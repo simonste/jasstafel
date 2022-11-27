@@ -16,17 +16,36 @@ class Coiffeur extends StatefulWidget {
 class _CoiffeurState extends State<Coiffeur> {
   var state = CoiffeurState();
 
+  void restoreData() async {
+    state = await state.load();
+    setState(() {}); // trigger widget update
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    restoreData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    state.load(); // todo: load only once but await
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      //   actions: [
-      //     IconButton(onPressed: _settings, icon: const Icon(Icons.settings))
-      //   ],
-      // ),
+      appBar: AppBar(
+        title: const Text("Coiffeur"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  for (var row in state.rows) {
+                    row.reset();
+                  }
+                  state.save();
+                });
+              },
+              icon: const Icon(Icons.delete)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+        ],
+      ),
       body: Column(
         children: _createRows,
       ),
@@ -64,16 +83,7 @@ class _CoiffeurState extends State<Coiffeur> {
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2));
     } else if (state.settings.thirdColumn) {
-      cells.add(Expanded(
-          child: InkWell(
-              onTap: () {
-                setState(() {
-                  for (var row in state.rows) {
-                    row.reset();
-                  }
-                });
-              },
-              child: CoiffeurCell("X"))));
+      cells.add(Expanded(child: CoiffeurCell("")));
     }
     return CoiffeurRow(cells);
   }
