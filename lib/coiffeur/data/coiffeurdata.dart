@@ -115,6 +115,16 @@ class CoiffeurState {
     return row.factor * (row.pts[0]! - row.pts[1]!);
   }
 
+  int rounds() {
+    int rounds = 0;
+    for (var row in rows) {
+      for (var team in row.pts) {
+        if (team != null) rounds++;
+      }
+    }
+    return rounds;
+  }
+
   @override
   String toString() {
     String str = commonData.toString();

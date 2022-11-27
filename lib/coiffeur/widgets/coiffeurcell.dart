@@ -4,6 +4,7 @@ class CoiffeurCell extends Container {
   CoiffeurCell(
     String text, {
     super.key,
+    textScaleFactor = 2.0,
     super.alignment = Alignment.center,
     super.decoration = const BoxDecoration(
       border: Border(
@@ -12,12 +13,12 @@ class CoiffeurCell extends Container {
         ),
       ),
     ),
-  }) : super(child: _createChild(text));
+  }) : super(child: _createChild(text, textScaleFactor));
 
-  static Widget _createChild(String name) {
+  static Widget _createChild(String name, double textScaleFactor) {
     return Text(
       name,
-      textScaleFactor: 2,
+      textScaleFactor: textScaleFactor,
     );
   }
 }

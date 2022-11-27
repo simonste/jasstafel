@@ -72,18 +72,24 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var cells = [
-      const Expanded(
-          child: Text(
-        "2 Runden",
-        textAlign: TextAlign.center,
-      )),
+      Expanded(
+          child: InkWell(
+              onTap: () {},
+              child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${state.rounds()} Runden",
+                    textAlign: TextAlign.center,
+                  )))),
       teamWidget(0),
       teamWidget(1),
     ];
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2));
     } else if (state.settings.thirdColumn) {
-      cells.add(Expanded(child: CoiffeurCell("")));
+      cells.add(Expanded(
+          child:
+              CoiffeurCell(state.commonData.duration(), textScaleFactor: 1.0)));
     }
     return CoiffeurRow(cells);
   }

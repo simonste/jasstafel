@@ -2,6 +2,22 @@ class CommonData {
   DateTime? startTime;
   DateTime? finishTime;
 
+  String duration() {
+    int minutes = 30;
+    if (startTime != null) {
+      if (finishTime != null) {
+        minutes = startTime!.difference(finishTime!).inMinutes;
+      } else {
+        minutes = startTime!.difference(DateTime.now()).inMinutes;
+      }
+    }
+
+    if (minutes < 300) {
+      return "$minutes min";
+    }
+    return "";
+  }
+
   @override
   String toString() {
     return "$startTime,$finishTime;";
