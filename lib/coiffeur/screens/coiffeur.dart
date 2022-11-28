@@ -63,45 +63,43 @@ class _CoiffeurState extends State<Coiffeur> {
 
   CoiffeurRow get _createHeader {
     Widget teamWidget(team) {
-      return Expanded(
-          child: InkWell(
-              onTap: () {
-                _stringDialog(team);
-              },
-              child: CoiffeurCell(state.teamName[team])));
+      return CoiffeurCell(
+        state.teamName[team],
+        onTap: () {
+          _stringDialog(team);
+        },
+      );
     }
 
     var cells = [
-      Expanded(
-          child: InkWell(
-              onTap: () {},
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${state.rounds()} Runden",
-                    textAlign: TextAlign.center,
-                  )))),
+      CoiffeurCell(
+        "${state.rounds()} Runden",
+        onTap: () {},
+        leftBorder: false,
+        textScaleFactor: 1.0,
+      ),
       teamWidget(0),
       teamWidget(1),
     ];
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2));
     } else if (state.settings.thirdColumn) {
-      cells.add(Expanded(
-          child:
-              CoiffeurCell(state.commonData.duration(), textScaleFactor: 1.0)));
+      cells.add(CoiffeurCell(
+        state.commonData.duration(),
+        textScaleFactor: 1.0,
+      ));
     }
     return CoiffeurRow(cells);
   }
 
   CoiffeurRow _createRow(int i) {
     Widget teamWidget(team, row) {
-      return Expanded(
-          child: InkWell(
-              onTap: () {
-                _pointsDialog(team, row);
-              },
-              child: CoiffeurPointsCell(state.rows[row].pts[team])));
+      return CoiffeurPointsCell(
+        state.rows[row].pts[team],
+        onTap: () {
+          _pointsDialog(team, row);
+        },
+      );
     }
 
     var cells = [
@@ -115,7 +113,7 @@ class _CoiffeurState extends State<Coiffeur> {
       cells.add(teamWidget(2, i));
     }
     if (state.settings.thirdColumn) {
-      cells.add(Expanded(child: CoiffeurPointsCell(state.diff(i))));
+      cells.add(CoiffeurPointsCell(state.diff(i)));
     }
 
     return CoiffeurRow(cells, topBorder: true);
@@ -130,12 +128,12 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      Expanded(child: CoiffeurPointsCell(state.total(0))),
-      Expanded(child: CoiffeurPointsCell(state.total(1))),
+      CoiffeurPointsCell(state.total(0)),
+      CoiffeurPointsCell(state.total(1)),
     ];
     if (state.settings.threeTeams || state.settings.thirdColumn) {
       cells.add(
-        Expanded(child: CoiffeurPointsCell(state.total(2))),
+        CoiffeurPointsCell(state.total(2)),
       );
     }
 

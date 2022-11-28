@@ -1,30 +1,55 @@
 import 'package:flutter/material.dart';
 
-class CoiffeurCell extends Container {
+class CoiffeurCell extends Expanded {
+  final GestureTapCallback? onTap;
+
   CoiffeurCell(
     String text, {
     super.key,
+    this.onTap,
     textScaleFactor = 2.0,
-    super.alignment = Alignment.center,
-    super.decoration = const BoxDecoration(
-      border: Border(
+    leftBorder = true,
+  }) : super(child: _createChild(text, onTap, textScaleFactor, leftBorder));
+
+  static BoxDecoration border(leftBorder) {
+    if (leftBorder) {
+      return const BoxDecoration(
+          border: Border(
         left: BorderSide(
           color: Colors.white,
         ),
-      ),
-    ),
-  }) : super(child: _createChild(text, textScaleFactor));
+      ));
+    }
+    return const BoxDecoration();
+  }
 
-  static Widget _createChild(String name, double textScaleFactor) {
-    return Text(
-      name,
-      textScaleFactor: textScaleFactor,
-    );
+  static Widget _createChild(String name, onTap, textScaleFactor, leftBorder) {
+    if (onTap != null) {
+      return InkWell(
+          onTap: onTap,
+          child: Container(
+              alignment: Alignment.center,
+              decoration: border(leftBorder),
+              child: Text(
+                name,
+                textScaleFactor: textScaleFactor,
+              )));
+    } else {
+      return Container(
+          alignment: Alignment.center,
+          decoration: border(leftBorder),
+          child: Text(
+            name,
+            textScaleFactor: textScaleFactor,
+          ));
+    }
   }
 }
 
 class CoiffeurPointsCell extends CoiffeurCell {
-  CoiffeurPointsCell(int? pts, {super.key}) : super(_getString(pts));
+  CoiffeurPointsCell(int? pts,
+      {super.key, super.onTap, super.textScaleFactor, super.leftBorder})
+      : super(_getString(pts));
 
   static String _getString(int? pts) {
     if (pts != null) {
