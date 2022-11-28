@@ -8,6 +8,8 @@ import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
 
+import 'coiffeursettings.dart';
+
 class Coiffeur extends StatefulWidget {
   const Coiffeur({super.key});
 
@@ -45,13 +47,31 @@ class _CoiffeurState extends State<Coiffeur> {
                 });
               },
               icon: const Icon(Icons.delete)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+          IconButton(
+              onPressed: () {
+                _openSettings();
+              },
+              icon: const Icon(Icons.settings))
         ],
       ),
       body: Column(
         children: _createRows,
       ),
     );
+  }
+
+  void _openSettings() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          return const CoiffeurSettingsScreen();
+        },
+      ),
+    ).then((value) {
+      setState(() {
+        state.settings.fromPrefService(context);
+      });
+    });
   }
 
   List<CoiffeurRow> get _createRows {
@@ -117,8 +137,7 @@ class _CoiffeurState extends State<Coiffeur> {
     ];
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2, i));
-    }
-    if (state.settings.thirdColumn) {
+    } else if (state.settings.thirdColumn) {
       cells.add(CoiffeurPointsCell(state.diff(i)));
     }
 

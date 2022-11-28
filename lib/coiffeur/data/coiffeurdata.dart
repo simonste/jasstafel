@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/commondata.dart';
+import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CoiffeurSettings {
@@ -24,6 +26,24 @@ class CoiffeurSettings {
     } on FormatException {
       bonus = null;
     }
+  }
+
+  void toPrefService(BuildContext context) {
+    var pref = PrefService.of(context);
+    pref.set('coiffeur_rows', rows);
+    pref.set('coiffeur_3teams', threeTeams);
+    pref.set('coiffeur_third_column', thirdColumn);
+    pref.set('coiffeur_rows', rows);
+  }
+
+  void fromPrefService(BuildContext context) {
+    var pref = PrefService.of(context);
+
+    //var s3 = pref.toMap();
+
+    rows = pref.get('coiffeur_rows');
+    threeTeams = pref.get('coiffeur_3teams');
+    thirdColumn = pref.get('coiffeur_third_column');
   }
 }
 
