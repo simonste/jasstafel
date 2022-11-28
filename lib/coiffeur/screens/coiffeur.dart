@@ -15,7 +15,7 @@ class Coiffeur extends StatefulWidget {
 }
 
 class _CoiffeurState extends State<Coiffeur> {
-  var state = CoiffeurState();
+  var state = CoiffeurData();
 
   void restoreData() async {
     state = await state.load();

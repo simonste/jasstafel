@@ -64,13 +64,13 @@ class RowSettings {
   }
 }
 
-class CoiffeurState {
+class CoiffeurData {
   var commonData = CommonData();
   var settings = CoiffeurSettings();
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
 
-  CoiffeurState() {
+  CoiffeurData() {
     assert(settings.rows <= rows.length);
 
     rows[0] = (RowSettings(1, "Eicheln"));
@@ -160,7 +160,7 @@ class CoiffeurState {
     await preferences.setString("coiffeur", data);
   }
 
-  Future<CoiffeurState> load() async {
+  Future<CoiffeurData> load() async {
     var s = await SharedPreferences.getInstance();
     fromString(s.getString("coiffeur"));
     return this;
