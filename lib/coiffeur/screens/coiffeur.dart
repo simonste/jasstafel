@@ -6,6 +6,7 @@ import 'package:jasstafel/coiffeur/widgets/coiffeurcell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurrow.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
+import 'package:jasstafel/common/widgets/boardtitle.dart';
 
 class Coiffeur extends StatefulWidget {
   const Coiffeur({super.key});
@@ -32,7 +33,7 @@ class _CoiffeurState extends State<Coiffeur> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Coiffeur"),
+        title: BoardTitle(Board.coiffeur, context),
         actions: [
           IconButton(
               onPressed: () {
