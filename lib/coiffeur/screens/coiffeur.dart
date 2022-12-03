@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeurdata.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurtype.dart';
+import 'package:jasstafel/coiffeur/dialog/coiffeurtypedialog.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeurtypecell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurcell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurrow.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
@@ -103,9 +104,13 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var cells = [
-      Expanded(
-          child:
-              InkWell(onTap: () {}, child: CoiffeurType(state.rows[i].type))),
+      CoiffeurTypeCell(
+        state.rows[i].factor,
+        state.rows[i].type,
+        onLongPress: () {
+          _coiffeurTypeDialog(i);
+        },
+      ),
       teamWidget(0, i),
       teamWidget(1, i),
     ];
@@ -159,6 +164,19 @@ class _CoiffeurState extends State<Coiffeur> {
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
       state.rows[row].pts[team] = input.value;
+      state.save();
+    });
+  }
+
+  void _coiffeurTypeDialog(row) async {
+    var controller = TextEditingController(text: state.rows[row].type);
+
+    final input = await coiffeurTypeDialogBuilder(
+        context, controller, state.rows[row].factor);
+    if (input == null || input.factor == 0) return; // empty name not allowed
+    setState(() {
+      state.rows[row].factor = input.factor;
+      state.rows[row].type = input.type;
       state.save();
     });
   }
