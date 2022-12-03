@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/commondata.dart';
+import 'package:jasstafel/common/settings_keys.dart';
 import 'package:pref/pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +31,10 @@ class CoiffeurSettings {
 
   void toPrefService(BuildContext context) {
     var pref = PrefService.of(context);
-    pref.set('coiffeur_rows', rows);
-    pref.set('coiffeur_3teams', threeTeams);
-    pref.set('coiffeur_third_column', thirdColumn);
-    pref.set('coiffeur_rows', rows);
+    pref.set(Keys.coiffeurRows, rows);
+    pref.set(Keys.coiffeur3Teams, threeTeams);
+    pref.set(Keys.coiffeurThirdColumn, thirdColumn);
+    pref.set(Keys.coiffeurRows, rows);
   }
 
   void fromPrefService(BuildContext context) {
@@ -41,9 +42,9 @@ class CoiffeurSettings {
 
     //var s3 = pref.toMap();
 
-    rows = pref.get('coiffeur_rows');
-    threeTeams = pref.get('coiffeur_3teams');
-    thirdColumn = pref.get('coiffeur_third_column');
+    rows = pref.get(Keys.coiffeurRows);
+    threeTeams = pref.get(Keys.coiffeur3Teams);
+    thirdColumn = pref.get(Keys.coiffeurThirdColumn);
   }
 }
 
@@ -177,12 +178,12 @@ class CoiffeurData {
     String data = toString();
 
     final preferences = await SharedPreferences.getInstance();
-    await preferences.setString("coiffeur", data);
+    await preferences.setString(Keys.coiffeur, data);
   }
 
   Future<CoiffeurData> load() async {
     var s = await SharedPreferences.getInstance();
-    fromString(s.getString("coiffeur"));
+    fromString(s.getString(Keys.coiffeur));
     return this;
   }
 }

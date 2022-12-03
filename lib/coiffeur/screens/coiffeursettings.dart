@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/settings_keys.dart';
 import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
@@ -19,31 +20,32 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
       body: PrefPage(children: [
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefCheckbox(
-            title: Text(context.l10n.denominator10), pref: "coiffeur_rounded"),
+            title: Text(context.l10n.denominator10),
+            pref: Keys.coiffeurRounded),
         PrefTitle(title: Text(context.l10n.settings)),
         PrefCheckbox(
-            title: Text(context.l10n.threeTeams), pref: "coiffeur_3teams"),
+            title: Text(context.l10n.threeTeams), pref: Keys.coiffeur3Teams),
         PrefDisabler(
-          pref: "coiffeur_3teams",
+          pref: Keys.coiffeur3Teams,
           children: [
             PrefCheckbox(
                 title: Text(context.l10n.thirdColumn),
-                pref: "coiffeur_third_column")
+                pref: Keys.coiffeurThirdColumn)
           ],
         ),
         PrefSlider(
           title: Text(context.l10n.rounds),
-          pref: "coiffeur_rows",
+          pref: Keys.coiffeurRows,
           min: 6,
           max: 13,
           trailing: (num v) => Text(context.l10n.noOfRounds(v)),
         ),
         PrefTitle(title: Text(context.l10n.commonSettings)),
         PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn), pref: "keepScreenOn"),
+            title: Text(context.l10n.keepScreenOn), pref: Keys.keepScreenOn),
         PrefChoice<String>(
           title: Text(context.l10n.language),
-          pref: 'appLanguage',
+          pref: Keys.appLanguage,
           items: const [
             DropdownMenuItem(value: 'de', child: Text('Deutsch')),
             DropdownMenuItem(value: 'en', child: Text('English')),

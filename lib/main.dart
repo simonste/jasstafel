@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/settings_keys.dart';
 import 'package:pref/pref.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -9,11 +10,11 @@ void main() async {
 
   final service = await PrefServiceShared.init(
     defaults: {
-      'coiffeur_rounded': false,
-      'coiffeur_bonus': false,
-      'coiffeur_rows': 11,
-      'coiffeur_3teams': false,
-      'coiffeur_third_column': false,
+      Keys.coiffeurRounded: false,
+      Keys.coiffeurBonus: false,
+      Keys.coiffeurRows: 11,
+      Keys.coiffeur3Teams: false,
+      Keys.coiffeurThirdColumn: false,
     },
   );
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   Locale getLanguage(context, locale, supportedLocales) {
-    var appLanguage = PrefService.of(context).get("appLanguage");
+    var appLanguage = PrefService.of(context).get(Keys.appLanguage);
     if (appLanguage != null) {
       return Locale(appLanguage);
     }
