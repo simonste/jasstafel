@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/localization.dart';
 
 class IntValue {
   int? value;
@@ -20,9 +21,9 @@ Future<IntValue?> pointsDialogBuilder(
       }
 
       return AlertDialog(
-        title: const Text('Points'),
+        title: Text(context.l10n.points),
         content: TextField(
-            decoration: const InputDecoration(hintText: "Enter Points"),
+            decoration: InputDecoration(hintText: context.l10n.points),
             autofocus: true,
             keyboardType: TextInputType.number,
             controller: controller,
@@ -32,7 +33,7 @@ Future<IntValue?> pointsDialogBuilder(
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
-            child: const Text('Enter'),
+            child: Text(context.l10n.ok),
             onPressed: () {
               finish();
             },

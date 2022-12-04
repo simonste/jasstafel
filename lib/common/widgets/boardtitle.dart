@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Board { schieber, coiffeur }
 
@@ -11,14 +12,14 @@ class BoardTitle extends Theme {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<Board>(
               value: board,
-              items: const <DropdownMenuItem<Board>>[
+              items: <DropdownMenuItem<Board>>[
                 DropdownMenuItem(
                   value: Board.schieber,
-                  child: Text('Schieber'),
+                  child: Text(AppLocalizations.of(context)!.schieber),
                 ),
                 DropdownMenuItem(
                   value: Board.coiffeur,
-                  child: Text('Coiffeur'),
+                  child: Text(AppLocalizations.of(context)!.coiffeur),
                 ),
               ],
               onChanged: (value) {

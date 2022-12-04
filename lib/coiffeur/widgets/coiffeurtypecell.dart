@@ -29,7 +29,11 @@ class CoiffeurTypeCell extends Expanded {
           top: 20,
           child: Text(name),
         ),
-        Text(factor.toString()),
+        Positioned(
+          right: 5,
+          top: 5,
+          child: Text(factor.toString()),
+        ),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurType {
   int factor;
@@ -6,25 +7,6 @@ class CoiffeurType {
 
   CoiffeurType(this.factor, this.type);
 }
-
-List<String> proposedTypes = [
-  "Eicheln",
-  "Schellen",
-  "Rosen",
-  "Schilten",
-  "Schaufel",
-  "Kreuz",
-  "Ecken",
-  "Herz",
-  "Obenabe",
-  "Ondenufe",
-  "Slalom",
-  "Gusti",
-  "Mery",
-  "Misere",
-  "Wunsch",
-  "Coiffeur"
-];
 
 Future<CoiffeurType?> coiffeurTypeDialogBuilder(
     BuildContext context, TextEditingController controller, factor) {
@@ -39,9 +21,47 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(
         }
       }
 
+      String proposedType(n) {
+        switch (n) {
+          case 0:
+            return context.l10n.eicheln;
+          case 1:
+            return context.l10n.schellen;
+          case 2:
+            return context.l10n.schilten;
+          case 3:
+            return context.l10n.rosen;
+          case 4:
+            return context.l10n.schaufel;
+          case 5:
+            return context.l10n.kreuz;
+          case 6:
+            return context.l10n.ecken;
+          case 7:
+            return context.l10n.herz;
+          case 8:
+            return context.l10n.obenabe;
+          case 9:
+            return context.l10n.ondenufe;
+          case 10:
+            return context.l10n.slalom;
+          case 11:
+            return context.l10n.gusti;
+          case 12:
+            return context.l10n.mery;
+          case 13:
+            return context.l10n.misere;
+          case 14:
+            return context.l10n.wunsch;
+          case 15:
+            return context.l10n.coiffeur;
+        }
+        return context.l10n.wunsch;
+      }
+
       TableRow createRow(i) {
         Text child(n) {
-          return Text(proposedTypes[n]);
+          return Text(proposedType(n));
         }
 
         return TableRow(children: [
@@ -53,12 +73,13 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(
       }
 
       return AlertDialog(
-        title: Text("Typ $factor"),
+        title: Text(context.l10n.xTimes(factor)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-                decoration: const InputDecoration(hintText: "Enter Name"),
+                decoration:
+                    InputDecoration(hintText: context.l10n.xTimes(factor)),
                 autofocus: true,
                 keyboardType: TextInputType.text,
                 controller: controller,

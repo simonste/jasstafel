@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/localization.dart';
 
 class Schieber extends StatefulWidget {
   const Schieber({super.key});
@@ -27,9 +28,7 @@ class _SchieberState extends State<Schieber> {
               icon: const Icon(Icons.settings))
         ],
       ),
-      body: const Center(
-        child: Text("Hallo Welt"),
-      ),
+      body: Center(child: Text(context.l10n.schieber)),
     );
   }
 

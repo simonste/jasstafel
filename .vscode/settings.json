@@ -35,11 +35,16 @@
     // strings. This setting will prevent that.
     "editor.wordBasedSuggestions": false
   },
+
   "cmake.configureOnOpen": false,
   "cSpell.words": [
     "autofocus",
+    "cupertino",
+    "deutsch",
+    "differenzler",
     "ecken",
     "eicheln",
+    "guggitaler",
     "gusti",
     "herz",
     "jass",
@@ -50,6 +55,7 @@
     "molotow",
     "obenabe",
     "ondenufe",
+    "punktetafel",
     "rosen",
     "runden",
     "schaufel",

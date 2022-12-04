@@ -1,0 +1,473 @@
+{
+  "app_name": "Jasstafel",
+  "schieber": "Schieber",
+  "coiffeur": "Coiffeur",
+  "differenzler": "Differenzler",
+  "molotow": "Molotow",
+  "guggitaler": "Guggitaler",
+  "punktetafel": "Punktetafel",
+  "settings": "Einstellungen",
+  "settings_title": "{type} - Einstellungen",
+  "@settings_title": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "commonSettings": "Allgemeine Einstellungen",
+  "language": "Sprache",
+  "ok": "Ok",
+  "cancel": "Abbrechen",
+  "back": "zurück",
+  "undo": "Rückgängig",
+  "points": "Punkte",
+  "pointsOf": "Punkte von {name}",
+  "@pointsOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rounds": "Anzahl Runden",
+  "noOfRounds": "{count, plural, one{1 Runde} other{{count} Runden}}",
+  "@noOfRounds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "currentRound": "Aktuelle Runde",
+  "roundTitle": "Runde {roundNumber}",
+  "@roundTitle": {
+    "placeholders": {
+      "roundNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "roundProgress": "{count, plural, one{{roundNumber}/1 Runde} other{{roundNumber}/{count} Runden}}",
+  "@roundProgress": {
+    "placeholders": {
+      "roundNumber": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "teamName1": "Team 1",
+  "teamName2": "Team 2",
+  "teamName3": "Team 3",
+  "teamName4": "Team 4",
+  "teamName5": "Team 5",
+  "teamName6": "Team 6",
+  "teamName": "Teamname",
+  "player1": "Spieler 1",
+  "player2": "Spieler 2",
+  "player3": "Spieler 3",
+  "player4": "Spieler 4",
+  "player5": "Spieler 5",
+  "player6": "Spieler 6",
+  "player7": "Spieler 7",
+  "player8": "Spieler 8",
+  "playerName": "Spielername",
+  "goalPoints": "Zielpunkte",
+  "goalPoints1": "Zielpunkte Team 1",
+  "columnName": "Spaltentitel",
+  "whoBegins": "Wer verteilt die Karten?",
+  "whoBeginsInfo": "Lange auf einen Namen klicken um die Auswahl zu ändern. Reihenfolge kann durch Ziehen geändert werden.",
+  "stats": "Statistiken",
+  "showStats": "Statistiken anzeigen",
+  "resetStats": "Statistiken zurücksetzen",
+  "showCurrentRound": "Aktuelle Runde anzeigen",
+  "duration": "{minutes} min gespielt",
+  "@duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "reset": "Punkte zurücksetzen",
+  "backside": "Rückseite verwenden",
+  "columns2ndBoard": "Spalten auf der Rückseite",
+  "differentGoals": "verschiedene Zielpunkte",
+  "pointsPerRound": "Punkte pro Runde",
+  "keepScreenOn": "Bildschirm immer an",
+  "allowTouch": "Punkteingabe per Touchscreen",
+  "vibrateOnTouch": "Vibration bei Punkteingabe",
+  "bigScore": "Total gross anzeigen",
+  "undoButton": "Rückgängig-Knopf anzeigen",
+  "drawZ": "Hilfslinien (Z) anzeigen",
+  "resetConfirm": "Sollen wirklich alle Punkte gelöscht werden?",
+  "resetConfirmStrokes": "Sollen wirklich alle Striche gelöscht werden?",
+  "emptyStatistics": "Alle Statistiken sind bereits gelöscht!",
+  "gameOver": "Gewonnen!",
+  "winner": "{winnerName} hat die Zielpunkte erreicht!",
+  "@winner": {
+    "placeholders": {
+      "winnerName": {
+        "type": "String"
+      }
+    }
+  },
+  "winnerBoth": "Beide Teams haben die Zielpunkte erreicht!\nWer war zuerst?",
+  "mountainBoth": "Beide Teams haben den Bergpreis erreicht!\nWer war zuerst?",
+  "teamNameChanged": "Teamname geändert!",
+  "deleteWhat": "Was soll zurückgesetzt werden?",
+  "resetAll": "Alles",
+  "invalidInput": "ungültige Eingabe",
+  "matches": "Matches",
+  "gewiesen": "Weise",
+  "stiche": "Stiche",
+  "match": "Match",
+  "total": "Total",
+  "opponent": "Gegner",
+  "screenRotate": "Dialog umdrehen",
+  "weis": "Weis",
+  "mountain": "Bergpreis",
+  "eicheln": "Eicheln",
+  "schellen": "Schellen",
+  "schilten": "Schilten",
+  "rosen": "Rosen",
+  "schaufel": "Schaufel",
+  "kreuz": "Kreuz",
+  "ecken": "Ecken",
+  "herz": "Herz",
+  "obenabe": "Obenabe",
+  "ondenufe": "Ondenufe",
+  "slalom": "Slalom",
+  "gusti": "Gusti",
+  "misere": "Misere",
+  "wunsch": "Wunsch",
+  "mery": "Mery",
+  "variable": "Variabel",
+  "free": "Frei",
+  "joker": "Joker",
+  "trumpf": "Trumpf",
+  "obenabeOndenufe": "Obenabe / Ondenufe",
+  "obeOnde": "Obe / Onde",
+  "slalomGusti": "Slalom / Gusti",
+  "gustiMery": "Gusti / Mery",
+  "superEicheln": "Super-Eicheln",
+  "tutti": "Tutti",
+  "tannenbaum": "Tannenbaum",
+  "emmentaler": "Emmentaler",
+  "blind": "Blind",
+  "xTimes": "Welcher Jass zählt {factor}fach?",
+  "@xTimes": {
+    "placeholders": {
+      "factor": {
+        "type": "int"
+      }
+    }
+  },
+  "xRound": "Welcher Jass gilt in Runde {round}?",
+  "@xRound": {
+    "placeholders": {
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "denominator10": "Punkte auf 10er Runden",
+  "threeTeams": "3 Teams",
+  "thirdColumn": "Auswertungsspalte",
+  "setFactorManually": "Eigene Multiplikatoren verwenden",
+  "shown": "angezeigt",
+  "hidden": "ausgeblendet",
+  "coiffeursummary": "Maximal mögliche Punkte",
+  "team": "Team",
+  "currentpoints": "aktuell",
+  "minpoints": "min",
+  "maxpoints": "max",
+  "matchPoints": "Match-Punkte",
+  "matchBonus": "Match-Prämie verwenden",
+  "matchBonusInfo": "Konstante Prämie für einen Match zusätzlich zu den {matchPoints} Punkten.",
+  "@matchBonusInfo": {
+    "placeholders": {
+      "matchPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "matchBonusVal": "Match-Prämie",
+  "matchMalusVal": "Konter-Match-Strafe",
+  "matchBonusRounded": "{bonus} (gerundet {rounded})",
+  "@matchBonusRounded": {
+    "placeholders": {
+      "bonus": {
+        "type": "int"
+      },
+      "rounded": {
+        "type": "int"
+      }
+    }
+  },
+  "countingType": "Zählweise",
+  "scratch": "Streichen",
+  "activatedBonus": "Match-Prämie aktiviert",
+  "deactivatedBonus": "Match-Prämie deaktiviert",
+  "resetMatchPoints": "Match-Punkte auf {points} ändern?",
+  "@resetMatchPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "resetMatchBonus": "Match-Prämie deaktivieren?",
+  "profiles": "Profile",
+  "profileInfo": "Einstellungen in Profilen speichern, um einfach hin und her zu wechseln.",
+  "profilename": "Profilname",
+  "deleteprofile": "Profil löschen",
+  "exportProfile": "Profil exportieren",
+  "deleteprofilefail": "Das aktive Profil kann nicht gelöscht werden!",
+  "addprofilefail": "Ein Profil mit diesem Namen existiert bereits!",
+  "hint2win": "Mit durchschnittlich {averagePoints} Punkten gewinnt {teamName}.",
+  "@hint2win": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "averagePoints": {
+        "type": "int"
+      }
+    }
+  },
+  "hint2winmatches": "{teamName} reicht ein {factor}x-Match um zu gewinnen.",
+  "@hint2winmatches": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "factor": {
+        "type": "int"
+      }
+    }
+  },
+  "hint2winspecial": "{teamName} reichen {points} Punkte im {factor}x um zu gewinnen.",
+  "@hint2winspecial": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "factor": {
+        "type": "int"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "hint2lead": "{teamName} benötigt durchschnittlich {averagePoints} Punkte um nicht zu verlieren.",
+  "@hint2lead": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "hint2losematches": "{teamName} benötigt einen {factor}x-Match um nicht zu verlieren.",
+  "@hint2losematches": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "factor": {
+        "type": "int"
+      }
+    }
+  },
+  "hint2loseother": "In den weiteren Runden benötigt {teamName} durchschnittlich {averagePoints} um nicht zu verlieren.",
+  "@hint2loseother": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "averagePoints": {
+        "type": "int"
+      }
+    }
+  },
+  "hintCountermatch": "{teamName} benötigt einen Konter-Match um nicht zu verlieren.",
+  "@hintCountermatch": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      }
+    }
+  },
+  "hintlost": "{teamName} müsste durchschnittlich {averagePoints} Punkte erreichen um zu gewinnen.",
+  "@hintlost": {
+    "placeholders": {
+      "teamName": {
+        "type": "String"
+      },
+      "averagePoints": {
+        "type": "int"
+      }
+    }
+  },
+  "matchinfo": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden.",
+  "@matchinfo": {
+    "placeholders": {
+      "matchPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "matchinfoBonus": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden. Für einen Match gibt es einen Bonus von {matchBonus} Punkten.",
+  "@matchinfoBonus": {
+    "placeholders": {
+      "matchPoints": {
+        "type": "int"
+      },
+      "matchBonus": {
+        "type": "int"
+      }
+    }
+  },
+  "enterguess": "Ansage von {playerName}",
+  "@enterguess": {
+    "placeholders": {
+      "playerName": {
+        "type": "String"
+      }
+    }
+  },
+  "diff_players": "Anzahl Spieler",
+  "roundeditX": "Runde {roundNumber} bearbeiten",
+  "@roundeditX": {
+    "placeholders": {
+      "roundNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "roundedit": "Runde bearbeiten",
+  "guessedit": "Ansagen bearbeiten",
+  "totalguessed": "Geschätzt: {totalGuess}",
+  "@totalguessed": {
+    "placeholders": {
+      "totalGuess": {
+        "type": "int"
+      }
+    }
+  },
+  "totalpoints": "Total: {totalPoints}",
+  "@totalpoints": {
+    "placeholders": {
+      "totalPoints": {
+        "type": "int"
+      }
+    }
+  },
+  "avgGuess": "Ansage Ø ",
+  "zeroGuess": "Ans.=0",
+  "zeroDiff": "Diff.=0",
+  "avgRoundGuess": "Durchschnittlich wurden pro Runde {averageGuess} Punkte angesagt.",
+  "@avgRoundGuess": {
+    "placeholders": {
+      "averageGuess": {
+        "type": "int"
+      }
+    }
+  },
+  "hideGuess": "Ansagen verstecken",
+  "handweis": "Handweis",
+  "tischweis": "Tischweis",
+  "fremdweis": "Fremdweis (2x)",
+  "remainingPoints": "Total: {total}, ausstehend: {remaining}",
+  "@remainingPoints": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "screenOrientation": "Bildschirm drehen",
+  "sensor": "Sensor",
+  "portrait": "Hochformat",
+  "landscape": "Querformat",
+  "undoBarText": "{points} Punkte für {teamName}",
+  "@undoBarText": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "teamName": {
+        "type": "String"
+      }
+    }
+  },
+  "ober": "Ober",
+  "rosenkonig": "Rosen König",
+  "laststich": "Letzter Stich",
+  "selectplayer": "Wähle zuerst einen Spieler",
+  "negative": "Negativ",
+  "goal": "Ziel",
+  "nogoal": "kein Ziel",
+  "goaltype": "Ziel des Spiels",
+  "positiveGoal": "Je mehr Punkte desto besser",
+  "negativeGoal": "Je weniger Punkte desto besser",
+  "enableppr": "Fixe Punkte pro Runde",
+  "winnerrounds": "{winnerName} hat gewonnen!",
+  "@winnerrounds": {
+    "placeholders": {
+      "winnerName": {
+        "type": "String"
+      }
+    }
+  },
+  "winnersrounds": "{winnerName1} und {winnerName2} haben gewonnen!",
+  "@winnersrounds": {
+    "placeholders": {
+      "winnerName1": {
+        "type": "String"
+      },
+      "winnerName2": {
+        "type": "String"
+      }
+    }
+  },
+  "nfc": "Einstellungen per NFC übertragen",
+  "nfc_notAvailable": "Gerät unterstützt kein NFC",
+  "nfc_disabled": "NFC ausgeschaltet",
+  "nfc_enabled": "Halte die Smartphones zusammen um die Einstellungen zu übertragen.",
+  "importprofile": "Profil {profileName} importieren",
+  "@importprofile": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "importprofilehint": "Profil {profileName} bleibt unverändert erhalten!",
+  "@importprofilehint": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "replaceprofile": "Profil {profileName} ersetzen",
+  "@replaceprofile": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "replaceprofilehint": "Die aktuellen Einstellungen und Spielstände werden überschrieben!"
+}

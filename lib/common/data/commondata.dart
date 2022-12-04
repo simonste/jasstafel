@@ -2,7 +2,7 @@ class CommonData {
   DateTime? startTime;
   DateTime? finishTime;
 
-  String duration() {
+  int? duration() {
     int minutes = 30;
     if (startTime != null) {
       if (finishTime != null) {
@@ -13,9 +13,9 @@ class CommonData {
     }
 
     if (minutes < 300) {
-      return "$minutes min";
+      return minutes;
     }
-    return "";
+    return null;
   }
 
   @override

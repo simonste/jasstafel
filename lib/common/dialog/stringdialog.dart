@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/localization.dart';
 
 Future<String?> stringDialogBuilder(
     BuildContext context, TextEditingController controller) {
@@ -14,9 +15,9 @@ Future<String?> stringDialogBuilder(
       }
 
       return AlertDialog(
-        title: const Text('Team name'),
+        title: Text(context.l10n.teamName),
         content: TextField(
-            decoration: const InputDecoration(hintText: "Enter Name"),
+            decoration: InputDecoration(hintText: context.l10n.teamName),
             autofocus: true,
             keyboardType: TextInputType.text,
             controller: controller,
@@ -26,7 +27,7 @@ Future<String?> stringDialogBuilder(
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
-            child: const Text('Enter'),
+            child: Text(context.l10n.ok),
             onPressed: () {
               finish();
             },

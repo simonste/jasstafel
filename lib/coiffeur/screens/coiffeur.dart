@@ -7,6 +7,7 @@ import 'package:jasstafel/coiffeur/widgets/coiffeurrow.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/localization.dart';
 
 import 'coiffeursettings.dart';
 
@@ -95,7 +96,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
     var cells = [
       CoiffeurCell(
-        "${state.rounds()} Runden",
+        context.l10n.noOfRounds(state.rounds()),
         onTap: () {},
         leftBorder: false,
         textScaleFactor: 1.0,
@@ -103,11 +104,20 @@ class _CoiffeurState extends State<Coiffeur> {
       teamWidget(0),
       teamWidget(1),
     ];
+
+    String durationString() {
+      var dur = state.commonData.duration();
+      if (dur != null) {
+        return context.l10n.duration(dur);
+      }
+      return "";
+    }
+
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2));
     } else if (state.settings.thirdColumn) {
       cells.add(CoiffeurCell(
-        state.commonData.duration(),
+        durationString(),
         textScaleFactor: 1.0,
       ));
     }
@@ -146,9 +156,9 @@ class _CoiffeurState extends State<Coiffeur> {
 
   CoiffeurRow get _createFooter {
     var cells = [
-      const Expanded(
+      Expanded(
         child: Text(
-          "Total",
+          context.l10n.total,
           textAlign: TextAlign.center,
           textScaleFactor: 2,
         ),
