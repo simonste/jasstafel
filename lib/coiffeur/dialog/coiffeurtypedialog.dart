@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeurtypeimage.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurType {
@@ -60,8 +61,17 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(
       }
 
       TableRow createRow(i) {
-        Text child(n) {
-          return Text(proposedType(n));
+        Widget child(n) {
+          return InkWell(
+            onTap: () => controller.text = proposedType(n),
+            child: Column(children: [
+              CoiffeurTypeImage(context, proposedType(n), width: 30),
+              Text(
+                proposedType(n),
+                textScaleFactor: 0.7,
+              )
+            ]),
+          );
         }
 
         return TableRow(children: [
@@ -80,10 +90,10 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(
             TextField(
                 decoration:
                     InputDecoration(hintText: context.l10n.xTimes(factor)),
-                autofocus: true,
                 keyboardType: TextInputType.text,
                 controller: controller,
                 onSubmitted: (value) => finish()),
+            Container(height: 20),
             Table(children: [
               createRow(0),
               createRow(1),

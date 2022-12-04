@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeurtypeimage.dart';
 
 class CoiffeurTypeCell extends Expanded {
   final GestureLongPressCallback? onLongPress;
 
-  CoiffeurTypeCell(int factor, String name, {super.key, this.onLongPress})
+  CoiffeurTypeCell(int factor, String name, context,
+      {super.key, this.onLongPress})
       : super(
             child: InkWell(
                 onLongPress: onLongPress,
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  child: _createChildren(factor, name),
+                  child: _createChildren(factor, name, context),
                 )));
 
-  static Widget _createChildren(factor, name) {
+  static Widget _createChildren(factor, name, context) {
     return Stack(
       fit: StackFit.expand,
       children: [
         Positioned(
-            top: 10,
-            left: 10,
-            child: SvgPicture.asset(
-              'assets/types/${_assetName(name)}.svg',
-              width: 30,
-            )),
+          top: 10,
+          left: 5,
+          child: CoiffeurTypeImage(context, name, width: 30),
+        ),
         Positioned(
-          left: 45,
+          left: 35,
           top: 20,
           child: Text(name),
         ),
@@ -36,19 +35,5 @@ class CoiffeurTypeCell extends Expanded {
         ),
       ],
     );
-  }
-
-  static String _assetName(String name) {
-    /* spell-checker:disable */
-    switch (name.toLowerCase()) {
-      case "eichel":
-        return 'eicheln';
-      case "rose":
-        return 'rosen';
-      case "schelle":
-        return 'schellen';
-    }
-    /* spell-checker:enable */
-    return name.toLowerCase();
   }
 }

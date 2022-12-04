@@ -138,6 +138,7 @@ class _CoiffeurState extends State<Coiffeur> {
       CoiffeurTypeCell(
         state.rows[i].factor,
         state.rows[i].type,
+        context,
         onLongPress: () {
           _coiffeurTypeDialog(i);
         },
@@ -203,7 +204,9 @@ class _CoiffeurState extends State<Coiffeur> {
 
     final input = await coiffeurTypeDialogBuilder(
         context, controller, state.rows[row].factor);
-    if (input == null || input.factor == 0) return; // empty name not allowed
+    if (input == null || input.factor == 0 || input.type.isEmpty) {
+      return; // empty name not allowed
+    }
     setState(() {
       state.rows[row].factor = input.factor;
       state.rows[row].type = input.type;
