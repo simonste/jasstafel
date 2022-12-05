@@ -202,8 +202,12 @@ class _CoiffeurState extends State<Coiffeur> {
   void _coiffeurTypeDialog(row) async {
     var controller = TextEditingController(text: state.rows[row].type);
 
-    final input = await coiffeurTypeDialogBuilder(
-        context, controller, state.rows[row].factor);
+    var title = state.settings.customFactor
+        ? context.l10n.xRound(row + 1)
+        : context.l10n.xTimes(row + 1);
+
+    final input = await coiffeurTypeDialogBuilder(context, title, controller,
+        state.rows[row].factor, state.settings.customFactor);
     if (input == null || input.factor == 0 || input.type.isEmpty) {
       return; // empty name not allowed
     }

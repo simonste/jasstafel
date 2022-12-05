@@ -15,6 +15,7 @@ void main() async {
       Keys.coiffeurRows: 11,
       Keys.coiffeur3Teams: false,
       Keys.coiffeurThirdColumn: false,
+      Keys.coiffeurCustomFactor: false,
     },
   );
 

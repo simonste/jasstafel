@@ -20,13 +20,17 @@ class CoiffeurTypeCell extends Expanded {
       children: [
         Positioned(
           top: 10,
+          bottom: 10,
           left: 5,
           child: CoiffeurTypeImage(context, name, width: 30),
         ),
         Positioned(
           left: 35,
-          top: 20,
-          child: Text(name),
+          top: 18,
+          bottom: 18,
+          child: FittedBox(
+            child: Text(name),
+          ),
         ),
         Positioned(
           right: 5,

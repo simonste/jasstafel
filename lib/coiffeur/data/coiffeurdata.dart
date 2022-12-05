@@ -9,11 +9,12 @@ class CoiffeurSettings {
   bool threeTeams = false;
   bool thirdColumn = true;
   bool rounded = false;
+  bool customFactor = false;
   int? bonus;
 
   @override
   String toString() {
-    return "$rows,$threeTeams,$thirdColumn,$rounded,$bonus;";
+    return "$rows,$threeTeams,$thirdColumn,$rounded,$customFactor,$bonus;";
   }
 
   void fromString(String str) {
@@ -22,8 +23,9 @@ class CoiffeurSettings {
     threeTeams = values[1] == "true";
     thirdColumn = values[2] == "true";
     rounded = values[3] == "true";
+    customFactor = values[4] == "true";
     try {
-      bonus = int.parse(values[4]);
+      bonus = int.parse(values[5]);
     } on FormatException {
       bonus = null;
     }
@@ -35,6 +37,7 @@ class CoiffeurSettings {
     pref.set(Keys.coiffeur3Teams, threeTeams);
     pref.set(Keys.coiffeurThirdColumn, thirdColumn);
     pref.set(Keys.coiffeurRows, rows);
+    pref.set(Keys.coiffeurCustomFactor, customFactor);
   }
 
   void fromPrefService(BuildContext context) {
@@ -45,6 +48,7 @@ class CoiffeurSettings {
     rows = pref.get(Keys.coiffeurRows);
     threeTeams = pref.get(Keys.coiffeur3Teams);
     thirdColumn = pref.get(Keys.coiffeurThirdColumn);
+    customFactor = pref.get(Keys.coiffeurCustomFactor);
   }
 }
 
