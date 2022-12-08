@@ -44,7 +44,12 @@ dependencies:
   pref: ^2.6.0
 
 dev_dependencies:
+  test: ^1.21.4
+  mockito: ^5.3.2
+
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to

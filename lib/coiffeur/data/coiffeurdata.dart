@@ -142,9 +142,10 @@ class CoiffeurData {
 
   int rounds() {
     int rounds = 0;
-    for (var row in rows) {
-      for (var team in row.pts) {
-        if (team != null) rounds++;
+    var teams = settings.threeTeams ? 3 : 2;
+    for (var r = 0; r < settings.rows; r++) {
+      for (var t = 0; t < teams; t++) {
+        if (rows[r].pts[t] != null) rounds++;
       }
     }
     return rounds;

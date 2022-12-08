@@ -47,8 +47,12 @@ String proposedType(BuildContext context, n) {
   return context.l10n.wunsch;
 }
 
-Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context, title,
-    TextEditingController controller, factor, customFactor) {
+Future<CoiffeurType?> coiffeurTypeDialogBuilder(
+    BuildContext context,
+    String title,
+    TextEditingController controller,
+    int factor,
+    bool customFactor) {
   return showDialog<CoiffeurType>(
       context: context,
       builder: (BuildContext context) {
@@ -92,10 +96,11 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context, title,
 
             var list = List<int>.generate(13, (i) => i + 1);
             return DropdownButton<int>(
+              key: const Key("dropdownFactor"),
               value: factor,
               onChanged: (val) {
                 setState(() {
-                  factor = val;
+                  factor = val!;
                 });
               },
               items: list.map((v) {

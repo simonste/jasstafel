@@ -4,10 +4,10 @@ import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurTypeImage extends SvgPicture {
   CoiffeurTypeImage(context, name, {super.key, super.width})
-      : super.asset('assets/types/${_assetName(context, name)}.svg',
+      : super.asset('assets/types/${assetName(context, name)}.svg',
             semanticsLabel: name);
 
-  static String _assetName(BuildContext context, String name) {
+  static String assetName(BuildContext context, String name) {
     /* spell-checker:disable */
     var knownTypes = {
       _unify(context.l10n.eicheln): "eicheln",
@@ -20,7 +20,9 @@ class CoiffeurTypeImage extends SvgPicture {
       _unify(context.l10n.herz): "herz",
       _unify(context.l10n.trumpf): "trumpf",
       _unify(context.l10n.obenabe): "obenabe",
+      _unify(context.l10n.obe): "obenabe",
       _unify(context.l10n.ondenufe): "ondenufe",
+      _unify(context.l10n.onde): "ondenufe",
       _unify(context.l10n.obenabeOndenufe): "obe_onde",
       _unify(context.l10n.obeOnde): "obe_onde",
       _unify(context.l10n.slalom): "slalom",
@@ -51,7 +53,8 @@ class CoiffeurTypeImage extends SvgPicture {
     // ignore whitespace, - , / and dialect specific n,ä,e.
     return name
         .toLowerCase()
-        .replaceAll(RegExp('\\s|-|/|n|ä|e'), '')
-        .replaceAll("u", "o"); // Characters u and o are replaceable
+        .replaceAll(RegExp('\\s|-|/|n|ä|e|é|è'), '')
+        .replaceAll("u", "o") // Characters u and o are replaceable
+        .replaceAll("sch", "s"); // replace sch with s
   }
 }
