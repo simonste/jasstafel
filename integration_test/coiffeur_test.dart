@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:jasstafel/common/settings_keys.dart';
 import 'package:jasstafel/main.dart' as app;
+import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -10,7 +10,7 @@ void main() {
   setUp(() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
-    await preferences.setString(Keys.appLanguage, "de");
+    await preferences.setString(CommonSettings.keys.appLanguage, "de");
   });
   testWidgets('first test', (tester) async {
     app.main();

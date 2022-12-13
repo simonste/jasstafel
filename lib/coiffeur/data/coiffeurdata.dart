@@ -1,56 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/commondata.dart';
-import 'package:jasstafel/common/settings_keys.dart';
-import 'package:pref/pref.dart';
+import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class CoiffeurSettings {
-  int rows = 11;
-  bool threeTeams = false;
-  bool thirdColumn = true;
-  bool rounded = false;
-  bool customFactor = false;
-  int? bonus;
-
-  @override
-  String toString() {
-    return "$rows,$threeTeams,$thirdColumn,$rounded,$customFactor,$bonus;";
-  }
-
-  void fromString(String str) {
-    var values = str.split(',');
-    rows = int.parse(values[0]);
-    threeTeams = values[1] == "true";
-    thirdColumn = values[2] == "true";
-    rounded = values[3] == "true";
-    customFactor = values[4] == "true";
-    try {
-      bonus = int.parse(values[5]);
-    } on FormatException {
-      bonus = null;
-    }
-  }
-
-  void toPrefService(BuildContext context) {
-    var pref = PrefService.of(context);
-    pref.set(Keys.coiffeurRows, rows);
-    pref.set(Keys.coiffeur3Teams, threeTeams);
-    pref.set(Keys.coiffeurThirdColumn, thirdColumn);
-    pref.set(Keys.coiffeurRows, rows);
-    pref.set(Keys.coiffeurCustomFactor, customFactor);
-  }
-
-  void fromPrefService(BuildContext context) {
-    var pref = PrefService.of(context);
-
-    //var s3 = pref.toMap();
-
-    rows = pref.get(Keys.coiffeurRows);
-    threeTeams = pref.get(Keys.coiffeur3Teams);
-    thirdColumn = pref.get(Keys.coiffeurThirdColumn);
-    customFactor = pref.get(Keys.coiffeurCustomFactor);
-  }
-}
 
 class RowSettings {
   int factor;
@@ -183,12 +133,12 @@ class CoiffeurData {
     String data = toString();
 
     final preferences = await SharedPreferences.getInstance();
-    await preferences.setString(Keys.coiffeur, data);
+    await preferences.setString(CoiffeurSettings.keys.data, data);
   }
 
   Future<CoiffeurData> load() async {
     var s = await SharedPreferences.getInstance();
-    fromString(s.getString(Keys.coiffeur));
+    fromString(s.getString(CoiffeurSettings.keys.data));
     return this;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jasstafel/common/settings_keys.dart';
+import 'package:jasstafel/settings/coiffeur_settings.g.dart';
+import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
@@ -21,34 +22,36 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefCheckbox(
             title: Text(context.l10n.denominator10),
-            pref: Keys.coiffeurRounded),
+            pref: CoiffeurSettings.keys.rounded),
         PrefTitle(title: Text(context.l10n.settings)),
         PrefCheckbox(
-            title: Text(context.l10n.threeTeams), pref: Keys.coiffeur3Teams),
+            title: Text(context.l10n.threeTeams),
+            pref: CoiffeurSettings.keys.threeTeams),
         PrefDisabler(
-          pref: Keys.coiffeur3Teams,
+          pref: CoiffeurSettings.keys.threeTeams,
           children: [
             PrefCheckbox(
                 title: Text(context.l10n.thirdColumn),
-                pref: Keys.coiffeurThirdColumn)
+                pref: CoiffeurSettings.keys.thirdColumn)
           ],
         ),
         PrefSlider(
           title: Text(context.l10n.rounds),
-          pref: Keys.coiffeurRows,
+          pref: CoiffeurSettings.keys.rows,
           min: 6,
           max: 13,
           trailing: (num v) => Text(context.l10n.noOfRounds(v)),
         ),
         PrefCheckbox(
             title: Text(context.l10n.setFactorManually),
-            pref: Keys.coiffeurCustomFactor),
+            pref: CoiffeurSettings.keys.customFactor),
         PrefTitle(title: Text(context.l10n.commonSettings)),
         PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn), pref: Keys.keepScreenOn),
+            title: Text(context.l10n.keepScreenOn),
+            pref: CommonSettings.keys.keepScreenOn),
         PrefChoice<String>(
           title: Text(context.l10n.language),
-          pref: Keys.appLanguage,
+          pref: CommonSettings.keys.appLanguage,
           items: const [
             DropdownMenuItem(value: 'de', child: Text('Deutsch')),
             DropdownMenuItem(value: 'en', child: Text('English')),
