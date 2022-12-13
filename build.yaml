@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      ":settings_generator":
+        generate_for: ["lib/settings/**"]
+
+builders:
+  settings_generator:
+    target: "jasstafel"
+    import: "package:jasstafel/settings_generator/settings_builder.dart"
+    builder_factories: ["generateSettings"]
+    build_extensions: { ".yaml": [".g.dart"] }
+    build_to: source

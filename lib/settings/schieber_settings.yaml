@@ -1,0 +1,40 @@
+SchieberSettings:
+  GoalType:
+    store: "schieber_goal"
+    default: 1
+  GoalRounds:
+    store: "schieber_goal_rounds"
+    default: 4
+  DifferentGoals:
+    store: "schieber_different_goals"
+    default: false
+  GoalPoints:
+    store: "schieber_goal_points"
+    default: 2500
+  GoalPoints2:
+    store: "schieber_goal_points2"
+    default: 2500
+  PointsPerRound:
+    store: "schieber_points_per_round"
+    default: 257
+  Backside:
+    store: "schieber_backside"
+    default: false
+  BacksideColumns:
+    store: "schieber_backside_columns"
+    default: 4
+  TouchScreen:
+    store: "schieber_touch_screen"
+    default: true
+  BigScore:
+    store: "schieber_big_score"
+    default: false
+  DrawZ:
+    store: "schieber_draw_Z"
+    default: true
+  Undo:
+    store: "schieber_undo"
+    default: false
+  Data:
+    store: "schieber"
+    default: ""

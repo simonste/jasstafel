@@ -1,0 +1,7 @@
+CommonSettings:
+  AppLanguage:
+    store: "appLanguage"
+    default: "de"
+  KeepScreenOn:
+    store: "keepScreenOn"
+    default: true

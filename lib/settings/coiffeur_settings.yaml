@@ -1,0 +1,31 @@
+CoiffeurSettings:
+  Rows:
+    store: "coiffeur_rows"
+    default: 11
+  ThreeTeams:
+    store: "coiffeur_3teams"
+    default: false
+  Match:
+    store: "coiffeur_match"
+    default: 257
+  Rounded:
+    store: "coiffeur_rounded"
+    default: false
+  ThirdColumn:
+    store: "coiffeur_third_column"
+    default: false
+  CustomFactor:
+    store: "coiffeur_custom_factor"
+    default: false
+  Bonus:
+    store: "coiffeur_bonus"
+    default: false
+  BonusValue:
+    store: "coiffeur_bonus_value"
+    default: 500
+  CounterLoss:
+    store: "coiffeur_counter"
+    default: 100
+  Data:
+    store: "coiffeur"
+    default: ""
