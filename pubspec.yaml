@@ -42,6 +42,7 @@ dependencies:
   flutter_svg: ^1.1.6
   shared_preferences: ^2.0.15
   pref: ^2.6.0
+  vibration: ^1.7.6
 
   build: ^2.3.1
   dart_style: ^2.2.4
@@ -75,6 +76,7 @@ flutter:
   assets:
     - assets/
     - assets/types/
+    - assets/actions/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

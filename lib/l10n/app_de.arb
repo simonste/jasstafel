@@ -127,6 +127,25 @@
   "match": "Match",
   "total": "Total",
   "opponent": "Gegner",
+  "totalPoints": "Total: {points}",
+  "@totalPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWithOpponent": "Total: {points} (Gegner: {opponentPoints})",
+  "@totalWithOpponent": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "opponentPoints": {
+        "type": "int"
+      }
+    }
+  },
   "screenRotate": "Dialog umdrehen",
   "weis": "Weis",
   "mountain": "Bergpreis",
@@ -420,7 +439,7 @@
   "negative": "Negativ",
   "goal": "Ziel",
   "nogoal": "kein Ziel",
-  "goaltype": "Ziel des Spiels",
+  "goalType": "Ziel des Spiels",
   "positiveGoal": "Je mehr Punkte desto besser",
   "negativeGoal": "Je weniger Punkte desto besser",
   "enableppr": "Fixe Punkte pro Runde",

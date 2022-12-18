@@ -1,7 +1,7 @@
 SchieberSettings:
   GoalType:
     store: "schieber_goal"
-    default: 1
+    default: true
   GoalRounds:
     store: "schieber_goal_rounds"
     default: 4
@@ -26,14 +26,14 @@ SchieberSettings:
   TouchScreen:
     store: "schieber_touch_screen"
     default: true
+  Vibrate:
+    store: "schieber_vibrate"
+    default: true
   BigScore:
     store: "schieber_big_score"
     default: false
   DrawZ:
     store: "schieber_draw_Z"
-    default: true
-  Undo:
-    store: "schieber_undo"
     default: false
   Data:
     store: "schieber"
