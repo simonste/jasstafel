@@ -5,3 +5,6 @@ CommonSettings:
   KeepScreenOn:
     store: "keepScreenOn"
     default: true
+  LastBoard:
+    store: "lastBoard"
+    default: 0

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:pref/pref.dart';
 
 enum Board { schieber, coiffeur }
 
@@ -25,6 +27,8 @@ class BoardTitle extends Theme {
               onChanged: (value) {
                 Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
                   builder: (context) {
+                    PrefService.of(context)
+                        .set(CommonSettings.keys.lastBoard, value!.index);
                     switch (value) {
                       case Board.schieber:
                         return const Schieber();

@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate Settings",
+      "type": "shell",
+      "command": "flutter packages pub run build_runner build "
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -46,6 +48,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getLastOpenedBoard() {
+      final lastBoard = Board
+          .values[PrefService.of(context).get(CommonSettings.keys.lastBoard)];
+      switch (lastBoard) {
+        case Board.coiffeur:
+          return const Coiffeur();
+        case Board.schieber:
+          return const Schieber();
+      }
+    }
+
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.app_name,
       theme: ThemeData(brightness: Brightness.dark),
@@ -56,7 +69,7 @@ class MyApp extends StatelessWidget {
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },
-      home: const Coiffeur(),
+      home: getLastOpenedBoard(),
     );
   }
 }
