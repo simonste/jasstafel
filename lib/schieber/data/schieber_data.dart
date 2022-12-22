@@ -101,4 +101,8 @@ class SchieberData {
     fromString(s.getString(SchieberSettings.keys.data));
     return this;
   }
+
+  int rounds() {
+    return 0;
+  }
 }

@@ -8,6 +8,8 @@ import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/widgets/settings_button.dart';
+import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 
 import 'coiffeursettings.dart';
 
@@ -38,41 +40,22 @@ class _CoiffeurState extends State<Coiffeur> {
       appBar: AppBar(
         title: BoardTitle(Board.coiffeur, context),
         actions: [
+          WhoIsNextButton(
+              context,
+              state.commonData,
+              state.teamName.sublist(0, state.settings.threeTeams ? 3 : 2),
+              state.rounds()),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  for (var row in state.rows) {
-                    row.reset();
-                  }
-                  state.save();
-                });
-              },
+              onPressed: () => setState(() => state.reset()),
               icon: const Icon(Icons.delete)),
-          IconButton(
-              onPressed: () {
-                _openSettings();
-              },
-              icon: const Icon(Icons.settings))
+          SettingsButton(const CoiffeurSettingsScreen(), context,
+              () => setState(() => state.settings.fromPrefService(context))),
         ],
       ),
       body: Column(
         children: _createRows,
       ),
     );
-  }
-
-  void _openSettings() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) {
-          return const CoiffeurSettingsScreen();
-        },
-      ),
-    ).then((value) {
-      setState(() {
-        state.settings.fromPrefService(context);
-      });
-    });
   }
 
   List<CoiffeurRow> get _createRows {
@@ -139,9 +122,7 @@ class _CoiffeurState extends State<Coiffeur> {
         state.rows[i].factor,
         state.rows[i].type,
         context,
-        onLongPress: () {
-          _coiffeurTypeDialog(i);
-        },
+        onLongPress: () => _coiffeurTypeDialog(i),
       ),
       teamWidget(0, i),
       teamWidget(1, i),

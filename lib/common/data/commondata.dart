@@ -2,13 +2,27 @@ class CommonData {
   DateTime? startTime;
   DateTime? finishTime;
 
+  int whoBeginsOffset = 0;
+
+  void reset() {
+    startTime = DateTime.now();
+    finishTime = null;
+  }
+
+  void firstPoints() {
+    if (startTime == null ||
+        DateTime.now().difference(startTime!).inMinutes < 10) {
+      reset();
+    }
+  }
+
   int? duration() {
-    int minutes = 30;
+    int minutes = 1000;
     if (startTime != null) {
       if (finishTime != null) {
-        minutes = startTime!.difference(finishTime!).inMinutes;
+        minutes = finishTime!.difference(startTime!).inMinutes;
       } else {
-        minutes = startTime!.difference(DateTime.now()).inMinutes;
+        minutes = DateTime.now().difference(startTime!).inMinutes;
       }
     }
 

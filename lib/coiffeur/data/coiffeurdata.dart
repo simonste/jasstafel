@@ -63,6 +63,12 @@ class CoiffeurData {
     rows[12] = (RowSettings(13, "Wunsch"));
   }
 
+  void reset() {
+    for (var row in rows) {
+      row.reset();
+    }
+  }
+
   int total(team) {
     assert(team < 3);
     int sum = 0;

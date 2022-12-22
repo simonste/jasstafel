@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/widgets/settings_button.dart';
+import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/schieber/data/schieber_data.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
@@ -69,9 +70,8 @@ class _SchieberState extends State<Schieber> {
         appBar: AppBar(
           title: BoardTitle(Board.schieber, context),
           actions: [
-            IconButton(
-                onPressed: () => _openWhoIstNext(),
-                icon: SvgPicture.asset("assets/actions/who_is_next.svg")),
+            WhoIsNextButton(context, state.commonData,
+                [state.team[0].name, state.team[1].name], state.rounds()),
             IconButton(
                 onPressed: () => _openStatistics(),
                 icon: const Icon(Icons.history)),
@@ -81,9 +81,8 @@ class _SchieberState extends State<Schieber> {
             IconButton(
                 onPressed: () => setState(() => state.reset()),
                 icon: const Icon(Icons.delete)),
-            IconButton(
-                onPressed: () => _openSettings(),
-                icon: const Icon(Icons.settings)),
+            SettingsButton(const SchieberSettingsScreen(), context,
+                () => setState(() => state.settings.fromPrefService(context))),
           ],
         ),
         body: Stack(children: [
@@ -98,23 +97,8 @@ class _SchieberState extends State<Schieber> {
         ]));
   }
 
-  void _openWhoIstNext() {}
   void _openHistory() {}
   void _openStatistics() {}
-
-  void _openSettings() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) {
-          return const SchieberSettingsScreen();
-        },
-      ),
-    ).then((value) {
-      setState(() {
-        state.settings.fromPrefService(context);
-      });
-    });
-  }
 
   void _stringDialog(team) async {
     var controller = TextEditingController(text: state.team[team].name);
