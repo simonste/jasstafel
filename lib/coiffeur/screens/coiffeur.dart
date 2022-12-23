@@ -12,6 +12,7 @@ import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 
 import 'coiffeursettings.dart';
+import 'dart:developer' as developer;
 
 class Coiffeur extends StatefulWidget {
   const Coiffeur({super.key});
@@ -30,12 +31,14 @@ class _CoiffeurState extends State<Coiffeur> {
 
   @override
   void initState() {
+    developer.log('init state', name: 'jasstafel coiffeur');
     super.initState();
     restoreData();
   }
 
   @override
   Widget build(BuildContext context) {
+    developer.log('build', name: 'jasstafel coiffeur');
     return Scaffold(
       appBar: AppBar(
         title: BoardTitle(Board.coiffeur, context),

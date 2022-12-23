@@ -9,6 +9,7 @@ import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
 import 'package:vibration/vibration.dart';
+import 'dart:developer' as developer;
 
 class Schieber extends StatefulWidget {
   const Schieber({super.key});
@@ -27,6 +28,7 @@ class _SchieberState extends State<Schieber> {
 
   @override
   void initState() {
+    developer.log('init state', name: 'jasstafel schieber');
     super.initState();
     restoreData();
   }
@@ -48,6 +50,7 @@ class _SchieberState extends State<Schieber> {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('build', name: 'jasstafel schieber');
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
     Widget goalPoints() {
