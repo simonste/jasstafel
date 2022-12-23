@@ -32,12 +32,11 @@ class CommonData {
     return null;
   }
 
-  @override
-  String toString() {
+  String dump() {
     return "$startTime,$finishTime;";
   }
 
-  void fromString(String str) {
+  void restore(String str) {
     var values = str.split(',');
 
     try {

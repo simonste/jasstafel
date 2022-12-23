@@ -22,7 +22,7 @@ class _SchieberState extends State<Schieber> {
   var state = SchieberData();
 
   void restoreData() async {
-    state = await state.load();
+    state = await state.load() as SchieberData;
     setState(() {}); // trigger widget update
   }
 

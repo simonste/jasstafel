@@ -1,15 +1,37 @@
 import 'dart:math';
 
-import 'package:jasstafel/common/data/commondata.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TeamData {
-  String name = "Team";
+  String name;
   int points = 0;
+
+  TeamData([this.name = "Team"]);
 
   final values = [1, 20, 50, 100, 500];
   var strokes = List.filled(5, 0);
+
+  @override
+  String toString() {
+    String str = "$name,";
+    for (var stroke in strokes) {
+      str += "$stroke,";
+    }
+    return str;
+  }
+
+  void fromString(String str) {
+    var values = str.split(',');
+    name = values[0];
+    for (var i = 0; i < strokes.length; i++) {
+      try {
+        strokes[i] = int.parse(values[i + 1]);
+      } on FormatException {
+        strokes[i] = 0;
+      }
+    }
+  }
 
   int sum() {
     var sum = 0;
@@ -50,56 +72,31 @@ class TeamData {
   }
 }
 
-class SchieberData {
-  var commonData = CommonData();
+class SchieberData extends BoardData {
   var settings = SchieberSettings();
-  var team = [TeamData(), TeamData()];
+  var team = [TeamData("Team 1"), TeamData("Team 2")];
 
-  SchieberData() {
-    // assert(settings.rows <= rows.length);
-  }
-
+  SchieberData() : super(SchieberSettings.keys.data);
+  @override
   void reset() {
     for (var t = 0; t < team.length; t++) {
       for (var s = 0; s < team[t].strokes.length; s++) {
         team[t].strokes[s] = 0;
       }
     }
+    super.reset();
   }
 
   @override
-  String toString() {
-    String str = commonData.toString();
-    str += settings.toString();
-    str += "${team[0]},${team[1]};";
-    return str;
+  String dump() {
+    return "${team[0]};${team[1]};";
   }
 
-  void fromString(String? str) {
-    if (str != null) {
-      var data = str.split(';');
-      data.removeLast();
-
-      commonData.fromString(data[0]);
-      settings.fromString(data[1]);
-      // var tn = data[2].split(',');
-      // for (var i = 0; i < team.length; i++) {
-      //   team[i] = tn[i];
-      // }
+  @override
+  void restore(List<String> data) {
+    for (var i = 0; i < team.length; i++) {
+      team[i].fromString(data[i]);
     }
-  }
-
-  void save() async {
-    String data = toString();
-
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.setString(SchieberSettings.keys.data, data);
-  }
-
-  Future<SchieberData> load() async {
-    var s = await SharedPreferences.getInstance();
-    fromString(s.getString(SchieberSettings.keys.data));
-    return this;
   }
 
   int rounds() {

@@ -1,6 +1,5 @@
-import 'package:jasstafel/common/data/commondata.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RowSettings {
   int factor;
@@ -39,13 +38,12 @@ class RowSettings {
   }
 }
 
-class CoiffeurData {
-  var commonData = CommonData();
+class CoiffeurData extends BoardData {
   var settings = CoiffeurSettings();
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
 
-  CoiffeurData() {
+  CoiffeurData() : super(CoiffeurSettings.keys.data) {
     assert(settings.rows <= rows.length);
 
     rows[0] = (RowSettings(1, "Eicheln"));
@@ -63,10 +61,12 @@ class CoiffeurData {
     rows[12] = (RowSettings(13, "Wunsch"));
   }
 
+  @override
   void reset() {
     for (var row in rows) {
       row.reset();
     }
+    super.reset();
   }
 
   int total(team) {
@@ -108,43 +108,22 @@ class CoiffeurData {
   }
 
   @override
-  String toString() {
-    String str = commonData.toString();
-    str += settings.toString();
-    str += "${teamName[0]},${teamName[1]},${teamName[2]};";
+  String dump() {
+    String str = "${teamName[0]},${teamName[1]},${teamName[2]};";
     for (var row in rows) {
       str += "$row;";
     }
     return str;
   }
 
-  void fromString(String? str) {
-    if (str != null) {
-      var data = str.split(';');
-      data.removeLast();
-
-      commonData.fromString(data[0]);
-      settings.fromString(data[1]);
-      var tn = data[2].split(',');
-      for (var i = 0; i < teamName.length; i++) {
-        teamName[i] = tn[i];
-      }
-      for (var i = 0; i < rows.length; i++) {
-        rows[i].fromString(data[i + 3]);
-      }
+  @override
+  void restore(List<String> data) {
+    var tn = data[0].split(',');
+    for (var i = 0; i < teamName.length; i++) {
+      teamName[i] = tn[i];
     }
-  }
-
-  void save() async {
-    String data = toString();
-
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.setString(CoiffeurSettings.keys.data, data);
-  }
-
-  Future<CoiffeurData> load() async {
-    var s = await SharedPreferences.getInstance();
-    fromString(s.getString(CoiffeurSettings.keys.data));
-    return this;
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].fromString(data[i + 1]);
+    }
   }
 }

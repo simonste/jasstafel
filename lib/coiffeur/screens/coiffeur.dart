@@ -25,7 +25,7 @@ class _CoiffeurState extends State<Coiffeur> {
   var state = CoiffeurData();
 
   void restoreData() async {
-    state = await state.load();
+    state = await state.load() as CoiffeurData;
     setState(() {}); // trigger widget update
   }
 
