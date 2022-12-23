@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
@@ -8,6 +9,7 @@ import 'package:jasstafel/schieber/data/schieber_data.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
+import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:vibration/vibration.dart';
 import 'dart:developer' as developer;
 
@@ -19,10 +21,10 @@ class Schieber extends StatefulWidget {
 }
 
 class _SchieberState extends State<Schieber> {
-  var state = SchieberData();
+  var state = BoardData(SchieberData(), SchieberSettingsKeys().data);
 
   void restoreData() async {
-    state = await state.load() as SchieberData;
+    state = await state.load() as BoardData<SchieberData>;
     setState(() {}); // trigger widget update
   }
 
@@ -34,17 +36,17 @@ class _SchieberState extends State<Schieber> {
   }
 
   int getGoalPoints(int team) {
-    if (state.settings.differentGoals && team == 0) {
-      return state.settings.goalPoints2;
+    if (state.data.settings.differentGoals && team == 0) {
+      return state.data.settings.goalPoints2;
     }
-    return state.settings.goalPoints;
+    return state.data.settings.goalPoints;
   }
 
   void setGoalPoints(int team, int points) {
-    if (state.settings.differentGoals && team == 0) {
-      state.settings.goalPoints2 = points;
+    if (state.data.settings.differentGoals && team == 0) {
+      state.data.settings.goalPoints2 = points;
     } else {
-      state.settings.goalPoints = points;
+      state.data.settings.goalPoints = points;
     }
   }
 
@@ -52,6 +54,7 @@ class _SchieberState extends State<Schieber> {
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
+    state.data.settings.fromPrefService(context);
 
     Widget goalPoints() {
       points(int teamId) {
@@ -60,7 +63,7 @@ class _SchieberState extends State<Schieber> {
             child: Text(getGoalPoints(teamId).toString(), textScaleFactor: 2));
       }
 
-      if (state.settings.differentGoals) {
+      if (state.data.settings.differentGoals) {
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           RotatedBox(quarterTurns: 2, child: points(0)),
           points(1)
@@ -73,8 +76,11 @@ class _SchieberState extends State<Schieber> {
         appBar: AppBar(
           title: BoardTitle(Board.schieber, context),
           actions: [
-            WhoIsNextButton(context, state.commonData,
-                [state.team[0].name, state.team[1].name], state.rounds()),
+            WhoIsNextButton(
+                context,
+                state.commonData,
+                [state.data.team[0].name, state.data.team[1].name],
+                state.data.rounds()),
             IconButton(
                 onPressed: () => _openStatistics(),
                 icon: const Icon(Icons.history)),
@@ -84,8 +90,13 @@ class _SchieberState extends State<Schieber> {
             IconButton(
                 onPressed: () => setState(() => state.reset()),
                 icon: const Icon(Icons.delete)),
-            SettingsButton(const SchieberSettingsScreen(), context,
-                () => setState(() => state.settings.fromPrefService(context))),
+            SettingsButton(
+                const SchieberSettingsScreen(),
+                context,
+                () => setState(() {
+                      developer.log('build', name: 'reload settings');
+                      state.data.settings.fromPrefService(context);
+                    })),
           ],
         ),
         body: Stack(children: [
@@ -93,8 +104,8 @@ class _SchieberState extends State<Schieber> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SchieberTeam(0, state, dialogs),
-                SchieberTeam(1, state, dialogs),
+                SchieberTeam(0, state.data, dialogs),
+                SchieberTeam(1, state.data, dialogs),
               ]),
           Center(child: goalPoints())
         ]));
@@ -104,12 +115,12 @@ class _SchieberState extends State<Schieber> {
   void _openStatistics() {}
 
   void _stringDialog(team) async {
-    var controller = TextEditingController(text: state.team[team].name);
+    var controller = TextEditingController(text: state.data.team[team].name);
 
     final input = await stringDialogBuilder(context, controller);
     if (input == null) return; // empty name not allowed
     setState(() {
-      state.team[team].name = input;
+      state.data.team[team].name = input;
       state.save();
     });
   }
@@ -128,29 +139,29 @@ class _SchieberState extends State<Schieber> {
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(
-        context, teamId, state.settings.pointsPerRound);
+        context, teamId, state.data.settings.pointsPerRound);
     if (input == null) {
       return; // empty name not allowed
     }
     setState(() {
-      state.team[0].add(input.points1);
-      state.team[1].add(input.points2);
+      state.data.team[0].add(input.points1);
+      state.data.team[1].add(input.points2);
       state.save();
     });
   }
 
   void _onTap(int teamId, int step) {
-    if (state.settings.touchScreen) {
-      if (state.settings.vibrate) {
+    if (state.data.settings.touchScreen) {
+      if (state.data.settings.vibrate) {
         Vibration.vibrate(duration: 50);
       }
       setState(() {
         if (step == -1) {
-          state.team[teamId].strokes[0]--;
+          state.data.team[teamId].strokes[0]--;
         } else {
-          state.team[teamId].strokes[step]++;
+          state.data.team[teamId].strokes[step]++;
         }
-        state.team[teamId].checkOverflow();
+        state.data.team[teamId].checkOverflow();
         state.save();
       });
     }

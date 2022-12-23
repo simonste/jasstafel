@@ -4,13 +4,14 @@ import 'package:jasstafel/coiffeur/dialog/coiffeurtypedialog.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurtypecell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurcell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurrow.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/pointsdialog.dart';
 import 'package:jasstafel/common/dialog/stringdialog.dart';
 import 'package:jasstafel/common/widgets/boardtitle.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
-
+import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'coiffeursettings.dart';
 import 'dart:developer' as developer;
 
@@ -22,10 +23,10 @@ class Coiffeur extends StatefulWidget {
 }
 
 class _CoiffeurState extends State<Coiffeur> {
-  var state = CoiffeurData();
+  var state = BoardData(CoiffeurData(), CoiffeurSettingsKeys().data);
 
   void restoreData() async {
-    state = await state.load() as CoiffeurData;
+    state = await state.load() as BoardData<CoiffeurData>;
     setState(() {}); // trigger widget update
   }
 
@@ -39,6 +40,9 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
+
+    state.data.settings.fromPrefService(context);
+
     return Scaffold(
       appBar: AppBar(
         title: BoardTitle(Board.coiffeur, context),
@@ -46,13 +50,17 @@ class _CoiffeurState extends State<Coiffeur> {
           WhoIsNextButton(
               context,
               state.commonData,
-              state.teamName.sublist(0, state.settings.threeTeams ? 3 : 2),
-              state.rounds()),
+              state.data.teamName
+                  .sublist(0, state.data.settings.threeTeams ? 3 : 2),
+              state.data.rounds()),
           IconButton(
               onPressed: () => setState(() => state.reset()),
               icon: const Icon(Icons.delete)),
-          SettingsButton(const CoiffeurSettingsScreen(), context,
-              () => setState(() => state.settings.fromPrefService(context))),
+          SettingsButton(
+              const CoiffeurSettingsScreen(),
+              context,
+              () =>
+                  setState(() => state.data.settings.fromPrefService(context))),
         ],
       ),
       body: Column(
@@ -63,7 +71,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
   List<CoiffeurRow> get _createRows {
     var list = [_createHeader];
-    for (var i = 0; i < state.settings.rows; i++) {
+    for (var i = 0; i < state.data.settings.rows; i++) {
       list.add(_createRow(i));
     }
     list.add(_createFooter);
@@ -73,7 +81,7 @@ class _CoiffeurState extends State<Coiffeur> {
   CoiffeurRow get _createHeader {
     Widget teamWidget(team) {
       return CoiffeurCell(
-        state.teamName[team],
+        state.data.teamName[team],
         onTap: () {
           _stringDialog(team);
         },
@@ -82,7 +90,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
     var cells = [
       CoiffeurCell(
-        context.l10n.noOfRounds(state.rounds()),
+        context.l10n.noOfRounds(state.data.rounds()),
         onTap: () {},
         leftBorder: false,
         textScaleFactor: 1.0,
@@ -99,9 +107,9 @@ class _CoiffeurState extends State<Coiffeur> {
       return "";
     }
 
-    if (state.settings.threeTeams) {
+    if (state.data.settings.threeTeams) {
       cells.add(teamWidget(2));
-    } else if (state.settings.thirdColumn) {
+    } else if (state.data.settings.thirdColumn) {
       cells.add(CoiffeurCell(
         durationString(),
         textScaleFactor: 1.0,
@@ -113,7 +121,7 @@ class _CoiffeurState extends State<Coiffeur> {
   CoiffeurRow _createRow(int i) {
     Widget teamWidget(team, row) {
       return CoiffeurPointsCell(
-        state.rows[row].pts[team],
+        state.data.rows[row].pts[team],
         onTap: () {
           _pointsDialog(team, row);
         },
@@ -122,18 +130,18 @@ class _CoiffeurState extends State<Coiffeur> {
 
     var cells = [
       CoiffeurTypeCell(
-        state.rows[i].factor,
-        state.rows[i].type,
+        state.data.rows[i].factor,
+        state.data.rows[i].type,
         context,
         onLongPress: () => _coiffeurTypeDialog(i),
       ),
       teamWidget(0, i),
       teamWidget(1, i),
     ];
-    if (state.settings.threeTeams) {
+    if (state.data.settings.threeTeams) {
       cells.add(teamWidget(2, i));
-    } else if (state.settings.thirdColumn) {
-      cells.add(CoiffeurPointsCell(state.diff(i)));
+    } else if (state.data.settings.thirdColumn) {
+      cells.add(CoiffeurPointsCell(state.data.diff(i)));
     }
 
     return CoiffeurRow(cells, topBorder: true);
@@ -148,12 +156,12 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      CoiffeurPointsCell(state.total(0)),
-      CoiffeurPointsCell(state.total(1)),
+      CoiffeurPointsCell(state.data.total(0)),
+      CoiffeurPointsCell(state.data.total(1)),
     ];
-    if (state.settings.threeTeams || state.settings.thirdColumn) {
+    if (state.data.settings.threeTeams || state.data.settings.thirdColumn) {
       cells.add(
-        CoiffeurPointsCell(state.total(2)),
+        CoiffeurPointsCell(state.data.total(2)),
       );
     }
 
@@ -161,43 +169,46 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   void _stringDialog(team) async {
-    var controller = TextEditingController(text: state.teamName[team]);
+    var controller = TextEditingController(text: state.data.teamName[team]);
 
     final input = await stringDialogBuilder(context, controller);
     if (input == null) return; // empty name not allowed
     setState(() {
-      state.teamName[team] = input;
+      state.data.teamName[team] = input;
       state.save();
     });
   }
 
   void _pointsDialog(team, row) async {
     var controller = TextEditingController();
-    controller.text = (state.rows[row].pts[team] ?? "").toString();
+    controller.text = (state.data.rows[row].pts[team] ?? "").toString();
 
     final input = await pointsDialogBuilder(context, controller);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      state.rows[row].pts[team] = input.value;
+      if (state.data.rounds() == 0) {
+        state.commonData.firstPoints();
+      }
+      state.data.rows[row].pts[team] = input.value;
       state.save();
     });
   }
 
   void _coiffeurTypeDialog(row) async {
-    var controller = TextEditingController(text: state.rows[row].type);
+    var controller = TextEditingController(text: state.data.rows[row].type);
 
-    var title = state.settings.customFactor
+    var title = state.data.settings.customFactor
         ? context.l10n.xRound(row + 1)
         : context.l10n.xTimes(row + 1);
 
     final input = await coiffeurTypeDialogBuilder(context, title, controller,
-        state.rows[row].factor, state.settings.customFactor);
+        state.data.rows[row].factor, state.data.settings.customFactor);
     if (input == null || input.factor == 0 || input.type.isEmpty) {
       return; // empty name not allowed
     }
     setState(() {
-      state.rows[row].factor = input.factor;
-      state.rows[row].type = input.type;
+      state.data.rows[row].factor = input.factor;
+      state.data.rows[row].type = input.type;
       state.save();
     });
   }

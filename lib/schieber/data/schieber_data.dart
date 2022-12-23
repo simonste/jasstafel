@@ -72,11 +72,11 @@ class TeamData {
   }
 }
 
-class SchieberData extends BoardData {
+class SchieberData implements SpecificData {
   var settings = SchieberSettings();
   var team = [TeamData("Team 1"), TeamData("Team 2")];
 
-  SchieberData() : super(SchieberSettings.keys.data);
+  SchieberData();
   @override
   void reset() {
     for (var t = 0; t < team.length; t++) {
@@ -84,7 +84,6 @@ class SchieberData extends BoardData {
         team[t].strokes[s] = 0;
       }
     }
-    super.reset();
   }
 
   @override
@@ -99,6 +98,7 @@ class SchieberData extends BoardData {
     }
   }
 
+  @override
   int rounds() {
     return 0;
   }

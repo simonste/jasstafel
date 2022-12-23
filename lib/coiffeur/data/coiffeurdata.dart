@@ -38,12 +38,12 @@ class RowSettings {
   }
 }
 
-class CoiffeurData extends BoardData {
+class CoiffeurData implements SpecificData {
   var settings = CoiffeurSettings();
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
 
-  CoiffeurData() : super(CoiffeurSettings.keys.data) {
+  CoiffeurData() {
     assert(settings.rows <= rows.length);
 
     rows[0] = (RowSettings(1, "Eicheln"));
@@ -66,7 +66,6 @@ class CoiffeurData extends BoardData {
     for (var row in rows) {
       row.reset();
     }
-    super.reset();
   }
 
   int total(team) {
@@ -96,6 +95,7 @@ class CoiffeurData extends BoardData {
     return row.factor * (row.pts[0]! - row.pts[1]!);
   }
 
+  @override
   int rounds() {
     int rounds = 0;
     var teams = settings.threeTeams ? 3 : 2;
