@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:pref/pref.dart';
@@ -23,6 +24,28 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefCheckbox(
             title: Text(context.l10n.denominator10),
             pref: CoiffeurSettings.keys.rounded),
+        PrefNumber(
+          title: Text(context.l10n.matchPoints),
+          pref: CoiffeurSettings.keys.match,
+        ),
+        PrefCheckbox(
+          title: Text(context.l10n.matchBonus),
+          pref: CoiffeurSettings.keys.bonus,
+          onChange: (value) {},
+        ),
+        PrefHider(
+          pref: CoiffeurSettings.keys.bonus,
+          children: [
+            PrefNumber(
+                title: Text(context.l10n.matchBonusVal),
+                pref: CoiffeurSettings.keys.bonusValue),
+            PrefNumber(
+                title: Text(context.l10n.matchMalusVal),
+                pref: CoiffeurSettings.keys.counterLoss)
+          ],
+        ),
+
+        //
         PrefTitle(title: Text(context.l10n.settings)),
         PrefCheckbox(
             title: Text(context.l10n.threeTeams),
@@ -45,6 +68,8 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefCheckbox(
             title: Text(context.l10n.setFactorManually),
             pref: CoiffeurSettings.keys.customFactor),
+
+        //
         PrefTitle(title: Text(context.l10n.commonSettings)),
         PrefCheckbox(
             title: Text(context.l10n.keepScreenOn),

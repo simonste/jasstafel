@@ -121,7 +121,8 @@ class _CoiffeurState extends State<Coiffeur> {
   CoiffeurRow _createRow(int i) {
     Widget teamWidget(team, row) {
       return CoiffeurPointsCell(
-        state.data.rows[row].pts[team],
+        state.data.points(row, team),
+        match: state.data.match(row, team),
         onTap: () {
           _pointsDialog(team, row);
         },

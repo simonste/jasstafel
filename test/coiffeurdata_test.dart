@@ -46,4 +46,55 @@ void main() {
     data.rows[2].pts[1] = 111;
     expect(data.diff(2), 3 * -11);
   });
+
+  test('rounded', () {
+    var data = CoiffeurData();
+    data.settings.rounded = true;
+
+    data.rows[0].pts[1] = 57;
+    data.rows[2].pts[0] = 105;
+    data.rows[2].pts[1] = 60;
+
+    expect(data.diff(2), 3 * 5);
+
+    data.rows[2].pts[1] = 112;
+    expect(data.diff(2), 0);
+  });
+
+  test('bonus', () {
+    var data = CoiffeurData();
+    data.settings.match = 257;
+    data.settings.bonus = true;
+    data.settings.bonusValue = 500;
+
+    data.rows[0].pts[0] = 60;
+    data.rows[0].pts[1] = 88;
+    data.rows[2].pts[0] = 257;
+    data.rows[2].pts[1] = 60;
+
+    expect(data.points(2, 0), 257);
+    expect(data.match(2, 0), true);
+    expect(data.diff(2), 3 * 97 + 500);
+    expect(data.total(0), 60 + 3 * 157 + 500);
+    expect(data.total(2), -28 + 3 * 97 + 500);
+  });
+
+  test('bonus rounded', () {
+    var data = CoiffeurData();
+    data.settings.match = 257;
+    data.settings.bonus = true;
+    data.settings.bonusValue = 300;
+    data.settings.rounded = true;
+
+    data.rows[0].pts[0] = 60;
+    data.rows[0].pts[1] = 88;
+    data.rows[2].pts[0] = 257;
+    data.rows[2].pts[1] = 60;
+
+    expect(data.points(2, 0), 26);
+    expect(data.match(2, 0), true);
+    expect(data.diff(2), 3 * 10 + 30);
+    expect(data.total(0), 6 + 3 * 16 + 30);
+    expect(data.total(2), -3 + 3 * 10 + 30);
+  });
 }

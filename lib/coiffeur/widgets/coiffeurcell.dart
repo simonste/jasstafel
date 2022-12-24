@@ -48,10 +48,17 @@ class CoiffeurCell extends Expanded {
 
 class CoiffeurPointsCell extends CoiffeurCell {
   CoiffeurPointsCell(int? pts,
-      {super.key, super.onTap, super.textScaleFactor, super.leftBorder})
-      : super(_getString(pts));
+      {bool match = false,
+      super.key,
+      super.onTap,
+      super.textScaleFactor,
+      super.leftBorder})
+      : super(_getString(pts, match));
 
-  static String _getString(int? pts) {
+  static String _getString(int? pts, bool match) {
+    if (match) {
+      return "MATCH";
+    }
     if (pts != null) {
       return pts.toString();
     }

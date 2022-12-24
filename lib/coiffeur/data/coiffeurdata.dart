@@ -73,7 +73,10 @@ class CoiffeurData implements SpecificData {
     int sum = 0;
     for (var row in rows) {
       if (row.pts[team] != null) {
-        sum += row.factor * row.pts[team]!;
+        sum += row.factor * _pts(row, team)!;
+        if (settings.bonus && row.pts[team]! == settings.match) {
+          sum += _bonus(row.factor);
+        }
       } else if (team == 2 &&
           !settings.threeTeams &&
           row.pts[0] != null &&
@@ -91,8 +94,46 @@ class CoiffeurData implements SpecificData {
     return null;
   }
 
-  int _rowDiff(row) {
-    return row.factor * (row.pts[0]! - row.pts[1]!);
+  int? points(int rowNumber, int team) {
+    return _pts(rows[rowNumber], team);
+  }
+
+  bool match(int rowNumber, int team) {
+    return settings.bonus && rows[rowNumber].pts[team] == settings.match;
+  }
+
+  int _rowDiff(RowSettings row) {
+    var diff = row.factor * (_pts(row, 0)! - _pts(row, 1)!);
+    if (settings.bonus) {
+      if (row.pts[0] == settings.match) {
+        diff += _bonus(row.factor);
+      }
+      if (row.pts[1] == settings.match) {
+        diff -= _bonus(row.factor);
+      }
+    }
+    return diff;
+  }
+
+  int _bonus(int factor) {
+    if (settings.bonus) {
+      assert(settings.match == 257);
+      final bonus = settings.bonusValue - 100 * factor;
+      if (settings.rounded) {
+        return (bonus / 10).round();
+      } else {
+        return bonus;
+      }
+    }
+    return 0;
+  }
+
+  int? _pts(RowSettings row, int team) {
+    final pts = row.pts[team];
+    if (pts != null && settings.rounded) {
+      return (pts / 10).round();
+    }
+    return pts;
   }
 
   @override
