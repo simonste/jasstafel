@@ -48,16 +48,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getLastOpenedBoard() {
-      final lastBoard = Board
-          .values[PrefService.of(context).get(CommonSettings.keys.lastBoard)];
-      switch (lastBoard) {
-        case Board.coiffeur:
-          return const Coiffeur();
-        case Board.schieber:
-          return const Schieber();
-      }
-    }
+    final lastBoard = Board
+        .values[PrefService.of(context).get(CommonSettings.keys.lastBoard)]
+        .name;
 
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.app_name,
@@ -69,7 +62,11 @@ class MyApp extends StatelessWidget {
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },
-      home: getLastOpenedBoard(),
+      routes: {
+        Board.schieber.name: (context) => const Schieber(),
+        Board.coiffeur.name: (context) => const Coiffeur()
+      },
+      initialRoute: lastBoard,
     );
   }
 }
