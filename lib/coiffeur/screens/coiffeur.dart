@@ -50,7 +50,6 @@ class _CoiffeurState extends State<Coiffeur> {
         actions: [
           WhoIsNextButton(
               context,
-              state.commonData,
               state.data.teamName
                   .sublist(0, state.data.settings.threeTeams ? 3 : 2),
               state.data.rounds()),

@@ -80,7 +80,6 @@ class _SchieberState extends State<Schieber> {
           actions: [
             WhoIsNextButton(
                 context,
-                state.commonData,
                 [state.data.team[0].name, state.data.team[1].name],
                 state.data.rounds()),
             SchieberHistoryButton(context, state.data),

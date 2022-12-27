@@ -18,7 +18,13 @@ class BoardData<T extends SpecificData> {
   void reset() {
     commonData.reset();
     data.reset();
+    _resetWhoIsNext();
     save();
+  }
+
+  void _resetWhoIsNext() async {
+    final preferences = await SharedPreferences.getInstance();
+    preferences.remove("RoundOffset");
   }
 
   void save() async {
