@@ -1,4 +1,4 @@
-import 'package:jasstafel/common/data/commondata.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class SpecificData {
@@ -33,7 +33,7 @@ class BoardData<T extends SpecificData> {
     var s = await SharedPreferences.getInstance();
 
     var str = s.getString(dataKey);
-    if (str != null) {
+    if (str != null && str.isNotEmpty) {
       var d = str.split(';');
       d.removeLast();
 

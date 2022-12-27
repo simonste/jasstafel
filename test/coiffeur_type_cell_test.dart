@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurtypecell.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
 
 import 'helper/testapp.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurtypeimage.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_type_image.dart';
 
 class CoiffeurTypeCell extends Expanded {
   final GestureLongPressCallback? onLongPress;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jasstafel/common/data/commondata.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class WhoIsNextButton extends IconButton {

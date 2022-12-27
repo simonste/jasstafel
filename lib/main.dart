@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';

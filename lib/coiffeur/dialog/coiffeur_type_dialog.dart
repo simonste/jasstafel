@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurtypeimage.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_type_image.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurType {

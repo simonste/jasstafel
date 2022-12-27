@@ -1,4 +1,4 @@
-import 'package:jasstafel/coiffeur/data/coiffeurdata.dart';
+import 'package:jasstafel/coiffeur/data/coiffeur_data.dart';
 import 'package:test/test.dart';
 
 void main() {

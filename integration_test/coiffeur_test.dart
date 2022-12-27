@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,8 @@ void main() {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, "de");
+    await preferences.setInt(
+        CommonSettings.keys.lastBoard, Board.coiffeur.index);
   });
   testWidgets('first test', (tester) async {
     app.main();

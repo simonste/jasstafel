@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
-import 'package:jasstafel/common/dialog/pointsdialog.dart';
-import 'package:jasstafel/common/dialog/stringdialog.dart';
-import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/dialog/points_dialog.dart';
+import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/schieber/data/schieber_data.dart';

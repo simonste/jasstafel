@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jasstafel/coiffeur/data/coiffeurdata.dart';
-import 'package:jasstafel/coiffeur/dialog/coiffeurtypedialog.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurtypecell.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurcell.dart';
-import 'package:jasstafel/coiffeur/widgets/coiffeurrow.dart';
+import 'package:jasstafel/coiffeur/data/coiffeur_data.dart';
+import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_row.dart';
 import 'package:jasstafel/common/data/board_data.dart';
-import 'package:jasstafel/common/dialog/pointsdialog.dart';
-import 'package:jasstafel/common/dialog/stringdialog.dart';
-import 'package:jasstafel/common/widgets/boardtitle.dart';
+import 'package:jasstafel/common/dialog/points_dialog.dart';
+import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
-import 'coiffeursettings.dart';
+import 'coiffeur_settings.dart';
 import 'dart:developer' as developer;
 
 class Coiffeur extends StatefulWidget {
