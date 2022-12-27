@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/coiffeur/data/coiffeurdata.dart';
 import 'package:jasstafel/coiffeur/dialog/coiffeurtypedialog.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeurtypecell.dart';
@@ -123,6 +124,7 @@ class _CoiffeurState extends State<Coiffeur> {
       return CoiffeurPointsCell(
         state.data.points(row, team),
         match: state.data.match(row, team),
+        scratch: state.data.rows[row].scratched(team),
         onTap: () {
           _pointsDialog(team, row);
         },
@@ -182,15 +184,55 @@ class _CoiffeurState extends State<Coiffeur> {
 
   void _pointsDialog(team, row) async {
     var controller = TextEditingController();
-    controller.text = (state.data.rows[row].pts[team] ?? "").toString();
+    if (state.data.points(row, team) == null ||
+        state.data.rows[row].scratched(team)) {
+      controller.text = "";
+    } else {
+      controller.text = state.data.rows[row].pts[team].toString();
+    }
 
-    final input = await pointsDialogBuilder(context, controller);
+    var titleWidget = SizedBox(
+        height: 32,
+        child: Row(children: [
+          Text(context.l10n.points),
+          const Expanded(child: SizedBox.expand()),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(IntValue(null, scratch: true));
+                  },
+                  child: SvgPicture.asset("assets/actions/scratch.svg"))),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    controller.text = state.data.settings.match.toString();
+                  },
+                  child: SvgPicture.asset("assets/actions/match.svg"))),
+          Expanded(
+              child: InkWell(
+                  onTap: () {
+                    try {
+                      controller.text =
+                          (157 - int.parse(controller.text)).toString();
+                    } on FormatException {
+                      controller.text = "157";
+                    }
+                  },
+                  child: SvgPicture.asset("assets/actions/157-x.svg")))
+        ]));
+
+    final input =
+        await pointsDialogBuilder(context, controller, title: titleWidget);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
       if (state.data.rounds() == 0) {
         state.commonData.firstPoints();
       }
-      state.data.rows[row].pts[team] = input.value;
+      if (input.scratch) {
+        state.data.rows[row].scratch(team);
+      } else {
+        state.data.rows[row].pts[team] = input.value;
+      }
       state.save();
     });
   }

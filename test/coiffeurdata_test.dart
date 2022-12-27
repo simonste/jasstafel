@@ -97,4 +97,15 @@ void main() {
     expect(data.total(0), 6 + 3 * 16 + 30);
     expect(data.total(2), -3 + 3 * 10 + 30);
   });
+
+  test('scratch', () {
+    var data = CoiffeurData();
+    data.rows[0].pts[0] = 60;
+    data.rows[2].pts[1] = 60;
+    data.rows[2].scratch(0);
+
+    expect(data.rounds(), 3);
+    expect(data.total(0), 60);
+    expect(data.diff(2), -3 * 60);
+  });
 }

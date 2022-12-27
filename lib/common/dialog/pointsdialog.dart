@@ -3,12 +3,16 @@ import 'package:jasstafel/common/localization.dart';
 
 class IntValue {
   int? value;
+  bool scratch;
 
-  IntValue(this.value);
+  IntValue(this.value, {this.scratch = false});
 }
 
 Future<IntValue?> pointsDialogBuilder(
-    BuildContext context, TextEditingController controller) {
+    BuildContext context, TextEditingController controller,
+    {Widget? title}) {
+  title ??= Text(context.l10n.points);
+
   return showDialog<IntValue>(
     context: context,
     builder: (BuildContext context) {
@@ -21,7 +25,7 @@ Future<IntValue?> pointsDialogBuilder(
       }
 
       return AlertDialog(
-        title: Text(context.l10n.points),
+        title: title,
         content: TextField(
             decoration: InputDecoration(hintText: context.l10n.points),
             autofocus: true,

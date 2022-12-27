@@ -36,6 +36,14 @@ class RowSettings {
       pts[i] = null;
     }
   }
+
+  bool scratched(int team) {
+    return pts[team] == -3513;
+  }
+
+  void scratch(int team) {
+    pts[team] = -3513;
+  }
 }
 
 class CoiffeurData implements SpecificData {
@@ -72,7 +80,7 @@ class CoiffeurData implements SpecificData {
     assert(team < 3);
     int sum = 0;
     for (var row in rows) {
-      if (row.pts[team] != null) {
+      if (_pts(row, team) != null) {
         sum += row.factor * _pts(row, team)!;
         if (settings.bonus && row.pts[team]! == settings.match) {
           sum += _bonus(row.factor);
@@ -117,7 +125,7 @@ class CoiffeurData implements SpecificData {
 
   int _bonus(int factor) {
     if (settings.bonus) {
-      assert(settings.match == 257);
+      // assert(settings.match == 257);
       final bonus = settings.bonusValue - 100 * factor;
       if (settings.rounded) {
         return (bonus / 10).round();
@@ -130,6 +138,9 @@ class CoiffeurData implements SpecificData {
 
   int? _pts(RowSettings row, int team) {
     final pts = row.pts[team];
+    if (row.scratched(team)) {
+      return 0;
+    }
     if (pts != null && settings.rounded) {
       return (pts / 10).round();
     }

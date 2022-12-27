@@ -9,27 +9,43 @@ class CoiffeurCell extends Expanded {
     this.onTap,
     textScaleFactor = 2.0,
     leftBorder = true,
-  }) : super(child: _createChild(text, onTap, textScaleFactor, leftBorder));
+    scratch = false,
+  }) : super(
+            child: _createChild(
+                text, onTap, textScaleFactor, leftBorder, scratch));
 
-  static BoxDecoration border(leftBorder) {
+  static BoxDecoration border(leftBorder, scratch) {
     if (leftBorder) {
-      return const BoxDecoration(
-          border: Border(
-        left: BorderSide(
-          color: Colors.white,
-        ),
+      var border = const Border(
+          left: BorderSide(
+        color: Colors.white,
       ));
+
+      if (scratch) {
+        return BoxDecoration(
+          image: const DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage("assets/images/scratch.png"),
+          ),
+          border: border,
+        );
+      }
+
+      return BoxDecoration(
+        border: border,
+      );
     }
     return const BoxDecoration();
   }
 
-  static Widget _createChild(String name, onTap, textScaleFactor, leftBorder) {
+  static Widget _createChild(
+      String name, onTap, textScaleFactor, leftBorder, scratch) {
     if (onTap != null) {
       return InkWell(
           onTap: onTap,
           child: Container(
               alignment: Alignment.center,
-              decoration: border(leftBorder),
+              decoration: border(leftBorder, scratch),
               child: Text(
                 name,
                 textScaleFactor: textScaleFactor,
@@ -37,7 +53,7 @@ class CoiffeurCell extends Expanded {
     } else {
       return Container(
           alignment: Alignment.center,
-          decoration: border(leftBorder),
+          decoration: border(leftBorder, scratch),
           child: Text(
             name,
             textScaleFactor: textScaleFactor,
@@ -49,13 +65,17 @@ class CoiffeurCell extends Expanded {
 class CoiffeurPointsCell extends CoiffeurCell {
   CoiffeurPointsCell(int? pts,
       {bool match = false,
+      bool scratch = false,
       super.key,
       super.onTap,
       super.textScaleFactor,
       super.leftBorder})
-      : super(_getString(pts, match));
+      : super(_getString(pts, match, scratch), scratch: scratch);
 
-  static String _getString(int? pts, bool match) {
+  static String _getString(int? pts, bool match, bool scratch) {
+    if (scratch) {
+      return "";
+    }
     if (match) {
       return "MATCH";
     }
