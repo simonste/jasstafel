@@ -84,7 +84,7 @@ class SchieberTeam extends StatelessWidget {
         top: top3,
         left: hMargin,
         child: GestureDetector(
-            onTap: () => dialogs.onTap(teamId, 1),
+            onTap: () => dialogs.onTap(teamId, 20),
             child: SchieberStrokes(
                 StrokeType.I, teamData.strokes[1], data.settings.bigScore)),
       );
@@ -92,7 +92,7 @@ class SchieberTeam extends StatelessWidget {
 
     strokes50() {
       var strokesBox = GestureDetector(
-          onTap: () => dialogs.onTap(teamId, 2),
+          onTap: () => dialogs.onTap(teamId, 50),
           child: SchieberStrokes(
               StrokeType.X, teamData.strokes[2], data.settings.bigScore));
 
@@ -131,7 +131,7 @@ class SchieberTeam extends StatelessWidget {
         top: top1,
         left: hMargin,
         child: GestureDetector(
-            onTap: () => dialogs.onTap(teamId, 3),
+            onTap: () => dialogs.onTap(teamId, 100),
             child:
                 SchieberStrokes(StrokeType.I, strokes, data.settings.bigScore)),
       );
@@ -162,7 +162,7 @@ class SchieberTeam extends StatelessWidget {
             right: hMargin,
             width: numberWidth,
             child: GestureDetector(
-              onTap: () => dialogs.onTap(teamId, 0),
+              onTap: () => dialogs.onTap(teamId, 1),
               child: Center(
                   child: Text(
                 "${teamData.strokes[0]}",

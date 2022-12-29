@@ -7,10 +7,12 @@ import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/schieber/data/schieber_data.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
+import 'package:jasstafel/schieber/dialog/schieber_history.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:vibration/vibration.dart';
+
 import 'dart:developer' as developer;
 
 class Schieber extends StatefulWidget {
@@ -81,11 +83,9 @@ class _SchieberState extends State<Schieber> {
                 state.commonData,
                 [state.data.team[0].name, state.data.team[1].name],
                 state.data.rounds()),
+            SchieberHistoryButton(context, state.data),
             IconButton(
                 onPressed: () => _openStatistics(),
-                icon: const Icon(Icons.history)),
-            IconButton(
-                onPressed: () => _openHistory(),
                 icon: const Icon(Icons.bar_chart)),
             IconButton(
                 onPressed: () => setState(() => state.reset()),
@@ -93,10 +93,8 @@ class _SchieberState extends State<Schieber> {
             SettingsButton(
                 const SchieberSettingsScreen(),
                 context,
-                () => setState(() {
-                      developer.log('build', name: 'reload settings');
-                      state.data.settings.fromPrefService(context);
-                    })),
+                () => setState(
+                    () => state.data.settings.fromPrefService(context))),
           ],
         ),
         body: Stack(children: [
@@ -111,7 +109,6 @@ class _SchieberState extends State<Schieber> {
         ]));
   }
 
-  void _openHistory() {}
   void _openStatistics() {}
 
   void _stringDialog(team) async {
@@ -144,22 +141,21 @@ class _SchieberState extends State<Schieber> {
       return; // empty name not allowed
     }
     setState(() {
-      state.data.team[0].add(input.points1);
-      state.data.team[1].add(input.points2);
+      state.data.add(input.points1, input.points2);
       state.save();
     });
   }
 
-  void _onTap(int teamId, int step) {
+  void _onTap(int teamId, int pts) {
     if (state.data.settings.touchScreen) {
       if (state.data.settings.vibrate) {
         Vibration.vibrate(duration: 50);
       }
       setState(() {
-        if (step == -1) {
-          state.data.team[teamId].strokes[0]--;
+        if (teamId == 0) {
+          state.data.add(pts, 0);
         } else {
-          state.data.team[teamId].strokes[step]++;
+          state.data.add(0, pts);
         }
         state.data.team[teamId].checkOverflow();
         state.save();

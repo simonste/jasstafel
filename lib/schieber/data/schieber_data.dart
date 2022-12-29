@@ -3,6 +3,39 @@ import 'dart:math';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
+class SchieberRound {
+  DateTime time = DateTime.now();
+  var pts = [0, 0];
+
+  SchieberRound(this.pts);
+
+  bool isRound() {
+    return false;
+  }
+
+  @override
+  String toString() {
+    return "$time,${pts[0]},${pts[1]};";
+  }
+
+  void fromString(String str) {
+    final values = str.split(",");
+    try {
+      time = DateTime.parse(values[0]);
+    } on FormatException {
+      //
+    }
+    final pt = values.sublist(1);
+    for (var i = 0; i < pt.length; i++) {
+      try {
+        pts[i] = int.parse(pt[i]);
+      } on FormatException {
+        pts[i] = 0;
+      }
+    }
+  }
+}
+
 class TeamData {
   String name;
   int points = 0;
@@ -14,23 +47,11 @@ class TeamData {
 
   @override
   String toString() {
-    String str = "$name,";
-    for (var stroke in strokes) {
-      str += "$stroke,";
-    }
-    return str;
+    return name;
   }
 
   void fromString(String str) {
-    var values = str.split(',');
-    name = values[0];
-    for (var i = 0; i < strokes.length; i++) {
-      try {
-        strokes[i] = int.parse(values[i + 1]);
-      } on FormatException {
-        strokes[i] = 0;
-      }
-    }
+    name = str;
   }
 
   int sum() {
@@ -75,6 +96,7 @@ class TeamData {
 class SchieberData implements SpecificData {
   var settings = SchieberSettings();
   var team = [TeamData("Team 1"), TeamData("Team 2")];
+  final List<SchieberRound> _rounds = [];
 
   SchieberData();
   @override
@@ -84,11 +106,23 @@ class SchieberData implements SpecificData {
         team[t].strokes[s] = 0;
       }
     }
+    _rounds.clear();
+  }
+
+  void add(pts1, pts2) {
+    final round = SchieberRound([pts1, pts2]);
+    _rounds.add(round);
+    team[0].add(pts1);
+    team[1].add(pts2);
   }
 
   @override
   String dump() {
-    return "${team[0]};${team[1]};";
+    var str = "${team[0]};${team[1]};";
+    for (var round in _rounds) {
+      str += round.toString();
+    }
+    return str;
   }
 
   @override
@@ -96,10 +130,28 @@ class SchieberData implements SpecificData {
     for (var i = 0; i < team.length; i++) {
       team[i].fromString(data[i]);
     }
+    for (var str in data.sublist(team.length)) {
+      final round = SchieberRound([0, 0]);
+      round.fromString(str);
+      _rounds.add(round);
+      for (var i = 0; i < team.length; i++) {
+        team[i].add(round.pts[i]);
+      }
+    }
   }
 
   @override
   int rounds() {
-    return 0;
+    int rounds = 0;
+    for (var round in _rounds) {
+      if (round.isRound()) {
+        rounds++;
+      }
+    }
+    return rounds;
+  }
+
+  List<SchieberRound> getHistory() {
+    return _rounds;
   }
 }
