@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
 import 'helper/testapp.dart';
@@ -13,7 +14,8 @@ void main() {
   testWidgets('who is next', (WidgetTester tester) async {
     await tester.pumpWidget(
         JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return const WhoIsNextWidget(['1', '2', '3', '4'], 0);
+      return WhoIsNextWidget(
+          WhoIsNextData(['1', '2', '3', '4'], 0, WhoIsNext(), () {}));
     })));
 
     expectTextColor(tester, '1', Colors.white);

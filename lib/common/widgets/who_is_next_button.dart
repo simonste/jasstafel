@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
 class WhoIsNextButton extends IconButton {
   WhoIsNextButton(BuildContext context, List<String> teams, int rounds,
+      WhoIsNext whoIsNext, Function saveFunction,
       {bool playerNames = false, super.key})
       : super(
             onPressed: () {
               var players = playerNames ? teams : guessPlayerNames(teams);
-              dialogBuilder(context, players, rounds);
+              dialogBuilder(context,
+                  WhoIsNextData(players, rounds, whoIsNext, saveFunction));
             },
             icon: SvgPicture.asset("assets/actions/who_is_next.svg"));
 
@@ -71,8 +74,7 @@ class WhoIsNextButton extends IconButton {
   }
 }
 
-Future<void> dialogBuilder(
-    BuildContext context, List<String> players, int rounds) {
+Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
   return showDialog<void>(
       context: context,
       builder: (context) {
@@ -83,8 +85,8 @@ Future<void> dialogBuilder(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(context.l10n.noOfRounds(rounds)),
-                  WhoIsNextWidget(players, rounds),
+                  Text(context.l10n.noOfRounds(whoIsNextData.rounds)),
+                  WhoIsNextWidget(whoIsNextData),
                   Text(
                     context.l10n.whoBeginsInfo,
                     style: const TextStyle(fontWeight: FontWeight.w100),
@@ -99,7 +101,7 @@ Future<void> dialogBuilder(
                   ),
                   child: Text(context.l10n.ok),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(WhoIsNext());
                   },
                 ),
               ],

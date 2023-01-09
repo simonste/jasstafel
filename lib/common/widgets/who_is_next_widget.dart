@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 // cspell: disable-next
 import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/swap_map.dart';
 
-class WhoIsNextWidget extends StatefulWidget {
-  final List<String> players;
-  final int rounds;
+class WhoIsNextData {
+  List<String> players;
+  int rounds;
+  WhoIsNext whoIsNext;
+  Function saveFunction;
 
-  const WhoIsNextWidget(this.players, this.rounds, {super.key});
+  WhoIsNextData(this.players, this.rounds, this.whoIsNext, this.saveFunction);
+}
+
+class WhoIsNextWidget extends StatefulWidget {
+  final WhoIsNextData data;
+
+  const WhoIsNextWidget(this.data, {super.key});
 
   @override
   State<WhoIsNextWidget> createState() => _WhoIsNextWidget();
@@ -17,16 +26,10 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
   int players = 4;
   late SwapMap swapMap;
 
-  void restoreData() async {
-    await swapMap.restore(widget.rounds);
-    setState(() {});
-  }
-
   @override
   void initState() {
-    players = widget.players.length;
-    swapMap = SwapMap(widget.players);
-    restoreData();
+    players = widget.data.players.length;
+    swapMap = SwapMap(widget.data);
     super.initState();
   }
 
@@ -42,7 +45,10 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
               key: key,
               color: Colors.black12,
               child: InkWell(
-                  onLongPress: () => setState(() => swapMap.select(key)),
+                  onLongPress: () => setState(() {
+                        swapMap.select(key);
+                        widget.data.saveFunction();
+                      }),
                   child: SizedBox(
                       height: cardWidth,
                       width: cardWidth,
@@ -65,6 +71,7 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
                   .toList();
 
               swapMap.set(newList);
+              widget.data.saveFunction();
               setState(() {});
             },
             dragPlaceHolder: (List<DraggableGridItem> list, int index) {

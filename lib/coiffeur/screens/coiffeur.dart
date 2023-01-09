@@ -52,7 +52,9 @@ class _CoiffeurState extends State<Coiffeur> {
               context,
               state.data.teamName
                   .sublist(0, state.data.settings.threeTeams ? 3 : 2),
-              state.data.rounds()),
+              state.data.rounds(),
+              state.commonData.whoIsNext,
+              () => state.save()),
           IconButton(
               onPressed: () => setState(() => state.reset()),
               icon: const Icon(Icons.delete)),
@@ -100,7 +102,7 @@ class _CoiffeurState extends State<Coiffeur> {
     ];
 
     String durationString() {
-      var dur = state.commonData.duration();
+      var dur = state.commonData.timestamps.duration();
       if (dur != null) {
         return context.l10n.duration(dur);
       }

@@ -81,7 +81,9 @@ class _SchieberState extends State<Schieber> {
             WhoIsNextButton(
                 context,
                 [state.data.team[0].name, state.data.team[1].name],
-                state.data.rounds()),
+                state.data.rounds(),
+                state.commonData.whoIsNext,
+                () => state.save()),
             SchieberHistoryButton(context, state.data),
             IconButton(
                 onPressed: () => _openStatistics(),

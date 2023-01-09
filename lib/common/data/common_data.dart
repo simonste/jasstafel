@@ -1,20 +1,6 @@
-class CommonData {
+class Timestamps {
   DateTime? startTime;
   DateTime? finishTime;
-
-  int whoBeginsOffset = 0;
-
-  void reset() {
-    startTime = DateTime.now();
-    finishTime = null;
-  }
-
-  void firstPoints() {
-    if (startTime == null ||
-        DateTime.now().difference(startTime!).inMinutes < 10) {
-      reset();
-    }
-  }
 
   int? duration() {
     int minutes = 1000;
@@ -31,23 +17,52 @@ class CommonData {
     }
     return null;
   }
+}
+
+class WhoIsNext {
+  String swapPlayers = "";
+  int? whoBeginsOffset;
+}
+
+class CommonData {
+  Timestamps timestamps = Timestamps();
+  WhoIsNext whoIsNext = WhoIsNext();
+
+  void reset() {
+    timestamps.startTime = DateTime.now();
+    timestamps.finishTime = null;
+    whoIsNext.whoBeginsOffset = null;
+  }
+
+  void firstPoints() {
+    if (timestamps.startTime == null ||
+        DateTime.now().difference(timestamps.startTime!).inMinutes < 10) {
+      reset();
+    }
+  }
 
   String dump() {
-    return "$startTime,$finishTime;";
+    return "${timestamps.startTime}|${timestamps.finishTime}|${whoIsNext.swapPlayers}|${whoIsNext.whoBeginsOffset};";
   }
 
   void restore(String str) {
-    var values = str.split(',');
+    var values = str.split('|');
 
     try {
-      startTime = DateTime.parse(values[0]);
+      timestamps.startTime = DateTime.parse(values[0]);
     } on FormatException {
-      startTime = null;
+      timestamps.startTime = null;
     }
     try {
-      finishTime = DateTime.parse(values[1]);
+      timestamps.finishTime = DateTime.parse(values[1]);
     } on FormatException {
-      finishTime = null;
+      timestamps.finishTime = null;
+    }
+    whoIsNext.swapPlayers = values[2];
+    try {
+      whoIsNext.whoBeginsOffset = int.parse(values[3]);
+    } on FormatException {
+      whoIsNext.whoBeginsOffset = null;
     }
   }
 }

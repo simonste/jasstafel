@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jasstafel/common/data/common_data.dart';
+import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
 class SwapMap {
-  final List<String> _players;
-  int rounds = 0;
+  final WhoIsNextData _data;
   List _list;
   int? selected; // index of _list
 
@@ -16,13 +16,31 @@ class SwapMap {
   // 1 4
   // 2 3
 
-  SwapMap(this._players) : _list = _defaultList(_players.length);
+  SwapMap.simple(List<String> pl)
+      : _data = WhoIsNextData(pl, 0, WhoIsNext(), () {}),
+        _list = _defaultList(pl.length);
+
+  SwapMap(this._data) : _list = _defaultList(_data.players.length) {
+    try {
+      _list = json.decode(_data.whoIsNext.swapPlayers).cast<int>();
+    } catch (e) {
+      _list = _defaultList(_data.players.length);
+    }
+    if (_list.length != _data.players.length) {
+      _list = _defaultList(_data.players.length);
+    }
+    if (_data.whoIsNext.whoBeginsOffset != null) {
+      var selectedPlayer = (_data.rounds + _data.whoIsNext.whoBeginsOffset!) %
+          _data.players.length;
+      selected = _defaultList(_data.players.length).indexOf(selectedPlayer);
+    }
+  }
 
   List<String> _reorder() {
-    List<String> newList = List.from(_players);
+    List<String> newList = List.from(_data.players);
 
-    for (var i = 0; i < _players.length; i++) {
-      newList[i] = _players[_list[i]];
+    for (var i = 0; i < _data.players.length; i++) {
+      newList[i] = _data.players[_list[i]];
     }
     return newList;
   }
@@ -31,7 +49,7 @@ class SwapMap {
     var newList = _reorder();
 
     Map<Key, Widget> map = {};
-    for (var i = 0; i < _players.length; i++) {
+    for (var i = 0; i < _data.players.length; i++) {
       map.putIfAbsent(
           Key("${_list[i]}"),
           () => Text(newList[i],
@@ -56,35 +74,15 @@ class SwapMap {
     _save();
   }
 
-  Future<void> _save() async {
-    final preferences = await SharedPreferences.getInstance();
+  void _save() {
     if (selected == null) {
-      preferences.remove("RoundOffset");
+      _data.whoIsNext.whoBeginsOffset = null;
     } else {
-      var selectedPlayer = _defaultList(_players.length)[selected!];
-      var roundOffset = selectedPlayer - rounds;
-      preferences.setInt("RoundOffset", roundOffset);
+      var selectedPlayer = _defaultList(_data.players.length)[selected!];
+      var roundOffset = selectedPlayer - _data.rounds;
+      _data.whoIsNext.whoBeginsOffset = roundOffset;
     }
-    preferences.setString("SwapPlayers", _list.toString());
-  }
-
-  Future<void> restore(int rounds) async {
-    this.rounds = rounds;
-    final preferences = await SharedPreferences.getInstance();
-    var swap = preferences.getString("SwapPlayers") ?? "";
-    try {
-      _list = json.decode(swap).cast<int>();
-    } catch (e) {
-      _list = _defaultList(_players.length);
-    }
-    if (_list.length != _players.length) {
-      _list = _defaultList(_players.length);
-    }
-    final roundOffset = preferences.getInt("RoundOffset");
-    if (roundOffset != null) {
-      var selectedPlayer = (rounds + roundOffset) % _players.length;
-      selected = _defaultList(_players.length).indexOf(selectedPlayer);
-    }
+    _data.whoIsNext.swapPlayers = _list.toString();
   }
 
   static List _defaultList(players) {
