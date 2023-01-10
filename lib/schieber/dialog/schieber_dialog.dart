@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/schieber/data/schieber_data.dart';
 
 class Points {
   int points1;
@@ -48,9 +49,8 @@ class PointsController extends TextEditingController {
 }
 
 Future<Points?> schieberDialogBuilder(
-    BuildContext context, int teamId, int ppr) {
+    BuildContext context, int teamId, int ppr, TeamData teamData) {
   int factor = 1;
-  bool flip = teamId == 0;
 
   return showDialog<Points>(
       context: context,
@@ -161,10 +161,11 @@ Future<Points?> schieberDialogBuilder(
           Widget dialog() {
             return AlertDialog(
               title: Row(children: [
-                Text(context.l10n.pointsOf("name")),
+                Text(context.l10n.pointsOf(teamData.name)),
                 Expanded(
                     child: InkWell(
-                        onTap: () => setState(() => flip = !flip),
+                        onTap: () =>
+                            setState(() => teamData.flip = !teamData.flip),
                         child: const Icon(Icons.screen_rotation_outlined)))
               ]),
               content: Column(
@@ -194,7 +195,7 @@ Future<Points?> schieberDialogBuilder(
             );
           }
 
-          if (flip) {
+          if (teamData.flip) {
             return RotatedBox(quarterTurns: 2, child: dialog());
           } else {
             return dialog();
