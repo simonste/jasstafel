@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lastBoard = Board
-        .values[PrefService.of(context).get(CommonSettings.keys.lastBoard)]
+        .values[PrefService.of(context).get(CommonSettings.keys.lastBoard) ?? 0]
         .name;
 
     return MaterialApp(

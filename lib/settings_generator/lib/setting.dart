@@ -44,7 +44,7 @@ class Setting {
   }
 
   String fromPref() {
-    return "$_name = pref.get('$_prefName');";
+    return "$_name = pref.get('$_prefName') ?? $_name;";
   }
 
   @override

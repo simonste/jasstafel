@@ -41,13 +41,16 @@ class CommonData {
     }
   }
 
-  String dump() {
-    return "${timestamps.startTime}|${timestamps.finishTime}|${whoIsNext.swapPlayers}|${whoIsNext.whoBeginsOffset};";
+  List<dynamic> dump() {
+    return [
+      timestamps.startTime,
+      timestamps.finishTime,
+      whoIsNext.swapPlayers,
+      whoIsNext.whoBeginsOffset
+    ];
   }
 
-  void restore(String str) {
-    var values = str.split('|');
-
+  void restore(List<String> values) {
     try {
       timestamps.startTime = DateTime.parse(values[0]);
     } on FormatException {

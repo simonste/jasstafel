@@ -1,7 +1,7 @@
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 
-class RowSettings {
+class RowSettings implements ScoreRow {
   int factor;
   String type;
   List<int?> pts = List.filled(3, null);
@@ -9,16 +9,16 @@ class RowSettings {
   RowSettings(this.factor, this.type);
 
   @override
-  String toString() {
-    String str = "$factor,$type,";
+  List<dynamic> dump() {
+    List<dynamic> val = [factor, type];
     for (var pt in pts) {
-      str += "$pt,";
+      val.add(pt);
     }
-    return str;
+    return val;
   }
 
-  void fromString(String str) {
-    var values = str.split(',');
+  @override
+  void restore(List<String> values) {
     factor = int.parse(values[0]);
     type = values[1];
 
@@ -160,22 +160,26 @@ class CoiffeurData implements SpecificData {
   }
 
   @override
-  String dump() {
-    String str = "${teamName[0]},${teamName[1]},${teamName[2]};";
-    for (var row in rows) {
-      str += "$row;";
-    }
-    return str;
+  List<dynamic> dumpHeader() {
+    return [teamName[0], teamName[1], teamName[2]];
   }
 
   @override
-  void restore(List<String> data) {
-    var tn = data[0].split(',');
+  List<ScoreRow> dumpScore() {
+    return rows;
+  }
+
+  @override
+  void restoreHeader(List<String> data) {
     for (var i = 0; i < teamName.length; i++) {
-      teamName[i] = tn[i];
+      teamName[i] = data[i];
     }
-    for (var i = 0; i < rows.length; i++) {
-      rows[i].fromString(data[i + 1]);
+  }
+
+  @override
+  void restoreScore(List<List<String>> data) {
+    for (var i = 0; i < data.length; i++) {
+      rows[i].restore(data[i]);
     }
   }
 }

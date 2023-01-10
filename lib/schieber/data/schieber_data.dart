@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
-class SchieberRound {
+class SchieberRound implements ScoreRow {
   DateTime time = DateTime.now();
   var pts = [0, 0];
 
@@ -14,12 +14,12 @@ class SchieberRound {
   }
 
   @override
-  String toString() {
-    return "$time,${pts[0]},${pts[1]};";
+  List<dynamic> dump() {
+    return [time, pts[0], pts[1]];
   }
 
-  void fromString(String str) {
-    final values = str.split(",");
+  @override
+  void restore(List<String> values) {
     try {
       time = DateTime.parse(values[0]);
     } on FormatException {
@@ -38,7 +38,7 @@ class SchieberRound {
 
 class TeamData {
   String name;
-  int points = 0;
+  bool flip = false;
 
   TeamData([this.name = "Team"]);
 
@@ -47,11 +47,13 @@ class TeamData {
 
   @override
   String toString() {
-    return name;
+    return joinC([name, flip]);
   }
 
   void fromString(String str) {
-    name = str;
+    var values = splitC(str);
+    name = values[0];
+    flip = (values[1] == 'true');
   }
 
   int sum() {
@@ -117,22 +119,27 @@ class SchieberData implements SpecificData {
   }
 
   @override
-  String dump() {
-    var str = "${team[0]};${team[1]};";
-    for (var round in _rounds) {
-      str += round.toString();
-    }
-    return str;
+  List<dynamic> dumpHeader() {
+    return [team[0], team[1]];
   }
 
   @override
-  void restore(List<String> data) {
+  List<ScoreRow> dumpScore() {
+    return _rounds;
+  }
+
+  @override
+  void restoreHeader(List<String> data) {
     for (var i = 0; i < team.length; i++) {
       team[i].fromString(data[i]);
     }
-    for (var str in data.sublist(team.length)) {
+  }
+
+  @override
+  void restoreScore(List<List<String>> data) {
+    for (var values in data) {
       final round = SchieberRound([0, 0]);
-      round.fromString(str);
+      round.restore(values);
       _rounds.add(round);
       for (var i = 0; i < team.length; i++) {
         team[i].add(round.pts[i]);
