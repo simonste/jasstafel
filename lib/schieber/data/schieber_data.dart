@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 class SchieberRound implements ScoreRow {
@@ -9,8 +8,13 @@ class SchieberRound implements ScoreRow {
 
   SchieberRound(this.pts);
 
-  bool isRound() {
-    return false;
+  int _total() {
+    return pts[0] + pts[1];
+  }
+
+  bool isRound(int matchPoints) {
+    return (_total() % roundPoints(matchPoints) == 0 ||
+        (pts[0] == 0 || pts[1] == 0) && (_total() % matchPoints == 0));
   }
 
   @override
@@ -66,17 +70,20 @@ class TeamData {
 
   void add(int points) {
     int remainingPoints = points + strokes[0];
-    final int sign = (remainingPoints < 0) ? -1 : 1;
 
     for (int i = 4; i > 0; i--) {
-      int tmp = sign * remainingPoints ~/ values[i];
-      if (sign == -1) {
-        tmp = min(tmp, strokes[i]);
+      final strokeValue = values[i];
+      int tmp = remainingPoints ~/ strokeValue;
+      if (remainingPoints < 0 && strokes[i] > tmp.abs()) {
+        // remove 'bigger' stroke and add singles afterwards
+        tmp = (remainingPoints - 5) ~/ strokeValue;
       }
-      strokes[i] += sign * tmp;
-      remainingPoints -= sign * tmp * values[i];
+      strokes[i] += tmp;
+      remainingPoints -= tmp * strokeValue;
     }
     strokes[0] = remainingPoints;
+
+    checkOverflow();
   }
 
   void checkOverflow() {
@@ -92,7 +99,42 @@ class TeamData {
       strokes[3] -= 5;
       strokes[4] += 1;
     }
+    if (strokes[0] < -19) {
+      strokes[0] += 20;
+      strokes[1] -= 1;
+    }
+    if (strokes[1] < 0) {
+      strokes[0] += 10;
+      strokes[1] += 2;
+      strokes[2] -= 1;
+      if (strokes[2] < 0) {
+        strokes[2] += 2;
+        strokes[3] -= 1;
+        if (strokes[3] < 0) {
+          strokes[3] += 5;
+          strokes[4] -= 1;
+        }
+      }
+    }
   }
+}
+
+class TeamStatistics {
+  int wins = 0;
+  int hills = 0;
+  int weis = 0;
+  int matches = 0;
+  int pts = 0;
+}
+
+class SchieberStatistics {
+  var team = [TeamStatistics(), TeamStatistics()];
+  int duration = 0;
+}
+
+class SchieberBacksideData {
+  String name = "";
+  int strokes = 0;
 }
 
 class SchieberData implements SpecificData {
@@ -100,9 +142,17 @@ class SchieberData implements SpecificData {
   var team = [TeamData("Team 1"), TeamData("Team 2")];
   final List<SchieberRound> _rounds = [];
 
+  var statistics = SchieberStatistics();
+  var backside = List.filled(6, SchieberBacksideData());
+
   SchieberData();
   @override
   void reset() {
+    // statistics.duration +=
+    for (var t = 0; t < team.length; t++) {
+      statistics.team[t].pts += team[t].sum();
+    }
+
     for (var t = 0; t < team.length; t++) {
       for (var s = 0; s < team[t].strokes.length; s++) {
         team[t].strokes[s] = 0;
@@ -151,7 +201,7 @@ class SchieberData implements SpecificData {
   int rounds() {
     int rounds = 0;
     for (var round in _rounds) {
-      if (round.isRound()) {
+      if (round.isRound(settings.match)) {
         rounds++;
       }
     }
@@ -160,5 +210,16 @@ class SchieberData implements SpecificData {
 
   List<SchieberRound> getHistory() {
     return _rounds;
+  }
+
+  void undo() {
+    _rounds.removeLast();
+
+    team = [TeamData("Team 1"), TeamData("Team 2")];
+    for (var round in _rounds) {
+      for (var i = 0; i < team.length; i++) {
+        team[i].add(round.pts[i]);
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
@@ -37,17 +38,10 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 pref: SchieberSettings.keys.differentGoals),
           ],
         ),
-        PrefDialogButton(
-            title: Text(context.l10n.pointsPerRound),
-            dialog: PrefDialog(
-                title: Text(context.l10n.pointsPerRound),
-                cancel: Text(context.l10n.cancel),
-                submit: Text(context.l10n.ok),
-                children: [
-                  PrefText(
-                      label: context.l10n.pointsPerRound,
-                      pref: SchieberSettings.keys.pointsPerRound)
-                ])),
+        PrefNumber(
+          title: Text(context.l10n.matchPoints),
+          pref: SchieberSettings.keys.match,
+        ),
         PrefTitle(title: Text(context.l10n.settings)),
         PrefCheckbox(
             title: Text(context.l10n.allowTouch),

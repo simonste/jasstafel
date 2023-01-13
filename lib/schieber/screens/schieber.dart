@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
@@ -84,7 +85,12 @@ class _SchieberState extends State<Schieber> {
                 state.data.rounds(),
                 state.commonData.whoIsNext,
                 () => state.save()),
-            SchieberHistoryButton(context, state.data),
+            SchieberHistoryButton(context, state.data, () {
+              setState(() {
+                state.data.undo();
+                state.save();
+              });
+            }),
             IconButton(
                 onPressed: () => _openStatistics(),
                 icon: const Icon(Icons.bar_chart)),
@@ -137,7 +143,7 @@ class _SchieberState extends State<Schieber> {
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(context, teamId,
-        state.data.settings.pointsPerRound, state.data.team[teamId]);
+        roundPoints(state.data.settings.match), state.data.team[teamId]);
     if (input == null) {
       return; // empty name not allowed
     }
@@ -158,7 +164,6 @@ class _SchieberState extends State<Schieber> {
         } else {
           state.data.add(0, pts);
         }
-        state.data.team[teamId].checkOverflow();
         state.save();
       });
     }

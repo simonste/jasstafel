@@ -14,8 +14,8 @@ SchieberSettings:
   GoalPoints2:
     store: "schieber_goal_points2"
     default: 2500
-  PointsPerRound:
-    store: "schieber_points_per_round"
+  Match:
+    store: "schieber_match"
     default: 257
   Backside:
     store: "schieber_backside"
