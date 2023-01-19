@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:jasstafel/schieber/data/schieber_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
 
 class Points {
   int points1;

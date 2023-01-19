@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:jasstafel/schieber/data/schieber_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
+import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 class SchieberHistoryButton extends IconButton {
-  SchieberHistoryButton(
-      BuildContext context, SchieberData data, Function undoLast,
+  SchieberHistoryButton(BuildContext context, data, Function undoLast,
       {super.key})
       : super(
             onPressed: () {
@@ -15,9 +16,9 @@ class SchieberHistoryButton extends IconButton {
 
 enum RowType { bold, normal }
 
-Future<void> dialogBuilder(
-    BuildContext context, SchieberData data, Function undoLast) {
-  var rounds = data.getHistory();
+Future<void> dialogBuilder(BuildContext context,
+    BoardData<SchieberSettings, SchieberScore> data, Function undoLast) {
+  var rounds = data.score.getHistory();
   return showDialog<void>(
       context: context,
       builder: (context) {
@@ -55,9 +56,11 @@ Future<void> dialogBuilder(
               ]);
             }
 
-            List<Widget> children = [];
-
-            children.add(row(data.team[0].name, data.team[1].name,
+            List<Widget> children = [
+              Text(data.common.timestamps.elapsed(context)),
+              const Divider()
+            ];
+            children.add(row(data.score.team[0].name, data.score.team[1].name,
                 rowType: RowType.bold));
             children.add(const Divider());
 

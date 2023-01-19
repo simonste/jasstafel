@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jasstafel/schieber/data/schieber_data.dart';
+import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/widgets/schieber_background_z.dart';
 import 'package:jasstafel/schieber/widgets/schieber_progress.dart';
 import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
+import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 class SchieberTeamDialogs {
   final Function(int) addPoints;
@@ -16,7 +18,7 @@ class SchieberTeamDialogs {
 }
 
 class SchieberTeam extends StatelessWidget {
-  final SchieberData data;
+  final BoardData<SchieberSettings, SchieberScore> data;
   final int teamId;
   final SchieberTeamDialogs dialogs;
 
@@ -33,11 +35,11 @@ class SchieberTeam extends StatelessWidget {
     }
   }
 
-  Widget _team(int teamId, SchieberData data, BuildContext context) {
+  Widget _team(int teamId, data, BuildContext context) {
     final height = MediaQuery.of(context).size.height / 2;
     final width = MediaQuery.of(context).size.width;
 
-    final teamData = data.team[teamId];
+    final teamData = data.score.team[teamId];
     final pts = teamData.sum();
     final progress = pts / data.settings.goalPoints;
     final hMargin = width * 0.05;

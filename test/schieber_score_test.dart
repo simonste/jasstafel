@@ -1,4 +1,4 @@
-import 'package:jasstafel/schieber/data/schieber_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:test/test.dart';
 
 void main() {

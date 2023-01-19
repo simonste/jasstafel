@@ -28,4 +28,4 @@ CoiffeurSettings:
     default: 100
   Data:
     store: "coiffeur"
-    default: ""
+    default: "{}"

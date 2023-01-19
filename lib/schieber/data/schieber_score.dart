@@ -1,8 +1,15 @@
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'schieber_score.g.dart';
 
-class SchieberRound implements ScoreRow {
+@JsonSerializable()
+class SchieberRound {
+  Map<String, dynamic> toJson() => _$SchieberRoundToJson(this);
+  factory SchieberRound.fromJson(Map<String, dynamic> json) =>
+      _$SchieberRoundFromJson(json);
+
   DateTime time = DateTime.now();
   var pts = [0, 0];
 
@@ -16,49 +23,22 @@ class SchieberRound implements ScoreRow {
     return (_total() % roundPoints(matchPoints) == 0 ||
         (pts[0] == 0 || pts[1] == 0) && (_total() % matchPoints == 0));
   }
-
-  @override
-  List<dynamic> dump() {
-    return [time, pts[0], pts[1]];
-  }
-
-  @override
-  void restore(List<String> values) {
-    try {
-      time = DateTime.parse(values[0]);
-    } on FormatException {
-      //
-    }
-    final pt = values.sublist(1);
-    for (var i = 0; i < pt.length; i++) {
-      try {
-        pts[i] = int.parse(pt[i]);
-      } on FormatException {
-        pts[i] = 0;
-      }
-    }
-  }
 }
 
+@JsonSerializable()
 class TeamData {
+  Map<String, dynamic> toJson() => _$TeamDataToJson(this);
+  factory TeamData.fromJson(Map<String, dynamic> json) =>
+      _$TeamDataFromJson(json);
+
   String name;
   bool flip = false;
+  bool? hill;
 
   TeamData([this.name = "Team"]);
 
   final values = [1, 20, 50, 100, 500];
   var strokes = List.filled(5, 0);
-
-  @override
-  String toString() {
-    return joinC([name, flip]);
-  }
-
-  void fromString(String str) {
-    var values = splitC(str);
-    name = values[0];
-    flip = (values[1] == 'true');
-  }
 
   int sum() {
     var sum = 0;
@@ -119,7 +99,14 @@ class TeamData {
   }
 }
 
+@JsonSerializable()
 class TeamStatistics {
+  Map<String, dynamic> toJson() => _$TeamStatisticsToJson(this);
+  factory TeamStatistics.fromJson(Map<String, dynamic> json) =>
+      _$TeamStatisticsFromJson(json);
+
+  TeamStatistics();
+
   int wins = 0;
   int hills = 0;
   int weis = 0;
@@ -127,28 +114,50 @@ class TeamStatistics {
   int pts = 0;
 }
 
+@JsonSerializable()
 class SchieberStatistics {
+  Map<String, dynamic> toJson() => _$SchieberStatisticsToJson(this);
+  factory SchieberStatistics.fromJson(Map<String, dynamic> json) =>
+      _$SchieberStatisticsFromJson(json);
+
+  SchieberStatistics();
+
   var team = [TeamStatistics(), TeamStatistics()];
   int duration = 0;
 }
 
+@JsonSerializable()
 class SchieberBacksideData {
+  Map<String, dynamic> toJson() => _$SchieberBacksideDataToJson(this);
+  factory SchieberBacksideData.fromJson(Map<String, dynamic> json) =>
+      _$SchieberBacksideDataFromJson(json);
+
+  SchieberBacksideData();
+
   String name = "";
   int strokes = 0;
 }
 
-class SchieberData implements SpecificData {
-  var settings = SchieberSettings();
+@JsonSerializable()
+class SchieberScore implements Score {
+  @override
+  Map<String, dynamic> toJson() => _$SchieberScoreToJson(this);
+  factory SchieberScore.fromJson(Map<String, dynamic> json) =>
+      _$SchieberScoreFromJson(json);
+  SchieberSettings _settings = SchieberSettings();
+  void setSettings(settings) => _settings = settings;
+
   var team = [TeamData("Team 1"), TeamData("Team 2")];
-  final List<SchieberRound> _rounds = [];
+  List<SchieberRound> rounds = [];
 
   var statistics = SchieberStatistics();
   var backside = List.filled(6, SchieberBacksideData());
 
-  SchieberData();
+  SchieberScore();
+
   @override
-  void reset() {
-    // statistics.duration +=
+  void reset(int? duration) {
+    statistics.duration += duration ?? 0;
     for (var t = 0; t < team.length; t++) {
       statistics.team[t].pts += team[t].sum();
     }
@@ -158,68 +167,50 @@ class SchieberData implements SpecificData {
         team[t].strokes[s] = 0;
       }
     }
-    _rounds.clear();
+    rounds.clear();
   }
 
   void add(pts1, pts2) {
     final round = SchieberRound([pts1, pts2]);
-    _rounds.add(round);
+    rounds.add(round);
     team[0].add(pts1);
     team[1].add(pts2);
-  }
 
-  @override
-  List<dynamic> dumpHeader() {
-    return [team[0], team[1]];
-  }
-
-  @override
-  List<ScoreRow> dumpScore() {
-    return _rounds;
-  }
-
-  @override
-  void restoreHeader(List<String> data) {
-    for (var i = 0; i < team.length; i++) {
-      team[i].fromString(data[i]);
-    }
-  }
-
-  @override
-  void restoreScore(List<List<String>> data) {
-    for (var values in data) {
-      final round = SchieberRound([0, 0]);
-      round.restore(values);
-      _rounds.add(round);
-      for (var i = 0; i < team.length; i++) {
-        team[i].add(round.pts[i]);
+    if (team[0].hill == null || team[1].hill == null) {
+      if (team[0].sum() > _settings.goalPoints / 2) {
+        team[0].hill = true;
+        team[1].hill = false;
+      }
+      if (team[1].sum() > _settings.goalPoints / 2) {
+        team[0].hill = false;
+        team[1].hill = true;
       }
     }
-  }
-
-  @override
-  int rounds() {
-    int rounds = 0;
-    for (var round in _rounds) {
-      if (round.isRound(settings.match)) {
-        rounds++;
-      }
-    }
-    return rounds;
   }
 
   List<SchieberRound> getHistory() {
-    return _rounds;
+    return rounds;
   }
 
   void undo() {
-    _rounds.removeLast();
+    rounds.removeLast();
 
     team = [TeamData("Team 1"), TeamData("Team 2")];
-    for (var round in _rounds) {
+    for (var round in rounds) {
       for (var i = 0; i < team.length; i++) {
         team[i].add(round.pts[i]);
       }
     }
+  }
+
+  @override
+  int noOfRounds() {
+    int noOfRounds = 0;
+    for (var round in rounds) {
+      if (round.isRound(_settings.match)) {
+        noOfRounds++;
+      }
+    }
+    return noOfRounds;
   }
 }

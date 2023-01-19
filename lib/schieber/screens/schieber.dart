@@ -6,7 +6,7 @@ import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
-import 'package:jasstafel/schieber/data/schieber_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/dialog/schieber_history.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
@@ -24,10 +24,11 @@ class Schieber extends StatefulWidget {
 }
 
 class _SchieberState extends State<Schieber> {
-  var state = BoardData(SchieberData(), SchieberSettingsKeys().data);
+  var state = BoardData(
+      SchieberSettings(), SchieberScore(), SchieberSettingsKeys().data);
 
   void restoreData() async {
-    state = await state.load() as BoardData<SchieberData>;
+    state = await state.load() as BoardData<SchieberSettings, SchieberScore>;
     setState(() {}); // trigger widget update
   }
 
@@ -39,25 +40,27 @@ class _SchieberState extends State<Schieber> {
   }
 
   int getGoalPoints(int team) {
-    if (state.data.settings.differentGoals && team == 0) {
-      return state.data.settings.goalPoints2;
+    if (state.settings.differentGoals && team == 0) {
+      return state.settings.goalPoints2;
     }
-    return state.data.settings.goalPoints;
+    return state.settings.goalPoints;
   }
 
   void setGoalPoints(int team, int points) {
-    if (state.data.settings.differentGoals && team == 0) {
-      state.data.settings.goalPoints2 = points;
+    if (state.settings.differentGoals && team == 0) {
+      state.settings.goalPoints2 = points;
     } else {
-      state.data.settings.goalPoints = points;
+      state.settings.goalPoints = points;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
+    state.settings.fromPrefService(context);
+    state.score.setSettings(state.settings);
+
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
-    state.data.settings.fromPrefService(context);
 
     Widget goalPoints() {
       points(int teamId) {
@@ -66,7 +69,7 @@ class _SchieberState extends State<Schieber> {
             child: Text(getGoalPoints(teamId).toString(), textScaleFactor: 2));
       }
 
-      if (state.data.settings.differentGoals) {
+      if (state.settings.differentGoals) {
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           RotatedBox(quarterTurns: 2, child: points(0)),
           points(1)
@@ -81,13 +84,13 @@ class _SchieberState extends State<Schieber> {
           actions: [
             WhoIsNextButton(
                 context,
-                [state.data.team[0].name, state.data.team[1].name],
-                state.data.rounds(),
-                state.commonData.whoIsNext,
+                [state.score.team[0].name, state.score.team[1].name],
+                state.score.noOfRounds(),
+                state.common.whoIsNext,
                 () => state.save()),
-            SchieberHistoryButton(context, state.data, () {
+            SchieberHistoryButton(context, state, () {
               setState(() {
-                state.data.undo();
+                state.score.undo();
                 state.save();
               });
             }),
@@ -97,11 +100,8 @@ class _SchieberState extends State<Schieber> {
             IconButton(
                 onPressed: () => setState(() => state.reset()),
                 icon: const Icon(Icons.delete)),
-            SettingsButton(
-                const SchieberSettingsScreen(),
-                context,
-                () => setState(
-                    () => state.data.settings.fromPrefService(context))),
+            SettingsButton(const SchieberSettingsScreen(), context,
+                () => setState(() => state.settings.fromPrefService(context))),
           ],
         ),
         body: Stack(children: [
@@ -109,8 +109,8 @@ class _SchieberState extends State<Schieber> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SchieberTeam(0, state.data, dialogs),
-                SchieberTeam(1, state.data, dialogs),
+                SchieberTeam(0, state, dialogs),
+                SchieberTeam(1, state, dialogs),
               ]),
           Center(child: goalPoints())
         ]));
@@ -119,12 +119,12 @@ class _SchieberState extends State<Schieber> {
   void _openStatistics() {}
 
   void _stringDialog(team) async {
-    var controller = TextEditingController(text: state.data.team[team].name);
+    var controller = TextEditingController(text: state.score.team[team].name);
 
     final input = await stringDialogBuilder(context, controller);
     if (input == null) return; // empty name not allowed
     setState(() {
-      state.data.team[team].name = input;
+      state.score.team[team].name = input;
       state.save();
     });
   }
@@ -143,26 +143,26 @@ class _SchieberState extends State<Schieber> {
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(context, teamId,
-        roundPoints(state.data.settings.match), state.data.team[teamId]);
+        roundPoints(state.settings.match), state.score.team[teamId]);
     if (input == null) {
       return; // empty name not allowed
     }
     setState(() {
-      state.data.add(input.points1, input.points2);
+      state.score.add(input.points1, input.points2);
       state.save();
     });
   }
 
   void _onTap(int teamId, int pts) {
-    if (state.data.settings.touchScreen) {
-      if (state.data.settings.vibrate) {
+    if (state.settings.touchScreen) {
+      if (state.settings.vibrate) {
         Vibration.vibrate(duration: 50);
       }
       setState(() {
         if (teamId == 0) {
-          state.data.add(pts, 0);
+          state.score.add(pts, 0);
         } else {
-          state.data.add(0, pts);
+          state.score.add(0, pts);
         }
         state.save();
       });

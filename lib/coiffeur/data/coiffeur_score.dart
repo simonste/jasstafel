@@ -1,35 +1,19 @@
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'coiffeur_score.g.dart';
 
-class RowSettings implements ScoreRow {
+@JsonSerializable()
+class RowSettings {
+  factory RowSettings.fromJson(Map<String, dynamic> json) =>
+      _$RowSettingsFromJson(json);
+  Map<String, dynamic> toJson() => _$RowSettingsToJson(this);
+
   int factor;
   String type;
   List<int?> pts = List.filled(3, null);
 
   RowSettings(this.factor, this.type);
-
-  @override
-  List<dynamic> dump() {
-    List<dynamic> val = [factor, type];
-    for (var pt in pts) {
-      val.add(pt);
-    }
-    return val;
-  }
-
-  @override
-  void restore(List<String> values) {
-    factor = int.parse(values[0]);
-    type = values[1];
-
-    for (var i = 0; i < pts.length; i++) {
-      try {
-        pts[i] = int.parse(values[i + 2]);
-      } on FormatException {
-        pts[i] = null;
-      }
-    }
-  }
 
   void reset() {
     for (var i = 0; i < pts.length; i++) {
@@ -46,14 +30,19 @@ class RowSettings implements ScoreRow {
   }
 }
 
-class CoiffeurData implements SpecificData {
-  var settings = CoiffeurSettings();
+@JsonSerializable()
+class CoiffeurScore implements Score {
+  @override
+  Map<String, dynamic> toJson() => _$CoiffeurScoreToJson(this);
+  factory CoiffeurScore.fromJson(Map<String, dynamic> json) =>
+      _$CoiffeurScoreFromJson(json);
+  CoiffeurSettings _settings = CoiffeurSettings();
+  void setSettings(settings) => _settings = settings;
+
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
 
-  CoiffeurData() {
-    assert(settings.rows <= rows.length);
-
+  CoiffeurScore() {
     rows[0] = (RowSettings(1, "Eicheln"));
     rows[1] = (RowSettings(2, "Schellen"));
     rows[2] = (RowSettings(3, "Rosen"));
@@ -70,7 +59,7 @@ class CoiffeurData implements SpecificData {
   }
 
   @override
-  void reset() {
+  void reset(int? duration) {
     for (var row in rows) {
       row.reset();
     }
@@ -82,11 +71,11 @@ class CoiffeurData implements SpecificData {
     for (var row in rows) {
       if (_pts(row, team) != null) {
         sum += row.factor * _pts(row, team)!;
-        if (settings.bonus && row.pts[team]! == settings.match) {
+        if (_settings.bonus && row.pts[team]! == _settings.match) {
           sum += _bonus(row.factor);
         }
       } else if (team == 2 &&
-          !settings.threeTeams &&
+          !_settings.threeTeams &&
           row.pts[0] != null &&
           row.pts[1] != null) {
         sum += _rowDiff(row);
@@ -107,16 +96,16 @@ class CoiffeurData implements SpecificData {
   }
 
   bool match(int rowNumber, int team) {
-    return settings.bonus && rows[rowNumber].pts[team] == settings.match;
+    return _settings.bonus && rows[rowNumber].pts[team] == _settings.match;
   }
 
   int _rowDiff(RowSettings row) {
     var diff = row.factor * (_pts(row, 0)! - _pts(row, 1)!);
-    if (settings.bonus) {
-      if (row.pts[0] == settings.match) {
+    if (_settings.bonus) {
+      if (row.pts[0] == _settings.match) {
         diff += _bonus(row.factor);
       }
-      if (row.pts[1] == settings.match) {
+      if (row.pts[1] == _settings.match) {
         diff -= _bonus(row.factor);
       }
     }
@@ -124,10 +113,10 @@ class CoiffeurData implements SpecificData {
   }
 
   int _bonus(int factor) {
-    if (settings.bonus) {
-      // assert(settings.match == 257);
-      final bonus = settings.bonusValue - 100 * factor;
-      if (settings.rounded) {
+    if (_settings.bonus) {
+      assert(_settings.match == 157);
+      final bonus = _settings.bonusValue - 100 * factor;
+      if (_settings.rounded) {
         return (bonus / 10).round();
       } else {
         return bonus;
@@ -141,45 +130,21 @@ class CoiffeurData implements SpecificData {
     if (row.scratched(team)) {
       return 0;
     }
-    if (pts != null && settings.rounded) {
+    if (pts != null && _settings.rounded) {
       return (pts / 10).round();
     }
     return pts;
   }
 
   @override
-  int rounds() {
+  int noOfRounds() {
     int rounds = 0;
-    var teams = settings.threeTeams ? 3 : 2;
-    for (var r = 0; r < settings.rows; r++) {
+    var teams = _settings.threeTeams ? 3 : 2;
+    for (var r = 0; r < _settings.rows; r++) {
       for (var t = 0; t < teams; t++) {
         if (rows[r].pts[t] != null) rounds++;
       }
     }
     return rounds;
-  }
-
-  @override
-  List<dynamic> dumpHeader() {
-    return [teamName[0], teamName[1], teamName[2]];
-  }
-
-  @override
-  List<ScoreRow> dumpScore() {
-    return rows;
-  }
-
-  @override
-  void restoreHeader(List<String> data) {
-    for (var i = 0; i < teamName.length; i++) {
-      teamName[i] = data[i];
-    }
-  }
-
-  @override
-  void restoreScore(List<List<String>> data) {
-    for (var i = 0; i < data.length; i++) {
-      rows[i].restore(data[i]);
-    }
   }
 }

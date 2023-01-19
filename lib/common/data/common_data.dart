@@ -1,6 +1,19 @@
+import 'package:jasstafel/common/localization.dart';
+import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'common_data.g.dart';
+
+@JsonSerializable()
 class Timestamps {
   DateTime? startTime;
   DateTime? finishTime;
+
+  Timestamps();
+
+  factory Timestamps.fromJson(Map<String, dynamic> json) =>
+      _$TimestampsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TimestampsToJson(this);
 
   int? duration() {
     int minutes = 1000;
@@ -17,16 +30,40 @@ class Timestamps {
     }
     return null;
   }
+
+  String elapsed(BuildContext context) {
+    var dur = duration();
+    if (dur != null) {
+      return context.l10n.duration(dur);
+    }
+    return "";
+  }
 }
 
+@JsonSerializable()
 class WhoIsNext {
   String swapPlayers = "";
   int? whoBeginsOffset;
+
+  WhoIsNext();
+
+  factory WhoIsNext.fromJson(Map<String, dynamic> json) =>
+      _$WhoIsNextFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WhoIsNextToJson(this);
 }
 
+@JsonSerializable()
 class CommonData {
   Timestamps timestamps = Timestamps();
   WhoIsNext whoIsNext = WhoIsNext();
+
+  CommonData();
+
+  factory CommonData.fromJson(Map<String, dynamic> json) =>
+      _$CommonDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CommonDataToJson(this);
 
   void reset() {
     timestamps.startTime = DateTime.now();

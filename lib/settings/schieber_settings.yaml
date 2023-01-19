@@ -37,4 +37,4 @@ SchieberSettings:
     default: false
   Data:
     store: "schieber"
-    default: ""
+    default: "{}"
