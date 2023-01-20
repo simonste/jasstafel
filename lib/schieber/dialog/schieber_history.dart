@@ -36,24 +36,16 @@ Future<void> dialogBuilder(BuildContext context,
                           icon: const Icon(Icons.delete)),
                     )
                   : const SizedBox(width: 50);
+              text(String string) {
+                return Expanded(
+                    child: Text(
+                  string,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: fontWeight),
+                ));
+              }
 
-              return Row(children: [
-                Expanded(
-                  child: Text(
-                    left,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: fontWeight),
-                  ),
-                ),
-                space,
-                Expanded(
-                  child: Text(
-                    right,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: fontWeight),
-                  ),
-                )
-              ]);
+              return Row(children: [text(left), space, text(right)]);
             }
 
             List<Widget> children = [

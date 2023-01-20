@@ -9,6 +9,7 @@ import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/dialog/schieber_history.dart';
+import 'package:jasstafel/schieber/dialog/schieber_statistics.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -94,9 +95,7 @@ class _SchieberState extends State<Schieber> {
                 state.save();
               });
             }),
-            IconButton(
-                onPressed: () => _openStatistics(),
-                icon: const Icon(Icons.bar_chart)),
+            SchieberStatisticsButton(context, state),
             IconButton(
                 onPressed: () => setState(() => state.reset()),
                 icon: const Icon(Icons.delete)),
@@ -115,8 +114,6 @@ class _SchieberState extends State<Schieber> {
           Center(child: goalPoints())
         ]));
   }
-
-  void _openStatistics() {}
 
   void _stringDialog(team) async {
     var controller = TextEditingController(text: state.score.team[team].name);

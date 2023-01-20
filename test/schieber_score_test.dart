@@ -148,4 +148,27 @@ void main() {
     expect(data.strokes[3], 1);
     expect(data.strokes[4], 0);
   });
+
+  test('consolidate rounds', () {
+    var score = SchieberScore();
+
+    score.add(50, 0);
+    score.rounds.last.time = DateTime(1999);
+
+    // grouped as round
+    score.add(50, 0);
+    score.add(50, 0);
+    score.add(20, 0);
+    score.add(0, 37);
+
+    score.add(0, 20);
+    score.rounds.last.time = DateTime(2005);
+    score.add(0, 20);
+    score.rounds.last.time = DateTime(2005);
+
+    score.add(5 * 66, 5 * (157 - 66));
+
+    expect(score.noOfRounds(), 2);
+    expect(score.weisPoints(), [50, 40]);
+  });
 }

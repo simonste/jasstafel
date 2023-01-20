@@ -32,8 +32,9 @@ class TeamData {
       _$TeamDataFromJson(json);
 
   String name;
-  bool flip = false;
   bool? hill;
+  bool? win;
+  bool flip = false;
 
   TeamData([this.name = "Team"]);
 
@@ -158,13 +159,25 @@ class SchieberScore implements Score {
   @override
   void reset(int? duration) {
     statistics.duration += duration ?? 0;
+    final match = matches();
+    final weis = weisPoints();
     for (var t = 0; t < team.length; t++) {
       statistics.team[t].pts += team[t].sum();
+      statistics.team[t].matches += match[t];
+      statistics.team[t].weis += weis[t];
+      if (team[t].hill == true) {
+        statistics.team[t].hills++;
+      }
+      if (team[t].win == true) {
+        statistics.team[t].wins++;
+      }
     }
 
     for (var t = 0; t < team.length; t++) {
       for (var s = 0; s < team[t].strokes.length; s++) {
         team[t].strokes[s] = 0;
+        team[t].hill = null;
+        team[t].win = null;
       }
     }
     rounds.clear();
@@ -192,6 +205,29 @@ class SchieberScore implements Score {
     return rounds;
   }
 
+  List<SchieberRound> _consolidateRounds() {
+    SchieberRound? previousRound;
+
+    List<SchieberRound> consRounds = [];
+
+    List<int> ptsBuffer = [0, 0];
+    for (var round in rounds) {
+      if (previousRound != null &&
+          round.time.difference(previousRound.time).inSeconds.abs() > 5) {
+        consRounds.add(SchieberRound(ptsBuffer));
+        ptsBuffer = [0, 0];
+      }
+      ptsBuffer[0] += round.pts[0];
+      ptsBuffer[1] += round.pts[1];
+      previousRound = round;
+    }
+    if (previousRound != null) {
+      consRounds.add(SchieberRound(ptsBuffer));
+    }
+
+    return consRounds;
+  }
+
   void undo() {
     rounds.removeLast();
 
@@ -206,11 +242,40 @@ class SchieberScore implements Score {
   @override
   int noOfRounds() {
     int noOfRounds = 0;
-    for (var round in rounds) {
+    for (var round in _consolidateRounds()) {
       if (round.isRound(_settings.match)) {
         noOfRounds++;
       }
     }
     return noOfRounds;
+  }
+
+  List<int> matches() {
+    var matches = [0, 0];
+    for (var round in _consolidateRounds()) {
+      if (round.isRound(_settings.match)) {
+        for (var i = 0; i < team.length; i++) {
+          var other = (i + 1) % 2;
+          if (round.pts[other] == 0) {
+            matches[i]++;
+          }
+        }
+      }
+    }
+    return matches;
+  }
+
+  List<int> weisPoints() {
+    var weisPts = [0, 0];
+    for (var round in _consolidateRounds()) {
+      if (!round.isRound(_settings.match)) {
+        for (var i = 0; i < team.length; i++) {
+          if (round.pts[i] % 20 == 0 || round.pts[i] % 50 == 0) {
+            weisPts[i] += round.pts[i];
+          }
+        }
+      }
+    }
+    return weisPts;
   }
 }
