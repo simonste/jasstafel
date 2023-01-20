@@ -4,6 +4,35 @@ import 'package:json_annotation/json_annotation.dart';
 part 'coiffeur_score.g.dart';
 
 @JsonSerializable()
+class CoiffeurPoints {
+  factory CoiffeurPoints.fromJson(Map<String, dynamic> json) =>
+      _$CoiffeurPointsFromJson(json);
+  Map<String, dynamic> toJson() => _$CoiffeurPointsToJson(this);
+
+  CoiffeurPoints();
+
+  bool match = false;
+  bool scratched = false;
+  int? pts;
+
+  void scratch() {
+    scratched = true;
+    match = false;
+    pts = null;
+  }
+
+  bool empty() {
+    return pts == null && scratched == false;
+  }
+
+  void reset() {
+    match = false;
+    scratched = false;
+    pts = null;
+  }
+}
+
+@JsonSerializable()
 class RowSettings {
   factory RowSettings.fromJson(Map<String, dynamic> json) =>
       _$RowSettingsFromJson(json);
@@ -11,22 +40,18 @@ class RowSettings {
 
   int factor;
   String type;
-  List<int?> pts = List.filled(3, null);
+  List<CoiffeurPoints> pts = [
+    CoiffeurPoints(),
+    CoiffeurPoints(),
+    CoiffeurPoints()
+  ];
 
   RowSettings(this.factor, this.type);
 
   void reset() {
     for (var i = 0; i < pts.length; i++) {
-      pts[i] = null;
+      pts[i].reset();
     }
-  }
-
-  bool scratched(int team) {
-    return pts[team] == -3513;
-  }
-
-  void scratch(int team) {
-    pts[team] = -3513;
   }
 }
 
@@ -71,13 +96,13 @@ class CoiffeurScore implements Score {
     for (var row in rows) {
       if (_pts(row, team) != null) {
         sum += row.factor * _pts(row, team)!;
-        if (_settings.bonus && row.pts[team]! == _settings.match) {
-          sum += _bonus(row.factor);
+        if (_settings.bonus && row.pts[team].match) {
+          sum += _bonus();
         }
       } else if (team == 2 &&
           !_settings.threeTeams &&
-          row.pts[0] != null &&
-          row.pts[1] != null) {
+          row.pts[0].pts != null &&
+          row.pts[1].pts != null) {
         sum += _rowDiff(row);
       }
     }
@@ -85,37 +110,39 @@ class CoiffeurScore implements Score {
   }
 
   int? diff(i) {
-    if (rows[i].pts[0] != null && rows[i].pts[1] != null) {
+    if (!rows[i].pts[0].empty() && !rows[i].pts[1].empty()) {
       return _rowDiff(rows[i]);
     }
     return null;
   }
 
-  int? points(int rowNumber, int team) {
-    return _pts(rows[rowNumber], team);
-  }
-
-  bool match(int rowNumber, int team) {
-    return _settings.bonus && rows[rowNumber].pts[team] == _settings.match;
+  CoiffeurPoints points(int rowNumber, int team) {
+    var pts = CoiffeurPoints();
+    pts.pts = _pts(rows[rowNumber], team);
+    if (_settings.bonus) {
+      // match is only relevant with bonus
+      pts.match = rows[rowNumber].pts[team].match;
+    }
+    pts.scratched = rows[rowNumber].pts[team].scratched;
+    return pts;
   }
 
   int _rowDiff(RowSettings row) {
     var diff = row.factor * (_pts(row, 0)! - _pts(row, 1)!);
     if (_settings.bonus) {
-      if (row.pts[0] == _settings.match) {
-        diff += _bonus(row.factor);
+      if (row.pts[0].match) {
+        diff += _bonus();
       }
-      if (row.pts[1] == _settings.match) {
-        diff -= _bonus(row.factor);
+      if (row.pts[1].match) {
+        diff -= _bonus();
       }
     }
     return diff;
   }
 
-  int _bonus(int factor) {
+  int _bonus() {
     if (_settings.bonus) {
-      assert(_settings.match == 157);
-      final bonus = _settings.bonusValue - 100 * factor;
+      final bonus = _settings.bonusValue;
       if (_settings.rounded) {
         return (bonus / 10).round();
       } else {
@@ -127,13 +154,16 @@ class CoiffeurScore implements Score {
 
   int? _pts(RowSettings row, int team) {
     final pts = row.pts[team];
-    if (row.scratched(team)) {
+    if (pts.scratched) {
       return 0;
     }
-    if (pts != null && _settings.rounded) {
-      return (pts / 10).round();
+    if (pts.match) {
+      pts.pts = _settings.match;
     }
-    return pts;
+    if (pts.pts != null && _settings.rounded) {
+      return (pts.pts! / 10).round();
+    }
+    return pts.pts;
   }
 
   @override
@@ -142,7 +172,8 @@ class CoiffeurScore implements Score {
     var teams = _settings.threeTeams ? 3 : 2;
     for (var r = 0; r < _settings.rows; r++) {
       for (var t = 0; t < teams; t++) {
-        if (rows[r].pts[t] != null) rounds++;
+        var pts = rows[r].pts[t];
+        if (pts.pts != null || pts.scratched) rounds++;
       }
     }
     return rounds;

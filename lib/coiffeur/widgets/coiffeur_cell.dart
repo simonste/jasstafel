@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 
 class CoiffeurCell extends Expanded {
   final GestureTapCallback? onTap;
@@ -63,25 +64,28 @@ class CoiffeurCell extends Expanded {
 }
 
 class CoiffeurPointsCell extends CoiffeurCell {
-  CoiffeurPointsCell(int? pts,
-      {bool match = false,
-      bool scratch = false,
-      super.key,
-      super.onTap,
-      super.textScaleFactor,
-      super.leftBorder})
-      : super(_getString(pts, match, scratch), scratch: scratch);
+  CoiffeurPointsCell(CoiffeurPoints pts,
+      {super.key, super.onTap, super.textScaleFactor, super.leftBorder})
+      : super(_getString(pts), scratch: pts.scratched);
 
-  static String _getString(int? pts, bool match, bool scratch) {
-    if (scratch) {
-      return "";
-    }
-    if (match) {
-      return "MATCH";
-    }
+  CoiffeurPointsCell.number(int? pts,
+      {super.key, super.onTap, super.textScaleFactor, super.leftBorder})
+      : super(_getNumberString(pts));
+
+  static String _getNumberString(int? pts) {
     if (pts != null) {
       return pts.toString();
     }
     return "";
+  }
+
+  static String _getString(CoiffeurPoints pts) {
+    if (pts.scratched) {
+      return "";
+    }
+    if (pts.match) {
+      return "MATCH";
+    }
+    return _getNumberString(pts.pts);
   }
 }

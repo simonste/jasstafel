@@ -114,8 +114,6 @@ class _CoiffeurState extends State<Coiffeur> {
     Widget teamWidget(team, row) {
       return CoiffeurPointsCell(
         state.score.points(row, team),
-        match: state.score.match(row, team),
-        scratch: state.score.rows[row].scratched(team),
         onTap: () {
           _pointsDialog(team, row);
         },
@@ -135,7 +133,7 @@ class _CoiffeurState extends State<Coiffeur> {
     if (state.settings.threeTeams) {
       cells.add(teamWidget(2, i));
     } else if (state.settings.thirdColumn) {
-      cells.add(CoiffeurPointsCell(state.score.diff(i)));
+      cells.add(CoiffeurPointsCell.number(state.score.diff(i)));
     }
 
     return CoiffeurRow(cells, topBorder: true);
@@ -150,12 +148,12 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      CoiffeurPointsCell(state.score.total(0)),
-      CoiffeurPointsCell(state.score.total(1)),
+      CoiffeurPointsCell.number(state.score.total(0)),
+      CoiffeurPointsCell.number(state.score.total(1)),
     ];
     if (state.settings.threeTeams || state.settings.thirdColumn) {
       cells.add(
-        CoiffeurPointsCell(state.score.total(2)),
+        CoiffeurPointsCell.number(state.score.total(2)),
       );
     }
 
@@ -175,11 +173,11 @@ class _CoiffeurState extends State<Coiffeur> {
 
   void _pointsDialog(team, row) async {
     var controller = TextEditingController();
-    if (state.score.points(row, team) == null ||
-        state.score.rows[row].scratched(team)) {
+    if (state.score.rows[row].pts[team].pts == null ||
+        state.score.rows[row].pts[team].scratched) {
       controller.text = "";
     } else {
-      controller.text = state.score.rows[row].pts[team].toString();
+      controller.text = state.score.rows[row].pts[team].pts.toString();
     }
 
     var titleWidget = SizedBox(
@@ -220,9 +218,13 @@ class _CoiffeurState extends State<Coiffeur> {
         state.common.firstPoints();
       }
       if (input.scratch) {
-        state.score.rows[row].scratch(team);
+        state.score.rows[row].pts[team].scratch();
       } else {
-        state.score.rows[row].pts[team] = input.value;
+        state.score.rows[row].pts[team].reset();
+        state.score.rows[row].pts[team].pts = input.value;
+        if (input.value == state.settings.match) {
+          state.score.rows[row].pts[team].match = true;
+        }
       }
       state.save();
     });
