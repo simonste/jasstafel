@@ -10,6 +10,7 @@ import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
@@ -56,9 +57,10 @@ class _CoiffeurState extends State<Coiffeur> {
               state.score.noOfRounds(),
               state.common.whoIsNext,
               () => state.save()),
-          IconButton(
-              onPressed: () => setState(() => state.reset()),
-              icon: const Icon(Icons.delete)),
+          DeleteButton(
+            context,
+            () => setState(() => state.reset()),
+          ),
           SettingsButton(const CoiffeurSettingsScreen(), context,
               () => setState(() => state.settings.fromPrefService(context))),
         ],

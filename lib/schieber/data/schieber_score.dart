@@ -123,6 +123,11 @@ class SchieberStatistics {
 
   SchieberStatistics();
 
+  void reset() {
+    team = [TeamStatistics(), TeamStatistics()];
+    duration = 0;
+  }
+
   var team = [TeamStatistics(), TeamStatistics()];
   int duration = 0;
 }

@@ -4,6 +4,7 @@ import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
@@ -96,9 +97,16 @@ class _SchieberState extends State<Schieber> {
               });
             }),
             SchieberStatisticsButton(context, state),
-            IconButton(
-                onPressed: () => setState(() => state.reset()),
-                icon: const Icon(Icons.delete)),
+            DeleteButton(
+              context,
+              () => setState(() => state.reset()),
+              deleteAllFunction: () {
+                setState(() {
+                  state.score.statistics.reset();
+                  state.reset();
+                });
+              },
+            ),
             SettingsButton(const SchieberSettingsScreen(), context,
                 () => setState(() => state.settings.fromPrefService(context))),
           ],
