@@ -1,5 +1,5 @@
 {
-  "app_name": "Jasstafel",
+  "appName": "Jasstafel",
   "schieber": "Schieber",
   "coiffeur": "Coiffeur",
   "differenzler": "Differenzler",
@@ -7,8 +7,8 @@
   "guggitaler": "Guggitaler",
   "punktetafel": "Punktetafel",
   "settings": "Einstellungen",
-  "settings_title": "{type} - Einstellungen",
-  "@settings_title": {
+  "settingsTitle": "{type} - Einstellungen",
+  "@settingsTitle": {
     "placeholders": {
       "type": {
         "type": "String"
@@ -122,7 +122,6 @@
   "resetAll": "Alles",
   "invalidInput": "ungültige Eingabe",
   "matches": "Matches",
-  "gewiesen": "Weise",
   "tricks": "Stiche",
   "match": "Match",
   "total": "Total",
@@ -170,7 +169,7 @@
   "variable": "Variabel",
   "free": "Frei",
   "joker": "Joker",
-  "trumpf": "Trumpf",
+  "trump": "Trumpf",
   "obenabeOndenufe": "Obenabe / Ondenufe",
   "obeOnde": "Obe / Onde",
   "slalomGusti": "Slalom / Gusti",
@@ -178,7 +177,7 @@
   "superEicheln": "Super-Eicheln",
   "tutti": "Tutti",
   "tannenbaum": "Tannenbaum",
-  "emmentaler": "Emmentaler",
+  "emmental": "Emmentaler",
   "blind": "Blind",
   "xTimes": "Welcher Jass zählt {factor}fach?",
   "@xTimes": {
@@ -202,11 +201,11 @@
   "setFactorManually": "Eigene Multiplikatoren verwenden",
   "shown": "angezeigt",
   "hidden": "ausgeblendet",
-  "coiffeursummary": "Maximal mögliche Punkte",
+  "coiffeurSummary": "Maximal mögliche Punkte",
   "team": "Team",
-  "currentpoints": "aktuell",
-  "minpoints": "min",
-  "maxpoints": "max",
+  "current": "aktuell",
+  "min": "min",
+  "max": "max",
   "matchPoints": "Match-Punkte",
   "matchBonus": "Match-Prämie verwenden",
   "matchBonusInfo": "Konstante Prämie für einen Match zusätzlich zu den {matchPoints} Punkten.",
@@ -245,11 +244,11 @@
   "resetMatchBonus": "Match-Prämie deaktivieren?",
   "profiles": "Profile",
   "profileInfo": "Einstellungen in Profilen speichern, um einfach hin und her zu wechseln.",
-  "profilename": "Profilname",
-  "deleteprofile": "Profil löschen",
+  "profileName": "Profilname",
+  "deleteProfile": "Profil löschen",
   "exportProfile": "Profil exportieren",
-  "deleteprofilefail": "Das aktive Profil kann nicht gelöscht werden!",
-  "addprofilefail": "Ein Profil mit diesem Namen existiert bereits!",
+  "deleteProfileFail": "Das aktive Profil kann nicht gelöscht werden!",
+  "addProfileFail": "Ein Profil mit diesem Namen existiert bereits!",
   "hint2win": "Mit durchschnittlich {averagePoints} Punkten gewinnt {teamName}.",
   "@hint2win": {
     "placeholders": {
@@ -261,8 +260,8 @@
       }
     }
   },
-  "hint2winmatches": "{teamName} reicht ein {factor}x-Match um zu gewinnen.",
-  "@hint2winmatches": {
+  "hint2winMatches": "{teamName} reicht ein {factor}x-Match um zu gewinnen.",
+  "@hint2winMatches": {
     "placeholders": {
       "teamName": {
         "type": "String"
@@ -272,8 +271,8 @@
       }
     }
   },
-  "hint2winspecial": "{teamName} reichen {points} Punkte im {factor}x um zu gewinnen.",
-  "@hint2winspecial": {
+  "hint2winSpecial": "{teamName} reichen {points} Punkte im {factor}x um zu gewinnen.",
+  "@hint2winSpecial": {
     "placeholders": {
       "teamName": {
         "type": "String"
@@ -297,8 +296,8 @@
       }
     }
   },
-  "hint2losematches": "{teamName} benötigt einen {factor}x-Match um nicht zu verlieren.",
-  "@hint2losematches": {
+  "hint2loseMatches": "{teamName} benötigt einen {factor}x-Match um nicht zu verlieren.",
+  "@hint2loseMatches": {
     "placeholders": {
       "teamName": {
         "type": "String"
@@ -308,8 +307,8 @@
       }
     }
   },
-  "hint2loseother": "In den weiteren Runden benötigt {teamName} durchschnittlich {averagePoints} um nicht zu verlieren.",
-  "@hint2loseother": {
+  "hint2loseOther": "In den weiteren Runden benötigt {teamName} durchschnittlich {averagePoints} um nicht zu verlieren.",
+  "@hint2loseOther": {
     "placeholders": {
       "teamName": {
         "type": "String"
@@ -319,16 +318,16 @@
       }
     }
   },
-  "hintCountermatch": "{teamName} benötigt einen Konter-Match um nicht zu verlieren.",
-  "@hintCountermatch": {
+  "hintCounterMatch": "{teamName} benötigt einen Konter-Match um nicht zu verlieren.",
+  "@hintCounterMatch": {
     "placeholders": {
       "teamName": {
         "type": "String"
       }
     }
   },
-  "hintlost": "{teamName} müsste durchschnittlich {averagePoints} Punkte erreichen um zu gewinnen.",
-  "@hintlost": {
+  "hintLost": "{teamName} müsste durchschnittlich {averagePoints} Punkte erreichen um zu gewinnen.",
+  "@hintLost": {
     "placeholders": {
       "teamName": {
         "type": "String"
@@ -338,16 +337,16 @@
       }
     }
   },
-  "matchinfo": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden.",
-  "@matchinfo": {
+  "matchInfo": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden.",
+  "@matchInfo": {
     "placeholders": {
       "matchPoints": {
         "type": "int"
       }
     }
   },
-  "matchinfoBonus": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden. Für einen Match gibt es einen Bonus von {matchBonus} Punkten.",
-  "@matchinfoBonus": {
+  "matchInfoBonus": "Die Berechnungen basieren auf der Annahme, dass für einen Match {matchPoints} Punkte geschrieben werden. Für einen Match gibt es einen Bonus von {matchBonus} Punkten.",
+  "@matchInfoBonus": {
     "placeholders": {
       "matchPoints": {
         "type": "int"
@@ -357,37 +356,29 @@
       }
     }
   },
-  "enterguess": "Ansage von {playerName}",
-  "@enterguess": {
+  "enterGuess": "Ansage von {playerName}",
+  "@enterGuess": {
     "placeholders": {
       "playerName": {
         "type": "String"
       }
     }
   },
-  "diff_players": "Anzahl Spieler",
-  "roundeditX": "Runde {roundNumber} bearbeiten",
-  "@roundeditX": {
+  "diffPlayers": "Anzahl Spieler",
+  "roundEditX": "Runde {roundNumber} bearbeiten",
+  "@roundEditX": {
     "placeholders": {
       "roundNumber": {
         "type": "int"
       }
     }
   },
-  "roundedit": "Runde bearbeiten",
-  "guessedit": "Ansagen bearbeiten",
-  "totalguessed": "Geschätzt: {totalGuess}",
-  "@totalguessed": {
+  "roundEdit": "Runde bearbeiten",
+  "guessEdit": "Ansagen bearbeiten",
+  "totalGuessed": "Geschätzt: {totalGuess}",
+  "@totalGuessed": {
     "placeholders": {
       "totalGuess": {
-        "type": "int"
-      }
-    }
-  },
-  "totalpoints": "Total: {totalPoints}",
-  "@totalpoints": {
-    "placeholders": {
-      "totalPoints": {
         "type": "int"
       }
     }
@@ -404,9 +395,9 @@
     }
   },
   "hideGuess": "Ansagen verstecken",
-  "handweis": "Handweis",
-  "tischweis": "Tischweis",
-  "fremdweis": "Fremdweis (2x)",
+  "handWeis": "Handweis",
+  "tableWeis": "Tischweis",
+  "fremdWeis": "Fremdweis (2x)",
   "remainingPoints": "Total: {total}, ausstehend: {remaining}",
   "@remainingPoints": {
     "placeholders": {
@@ -433,27 +424,27 @@
       }
     }
   },
-  "ober": "Ober",
-  "rosenkonig": "Rosen König",
+  "queen": "Ober",
+  "rosesKing": "Rosen König",
   "lastTrick": "Letzter Stich",
-  "selectplayer": "Wähle zuerst einen Spieler",
+  "selectPlayer": "Wähle zuerst einen Spieler",
   "negative": "Negativ",
   "goal": "Ziel",
-  "nogoal": "kein Ziel",
+  "noGoal": "kein Ziel",
   "goalType": "Ziel des Spiels",
   "positiveGoal": "Je mehr Punkte desto besser",
   "negativeGoal": "Je weniger Punkte desto besser",
-  "enableppr": "Fixe Punkte pro Runde",
-  "winnerrounds": "{winnerName} hat gewonnen!",
-  "@winnerrounds": {
+  "enablePpr": "Fixe Punkte pro Runde",
+  "winnerRounds": "{winnerName} hat gewonnen!",
+  "@winnerRounds": {
     "placeholders": {
       "winnerName": {
         "type": "String"
       }
     }
   },
-  "winnersrounds": "{winnerName1} und {winnerName2} haben gewonnen!",
-  "@winnersrounds": {
+  "winnersRounds": "{winnerName1} und {winnerName2} haben gewonnen!",
+  "@winnersRounds": {
     "placeholders": {
       "winnerName1": {
         "type": "String"
@@ -464,32 +455,32 @@
     }
   },
   "nfc": "Einstellungen per NFC übertragen",
-  "nfc_notAvailable": "Gerät unterstützt kein NFC",
-  "nfc_disabled": "NFC ausgeschaltet",
-  "nfc_enabled": "Halte die Smartphones zusammen um die Einstellungen zu übertragen.",
-  "importprofile": "Profil {profileName} importieren",
-  "@importprofile": {
+  "nfcNotAvailable": "Gerät unterstützt kein NFC",
+  "nfcDisabled": "NFC ausgeschaltet",
+  "nfcEnabled": "Halte die Smartphones zusammen um die Einstellungen zu übertragen.",
+  "importProfile": "Profil {profileName} importieren",
+  "@importProfile": {
     "placeholders": {
       "profileName": {
         "type": "String"
       }
     }
   },
-  "importprofilehint": "Profil {profileName} bleibt unverändert erhalten!",
-  "@importprofilehint": {
+  "importProfileHint": "Profil {profileName} bleibt unverändert erhalten!",
+  "@importProfileHint": {
     "placeholders": {
       "profileName": {
         "type": "String"
       }
     }
   },
-  "replaceprofile": "Profil {profileName} ersetzen",
-  "@replaceprofile": {
+  "replaceProfile": "Profil {profileName} ersetzen",
+  "@replaceProfile": {
     "placeholders": {
       "profileName": {
         "type": "String"
       }
     }
   },
-  "replaceprofilehint": "Die aktuellen Einstellungen und Spielstände werden überschrieben!"
+  "replaceProfileHint": "Die aktuellen Einstellungen und Spielstände werden überschrieben!"
 }

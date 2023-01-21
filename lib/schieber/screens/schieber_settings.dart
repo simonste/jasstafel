@@ -17,7 +17,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.l10n.settings_title(context.l10n.schieber)),
+        title: Text(context.l10n.settingsTitle(context.l10n.schieber)),
       ),
       body: PrefPage(children: [
         PrefTitle(title: Text(context.l10n.countingType)),

@@ -17,7 +17,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.l10n.settings_title(context.l10n.coiffeur)),
+        title: Text(context.l10n.settingsTitle(context.l10n.coiffeur)),
       ),
       body: PrefPage(children: [
         PrefTitle(title: Text(context.l10n.countingType)),

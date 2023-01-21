@@ -18,7 +18,7 @@ class CoiffeurTypeImage extends SvgPicture {
       _unify(context.l10n.kreuz): "kreuz",
       _unify(context.l10n.ecken): "ecken",
       _unify(context.l10n.herz): "herz",
-      _unify(context.l10n.trumpf): "trumpf",
+      _unify(context.l10n.trump): "trumpf",
       _unify(context.l10n.obenabe): "obenabe",
       _unify(context.l10n.obe): "obenabe",
       _unify(context.l10n.ondenufe): "ondenufe",
@@ -38,7 +38,7 @@ class CoiffeurTypeImage extends SvgPicture {
       _unify(context.l10n.superEicheln): "super_eicheln",
       _unify(context.l10n.tutti): "tutti",
       _unify(context.l10n.tannenbaum): "tannenbaum",
-      _unify(context.l10n.emmentaler): "emmentaler",
+      _unify(context.l10n.emmental): "emmentaler",
       _unify(context.l10n.blind): "blind",
     };
     /* spell-checker:enable */

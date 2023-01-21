@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         .name;
 
     return MaterialApp(
-      onGenerateTitle: (context) => context.l10n.app_name,
+      onGenerateTitle: (context) => context.l10n.appName,
       theme: ThemeData(brightness: Brightness.dark, canvasColor: Colors.black),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
