@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
@@ -44,7 +45,6 @@ class _SchieberState extends State<Schieber> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
-    state.settings.fromPrefService(context);
     state.score.setSettings(state.settings);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
@@ -93,7 +93,7 @@ class _SchieberState extends State<Schieber> {
                 });
               },
             ),
-            SettingsButton(const SchieberSettingsScreen(), context,
+            SettingsButton(SchieberSettingsScreen(state), context,
                 () => setState(() => state.settings.fromPrefService(context))),
           ],
         ),

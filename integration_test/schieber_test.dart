@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,8 +81,7 @@ void main() {
     // cspell:disable-next
     await tester.tap(find.text("verschiedene Zielpunkte"));
     await tester.pumpAndSettle();
-    // cspell:disable-next
-    await tester.tap(find.byTooltip("Zurück"));
+    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
     await tester.pumpAndSettle();
 
     expect(find.text('2500'), findsNWidgets(2));
@@ -108,5 +107,51 @@ void main() {
 
     expect(find.text('1212'), findsOneWidget);
     expect(find.text('2121'), findsOneWidget);
+  });
+
+  testWidgets('profile', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Standard'));
+    await tester.pumpAndSettle();
+
+    // cspell:disable-next
+    await tester.tap(find.byTooltip('Profil kopieren'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '2nd Profile');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('2nd Profile'));
+    await tester.pump();
+
+    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.pumpAndSettle();
+    // cspell:disable-next
+    await tester.tap(find.text("Hilfslinien (Z) anzeigen"));
+    // cspell:disable-next
+    await tester.tap(find.text("verschiedene Zielpunkte"));
+    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.pumpAndSettle();
+
+    expect(find.text('2500'), findsNWidgets(2));
+
+    // TODO: add some points
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('2nd Profile'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Standard'));
+    await tester.pump();
+    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.pumpAndSettle();
+
+    expect(find.text('2500'), findsNWidgets(1));
   });
 }

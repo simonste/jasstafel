@@ -4,7 +4,16 @@
     {
       "label": "Generate Settings",
       "type": "shell",
-      "command": "flutter packages pub run build_runner build "
+      "command": "flutter",
+      "args": ["packages", "pub", "run", "build_runner", "build"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate Localization",
+      "type": "flutter",
+      "command": "flutter",
+      "args": ["gen-l10n"],
+      "problemMatcher": []
     }
   ]
 }

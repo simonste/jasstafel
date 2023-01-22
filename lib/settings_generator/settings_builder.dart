@@ -26,7 +26,9 @@ class GenerateSettings implements Builder {
     var library = Library((b) => {
           b.directives.addAll([
             Directive.import('package:flutter/widgets.dart'),
-            Directive.import('package:pref/pref.dart')
+            Directive.import('package:pref/pref.dart'),
+            Directive.import(
+                'package:shared_preferences/shared_preferences.dart')
           ]),
           b.body.addAll(settings.create())
         });

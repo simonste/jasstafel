@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:yaml/yaml.dart';
 
 class Setting {
   final String _name;
@@ -25,6 +26,10 @@ class Setting {
   String _assignment() {
     if (_defaultValue is String) {
       return "'$_defaultValue'";
+    } else if (_defaultValue is YamlList) {
+      var defaultList =
+          (_defaultValue as YamlList).map((element) => "\"$element\"").toList();
+      return "$defaultList";
     }
     return '$_defaultValue';
   }
@@ -47,20 +52,41 @@ class Setting {
     return "$_name = pref.get('$_prefName') ?? $_name;";
   }
 
-  @override
-  String toString() {
-    return "\$$_name";
+  String toPreferences() {
+    if (_defaultValue is bool) {
+      return "preferences.setBool('$_prefName', $_name);";
+    } else if (_defaultValue is int) {
+      return "preferences.setInt('$_prefName', $_name);";
+    } else if (_defaultValue is double) {
+      return "preferences.setDouble('$_prefName', $_name);";
+    } else if (_defaultValue is String) {
+      return "preferences.setString('$_prefName', $_name);";
+    } else if (_defaultValue is YamlList) {
+      return "preferences.setStringList('$_prefName', $_name);";
+    }
+    return '$_defaultValue';
   }
 
-  String fromString(String value) {
-    if (_defaultValue is int) {
-      return "try{ $_name = int.parse($value); } catch (e) { $_name = $_defaultValue; }";
-    } else if (_defaultValue is bool) {
-      return "try{ $_name = ($value == 'true'); } catch (e) { $_name = $_defaultValue; }";
+  String fromPreferences() {
+    if (_defaultValue is bool) {
+      return "$_name = preferences.getBool('$_prefName') ?? $_name;";
+    } else if (_defaultValue is int) {
+      return "$_name = preferences.getInt('$_prefName') ?? $_name;";
+    } else if (_defaultValue is double) {
+      return "$_name = preferences.getDouble('$_prefName') ?? $_name;";
     } else if (_defaultValue is String) {
-      return "try{ $_name = $value; } catch (e) { $_name = '$_defaultValue'; }";
-    } else {
-      throw ArgumentError("unhandled type of $_name (${_name.runtimeType})");
+      return "$_name = preferences.getString('$_prefName') ?? $_name;";
+    } else if (_defaultValue is YamlList) {
+      return "$_name = preferences.getStringList('$_prefName') ?? $_name;";
     }
+    return '$_defaultValue';
+  }
+
+  String toJson() {
+    return "'$_prefName': $_name,";
+  }
+
+  String fromJson() {
+    return "$_name = json['$_prefName'] ?? ${_assignment()};";
   }
 }

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
+import 'package:jasstafel/common/widgets/profile_button.dart';
+import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class SchieberSettingsScreen extends StatefulWidget {
-  const SchieberSettingsScreen({super.key});
+  final BoardData boardData;
+
+  const SchieberSettingsScreen(this.boardData, {super.key});
 
   @override
   State<SchieberSettingsScreen> createState() => _SchieberSettingsScreenState();
@@ -20,6 +25,11 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
         title: Text(context.l10n.settingsTitle(context.l10n.schieber)),
       ),
       body: PrefPage(children: [
+        PrefTitle(title: Text(context.l10n.profiles)),
+        ProfileButton(
+            pageTitle: Text(context.l10n.selectProfile),
+            title: Text(widget.boardData.profiles.active),
+            page: ProfilePage(widget.boardData, () => setState(() {}))),
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefDropdown(
           title: Text(context.l10n.goalType),

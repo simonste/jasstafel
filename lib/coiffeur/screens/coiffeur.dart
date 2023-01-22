@@ -5,6 +5,7 @@ import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_row.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
@@ -43,7 +44,6 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
-    state.settings.fromPrefService(context);
     state.score.setSettings(state.settings);
 
     return Scaffold(
@@ -61,7 +61,7 @@ class _CoiffeurState extends State<Coiffeur> {
             context,
             () => setState(() => state.reset()),
           ),
-          SettingsButton(const CoiffeurSettingsScreen(), context,
+          SettingsButton(CoiffeurSettingsScreen(state), context,
               () => setState(() => state.settings.fromPrefService(context))),
         ],
       ),

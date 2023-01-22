@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';

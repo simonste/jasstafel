@@ -70,5 +70,5 @@
     "weis",
     "wunsch"
   ],
-  "cSpell.ignoreRegExpList": ["import '[a-z0-9/:]+.dart"]
+  "cSpell.ignoreRegExpList": ["import '[.a-z0-9/:]+.dart"]
 }

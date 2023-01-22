@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:pref/pref.dart';
-
-enum Board { schieber, coiffeur }
 
 class BoardTitle extends Theme {
   BoardTitle(Board board, BuildContext context, {super.key})

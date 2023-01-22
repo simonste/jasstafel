@@ -33,18 +33,31 @@ class SettingsGroup {
     for (Setting setting in _settings) {
       toPref += setting.toPref();
     }
+
     var fromPref = "var pref = PrefService.of(context);\n";
     for (Setting setting in _settings) {
       fromPref += setting.fromPref();
     }
-    var toString = "return '";
-    for (int i = 0; i < _settings.length; i++) {
-      toString += "${_settings[i]},";
+
+    var toPreferences = "";
+    for (Setting setting in _settings) {
+      toPreferences += setting.toPreferences();
     }
-    toString = "${toString.substring(0, toString.length - 1)}';";
-    var fromString = "var values = str.split(',');\n";
+
+    var fromPreferences = "";
+    for (Setting setting in _settings) {
+      fromPreferences += setting.fromPreferences();
+    }
+
+    var toJson = "return <String, dynamic>{";
     for (int i = 0; i < _settings.length; i++) {
-      fromString += _settings[i].fromString("values[$i]");
+      toJson += _settings[i].toJson();
+    }
+    toJson += "};";
+
+    var fromJson = "";
+    for (int i = 0; i < _settings.length; i++) {
+      fromJson += _settings[i].fromJson();
     }
 
     var methods = [
@@ -60,17 +73,28 @@ class SettingsGroup {
           ..name = 'context'
           ..type = refer('BuildContext')))
         ..body = Code(fromPref)),
-      Method((b) => b
-        ..name = 'toString'
-        ..annotations.add(refer('override'))
-        ..returns = refer('String')
-        ..body = Code(toString)),
       Method.returnsVoid((b) => b
-        ..name = 'fromString'
+        ..name = 'toPreferences'
         ..requiredParameters.add(Parameter((b) => b
-          ..name = 'str'
-          ..type = refer('String')))
-        ..body = Code(fromString)),
+          ..name = 'preferences'
+          ..type = refer('SharedPreferences')))
+        ..body = Code(toPreferences)),
+      Method.returnsVoid((b) => b
+        ..name = 'fromPreferences'
+        ..requiredParameters.add(Parameter((b) => b
+          ..name = 'preferences'
+          ..type = refer('SharedPreferences')))
+        ..body = Code(fromPreferences)),
+      Method((b) => b
+        ..name = 'toJson'
+        ..returns = refer('Map<String, dynamic>')
+        ..body = Code(toJson)),
+      Method.returnsVoid((b) => b
+        ..name = 'fromJson'
+        ..requiredParameters.add(Parameter((b) => b
+          ..name = 'json'
+          ..type = refer('Map<String, dynamic>')))
+        ..body = Code(fromJson)),
     ];
 
     String def = "";
