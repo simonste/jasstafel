@@ -23,14 +23,14 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefDropdown(
           title: Text(context.l10n.goalType),
-          pref: SchieberSettings.keys.goalType,
+          pref: SchieberSettings.keys.goalTypePoints,
           items: [
             DropdownMenuItem(value: true, child: Text(context.l10n.goalPoints)),
             DropdownMenuItem(value: false, child: Text(context.l10n.rounds)),
           ],
         ),
         PrefDisabler(
-          pref: SchieberSettings.keys.goalType,
+          pref: SchieberSettings.keys.goalTypePoints,
           reversed: true,
           children: [
             PrefCheckbox(

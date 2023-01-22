@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
 
 Future<String?> stringDialogBuilder(
-    BuildContext context, TextEditingController controller) {
+    BuildContext context, TextEditingController controller,
+    {Widget? title}) {
+  title ??= Text(context.l10n.teamName);
   return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       void finish() {
-        try {
-          Navigator.of(context).pop(controller.text);
-        } on FormatException {
+        if (controller.text.isEmpty) {
           Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pop(controller.text);
         }
       }
 
       return AlertDialog(
-        title: Text(context.l10n.teamName),
+        title: title,
         content: TextField(
             decoration: InputDecoration(hintText: context.l10n.teamName),
             autofocus: true,

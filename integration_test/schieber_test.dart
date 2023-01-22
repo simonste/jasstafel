@@ -36,4 +36,77 @@ void main() {
     expect(find.text('Team 1'), findsNothing);
     expect(find.text('Super Team'), findsOneWidget);
   });
+
+  testWidgets('do not accept empty team name', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Team 2'), findsOneWidget);
+    await tester.tap(find.text('Team 2'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('Team 2'), findsOneWidget);
+  });
+
+  testWidgets('change goal points', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    expect(find.text('2500'), findsOneWidget);
+
+    await tester.tap(find.text('2500'));
+    await tester.pumpAndSettle();
+
+    // cspell:disable-next
+    expect(find.text('Punkte'), findsWidgets);
+    expect(find.byType(TextField), findsOneWidget);
+    await tester.enterText(find.byType(TextField), '2121');
+    await tester.pump();
+
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('2500'), findsNothing);
+    expect(find.text('2121'), findsOneWidget);
+  });
+
+  testWidgets('change goal points 2', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key("SettingsButton")));
+    await tester.pumpAndSettle();
+    // cspell:disable-next
+    await tester.tap(find.text("verschiedene Zielpunkte"));
+    await tester.pumpAndSettle();
+    // cspell:disable-next
+    await tester.tap(find.byTooltip("Zurück"));
+    await tester.pumpAndSettle();
+
+    expect(find.text('2500'), findsNWidgets(2));
+
+    var gp0 = find.byKey(const Key("GoalPoints0"));
+    var gp1 = find.byKey(const Key("GoalPoints1"));
+    expect(gp0, findsOneWidget);
+    expect(gp1, findsOneWidget);
+
+    await tester.tap(gp0);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '2121');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(gp1);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '1212');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('1212'), findsOneWidget);
+    expect(find.text('2121'), findsOneWidget);
+  });
 }

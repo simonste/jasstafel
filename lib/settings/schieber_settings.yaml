@@ -1,19 +1,10 @@
 SchieberSettings:
-  GoalType:
+  GoalTypePoints:
     store: "schieber_goal"
     default: true
-  GoalRounds:
-    store: "schieber_goal_rounds"
-    default: 4
   DifferentGoals:
     store: "schieber_different_goals"
     default: false
-  GoalPoints:
-    store: "schieber_goal_points"
-    default: 2500
-  GoalPoints2:
-    store: "schieber_goal_points2"
-    default: 2500
   Match:
     store: "schieber_match"
     default: 257

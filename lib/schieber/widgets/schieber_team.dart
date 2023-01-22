@@ -41,7 +41,7 @@ class SchieberTeam extends StatelessWidget {
 
     final teamData = data.score.team[teamId];
     final pts = teamData.sum();
-    final progress = pts / data.settings.goalPoints;
+    final progress = pts / data.score.team[teamId].goalPoints;
     final hMargin = width * 0.05;
     final strokeHeight = height * 0.2;
     final strokesWidth = width * 0.4;

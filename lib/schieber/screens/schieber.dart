@@ -41,21 +41,6 @@ class _SchieberState extends State<Schieber> {
     restoreData();
   }
 
-  int getGoalPoints(int team) {
-    if (state.settings.differentGoals && team == 0) {
-      return state.settings.goalPoints2;
-    }
-    return state.settings.goalPoints;
-  }
-
-  void setGoalPoints(int team, int points) {
-    if (state.settings.differentGoals && team == 0) {
-      state.settings.goalPoints2 = points;
-    } else {
-      state.settings.goalPoints = points;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
@@ -68,7 +53,8 @@ class _SchieberState extends State<Schieber> {
       points(int teamId) {
         return GestureDetector(
             onTap: () => _pointsDialog(teamId),
-            child: Text(getGoalPoints(teamId).toString(), textScaleFactor: 2));
+            child: Text(state.score.team[teamId].goalPoints.toString(),
+                textScaleFactor: 2, key: Key("GoalPoints$teamId")));
       }
 
       if (state.settings.differentGoals) {
@@ -136,12 +122,12 @@ class _SchieberState extends State<Schieber> {
 
   void _pointsDialog(int teamId) async {
     var controller = TextEditingController();
-    controller.text = getGoalPoints(teamId).toString();
+    controller.text = state.score.team[teamId].goalPoints.toString();
 
     final input = await pointsDialogBuilder(context, controller);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      setGoalPoints(teamId, input.value!);
+      state.score.team[teamId].goalPoints = input.value;
       state.save();
     });
   }

@@ -4,7 +4,7 @@ class SettingsButton<T extends StatefulWidget> extends IconButton {
   final T widget;
 
   SettingsButton(this.widget, BuildContext context, Function callback,
-      {super.key})
+      {super.key = const Key("SettingsButton")})
       : super(
             onPressed: () {
               Navigator.of(context).push(

@@ -32,6 +32,7 @@ class TeamData {
       _$TeamDataFromJson(json);
 
   String name;
+  int? goalPoints = 2500;
   bool? hill;
   bool? win;
   bool flip = false;
@@ -154,6 +155,7 @@ class SchieberScore implements Score {
   void setSettings(settings) => _settings = settings;
 
   var team = [TeamData("Team 1"), TeamData("Team 2")];
+  int? goalRounds;
   List<SchieberRound> rounds = [];
 
   var statistics = SchieberStatistics();
@@ -194,14 +196,16 @@ class SchieberScore implements Score {
     team[0].add(pts1);
     team[1].add(pts2);
 
-    if (team[0].hill == null || team[1].hill == null) {
-      if (team[0].sum() > _settings.goalPoints / 2) {
-        team[0].hill = true;
-        team[1].hill = false;
-      }
-      if (team[1].sum() > _settings.goalPoints / 2) {
-        team[0].hill = false;
-        team[1].hill = true;
+    if (_settings.goalTypePoints) {
+      if (team[0].hill == null || team[1].hill == null) {
+        if (team[0].sum() > team[0].goalPoints! / 2) {
+          team[0].hill = true;
+          team[1].hill = false;
+        }
+        if (team[1].sum() > team[1].goalPoints! / 2) {
+          team[0].hill = false;
+          team[1].hill = true;
+        }
       }
     }
   }
