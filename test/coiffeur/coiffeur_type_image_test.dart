@@ -5,13 +5,8 @@ import 'package:jasstafel/coiffeur/widgets/coiffeur_type_image.dart';
 import '../helper/testapp.dart';
 
 void main() {
-  Widget makeTestable(widget) {
-    return JasstafelTestApp(
-        child: Flex(direction: Axis.horizontal, children: [widget]));
-  }
-
   testWidgets('type matching', (WidgetTester tester) async {
-    final widget = makeTestable(Builder(builder: (BuildContext ctx) {
+    final widget = makeTestableExpanded(Builder(builder: (BuildContext ctx) {
       /* spell-checker:disable */
       expect(CoiffeurTypeImage.assetName(ctx, "Eichel"), "eicheln");
       expect(CoiffeurTypeImage.assetName(ctx, "Eichle"), "eicheln");

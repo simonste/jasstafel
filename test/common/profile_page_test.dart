@@ -15,19 +15,10 @@ bool radioSelected(Key key) {
 }
 
 void main() {
-  Widget makeTestable(widget) {
-    return JasstafelTestApp(
-        child: Flex(
-            direction: Axis.horizontal, children: [Expanded(child: widget)]));
-  }
-
   testWidgets('copy profile', (WidgetTester tester) async {
     var data = BoardData(SchieberSettings(), SchieberScore(), "");
 
-    final widget = makeTestable(Builder(builder: (BuildContext context) {
-      return ProfilePage(data, () {});
-    }));
-
+    final widget = makeTestableExpanded(ProfilePage(data, () {}));
     await tester.pumpWidget(widget);
 
     expect(find.text('Standard'), findsOneWidget);
@@ -50,10 +41,7 @@ void main() {
   testWidgets('rename active profile', (WidgetTester tester) async {
     var data = BoardData(SchieberSettings(), SchieberScore(), "");
 
-    final widget = makeTestable(Builder(builder: (BuildContext context) {
-      return ProfilePage(data, () {});
-    }));
-
+    final widget = makeTestableExpanded(ProfilePage(data, () {}));
     await tester.pumpWidget(widget);
 
     expect(find.text('Standard'), findsOneWidget);
@@ -75,10 +63,7 @@ void main() {
     var data = BoardData(SchieberSettings(), SchieberScore(), "");
     data.profiles.list.add("Foo:Bar");
 
-    final widget = makeTestable(Builder(builder: (BuildContext context) {
-      return ProfilePage(data, () {});
-    }));
-
+    final widget = makeTestableExpanded(ProfilePage(data, () {}));
     await tester.pumpWidget(widget);
 
     expect(find.text('Foo'), findsOneWidget);
@@ -101,10 +86,7 @@ void main() {
     var data = BoardData(SchieberSettings(), SchieberScore(), "");
     data.profiles.list.add("Foo:Bar");
 
-    final widget = makeTestable(Builder(builder: (BuildContext context) {
-      return ProfilePage(data, () {});
-    }));
-
+    final widget = makeTestableExpanded(ProfilePage(data, () {}));
     await tester.pumpWidget(widget);
 
     expect(find.text('Foo'), findsOneWidget);

@@ -5,11 +5,6 @@ import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
 import '../helper/testapp.dart';
 
 void main() {
-  Widget makeTestable(widget) {
-    return JasstafelTestApp(
-        child: Flex(direction: Axis.horizontal, children: [widget]));
-  }
-
   testWidgets('type cell', (WidgetTester tester) async {
     final widget = makeTestable(Builder(builder: (BuildContext context) {
       return CoiffeurTypeCell(11, "Eicheln", context);
@@ -21,6 +16,6 @@ void main() {
     expect(find.text('Eicheln'), findsOneWidget);
 
     await tester.longPress(find.text('Eicheln'));
-    await tester.pump();
+    await tester.pumpAndSettle();
   });
 }
