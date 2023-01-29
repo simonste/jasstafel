@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
-import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_row.dart';
@@ -123,12 +122,7 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var cells = [
-      CoiffeurTypeCell(
-        state.score.rows[i].factor,
-        state.score.rows[i].type,
-        context,
-        onLongPress: () => _coiffeurTypeDialog(i),
-      ),
+      CoiffeurTypeCell(state, i, () => setState(() {})),
       teamWidget(0, i),
       teamWidget(1, i),
     ];
@@ -228,25 +222,6 @@ class _CoiffeurState extends State<Coiffeur> {
           state.score.rows[row].pts[team].match = true;
         }
       }
-      state.save();
-    });
-  }
-
-  void _coiffeurTypeDialog(row) async {
-    var controller = TextEditingController(text: state.score.rows[row].type);
-
-    var title = state.settings.customFactor
-        ? context.l10n.xRound(row + 1)
-        : context.l10n.xTimes(row + 1);
-
-    final input = await coiffeurTypeDialogBuilder(context, title, controller,
-        state.score.rows[row].factor, state.settings.customFactor);
-    if (input == null || input.factor == 0 || input.type.isEmpty) {
-      return; // empty name not allowed
-    }
-    setState(() {
-      state.score.rows[row].factor = input.factor;
-      state.score.rows[row].type = input.type;
       state.save();
     });
   }
