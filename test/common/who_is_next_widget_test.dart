@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
-import 'helper/testapp.dart';
+import '../helper/testapp.dart';
 
 void main() {
   void expectTextColor(WidgetTester tester, String player, Color color) {

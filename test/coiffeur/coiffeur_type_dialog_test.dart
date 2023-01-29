@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
 
-import 'helper/testapp.dart';
+import '../helper/testapp.dart';
 
 void main() {
   const customFactor = true;
