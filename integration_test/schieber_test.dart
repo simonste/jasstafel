@@ -6,6 +6,11 @@ import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String? text(Key key) {
+  var textWidget = find.byKey(key).evaluate().single.widget as Text;
+  return textWidget.data;
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -109,6 +114,26 @@ void main() {
     expect(find.text('2121'), findsOneWidget);
   });
 
+  testWidgets('add points touch', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key("add20_1")));
+    await tester.tap(find.byKey(const Key("add20_1")));
+    await tester.tap(find.byKey(const Key("add100_1")));
+    await tester.tap(find.byKey(const Key("subtract1_1")));
+    await tester.pump();
+    expect(text(const Key("sum_0")), "0");
+    expect(text(const Key("sum_1")), "139");
+
+    await tester.tap(find.byKey(const Key("add100_0")));
+    await tester.tap(find.byKey(const Key("add50_0")));
+    await tester.tap(find.byKey(const Key("add1_0")));
+    await tester.pump();
+    expect(text(const Key("sum_0")), "151");
+    expect(text(const Key("sum_1")), "139");
+  });
+
   testWidgets('profile', (tester) async {
     app.main();
     await tester.pumpAndSettle();
@@ -139,7 +164,12 @@ void main() {
 
     expect(find.text('2500'), findsNWidgets(2));
 
-    // TODO: add some points
+    await tester.tap(find.byKey(const Key("add20_0")));
+    await tester.tap(find.byKey(const Key("add50_1")));
+    await tester.tap(find.byKey(const Key("add50_1")));
+    await tester.pump();
+    expect(text(const Key("sum_0")), "20");
+    expect(text(const Key("sum_1")), "100");
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -153,5 +183,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2500'), findsNWidgets(1));
+    expect(text(const Key("sum_0")), "0");
+    expect(text(const Key("sum_1")), "0");
   });
 }

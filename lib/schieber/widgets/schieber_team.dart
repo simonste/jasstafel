@@ -60,12 +60,13 @@ class SchieberTeam extends StatelessWidget {
     );
     teamPoints() {
       if (data.settings.bigScore) {
-        return Center(child: Text("$pts", textScaleFactor: 4));
+        return Center(
+            child: Text("$pts", textScaleFactor: 4, key: Key("sum_$teamId")));
       }
       return Positioned(
         top: height * 0.01,
         right: width * 0.01,
-        child: Text("$pts", textScaleFactor: 2),
+        child: Text("$pts", textScaleFactor: 2, key: Key("sum_$teamId")),
       );
     }
 
@@ -81,6 +82,7 @@ class SchieberTeam extends StatelessWidget {
 
     strokes20() {
       return Positioned(
+        key: Key("add20_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top3,
@@ -104,6 +106,7 @@ class SchieberTeam extends StatelessWidget {
         var angle = -atan2(dy, dx) / 2 / pi;
 
         return Positioned(
+            key: Key("add50_$teamId"),
             width: strokesWidth,
             height: strokeHeight,
             top: top2 * 1.1,
@@ -113,6 +116,7 @@ class SchieberTeam extends StatelessWidget {
       }
 
       return Positioned(
+        key: Key("add50_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top2,
@@ -128,6 +132,7 @@ class SchieberTeam extends StatelessWidget {
       }
 
       return Positioned(
+        key: Key("add100_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top1,
@@ -159,6 +164,7 @@ class SchieberTeam extends StatelessWidget {
       }
       if (add) {
         return Positioned(
+            key: Key("add1_$teamId"),
             height: strokeHeight,
             top: (top1 + strokeHeight),
             right: hMargin,
@@ -174,6 +180,7 @@ class SchieberTeam extends StatelessWidget {
             ));
       } else {
         return Positioned(
+            key: Key("subtract1_$teamId"),
             top: (top1 + strokeHeight) + strokeHeight * 0.75,
             right: hMargin,
             width: numberWidth,
