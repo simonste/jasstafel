@@ -93,17 +93,17 @@ class CoiffeurScore implements Score {
   int total(team) {
     assert(team < 3);
     int sum = 0;
-    for (var row in rows) {
-      if (_pts(row, team) != null) {
+    for (var i = 0; i < _settings.rows; i++) {
+      final row = rows[i];
+      if (team == 2 && !_settings.threeTeams) {
+        if (row.pts[0].pts != null && row.pts[1].pts != null) {
+          sum += _rowDiff(row);
+        }
+      } else if (_pts(row, team) != null) {
         sum += row.factor * _pts(row, team)!;
         if (_settings.bonus && row.pts[team].match) {
           sum += _bonus();
         }
-      } else if (team == 2 &&
-          !_settings.threeTeams &&
-          row.pts[0].pts != null &&
-          row.pts[1].pts != null) {
-        sum += _rowDiff(row);
       }
     }
     return sum;

@@ -142,4 +142,19 @@ void main() {
     expect(score.total(0), 60);
     expect(score.diff(2), -3 * 60);
   });
+
+  test('do not count hidden cells', () {
+    var score = CoiffeurScore();
+    var settings = CoiffeurSettings();
+    settings.rows = 8;
+    score.setSettings(settings);
+    score.rows[6].pts[0].pts = 61;
+    score.rows[9].pts[1].pts = 62;
+    score.rows[5].pts[2].pts = 63;
+
+    expect(score.noOfRounds(), 1);
+    expect(score.total(0), 7 * 61);
+    expect(score.total(1), 0);
+    expect(score.total(2), 0);
+  });
 }

@@ -117,6 +117,7 @@ class _CoiffeurState extends State<Coiffeur> {
         onTap: () {
           _pointsDialog(team, row);
         },
+        key: Key("$team:$row"),
       );
     }
 
@@ -143,12 +144,12 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      CoiffeurPointsCell.number(data.score.total(0)),
-      CoiffeurPointsCell.number(data.score.total(1)),
+      CoiffeurPointsCell.number(data.score.total(0), key: const Key("sum_0")),
+      CoiffeurPointsCell.number(data.score.total(1), key: const Key("sum_1")),
     ];
     if (data.settings.threeTeams || data.settings.thirdColumn) {
       cells.add(
-        CoiffeurPointsCell.number(data.score.total(2)),
+        CoiffeurPointsCell.number(data.score.total(2), key: const Key("sum_2")),
       );
     }
 
@@ -185,12 +186,14 @@ class _CoiffeurState extends State<Coiffeur> {
                   onTap: () {
                     Navigator.of(context).pop(IntValue(null, scratch: true));
                   },
+                  key: const Key('scratch'),
                   child: SvgPicture.asset("assets/actions/scratch.svg"))),
           Expanded(
               child: InkWell(
                   onTap: () {
                     controller.text = data.settings.match.toString();
                   },
+                  key: const Key('match'),
                   child: SvgPicture.asset("assets/actions/match.svg"))),
           Expanded(
               child: InkWell(
@@ -202,6 +205,7 @@ class _CoiffeurState extends State<Coiffeur> {
                       controller.text = "157";
                     }
                   },
+                  key: const Key('157-x'),
                   child: SvgPicture.asset("assets/actions/157-x.svg")))
         ]));
 
