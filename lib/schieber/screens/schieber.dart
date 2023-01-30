@@ -12,7 +12,7 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/dialog/schieber_history.dart';
 import 'package:jasstafel/schieber/dialog/schieber_statistics.dart';
-import 'package:jasstafel/schieber/screens/schieber_settings.dart';
+import 'package:jasstafel/schieber/screens/schieber_settings_screen.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:vibration/vibration.dart';
@@ -27,11 +27,11 @@ class Schieber extends StatefulWidget {
 }
 
 class _SchieberState extends State<Schieber> {
-  var state = BoardData(
+  var data = BoardData(
       SchieberSettings(), SchieberScore(), SchieberSettingsKeys().data);
 
   void restoreData() async {
-    state = await state.load() as BoardData<SchieberSettings, SchieberScore>;
+    data = await data.load() as BoardData<SchieberSettings, SchieberScore>;
     setState(() {}); // trigger widget update
   }
 
@@ -45,7 +45,7 @@ class _SchieberState extends State<Schieber> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
-    state.score.setSettings(state.settings);
+    data.score.setSettings(data.settings);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
@@ -53,11 +53,11 @@ class _SchieberState extends State<Schieber> {
       points(int teamId) {
         return GestureDetector(
             onTap: () => _pointsDialog(teamId),
-            child: Text(state.score.team[teamId].goalPoints.toString(),
+            child: Text(data.score.team[teamId].goalPoints.toString(),
                 textScaleFactor: 2, key: Key("GoalPoints$teamId")));
       }
 
-      if (state.settings.differentGoals) {
+      if (data.settings.differentGoals) {
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           RotatedBox(quarterTurns: 2, child: points(0)),
           points(1)
@@ -72,29 +72,29 @@ class _SchieberState extends State<Schieber> {
           actions: [
             WhoIsNextButton(
                 context,
-                [state.score.team[0].name, state.score.team[1].name],
-                state.score.noOfRounds(),
-                state.common.whoIsNext,
-                () => state.save()),
-            SchieberHistoryButton(context, state, () {
+                [data.score.team[0].name, data.score.team[1].name],
+                data.score.noOfRounds(),
+                data.common.whoIsNext,
+                () => data.save()),
+            SchieberHistoryButton(context, data, () {
               setState(() {
-                state.score.undo();
-                state.save();
+                data.score.undo();
+                data.save();
               });
             }),
-            SchieberStatisticsButton(context, state),
+            SchieberStatisticsButton(context, data),
             DeleteButton(
               context,
-              () => setState(() => state.reset()),
+              () => setState(() => data.reset()),
               deleteAllFunction: () {
                 setState(() {
-                  state.score.statistics.reset();
-                  state.reset();
+                  data.score.statistics.reset();
+                  data.reset();
                 });
               },
             ),
-            SettingsButton(SchieberSettingsScreen(state), context,
-                () => setState(() => state.settings.fromPrefService(context))),
+            SettingsButton(SchieberSettingsScreen(data), context,
+                () => setState(() => data.settings.fromPrefService(context))),
           ],
         ),
         body: Stack(children: [
@@ -102,60 +102,60 @@ class _SchieberState extends State<Schieber> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SchieberTeam(0, state, dialogs),
-                SchieberTeam(1, state, dialogs),
+                SchieberTeam(0, data, dialogs),
+                SchieberTeam(1, data, dialogs),
               ]),
           Center(child: goalPoints())
         ]));
   }
 
   void _stringDialog(team) async {
-    var controller = TextEditingController(text: state.score.team[team].name);
+    var controller = TextEditingController(text: data.score.team[team].name);
 
     final input = await stringDialogBuilder(context, controller);
     if (input == null) return; // empty name not allowed
     setState(() {
-      state.score.team[team].name = input;
-      state.save();
+      data.score.team[team].name = input;
+      data.save();
     });
   }
 
   void _pointsDialog(int teamId) async {
     var controller = TextEditingController();
-    controller.text = state.score.team[teamId].goalPoints.toString();
+    controller.text = data.score.team[teamId].goalPoints.toString();
 
     final input = await pointsDialogBuilder(context, controller);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      state.score.team[teamId].goalPoints = input.value;
-      state.save();
+      data.score.team[teamId].goalPoints = input.value;
+      data.save();
     });
   }
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(context, teamId,
-        roundPoints(state.settings.match), state.score.team[teamId]);
+        roundPoints(data.settings.match), data.score.team[teamId]);
     if (input == null) {
       return; // empty name not allowed
     }
     setState(() {
-      state.score.add(input.points1, input.points2);
-      state.save();
+      data.score.add(input.points1, input.points2);
+      data.save();
     });
   }
 
   void _onTap(int teamId, int pts) {
-    if (state.settings.touchScreen) {
-      if (state.settings.vibrate) {
+    if (data.settings.touchScreen) {
+      if (data.settings.vibrate) {
         Vibration.vibrate(duration: 50);
       }
       setState(() {
         if (teamId == 0) {
-          state.score.add(pts, 0);
+          data.score.add(pts, 0);
         } else {
-          state.score.add(0, pts);
+          data.score.add(0, pts);
         }
-        state.save();
+        data.save();
       });
     }
   }

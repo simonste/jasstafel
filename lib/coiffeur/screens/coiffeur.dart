@@ -14,7 +14,7 @@ import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
-import 'coiffeur_settings.dart';
+import 'coiffeur_settings_screen.dart';
 import 'dart:developer' as developer;
 
 class Coiffeur extends StatefulWidget {
@@ -25,11 +25,11 @@ class Coiffeur extends StatefulWidget {
 }
 
 class _CoiffeurState extends State<Coiffeur> {
-  var state = BoardData(
+  var data = BoardData(
       CoiffeurSettings(), CoiffeurScore(), CoiffeurSettingsKeys().data);
 
   void restoreData() async {
-    state = await state.load() as BoardData<CoiffeurSettings, CoiffeurScore>;
+    data = await data.load() as BoardData<CoiffeurSettings, CoiffeurScore>;
     setState(() {}); // trigger widget update
   }
 
@@ -43,7 +43,7 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
-    state.score.setSettings(state.settings);
+    data.score.setSettings(data.settings);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,17 +51,16 @@ class _CoiffeurState extends State<Coiffeur> {
         actions: [
           WhoIsNextButton(
               context,
-              state.score.teamName
-                  .sublist(0, state.settings.threeTeams ? 3 : 2),
-              state.score.noOfRounds(),
-              state.common.whoIsNext,
-              () => state.save()),
+              data.score.teamName.sublist(0, data.settings.threeTeams ? 3 : 2),
+              data.score.noOfRounds(),
+              data.common.whoIsNext,
+              () => data.save()),
           DeleteButton(
             context,
-            () => setState(() => state.reset()),
+            () => setState(() => data.reset()),
           ),
-          SettingsButton(CoiffeurSettingsScreen(state), context,
-              () => setState(() => state.settings.fromPrefService(context))),
+          SettingsButton(CoiffeurSettingsScreen(data), context,
+              () => setState(() => data.settings.fromPrefService(context))),
         ],
       ),
       body: Column(
@@ -72,7 +71,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
   List<CoiffeurRow> get _createRows {
     var list = [_createHeader];
-    for (var i = 0; i < state.settings.rows; i++) {
+    for (var i = 0; i < data.settings.rows; i++) {
       list.add(_createRow(i));
     }
     list.add(_createFooter);
@@ -82,7 +81,7 @@ class _CoiffeurState extends State<Coiffeur> {
   CoiffeurRow get _createHeader {
     Widget teamWidget(team) {
       return CoiffeurCell(
-        state.score.teamName[team],
+        data.score.teamName[team],
         onTap: () {
           _stringDialog(team);
         },
@@ -91,7 +90,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
     var cells = [
       CoiffeurCell(
-        context.l10n.noOfRounds(state.score.noOfRounds()),
+        context.l10n.noOfRounds(data.score.noOfRounds()),
         onTap: () {},
         leftBorder: false,
         textScaleFactor: 1.0,
@@ -100,11 +99,11 @@ class _CoiffeurState extends State<Coiffeur> {
       teamWidget(1),
     ];
 
-    if (state.settings.threeTeams) {
+    if (data.settings.threeTeams) {
       cells.add(teamWidget(2));
-    } else if (state.settings.thirdColumn) {
+    } else if (data.settings.thirdColumn) {
       cells.add(CoiffeurCell(
-        state.common.timestamps.elapsed(context),
+        data.common.timestamps.elapsed(context),
         textScaleFactor: 1.0,
       ));
     }
@@ -114,7 +113,7 @@ class _CoiffeurState extends State<Coiffeur> {
   CoiffeurRow _createRow(int i) {
     Widget teamWidget(team, row) {
       return CoiffeurPointsCell(
-        state.score.points(row, team),
+        data.score.points(row, team),
         onTap: () {
           _pointsDialog(team, row);
         },
@@ -122,14 +121,14 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var cells = [
-      CoiffeurTypeCell(state, i, () => setState(() {})),
+      CoiffeurTypeCell(data, i, () => setState(() {})),
       teamWidget(0, i),
       teamWidget(1, i),
     ];
-    if (state.settings.threeTeams) {
+    if (data.settings.threeTeams) {
       cells.add(teamWidget(2, i));
-    } else if (state.settings.thirdColumn) {
-      cells.add(CoiffeurPointsCell.number(state.score.diff(i)));
+    } else if (data.settings.thirdColumn) {
+      cells.add(CoiffeurPointsCell.number(data.score.diff(i)));
     }
 
     return CoiffeurRow(cells, topBorder: true);
@@ -144,12 +143,12 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      CoiffeurPointsCell.number(state.score.total(0)),
-      CoiffeurPointsCell.number(state.score.total(1)),
+      CoiffeurPointsCell.number(data.score.total(0)),
+      CoiffeurPointsCell.number(data.score.total(1)),
     ];
-    if (state.settings.threeTeams || state.settings.thirdColumn) {
+    if (data.settings.threeTeams || data.settings.thirdColumn) {
       cells.add(
-        CoiffeurPointsCell.number(state.score.total(2)),
+        CoiffeurPointsCell.number(data.score.total(2)),
       );
     }
 
@@ -157,23 +156,23 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   void _stringDialog(team) async {
-    var controller = TextEditingController(text: state.score.teamName[team]);
+    var controller = TextEditingController(text: data.score.teamName[team]);
 
     final input = await stringDialogBuilder(context, controller);
     if (input == null) return; // empty name not allowed
     setState(() {
-      state.score.teamName[team] = input;
-      state.save();
+      data.score.teamName[team] = input;
+      data.save();
     });
   }
 
   void _pointsDialog(team, row) async {
     var controller = TextEditingController();
-    if (state.score.rows[row].pts[team].pts == null ||
-        state.score.rows[row].pts[team].scratched) {
+    if (data.score.rows[row].pts[team].pts == null ||
+        data.score.rows[row].pts[team].scratched) {
       controller.text = "";
     } else {
-      controller.text = state.score.rows[row].pts[team].pts.toString();
+      controller.text = data.score.rows[row].pts[team].pts.toString();
     }
 
     var titleWidget = SizedBox(
@@ -190,7 +189,7 @@ class _CoiffeurState extends State<Coiffeur> {
           Expanded(
               child: InkWell(
                   onTap: () {
-                    controller.text = state.settings.match.toString();
+                    controller.text = data.settings.match.toString();
                   },
                   child: SvgPicture.asset("assets/actions/match.svg"))),
           Expanded(
@@ -210,19 +209,19 @@ class _CoiffeurState extends State<Coiffeur> {
         await pointsDialogBuilder(context, controller, title: titleWidget);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      if (state.score.noOfRounds() == 0) {
-        state.common.firstPoints();
+      if (data.score.noOfRounds() == 0) {
+        data.common.firstPoints();
       }
       if (input.scratch) {
-        state.score.rows[row].pts[team].scratch();
+        data.score.rows[row].pts[team].scratch();
       } else {
-        state.score.rows[row].pts[team].reset();
-        state.score.rows[row].pts[team].pts = input.value;
-        if (input.value == state.settings.match) {
-          state.score.rows[row].pts[team].match = true;
+        data.score.rows[row].pts[team].reset();
+        data.score.rows[row].pts[team].pts = input.value;
+        if (input.value == data.settings.match) {
+          data.score.rows[row].pts[team].match = true;
         }
       }
-      state.save();
+      data.save();
     });
   }
 }
