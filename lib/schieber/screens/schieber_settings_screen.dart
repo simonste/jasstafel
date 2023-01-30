@@ -61,6 +61,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
           pref: SchieberSettings.keys.touchScreen,
           children: [
             PrefCheckbox(
+                disabled: !widget.boardData.supportsVibration,
                 title: Text(context.l10n.vibrateOnTouch),
                 pref: SchieberSettings.keys.vibrate)
           ],

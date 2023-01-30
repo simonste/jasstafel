@@ -146,7 +146,7 @@ class _SchieberState extends State<Schieber> {
 
   void _onTap(int teamId, int pts) {
     if (data.settings.touchScreen) {
-      if (data.settings.vibrate) {
+      if (data.supportsVibration && data.settings.vibrate) {
         Vibration.vibrate(duration: 50);
       }
       setState(() {

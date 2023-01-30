@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/common_data.dart';
@@ -8,6 +9,7 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 
 abstract class Score {
   Map<String, dynamic> toJson();
@@ -25,6 +27,7 @@ class BoardData<T, S extends Score> {
   var common = CommonData();
   ProfileData profiles = ProfileData("Standard", []);
   final Board boardType;
+  bool supportsVibration = false;
 
   static Board determineBoardType(String string) {
     if (string == "SchieberScore") {
@@ -44,6 +47,15 @@ class BoardData<T, S extends Score> {
 
   Future<BoardData> load() async {
     final preferences = await SharedPreferences.getInstance();
+
+    try {
+      var hasVibrator = await Vibration.hasVibrator() ?? false;
+      if (hasVibrator) {
+        supportsVibration = true;
+      }
+    } on MissingPluginException {
+      // https://github.com/benjamindean/flutter_vibration/issues/77
+    }
 
     switch (boardType) {
       case Board.schieber:
