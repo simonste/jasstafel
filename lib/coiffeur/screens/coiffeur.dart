@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
+import 'package:jasstafel/coiffeur/dialog/coiffeur_info.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_type_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_row.dart';
@@ -43,7 +44,6 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
-    data.score.setSettings(data.settings);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +55,7 @@ class _CoiffeurState extends State<Coiffeur> {
               data.score.noOfRounds(),
               data.common.whoIsNext,
               () => data.save()),
+          CoiffeurInfoButton(context, data),
           DeleteButton(
             context,
             () => setState(() => data.reset()),

@@ -45,7 +45,6 @@ class _SchieberState extends State<Schieber> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
-    data.score.setSettings(data.settings);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 

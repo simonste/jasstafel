@@ -43,7 +43,20 @@ class BoardData<T, S extends Score> {
   BoardData(this.settings, this.score, this.dataKey)
       : profilesKey = "${dataKey}_profiles",
         activeProfileKey = "${dataKey}_profile",
-        boardType = determineBoardType(S.toString());
+        boardType = determineBoardType(S.toString()) {
+    _updateSettings();
+  }
+
+  void _updateSettings() {
+    switch (boardType) {
+      case Board.schieber:
+        (score as SchieberScore).setSettings(settings);
+        break;
+      case Board.coiffeur:
+        (score as CoiffeurScore).setSettings(settings);
+        break;
+    }
+  }
 
   Future<BoardData> load() async {
     final preferences = await SharedPreferences.getInstance();
@@ -65,6 +78,7 @@ class BoardData<T, S extends Score> {
         (settings as CoiffeurSettings).fromPreferences(preferences);
         break;
     }
+    _updateSettings();
 
     profiles.active = preferences.getString(activeProfileKey) ?? "Standard";
     profiles.list = preferences.getStringList(profilesKey) ?? ["Standard:{}"];
@@ -90,6 +104,7 @@ class BoardData<T, S extends Score> {
         (settings as CoiffeurSettings).data = str;
         break;
     }
+    _updateSettings();
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(dataKey, str);
@@ -123,6 +138,7 @@ class BoardData<T, S extends Score> {
           coiffeurSettings.toPreferences(preferences);
           break;
       }
+      _updateSettings();
       json = jsonDecode(json[dataKey]);
     }
 

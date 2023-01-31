@@ -7,7 +7,8 @@ import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// cspell:ignore: zurück zählt fach auswertungsspalte punkte eigene multiplikatoren verwenden prämie
+// cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
+// cspell:ignore: punkte verwenden prämie ändern abbrechen
 
 String? text(Key key) {
   var coiffeurCellWidget =
@@ -245,6 +246,59 @@ void main() {
     expect(text(const Key('sum_2')), '${4 * 10 + 50}');
   });
 
+  testWidgets('toggle bonus', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.addPoints('0:5', 157);
+    await tester.addPoints('1:6', 0, tapKey: "match");
+
+    expect(text(const Key('0:5')), '157');
+    expect(text(const Key('1:6')), '257');
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pumpAndSettle();
+    expect(find.text('Match-Punkte auf 157 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('0:5')), '157');
+    expect(text(const Key('1:6')), 'MATCH');
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pump();
+    expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Abbrechen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('0:5')), '157');
+    expect(text(const Key('1:6')), '157');
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pump();
+    expect(find.text('Match-Punkte auf 257 ändern?'), findsNothing);
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pump();
+    expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('0:5')), '157');
+    expect(text(const Key('1:6')), '257');
+  });
+
   testWidgets('match bonus change', (tester) async {
     app.main();
     await tester.pumpAndSettle();
@@ -274,6 +328,9 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Abbrechen'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Match-Punkte'));
     await tester.pump();
     await tester.enterText(find.byType(TextField), '207');
@@ -318,5 +375,34 @@ void main() {
     expect(text(const Key('sum_0')), '0');
     expect(text(const Key('sum_1')), '${7 * 66}');
     expect(text(const Key('sum_2')), '0');
+  });
+
+  testWidgets('coiffeur info', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.addPoints('0:8', 140);
+    await tester.addPoints('1:6', 0, tapKey: "match");
+
+    await tester.tap(find.byKey(const Key('InfoButton')));
+    await tester.pumpAndSettle();
+    expect(find.text('Team 1'), findsNWidgets(2));
+    expect(find.text('Team 2'), findsNWidgets(2));
+    expect(find.text('Team 3'), findsNothing);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('3 Teams'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('InfoButton')));
+    await tester.pumpAndSettle();
+    expect(find.text('Team 1'), findsNWidgets(2));
+    expect(find.text('Team 2'), findsNWidgets(2));
+    expect(find.text('Team 3'), findsNWidgets(2));
   });
 }

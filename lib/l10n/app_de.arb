@@ -300,7 +300,7 @@
       "teamName": {
         "type": "String"
       },
-      "points": {
+      "averagePoints": {
         "type": "int"
       }
     }
