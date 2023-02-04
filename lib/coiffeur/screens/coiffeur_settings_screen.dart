@@ -108,7 +108,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
           pref: CoiffeurSettings.keys.rows,
           min: 6,
           max: 13,
-          trailing: (num v) => Text(context.l10n.noOfRounds(v)),
+          trailing: (num v) => Text(context.l10n.noOfRounds(v as int)),
         ),
         PrefCheckbox(
             title: Text(context.l10n.setFactorManually),
