@@ -10,7 +10,8 @@ import '../helper/testapp.dart';
 void main() {
   testWidgets('change type', (WidgetTester tester) async {
     var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    final widget = makeTestable(CoiffeurTypeCell(data, 0, () {}));
+    final widget =
+        makeTestable(CoiffeurTypeCell(data: data, row: 0, updateParent: () {}));
 
     await tester.pumpWidget(widget);
 
@@ -31,7 +32,8 @@ void main() {
   testWidgets('change factor', (WidgetTester tester) async {
     var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
     data.settings.customFactor = true;
-    final widget = makeTestable(CoiffeurTypeCell(data, 5, () {}));
+    final widget =
+        makeTestable(CoiffeurTypeCell(data: data, row: 5, updateParent: () {}));
 
     await tester.pumpWidget(widget);
 

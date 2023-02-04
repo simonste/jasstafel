@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
@@ -28,6 +29,7 @@ class Coiffeur extends StatefulWidget {
 class _CoiffeurState extends State<Coiffeur> {
   var data = BoardData(
       CoiffeurSettings(), CoiffeurScore(), CoiffeurSettingsKeys().data);
+  final typeNameGroup = AutoSizeGroup();
 
   void restoreData() async {
     data = await data.load() as BoardData<CoiffeurSettings, CoiffeurScore>;
@@ -80,13 +82,12 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   CoiffeurRow get _createHeader {
+    final teamNameGroup = AutoSizeGroup();
+
     Widget teamWidget(team) {
-      return CoiffeurCell(
-        data.score.teamName[team],
-        onTap: () {
-          _stringDialog(team);
-        },
-      );
+      return CoiffeurCell(data.score.teamName[team], onTap: () {
+        _stringDialog(team);
+      }, group: teamNameGroup);
     }
 
     var cells = [
@@ -123,7 +124,12 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var cells = [
-      CoiffeurTypeCell(data, i, () => setState(() {})),
+      CoiffeurTypeCell(
+        data: data,
+        row: i,
+        updateParent: () => setState(() {}),
+        group: typeNameGroup,
+      ),
       teamWidget(0, i),
       teamWidget(1, i),
     ];

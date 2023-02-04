@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 
@@ -8,12 +9,13 @@ class CoiffeurCell extends Expanded {
     String text, {
     super.key,
     this.onTap,
-    textScaleFactor = 2.0,
+    textScaleFactor = 1.8,
     leftBorder = true,
     scratch = false,
+    group,
   }) : super(
             child: _createChild(
-                text, onTap, textScaleFactor, leftBorder, scratch));
+                text, onTap, textScaleFactor, leftBorder, scratch, group));
 
   static BoxDecoration border(leftBorder, scratch) {
     if (leftBorder) {
@@ -40,17 +42,17 @@ class CoiffeurCell extends Expanded {
   }
 
   static Widget _createChild(
-      String name, onTap, textScaleFactor, leftBorder, scratch) {
+      String name, onTap, textScaleFactor, leftBorder, scratch, group) {
     if (onTap != null) {
       return InkWell(
           onTap: onTap,
           child: Container(
               alignment: Alignment.center,
               decoration: border(leftBorder, scratch),
-              child: Text(
-                name,
-                textScaleFactor: textScaleFactor,
-              )));
+              child: AutoSizeText(name,
+                  maxLines: 2,
+                  textScaleFactor: textScaleFactor,
+                  group: group)));
     } else {
       return Container(
           alignment: Alignment.center,

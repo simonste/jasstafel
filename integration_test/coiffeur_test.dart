@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -19,8 +20,10 @@ String? text(Key key) {
   } else {
     container = coiffeurCellWidget.child as Container;
   }
-  var textWidget = container.child as Text;
-  return textWidget.data;
+  if (container.child is AutoSizeText) {
+    return (container.child as AutoSizeText).data;
+  }
+  return (container.child as Text).data;
 }
 
 extension CoiffeurHelper on WidgetTester {
