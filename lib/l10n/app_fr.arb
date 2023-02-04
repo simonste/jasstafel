@@ -166,7 +166,7 @@
   "deactivatedBonus": "Match bonus inactivé",
   "resetMatchPoints": "Changer les points pour un match à {points}?",
   "scratch": "Rayer",
-  "matchBonusRounded": "{bonus} (arrondi {rounded})",
+  "pointsRounded": "arrondi {rounded}",
   "profiles": "Profils",
   "selectProfile": "Choisir le profil",
   "profileInfo": "Enregistrer les paramètres dans les profils pour alterner facilement",

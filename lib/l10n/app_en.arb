@@ -115,7 +115,7 @@
   "matchBonusInfo": "Constant bonus for a match in addition to the {matchPoints} points.",
   "matchBonusVal": "Match bonus",
   "matchMalusVal": "Counter-Match Penalty",
-  "matchBonusRounded": "{bonus} (rounded {rounded})",
+  "pointsRounded": "rounded {rounded}",
   "countingType": "Counting mode",
   "scratch": "Scratch",
   "activatedBonus": "Match bonus activated",

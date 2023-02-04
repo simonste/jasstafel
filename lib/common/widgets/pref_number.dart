@@ -3,15 +3,17 @@ import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class PrefNumber extends StatelessWidget {
-  const PrefNumber({this.title, required this.pref, super.key});
+  const PrefNumber({this.title, this.subtitle, required this.pref, super.key});
 
   final Widget? title;
+  final Widget? subtitle;
   final String pref;
 
   @override
   Widget build(BuildContext context) {
     return PrefCustom<int>(
       title: title,
+      subtitle: subtitle,
       pref: pref,
       onTap: _tap,
     );

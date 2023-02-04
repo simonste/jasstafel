@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -20,6 +21,18 @@ class CoiffeurSettingsScreen extends StatefulWidget {
 class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final pref = PrefService.of(context);
+    final keys = CoiffeurSettings.keys;
+    subTitle(int pts) {
+      return pref.get(keys.rounded)
+          ? context.l10n.pointsRounded((pts * 0.1).round())
+          : "";
+    }
+
+    final matchPointsSubTitle = subTitle(pref.get(keys.match));
+    final bonusPointsSubTitle = subTitle(pref.get(keys.bonusValue));
+    final counterPointsSubTitle = subTitle(pref.get(keys.counterLoss));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.coiffeur)),
@@ -36,22 +49,44 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             pref: CoiffeurSettings.keys.rounded),
         PrefNumber(
           title: Text(context.l10n.matchPoints),
+          subtitle: Text(matchPointsSubTitle),
           pref: CoiffeurSettings.keys.match,
         ),
+        PrefNumber(
+            title: Text(context.l10n.matchMalusVal),
+            subtitle: Text(counterPointsSubTitle),
+            pref: CoiffeurSettings.keys.counterLoss),
         PrefCheckbox(
           title: Text(context.l10n.matchBonus),
+          subtitle: Text(context.l10n.matchBonusInfo(157)),
           pref: CoiffeurSettings.keys.bonus,
-          onChange: (value) {},
+          onChange: (value) async {
+            final proposedMatchPoints = value ? 157 : 257;
+            if (proposedMatchPoints == pref.get(keys.match)) return;
+
+            confirmDialog(
+                context: context,
+                title: value
+                    ? context.l10n.activatedBonus
+                    : context.l10n.deactivatedBonus,
+                subtitle: context.l10n.resetMatchPoints(proposedMatchPoints),
+                actions: [
+                  DialogAction(
+                      text: context.l10n.ok,
+                      action: () {
+                        pref.set(
+                            CoiffeurSettings.keys.match, proposedMatchPoints);
+                      })
+                ]);
+          },
         ),
         PrefHider(
           pref: CoiffeurSettings.keys.bonus,
           children: [
             PrefNumber(
                 title: Text(context.l10n.matchBonusVal),
+                subtitle: Text(bonusPointsSubTitle),
                 pref: CoiffeurSettings.keys.bonusValue),
-            PrefNumber(
-                title: Text(context.l10n.matchMalusVal),
-                pref: CoiffeurSettings.keys.counterLoss)
           ],
         ),
 

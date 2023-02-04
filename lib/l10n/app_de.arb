@@ -218,12 +218,9 @@
   },
   "matchBonusVal": "Match-Prämie",
   "matchMalusVal": "Konter-Match-Strafe",
-  "matchBonusRounded": "{bonus} (gerundet {rounded})",
-  "@matchBonusRounded": {
+  "pointsRounded": "gerundet {rounded}",
+  "@pointsRounded": {
     "placeholders": {
-      "bonus": {
-        "type": "int"
-      },
       "rounded": {
         "type": "int"
       }
