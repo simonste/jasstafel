@@ -54,7 +54,15 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
-      theme: ThemeData(brightness: Brightness.dark, canvasColor: Colors.black),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          canvasColor: Colors.black,
+          colorScheme: ColorScheme.dark(
+            surface: Colors.grey.shade800, // top bar
+            primary: Colors.blue.shade600, // buttons/ progress bar
+            background: Colors.grey.shade600, // progress bar
+            secondary: Colors.blue, // settings
+          )),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       localeResolutionCallback: (locale, supportedLocales) {
