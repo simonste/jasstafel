@@ -11,6 +11,16 @@ String? text(Key key) {
   return textWidget.data;
 }
 
+extension SchieberHelper on WidgetTester {
+  Future<void> launchApp() async {
+    app.main();
+    // pump three times to assure android app is launched
+    await pumpAndSettle();
+    await pumpAndSettle();
+    await pumpAndSettle();
+  }
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -21,9 +31,9 @@ void main() {
     await preferences.setInt(
         CommonSettings.keys.lastBoard, Board.schieber.index);
   });
+
   testWidgets('change team name', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     expect(find.text('Team 1'), findsOneWidget);
 
@@ -43,8 +53,7 @@ void main() {
   });
 
   testWidgets('do not accept empty team name', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     expect(find.text('Team 2'), findsOneWidget);
     await tester.tap(find.text('Team 2'));
@@ -57,8 +66,7 @@ void main() {
   });
 
   testWidgets('change goal points', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     expect(find.text('2500'), findsOneWidget);
 
@@ -78,8 +86,7 @@ void main() {
   });
 
   testWidgets('change goal points 2', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key("SettingsButton")));
     await tester.pumpAndSettle();
@@ -115,8 +122,7 @@ void main() {
   });
 
   testWidgets('add points touch', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key("add20_1")));
     await tester.tap(find.byKey(const Key("add20_1")));
@@ -135,8 +141,7 @@ void main() {
   });
 
   testWidgets('profile', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();

@@ -27,6 +27,14 @@ String? text(Key key) {
 }
 
 extension CoiffeurHelper on WidgetTester {
+  Future<void> launchApp() async {
+    app.main();
+    // pump three times to assure android app is launched
+    await pumpAndSettle();
+    await pumpAndSettle();
+    await pumpAndSettle();
+  }
+
   Future<void> addPoints(String teamRow, int points, {String? tapKey}) async {
     await tap(find.byKey(Key(teamRow)));
     await pumpAndSettle();
@@ -58,9 +66,9 @@ void main() {
     await preferences.setInt(
         CommonSettings.keys.lastBoard, Board.coiffeur.index);
   });
+
   testWidgets('change type', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     expect(find.text('Schellen'), findsOneWidget);
 
@@ -80,8 +88,7 @@ void main() {
   });
 
   testWidgets('add points', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.addPoints('1:2', 56);
     await tester.addPoints('0:5', 50, tapKey: '157-x');
@@ -92,8 +99,7 @@ void main() {
   });
 
   testWidgets('third column', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -114,8 +120,7 @@ void main() {
   });
 
   testWidgets('3 teams', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -147,8 +152,7 @@ void main() {
   });
 
   testWidgets('rounded points', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -171,8 +175,7 @@ void main() {
   });
 
   testWidgets('change no of rounds', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -187,8 +190,7 @@ void main() {
   });
 
   testWidgets('custom factors', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.addPoints('1:7', 97);
     expect(text(const Key('sum_1')), '${8 * 97}');
@@ -214,8 +216,7 @@ void main() {
   });
 
   testWidgets('match bonus', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -223,7 +224,7 @@ void main() {
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
     await tester.tap(find.text('Ok'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Match-Prämie verwenden'));
     await tester.tap(find.text('Auswertungsspalte'));
     await tester.pumpAndSettle();
@@ -250,8 +251,7 @@ void main() {
   });
 
   testWidgets('toggle bonus', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.addPoints('0:5', 157);
     await tester.addPoints('1:6', 0, tapKey: "match");
@@ -303,8 +303,7 @@ void main() {
   });
 
   testWidgets('match bonus change', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.addPoints('0:7', 88);
     await tester.addPoints('1:7', 0, tapKey: 'match');
@@ -348,8 +347,7 @@ void main() {
   });
 
   testWidgets('ignore hidden cells', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -381,8 +379,7 @@ void main() {
   });
 
   testWidgets('coiffeur info', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    await tester.launchApp();
 
     await tester.addPoints('0:8', 140);
     await tester.addPoints('1:6', 0, tapKey: "match");

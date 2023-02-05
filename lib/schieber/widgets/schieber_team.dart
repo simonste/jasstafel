@@ -82,12 +82,12 @@ class SchieberTeam extends StatelessWidget {
 
     strokes20() {
       return Positioned(
-        key: Key("add20_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top3,
         left: hMargin,
         child: GestureDetector(
+            key: Key("add20_$teamId"),
             onTap: () => dialogs.onTap(teamId, 20),
             child: SchieberStrokes(
                 StrokeType.I, teamData.strokes[1], data.settings.bigScore)),
@@ -96,6 +96,7 @@ class SchieberTeam extends StatelessWidget {
 
     strokes50() {
       var strokesBox = GestureDetector(
+          key: Key("add50_$teamId"),
           onTap: () => dialogs.onTap(teamId, 50),
           child: SchieberStrokes(
               StrokeType.X, teamData.strokes[2], data.settings.bigScore));
@@ -106,7 +107,6 @@ class SchieberTeam extends StatelessWidget {
         var angle = -atan2(dy, dx) / 2 / pi;
 
         return Positioned(
-            key: Key("add50_$teamId"),
             width: strokesWidth,
             height: strokeHeight,
             top: top2 * 1.1,
@@ -116,7 +116,6 @@ class SchieberTeam extends StatelessWidget {
       }
 
       return Positioned(
-        key: Key("add50_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top2,
@@ -132,12 +131,12 @@ class SchieberTeam extends StatelessWidget {
       }
 
       return Positioned(
-        key: Key("add100_$teamId"),
         width: strokesWidth,
         height: strokeHeight,
         top: top1,
         left: hMargin,
         child: GestureDetector(
+            key: Key("add100_$teamId"),
             onTap: () => dialogs.onTap(teamId, 100),
             child:
                 SchieberStrokes(StrokeType.I, strokes, data.settings.bigScore)),
@@ -164,12 +163,12 @@ class SchieberTeam extends StatelessWidget {
       }
       if (add) {
         return Positioned(
-            key: Key("add1_$teamId"),
             height: strokeHeight,
             top: (top1 + strokeHeight),
             right: hMargin,
             width: numberWidth,
             child: GestureDetector(
+              key: Key("add1_$teamId"),
               onTap: () => dialogs.onTap(teamId, 1),
               child: Center(
                   child: Text(
@@ -180,12 +179,12 @@ class SchieberTeam extends StatelessWidget {
             ));
       } else {
         return Positioned(
-            key: Key("subtract1_$teamId"),
             top: (top1 + strokeHeight) + strokeHeight * 0.75,
             right: hMargin,
             width: numberWidth,
             height: strokeHeight / 2,
             child: GestureDetector(
+              key: Key("subtract1_$teamId"),
               onTap: () => dialogs.onTap(teamId, -1),
               child: const Text(""),
             ));
