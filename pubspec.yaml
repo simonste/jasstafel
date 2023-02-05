@@ -50,7 +50,7 @@ dependencies:
   code_builder: ^4.3.0
   collection: ^1.16.0
   flutter_draggable_gridview: ^0.0.7
-  json_annotation: ^4.7.0
+  json_annotation: ^4.8.0
   archive: ^3.3.0
   auto_size_text: ^3.0.0
 

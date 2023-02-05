@@ -1,0 +1,63 @@
+name: Jasstafel CI
+on: [push]
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "12.x"
+          cache: "gradle"
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.1"
+          channel: "stable"
+          cache: true
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Generate translations
+        run: flutter gen-l10n
+      - name: Generate sources
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - name: Test
+        run: flutter test
+      # - name: Integration test
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 29
+      #     profile: Nexus 6
+      #     script: flutter test integration_test --verbose
+      - name: Build
+        run: flutter build appbundle
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Setup xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.1"
+          channel: "stable"
+          cache: true
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Install pods
+        run: cd ios && pod install && cd ..
+      - name: Generate translations
+        run: flutter gen-l10n
+      - name: Generate sources
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - name: Test
+        run: flutter test
+      - name: Build
+        run: flutter build ios --release --no-codesign
