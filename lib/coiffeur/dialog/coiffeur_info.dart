@@ -30,33 +30,30 @@ int roundedInt(int value, bool rounded) {
 }
 
 class CoiffeurInfo {
-  CoiffeurInfo(this._data)
-      : teams = _data.settings.threeTeams ? 3 : 2,
+  CoiffeurInfo(this._settings, this._score)
+      : teams = _settings.threeTeams ? 3 : 2,
         bonusPoints = roundedInt(
-            _data.settings.bonus ? _data.settings.bonusValue : 0,
-            _data.settings.rounded),
-        match = roundedInt(_data.settings.match, _data.settings.rounded),
+            _settings.bonus ? _settings.bonusValue : 0, _settings.rounded),
+        match = roundedInt(_settings.match, _settings.rounded),
         noMatch = roundedInt(
-            _data.settings.bonus
-                ? _data.settings.match
-                : roundPoints(_data.settings.match),
-            _data.settings.rounded) {
+            _settings.bonus ? _settings.match : roundPoints(_settings.match),
+            _settings.rounded) {
     for (var t = 0; t < teams; t++) {
-      for (var i = 0; i < _data.settings.rows; i++) {
-        final pts = _data.score.rows[i].pts[t];
+      for (var i = 0; i < _settings.rows; i++) {
+        final pts = _score.rows[i].pts[t];
         if (pts.pts == null && !pts.scratched && !pts.match) {
-          result[t].open.add(_data.score.rows[i].factor);
+          result[t].open.add(_score.rows[i].factor);
         }
       }
-      result[t].pts = _data.score.total(t);
+      result[t].pts = _score.total(t);
       result[t].min = result[t].pts;
       final factorSum = result[t].open.sum;
       result[t].max = result[t].pts + factorSum * match;
       result[t].max += result[t].open.length * bonusPoints;
       final minusFactor =
-          _data.settings.bonus ? result[t].open.length : result[t].open.sum;
-      result[t].min -= minusFactor *
-          roundedInt(_data.settings.counterLoss, _data.settings.rounded);
+          _settings.bonus ? result[t].open.length : result[t].open.sum;
+      result[t].min -=
+          minusFactor * roundedInt(_settings.counterLoss, _settings.rounded);
     }
   }
 
@@ -64,7 +61,8 @@ class CoiffeurInfo {
 
   final result = [Result(), Result(), Result()];
 
-  final BoardData<CoiffeurSettings, CoiffeurScore> _data;
+  final CoiffeurSettings _settings;
+  final CoiffeurScore _score;
 
   final int bonusPoints;
 
@@ -73,7 +71,7 @@ class CoiffeurInfo {
   final int noMatch;
 
   String teamName(int i) {
-    return _data.score.teamName[i];
+    return _score.teamName[i];
   }
 
   Winner winner() {
@@ -121,9 +119,8 @@ class CoiffeurInfo {
       final int maxPointsWithoutMatch = factors.sum * noMatch;
 
       for (int f in factors) {
-        final int noMatchDiff = (_data.settings.bonus)
-            ? _data.settings.bonusValue
-            : ((match - noMatch) * f);
+        final int noMatchDiff =
+            (_settings.bonus) ? _settings.bonusValue : ((match - noMatch) * f);
 
         // enough if everywhere else "noMatch" points?
         if (ptsDiff - noMatchDiff <= maxPointsWithoutMatch) {
@@ -163,7 +160,7 @@ class CoiffeurInfo {
 
     List<Hint> getHintsForTeam(int t) {
       final team = result[t];
-      final teamName = _data.score.teamName[t];
+      final teamName = _score.teamName[t];
       final canWin = team.max >= highestMin;
       final canWinSelf = team.max == highestMax && team.open.isNotEmpty;
       final notWonYet = team.min < secondHighestMax;
@@ -191,7 +188,7 @@ class CoiffeurInfo {
                 factor: team.open[0], pts: avgPtsWin));
           }
         } else {
-          if (avgPtsWin > match && _data.settings.bonus) {
+          if (avgPtsWin > match && _settings.bonus) {
             // need match to win
             calcPointsToLead(hints, team, teamName);
           } else {
@@ -223,10 +220,11 @@ class CoiffeurInfo {
 }
 
 class CoiffeurInfoButton extends IconButton {
-  CoiffeurInfoButton(BuildContext context, data)
+  CoiffeurInfoButton(
+      BuildContext context, BoardData<CoiffeurSettings, CoiffeurScore> data)
       : super(
             onPressed: () {
-              dialogBuilder(context, CoiffeurInfo(data));
+              dialogBuilder(context, CoiffeurInfo(data.settings, data.score));
             },
             icon: const Icon(Icons.info_outline),
             key: const Key("InfoButton"));

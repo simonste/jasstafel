@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:jasstafel/coiffeur/data/coiffeur_hint.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/coiffeur/dialog/coiffeur_info.dart';
-import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
@@ -34,36 +33,47 @@ void main() {
     expect(winners.loser, loser);
   }
 
+  var settings = CoiffeurSettings();
+  var score = CoiffeurScore();
+
+  setUp(() {
+    settings = CoiffeurSettings();
+    score = CoiffeurScore();
+  });
+
   test('two teams game over', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 1;
-    data.score.rows[0].pts[0].pts = 200;
-    data.score.rows[0].pts[1].pts = 240;
-    final info = CoiffeurInfo(data);
+    settings.rows = 1;
+    score.setSettings(settings);
+
+    score.rows[0].pts[0].pts = 200;
+    score.rows[0].pts[1].pts = 240;
+    final info = CoiffeurInfo(settings, score);
 
     expectHints(info, []);
     expectWinner(info, [1], [0]);
   });
 
   test('two teams game over draw', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 1;
-    data.score.rows[0].pts[0].pts = 200;
-    data.score.rows[0].pts[1].pts = 200;
-    final info = CoiffeurInfo(data);
+    settings.rows = 1;
+    score.setSettings(settings);
+
+    score.rows[0].pts[0].pts = 200;
+    score.rows[0].pts[1].pts = 200;
+    final info = CoiffeurInfo(settings, score);
 
     expectHints(info, []);
     expectWinner(info, [0, 1], []);
   });
 
   test('two teams one game open', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 2;
-    data.score.rows[0].pts[0].pts = 100;
-    data.score.rows[0].pts[1].pts = 200;
-    data.score.rows[1].pts[0].pts = 200;
+    settings.rows = 2;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 100;
+    score.rows[0].pts[1].pts = 200;
+    score.rows[1].pts[0].pts = 200;
+
+    final info = CoiffeurInfo(settings, score);
 
     expectHints(info, [
       Hint.winPointsSingle('Team 2', factor: 2, pts: 150),
@@ -72,12 +82,13 @@ void main() {
   });
 
   test('two teams two games open', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 2;
-    data.score.rows[0].pts[0].pts = 100;
-    data.score.rows[1].pts[0].pts = 100;
+    settings.rows = 2;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 100;
+    score.rows[1].pts[0].pts = 100;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 300);
 
     expectHints(info, [
@@ -88,10 +99,10 @@ void main() {
   });
 
   test('two teams both can win with matches', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 3;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
 
     expectHints(info, [
       Hint.winPoints('Team 1', pts: 257),
@@ -101,13 +112,14 @@ void main() {
   });
 
   test('two teams win with avg or match', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 3;
-    data.score.rows[0].pts[1].pts = 100;
-    data.score.rows[2].pts[1].pts = 60;
-    data.score.rows[0].pts[0].pts = 130;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[1].pts = 100;
+    score.rows[2].pts[1].pts = 60;
+    score.rows[0].pts[0].pts = 130;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[1].max, 280 + 2 * 257);
 
     expectHints(info, [
@@ -118,14 +130,15 @@ void main() {
   });
 
   test('two teams avg not losing', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 4;
-    data.score.rows[0].pts[1].pts = 100;
-    data.score.rows[1].pts[1].pts = 40;
-    data.score.rows[1].pts[0].pts = 257;
-    data.score.rows[2].pts[0].pts = 130;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[1].pts = 100;
+    score.rows[1].pts[1].pts = 40;
+    score.rows[1].pts[0].pts = 257;
+    score.rows[2].pts[0].pts = 130;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 904);
 
     expectHints(info, [
@@ -136,15 +149,16 @@ void main() {
   });
 
   test('two teams match not losing', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 4;
-    data.score.rows[0].pts[1].pts = 100;
-    data.score.rows[2].pts[1].pts = 140;
-    data.score.rows[1].pts[0].pts = 257;
-    data.score.rows[2].pts[0].pts = 257;
-    data.score.rows[3].pts[0].pts = 140;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[1].pts = 100;
+    score.rows[2].pts[1].pts = 140;
+    score.rows[1].pts[0].pts = 257;
+    score.rows[2].pts[0].pts = 257;
+    score.rows[3].pts[0].pts = 140;
+
+    final info = CoiffeurInfo(settings, score);
 
     expectHints(info, [
       Hint.winWithMatch('Team 1', factor: 1),
@@ -155,16 +169,17 @@ void main() {
   });
 
   test('two teams lost', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 4;
-    data.score.rows[0].pts[0].pts = 80;
-    data.score.rows[0].pts[1].pts = 70;
-    data.score.rows[1].pts[0].pts = 257;
-    data.score.rows[1].pts[1].pts = 65;
-    data.score.rows[3].pts[0].pts = 257;
-    data.score.rows[3].pts[1].pts = 67;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 80;
+    score.rows[0].pts[1].pts = 70;
+    score.rows[1].pts[0].pts = 257;
+    score.rows[1].pts[1].pts = 65;
+    score.rows[3].pts[0].pts = 257;
+    score.rows[3].pts[1].pts = 67;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[1].max, lessThan(info.result[0].min));
 
     expectHints(info, [
@@ -174,15 +189,16 @@ void main() {
   });
 
   test('two teams match 157', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.match = 157;
-    data.settings.rows = 3;
-    data.score.rows[0].pts[0].pts = 80;
-    data.score.rows[0].pts[1].pts = 70;
-    data.score.rows[1].pts[1].pts = 130;
-    data.score.rows[2].pts[1].pts = 70;
+    settings.match = 157;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 80;
+    score.rows[0].pts[1].pts = 70;
+    score.rows[1].pts[1].pts = 130;
+    score.rows[2].pts[1].pts = 70;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 80);
     expect(info.result[1].pts, 540);
 
@@ -194,16 +210,17 @@ void main() {
   });
 
   test('two teams match 200', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.match = 200;
-    data.settings.rows = 4;
-    data.score.rows[1].pts[0].pts = 75;
-    data.score.rows[2].pts[0].pts = 50;
-    data.score.rows[0].pts[1].pts = 40;
-    data.score.rows[2].pts[1].pts = 80;
-    data.score.rows[3].pts[1].pts = 80;
+    settings.match = 200;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[1].pts[0].pts = 75;
+    score.rows[2].pts[0].pts = 50;
+    score.rows[0].pts[1].pts = 40;
+    score.rows[2].pts[1].pts = 80;
+    score.rows[3].pts[1].pts = 80;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 300);
     expect(info.result[1].pts, 600);
 
@@ -215,16 +232,16 @@ void main() {
   });
 
   test('two teams bonus 500', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.bonus = true;
-    data.settings.match = 157;
-    data.settings.rows = 3;
+    settings.bonus = true;
+    settings.match = 157;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 80;
-    data.score.rows[0].pts[1].pts = 70;
-    data.score.rows[2].pts[1].match = true;
+    score.rows[0].pts[0].pts = 80;
+    score.rows[0].pts[1].pts = 70;
+    score.rows[2].pts[1].match = true;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].max, 80 + 5 * 157 + 1000);
     expect(info.result[0].min, 80 - 200);
     expect(info.result[1].pts, 70 + 3 * 157 + 500);
@@ -237,18 +254,18 @@ void main() {
   });
 
   test('two teams bonus 50', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.bonus = true;
-    data.settings.bonusValue = 50;
-    data.settings.match = 157;
-    data.settings.rows = 4;
+    settings.bonus = true;
+    settings.bonusValue = 50;
+    settings.match = 157;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    data.score.rows[1].pts[1].pts = 85;
-    data.score.rows[2].pts[0].pts = 80;
-    data.score.rows[2].pts[1].pts = 110;
-    data.score.rows[3].pts[0].pts = 140;
+    score.rows[1].pts[1].pts = 85;
+    score.rows[2].pts[0].pts = 80;
+    score.rows[2].pts[1].pts = 110;
+    score.rows[3].pts[0].pts = 140;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 800);
     expect(info.result[1].pts, 500);
 
@@ -259,19 +276,19 @@ void main() {
   });
 
   test('two teams bonus', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.bonus = true;
-    data.settings.bonusValue = 50;
-    data.settings.match = 157;
-    data.settings.rows = 4;
+    settings.bonus = true;
+    settings.bonusValue = 50;
+    settings.match = 157;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[1].scratch();
-    data.score.rows[1].pts[1].pts = 85;
-    data.score.rows[2].pts[0].pts = 80;
-    data.score.rows[2].pts[1].pts = 110;
-    data.score.rows[3].pts[0].pts = 140;
+    score.rows[0].pts[1].scratch();
+    score.rows[1].pts[1].pts = 85;
+    score.rows[2].pts[0].pts = 80;
+    score.rows[2].pts[1].pts = 110;
+    score.rows[3].pts[0].pts = 140;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 800);
     expect(info.result[1].pts, 500);
 
@@ -283,18 +300,18 @@ void main() {
   });
 
   test('two teams bonus win with counter match', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.bonus = true;
-    data.settings.match = 157;
-    data.settings.rows = 3;
+    settings.bonus = true;
+    settings.match = 157;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 80;
-    data.score.rows[1].pts[0].pts = 80;
-    data.score.rows[2].pts[0].pts = 60;
-    data.score.rows[0].pts[1].pts = 130;
-    data.score.rows[1].pts[1].pts = 150;
+    score.rows[0].pts[0].pts = 80;
+    score.rows[1].pts[0].pts = 80;
+    score.rows[2].pts[0].pts = 60;
+    score.rows[0].pts[1].pts = 130;
+    score.rows[1].pts[1].pts = 150;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, lessThan(info.result[1].pts));
     expect(info.result[0].pts, greaterThan(info.result[1].min));
 
@@ -306,17 +323,18 @@ void main() {
   });
 
   test('three teams lost not lose win', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.threeTeams = true;
-    data.settings.rows = 3;
-    data.score.rows[0].pts[0].pts = 55;
-    data.score.rows[0].pts[1].pts = 9;
-    data.score.rows[0].pts[2].pts = 150;
-    data.score.rows[2].pts[0].pts = 50;
-    data.score.rows[2].pts[1].pts = 257;
-    data.score.rows[2].pts[2].pts = 257;
+    settings.threeTeams = true;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 55;
+    score.rows[0].pts[1].pts = 9;
+    score.rows[0].pts[2].pts = 150;
+    score.rows[2].pts[0].pts = 50;
+    score.rows[2].pts[1].pts = 257;
+    score.rows[2].pts[2].pts = 257;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].max,
         lessThan(max(info.result[1].min, info.result[2].min)));
 
@@ -329,18 +347,19 @@ void main() {
   });
 
   test('three teams counter match needed', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.threeTeams = true;
-    data.settings.rows = 4;
-    data.score.rows[0].pts[0].pts = 100;
-    data.score.rows[1].pts[2].pts = 114;
-    data.score.rows[2].pts[0].pts = 70;
-    data.score.rows[2].pts[1].pts = 64;
-    data.score.rows[2].pts[2].pts = 257;
-    data.score.rows[3].pts[0].scratch();
-    data.score.rows[3].pts[1].pts = 152;
+    settings.threeTeams = true;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 100;
+    score.rows[1].pts[2].pts = 114;
+    score.rows[2].pts[0].pts = 70;
+    score.rows[2].pts[1].pts = 64;
+    score.rows[2].pts[2].pts = 257;
+    score.rows[3].pts[0].scratch();
+    score.rows[3].pts[1].pts = 152;
+
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, 310);
     expect(info.result[1].pts, 800);
     expect(info.result[2].pts, 999);
@@ -356,24 +375,25 @@ void main() {
   });
 
   test('two teams lost can win rounded', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rows = 3;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 75;
-    data.score.rows[2].pts[0].pts = 75;
-    data.score.rows[0].pts[1].pts = 145;
-    data.score.rows[1].pts[1].pts = 104;
-    data.score.rows[2].pts[1].pts = 154;
+    score.rows[0].pts[0].pts = 75;
+    score.rows[2].pts[0].pts = 75;
+    score.rows[0].pts[1].pts = 145;
+    score.rows[1].pts[1].pts = 104;
+    score.rows[2].pts[1].pts = 154;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].max, lessThan(info.result[1].pts));
     expectHints(info, [
       Hint.lost('Team 1', pts: 258),
     ]);
     expectWinner(info, [1], [0]);
 
-    data.settings.rounded = true;
-    final infoRounded = CoiffeurInfo(data);
+    settings.rounded = true;
+    score.setSettings(settings);
+    final infoRounded = CoiffeurInfo(settings, score);
     expect(infoRounded.result[0].max, greaterThan(infoRounded.result[1].pts));
 
     expectHints(infoRounded, [
@@ -383,15 +403,15 @@ void main() {
   });
 
   test('two teams rounded win with counter match', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rounded = true;
-    data.settings.rows = 2;
+    settings.rounded = true;
+    settings.rows = 2;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 257;
-    data.score.rows[0].pts[1].pts = 70;
-    data.score.rows[1].pts[1].pts = 90;
+    score.rows[0].pts[0].pts = 257;
+    score.rows[0].pts[1].pts = 70;
+    score.rows[1].pts[1].pts = 90;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, greaterThan(info.result[1].pts));
     expect(info.result[0].min, lessThan(info.result[1].pts));
 
@@ -403,16 +423,16 @@ void main() {
   });
 
   test('two teams rounded lost when counter 0', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rounded = true;
-    data.settings.counterLoss = 0;
-    data.settings.rows = 2;
+    settings.rounded = true;
+    settings.counterLoss = 0;
+    settings.rows = 2;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 257;
-    data.score.rows[0].pts[1].pts = 70;
-    data.score.rows[1].pts[1].pts = 90;
+    score.rows[0].pts[0].pts = 257;
+    score.rows[0].pts[1].pts = 70;
+    score.rows[1].pts[1].pts = 90;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts, greaterThan(info.result[1].pts));
     expect(info.result[0].min, greaterThan(info.result[1].pts));
 
@@ -421,17 +441,17 @@ void main() {
   });
 
   test('two teams rounded bonus win with match', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rounded = true;
-    data.settings.bonus = true;
-    data.settings.match = 157;
-    data.settings.rows = 2;
+    settings.rounded = true;
+    settings.bonus = true;
+    settings.match = 157;
+    settings.rows = 2;
+    score.setSettings(settings);
 
-    data.score.rows[1].pts[0].pts = 64;
-    data.score.rows[0].pts[1].pts = 131;
-    data.score.rows[1].pts[1].pts = 76;
+    score.rows[1].pts[0].pts = 64;
+    score.rows[0].pts[1].pts = 131;
+    score.rows[1].pts[1].pts = 76;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts + 16, lessThan(info.result[1].pts));
 
     expectHints(info, [
@@ -441,19 +461,19 @@ void main() {
   });
 
   test('two teams bonus win with match 2', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.rounded = true;
-    data.settings.bonus = true;
-    data.settings.bonusValue = 100;
-    data.settings.match = 157;
-    data.settings.rows = 3;
+    settings.rounded = true;
+    settings.bonus = true;
+    settings.bonusValue = 100;
+    settings.match = 157;
+    settings.rows = 3;
+    score.setSettings(settings);
 
-    data.score.rows[0].pts[0].pts = 142;
-    data.score.rows[1].pts[0].match = true;
-    data.score.rows[2].pts[0].pts = 114;
-    data.score.rows[1].pts[1].pts = 96;
+    score.rows[0].pts[0].pts = 142;
+    score.rows[1].pts[0].match = true;
+    score.rows[2].pts[0].pts = 114;
+    score.rows[1].pts[1].pts = 96;
 
-    final info = CoiffeurInfo(data);
+    final info = CoiffeurInfo(settings, score);
     // can win
     expect(info.result[0].pts, lessThan(info.result[1].max));
     // can not win without match
@@ -469,17 +489,18 @@ void main() {
   });
 
   test('two teams bonus win with 2 matches', () {
-    var data = BoardData(CoiffeurSettings(), CoiffeurScore(), "");
-    data.settings.bonus = true;
-    data.settings.match = 157;
-    data.settings.rows = 4;
-    data.score.rows[0].pts[0].pts = 80;
-    data.score.rows[0].pts[1].match = true;
-    data.score.rows[1].pts[1].pts = 121;
-    data.score.rows[2].pts[1].match = true;
-    data.score.rows[3].pts[1].pts = 141;
+    settings.bonus = true;
+    settings.match = 157;
+    settings.rows = 4;
+    score.setSettings(settings);
 
-    final info = CoiffeurInfo(data);
+    score.rows[0].pts[0].pts = 80;
+    score.rows[0].pts[1].match = true;
+    score.rows[1].pts[1].pts = 121;
+    score.rows[2].pts[1].match = true;
+    score.rows[3].pts[1].pts = 141;
+
+    final info = CoiffeurInfo(settings, score);
     // can win
     expect(info.result[0].max, greaterThan(info.result[1].pts));
     // can not win without match
