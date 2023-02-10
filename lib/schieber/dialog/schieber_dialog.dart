@@ -134,6 +134,7 @@ Future<Points?> schieberDialogBuilder(
             return Padding(
               padding: const EdgeInsets.only(left: 10),
               child: InkWell(
+                key: Key("key_$text"),
                 onTap: () => setState(() => ptsController.set("$value")),
                 child: Text(text),
               ),
@@ -168,6 +169,7 @@ Future<Points?> schieberDialogBuilder(
                 Text(context.l10n.pointsOf(teamData.name)),
                 Expanded(
                     child: InkWell(
+                        key: const Key("flip"),
                         onTap: () =>
                             setState(() => teamData.flip = !teamData.flip),
                         child: const Icon(Icons.screen_rotation_outlined)))

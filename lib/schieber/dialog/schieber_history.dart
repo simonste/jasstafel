@@ -5,9 +5,12 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 class SchieberHistoryButton extends IconButton {
-  SchieberHistoryButton(BuildContext context, data, Function undoLast,
-      {super.key})
-      : super(
+  SchieberHistoryButton(
+    BuildContext context,
+    data,
+    Function undoLast,
+  ) : super(
+            key: const Key('history'),
             onPressed: () {
               dialogBuilder(context, data, undoLast);
             },

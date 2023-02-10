@@ -35,13 +35,17 @@ class SchieberTeam extends StatelessWidget {
     }
   }
 
-  Widget _team(int teamId, data, BuildContext context) {
+  Widget _team(int teamId, BoardData<SchieberSettings, SchieberScore> data,
+      BuildContext context) {
     final height = MediaQuery.of(context).size.height / 2;
     final width = MediaQuery.of(context).size.width;
 
     final teamData = data.score.team[teamId];
     final pts = teamData.sum();
-    final progress = pts / data.score.team[teamId].goalPoints;
+
+    final progress = data.settings.goalTypePoints
+        ? (pts / data.score.team[teamId].goalPoints)
+        : (data.score.noOfRounds() / data.score.goalRounds);
     final hMargin = width * 0.05;
     final strokeHeight = height * 0.2;
     final strokesWidth = width * 0.4;

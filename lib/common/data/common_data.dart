@@ -78,6 +78,14 @@ class CommonData {
     }
   }
 
+  bool justFinished() {
+    if (timestamps.finishTime == null) {
+      timestamps.finishTime = DateTime.now();
+      return true;
+    }
+    return false;
+  }
+
   List<dynamic> dump() {
     return [
       timestamps.startTime,

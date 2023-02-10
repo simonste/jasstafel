@@ -7,6 +7,8 @@ import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 import '../helper/testapp.dart';
 
+// cspell:ignore: profil kopieren löschen
+
 bool radioSelected(Key key) {
   var radioFinder = find.byKey(key);
   expect(radioFinder, findsOneWidget);
@@ -23,7 +25,6 @@ void main() {
 
     expect(find.text('Standard'), findsOneWidget);
     expect(data.profiles.list.length, 1);
-    // cspell:disable-next
     await tester.tap(find.byTooltip('Profil kopieren'));
     await tester.pumpAndSettle();
 
@@ -91,7 +92,6 @@ void main() {
 
     expect(find.text('Foo'), findsOneWidget);
     expect(data.profiles.list.length, 2);
-    // cspell:disable-next
     await tester.tap(find.byTooltip('Profil löschen'));
     await tester.pumpAndSettle();
 

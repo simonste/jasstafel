@@ -30,7 +30,9 @@ Future<void> confirmDialog(
                   });
             }
 
-            var actionButtons = [textButton(context.l10n.cancel, () {})];
+            final defaultButtonText =
+                actions.isEmpty ? context.l10n.ok : context.l10n.cancel;
+            var actionButtons = [textButton(defaultButtonText, () {})];
             for (final action in actions) {
               if (action.action != null) {
                 actionButtons.add(textButton(action.text, action.action!));

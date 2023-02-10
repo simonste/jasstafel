@@ -6,8 +6,17 @@ import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? text(Key key) {
-  var textWidget = find.byKey(key).evaluate().single.widget as Text;
+// cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
+// cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl
+
+String? text(Key key, {int? elementNo}) {
+  var elements = find.byKey(key).evaluate();
+  Text textWidget;
+  if (elementNo == null) {
+    textWidget = elements.single.widget as Text;
+  } else {
+    textWidget = elements.elementAt(elementNo).widget as Text;
+  }
   return textWidget.data;
 }
 
@@ -19,6 +28,22 @@ extension SchieberHelper on WidgetTester {
     await pumpAndSettle();
     await pumpAndSettle();
   }
+
+  Future<void> addPoints(List<String> keys,
+      {String? factor, bool? weis}) async {
+    for (final key in keys) {
+      await tap(find.byKey(Key(key)));
+      await pumpAndSettle();
+    }
+    if (factor != null) {
+      await tap(find.byKey(const Key('dropdownFactor')));
+      await pumpAndSettle();
+      await tap(find.text(factor).last);
+      await pumpAndSettle();
+    }
+    await tap(find.text((weis ?? false) ? 'Weis' : 'Ok'));
+    await pumpAndSettle();
+  }
 }
 
 void main() {
@@ -27,7 +52,7 @@ void main() {
   setUp(() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
-    await preferences.setString(CommonSettings.keys.appLanguage, "de");
+    await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
         CommonSettings.keys.lastBoard, Board.schieber.index);
   });
@@ -40,7 +65,6 @@ void main() {
     await tester.tap(find.text('Team 1'));
     await tester.pumpAndSettle();
 
-    // cspell:disable-next
     expect(find.text('Teamname'), findsWidgets);
     expect(find.byType(TextField), findsOneWidget);
     await tester.enterText(find.byType(TextField), 'Super Team');
@@ -73,7 +97,6 @@ void main() {
     await tester.tap(find.text('2500'));
     await tester.pumpAndSettle();
 
-    // cspell:disable-next
     expect(find.text('Punkte'), findsWidgets);
     expect(find.byType(TextField), findsOneWidget);
     await tester.enterText(find.byType(TextField), '2121');
@@ -88,18 +111,17 @@ void main() {
   testWidgets('change goal points 2', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key("SettingsButton")));
+    await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    // cspell:disable-next
-    await tester.tap(find.text("verschiedene Zielpunkte"));
+    await tester.tap(find.text('verschiedene Zielpunkte'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
     expect(find.text('2500'), findsNWidgets(2));
 
-    var gp0 = find.byKey(const Key("GoalPoints0"));
-    var gp1 = find.byKey(const Key("GoalPoints1"));
+    var gp0 = find.byKey(const Key('GoalPoints0'));
+    var gp1 = find.byKey(const Key('GoalPoints1'));
     expect(gp0, findsOneWidget);
     expect(gp1, findsOneWidget);
 
@@ -124,71 +146,49 @@ void main() {
   testWidgets('add points touch', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key("add20_1")));
-    await tester.tap(find.byKey(const Key("add20_1")));
-    await tester.tap(find.byKey(const Key("add100_1")));
-    await tester.tap(find.byKey(const Key("subtract1_1")));
+    await tester.tap(find.byKey(const Key('add20_1')));
+    await tester.tap(find.byKey(const Key('add20_1')));
+    await tester.tap(find.byKey(const Key('add100_1')));
+    await tester.tap(find.byKey(const Key('subtract1_1')));
     await tester.pump();
-    expect(text(const Key("sum_0")), "0");
-    expect(text(const Key("sum_1")), "139");
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '139');
 
-    await tester.tap(find.byKey(const Key("add100_0")));
-    await tester.tap(find.byKey(const Key("add50_0")));
-    await tester.tap(find.byKey(const Key("add1_0")));
+    await tester.tap(find.byKey(const Key('add100_0')));
+    await tester.tap(find.byKey(const Key('add50_0')));
+    await tester.tap(find.byKey(const Key('add1_0')));
     await tester.pump();
-    expect(text(const Key("sum_0")), "151");
-    expect(text(const Key("sum_1")), "139");
+    expect(text(const Key('sum_0')), '151');
+    expect(text(const Key('sum_1')), '139');
   });
 
   testWidgets('add round', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key("add_1")));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("2"));
-    await tester.tap(find.text("3"));
-    await tester.tap(find.byKey(const Key('dropdownFactor')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('4x').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("Ok"));
-    await tester.pumpAndSettle();
-    expect(text(const Key("sum_0")), "536");
-    expect(text(const Key("sum_1")), "92");
+    await tester.addPoints(['add_1', 'key_2', 'key_3'], factor: '4x');
+
+    expect(text(const Key('sum_0')), '536');
+    expect(text(const Key('sum_1')), '92');
   });
 
   testWidgets('add match', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key("add_0")));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("2"));
-    await tester.tap(find.text("Match"));
-    await tester.tap(find.text("Ok"));
-    await tester.pumpAndSettle();
-    expect(text(const Key("sum_0")), "257");
-    expect(text(const Key("sum_1")), "0");
+    await tester.addPoints(['add_0', 'key_2', 'key_Match']);
+
+    expect(text(const Key('sum_0')), '257');
+    expect(text(const Key('sum_1')), '0');
   });
 
   testWidgets('add weis', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key("add_0")));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('dropdownFactor')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('3x').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("2"));
-    await tester.tap(find.text("∅")); // reset
-    await tester.tap(find.text("5"));
-    await tester.tap(find.text("1"));
-    await tester.tap(find.text("←")); // delete 1
-    await tester.tap(find.byKey(const Key("key_0")));
-    await tester.tap(find.text("Weis"));
-    await tester.pumpAndSettle();
-    expect(text(const Key("sum_0")), "150");
-    expect(text(const Key("sum_1")), "0");
+    await tester.addPoints(
+        ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_←', 'key_0'],
+        factor: '3x', weis: true);
+
+    expect(text(const Key('sum_0')), '150');
+    expect(text(const Key('sum_1')), '0');
   });
 
   testWidgets('profile', (tester) async {
@@ -199,7 +199,6 @@ void main() {
     await tester.tap(find.text('Standard'));
     await tester.pumpAndSettle();
 
-    // cspell:disable-next
     await tester.tap(find.byTooltip('Profil kopieren'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '2nd Profile');
@@ -209,23 +208,21 @@ void main() {
     await tester.tap(find.text('2nd Profile'));
     await tester.pump();
 
-    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
-    // cspell:disable-next
-    await tester.tap(find.text("Hilfslinien (Z) anzeigen"));
-    // cspell:disable-next
-    await tester.tap(find.text("verschiedene Zielpunkte"));
-    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.tap(find.text('Hilfslinien (Z) anzeigen'));
+    await tester.tap(find.text('verschiedene Zielpunkte'));
+    await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
     expect(find.text('2500'), findsNWidgets(2));
 
-    await tester.tap(find.byKey(const Key("add20_0")));
-    await tester.tap(find.byKey(const Key("add50_1")));
-    await tester.tap(find.byKey(const Key("add50_1")));
+    await tester.tap(find.byKey(const Key('add20_0')));
+    await tester.tap(find.byKey(const Key('add50_1')));
+    await tester.tap(find.byKey(const Key('add50_1')));
     await tester.pump();
-    expect(text(const Key("sum_0")), "20");
-    expect(text(const Key("sum_1")), "100");
+    expect(text(const Key('sum_0')), '20');
+    expect(text(const Key('sum_1')), '100');
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -233,13 +230,80 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Standard'));
     await tester.pump();
-    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip("Zurück")); // cspell:disable-line
+    await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
     expect(find.text('2500'), findsNWidgets(1));
-    expect(text(const Key("sum_0")), "0");
-    expect(text(const Key("sum_1")), "0");
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '0');
+  });
+
+  testWidgets('check winner', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.text('2500'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '400');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.addPoints(['add_1', 'key_7', 'key_3'], factor: '3x');
+
+    expect(find.text('Bergpreis'), findsOneWidget);
+    await tester.tap(find.text('Team 2').last);
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('sum_0')), '252');
+    expect(text(const Key('sum_1')), '219');
+
+    await tester.addPoints(['add_0', 'flip', 'key_Match']);
+
+    expect(find.text('Gewonnen!'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('statistics')));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('Bergpreis_1'), elementNo: 0), '');
+    expect(text(const Key('Bergpreis_2'), elementNo: 0), '✓');
+    expect(text(const Key('Sieg_1')), '✓');
+    expect(text(const Key('Sieg_2')), '');
+
+    expect(text(const Key('Bergpreis_1'), elementNo: 1), '0');
+    expect(text(const Key('Bergpreis_2'), elementNo: 1), '1');
+    expect(text(const Key('Siege_1')), '1');
+    expect(text(const Key('Siege_2')), '0');
+
+    await tester.tap(find.text('Ok'));
+  });
+
+  testWidgets('check winner rounds', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zielpunkte'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Anzahl Runden').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('0 / 8'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '2');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.addPoints(['add_1', 'key_7', 'key_8']);
+    await tester.addPoints(['add_0', 'key_5', 'key_8']);
+
+    expect(find.text('Gewonnen!'), findsOneWidget);
+  });
   });
 }

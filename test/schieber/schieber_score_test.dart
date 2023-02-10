@@ -1,4 +1,5 @@
 import 'package:jasstafel/schieber/data/schieber_score.dart';
+import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -170,5 +171,123 @@ void main() {
 
     expect(score.noOfRounds(), 2);
     expect(score.weisPoints(), [50, 40]);
+  });
+
+  test('do not consolidate complete rounds', () {
+    var score = SchieberScore();
+
+    score.add(100, 57);
+    score.add(262, 52);
+    score.add(0, 514);
+
+    expect(score.noOfRounds(), 3);
+    expect(score.weisPoints(), [0, 0]);
+  });
+
+  test('do not consolidate complete round with previous', () {
+    var score = SchieberScore();
+
+    score.add(16, 141);
+    score.add(50, 0);
+    score.add(262, 52);
+
+    expect(score.noOfRounds(), 2);
+    expect(score.weisPoints(), [50, 0]);
+  });
+
+  test('hill & winner', () {
+    var score = SchieberScore();
+    score.team[0].goalPoints = 1000;
+    score.team[1].goalPoints = 1000;
+
+    score.add(200, 57);
+    score.add(262, 150);
+    expect(score.passedHill().isEmpty, true);
+    expect(score.winner().isEmpty, true);
+
+    score.add(132, 25);
+    expect(score.passedHill()[0], "Team 1");
+    expect(score.winner().isEmpty, true);
+
+    score.add(0, 514);
+    score.add(0, 257);
+    expect(score.winner().length, 1);
+    expect(score.winner()[0], "Team 2");
+    expect(score.passedHill().isEmpty, true);
+    expect(score.team[0].hill, true);
+    expect(score.team[1].hill, false);
+  });
+
+  test('both passed hill', () {
+    var score = SchieberScore();
+    score.team[0].goalPoints = 400;
+    score.team[1].goalPoints = 400;
+
+    score.add(180, 57);
+    score.add(262, 150);
+    expect(score.passedHill().length, 2);
+  });
+
+  test('both win', () {
+    var score = SchieberScore();
+    score.team[0].goalPoints = 400;
+    score.team[1].goalPoints = 400;
+
+    score.add(180, 57);
+    score.add(180, 200);
+    score.add(262, 150);
+    expect(score.winner().length, 2);
+  });
+
+  test('hill & winner rounds', () {
+    var score = SchieberScore();
+    var settings = SchieberSettings();
+    settings.goalTypePoints = false;
+    score.setSettings(settings);
+    score.goalRounds = 3;
+
+    score.add(200, 0);
+    score.add(100, 57);
+    expect(score.passedHill().isEmpty, true);
+    expect(score.winner().isEmpty, true);
+
+    score.add(77, 80);
+    expect(score.noOfRounds(), 2);
+    expect(score.passedHill()[0], "Team 1");
+    expect(score.winner().isEmpty, true);
+
+    score.add(0, 300);
+    score.add(60, 97);
+    expect(score.winner().length, 1);
+    expect(score.winner()[0], "Team 2");
+    expect(score.passedHill().isEmpty, true);
+    expect(score.team[0].hill, true);
+    expect(score.team[1].hill, false);
+  });
+
+  test('both passed hill rounds', () {
+    var score = SchieberScore();
+    var settings = SchieberSettings();
+    settings.goalTypePoints = false;
+    score.setSettings(settings);
+    score.goalRounds = 4;
+
+    score.add(200, 114);
+    score.add(0, 40);
+    score.add(134, 180);
+    expect(score.passedHill().length, 2);
+  });
+
+  test('both win rounds', () {
+    var score = SchieberScore();
+    var settings = SchieberSettings();
+    settings.goalTypePoints = false;
+    score.setSettings(settings);
+    score.goalRounds = 2;
+
+    score.add(77, 80);
+    score.add(20, 0);
+    score.add(70, 87);
+    expect(score.winner().length, 2);
   });
 }

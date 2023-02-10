@@ -3,6 +3,7 @@ import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -45,12 +46,27 @@ class _SchieberState extends State<Schieber> {
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schieber');
 
+    data.score.checkHill(context);
+    data.checkGameOver(context);
+
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
     Widget goalPoints() {
       points(int teamId) {
+        setGoalPoints(pts) {
+          if (data.settings.differentGoals) {
+            data.score.team[teamId].goalPoints = pts;
+          } else {
+            data.score.team[0].goalPoints = pts;
+            data.score.team[1].goalPoints = pts;
+          }
+        }
+
         return GestureDetector(
-            onTap: () => _pointsDialog(teamId),
+            onTap: () => _pointsDialog(
+                value: data.score.team[teamId].goalPoints,
+                apply: (int value) => setGoalPoints(value),
+                title: Text(context.l10n.goalPoints)),
             child: Text(data.score.team[teamId].goalPoints.toString(),
                 textScaleFactor: 2, key: Key("GoalPoints$teamId")));
       }
@@ -62,6 +78,16 @@ class _SchieberState extends State<Schieber> {
         ]);
       }
       return points(0);
+    }
+
+    Widget goalRounds() {
+      return GestureDetector(
+          onTap: () => _pointsDialog(
+              value: data.score.goalRounds,
+              apply: (int value) => data.score.goalRounds = value,
+              title: Text(context.l10n.rounds)),
+          child: Text("${data.score.noOfRounds()} / ${data.score.goalRounds}",
+              textScaleFactor: 2, key: const Key("GoalRounds")));
     }
 
     return Scaffold(
@@ -103,7 +129,8 @@ class _SchieberState extends State<Schieber> {
                 SchieberTeam(0, data, dialogs),
                 SchieberTeam(1, data, dialogs),
               ]),
-          Center(child: goalPoints())
+          Center(
+              child: data.settings.goalTypePoints ? goalPoints() : goalRounds())
         ]));
   }
 
@@ -118,14 +145,15 @@ class _SchieberState extends State<Schieber> {
     });
   }
 
-  void _pointsDialog(int teamId) async {
+  void _pointsDialog(
+      {required int value, required Function apply, Widget? title}) async {
     var controller = TextEditingController();
-    controller.text = data.score.team[teamId].goalPoints.toString();
+    controller.text = "$value";
 
-    final input = await pointsDialogBuilder(context, controller);
+    final input = await pointsDialogBuilder(context, controller, title: title);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      data.score.team[teamId].goalPoints = input.value;
+      apply(input.value!);
       data.save();
     });
   }

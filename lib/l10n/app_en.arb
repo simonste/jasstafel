@@ -60,6 +60,7 @@
   "tricks": "Tricks",
   "match": "Match",
   "total": "Total",
+  "win": "Win",
   "wins": "Wins",
   "opponent": "Opponent",
   "totalPoints": "Total: {points}",

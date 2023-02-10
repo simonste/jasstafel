@@ -4,8 +4,9 @@ import 'package:jasstafel/common/localization.dart';
 
 class DeleteButton extends IconButton {
   DeleteButton(BuildContext context, Function deleteFunction,
-      {Function? deleteAllFunction, super.key})
+      {Function? deleteAllFunction})
       : super(
+            key: const Key('delete'),
             onPressed: () {
               var actions = <DialogAction>[];
               if (deleteAllFunction != null) {

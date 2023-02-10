@@ -46,6 +46,7 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
+    data.checkGameOver(context);
 
     return Scaffold(
       appBar: AppBar(

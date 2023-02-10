@@ -125,6 +125,7 @@
   "tricks": "Stiche",
   "match": "Match",
   "total": "Total",
+  "win": "Sieg",
   "wins": "Siege",
   "opponent": "Gegner",
   "totalPoints": "Total: {points}",

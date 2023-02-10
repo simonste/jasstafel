@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/winner_dialog.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
 part 'schieber_score.g.dart';
 
 @JsonSerializable()
@@ -32,7 +35,7 @@ class TeamData {
       _$TeamDataFromJson(json);
 
   String name;
-  int? goalPoints = 2500;
+  int goalPoints = 2500;
   bool? hill;
   bool? win;
   bool flip = false;
@@ -155,7 +158,7 @@ class SchieberScore implements Score {
   void setSettings(settings) => _settings = settings;
 
   var team = [TeamData("Team 1"), TeamData("Team 2")];
-  int? goalRounds;
+  int goalRounds = 8;
   List<SchieberRound> rounds = [];
 
   var statistics = SchieberStatistics();
@@ -195,19 +198,6 @@ class SchieberScore implements Score {
     rounds.add(round);
     team[0].add(pts1);
     team[1].add(pts2);
-
-    if (_settings.goalTypePoints) {
-      if (team[0].hill == null || team[1].hill == null) {
-        if (team[0].sum() > team[0].goalPoints! / 2) {
-          team[0].hill = true;
-          team[1].hill = false;
-        }
-        if (team[1].sum() > team[1].goalPoints! / 2) {
-          team[0].hill = false;
-          team[1].hill = true;
-        }
-      }
-    }
   }
 
   List<SchieberRound> getHistory() {
@@ -221,8 +211,16 @@ class SchieberScore implements Score {
 
     List<int> ptsBuffer = [0, 0];
     for (var round in rounds) {
-      if (previousRound != null &&
-          round.time.difference(previousRound.time).inSeconds.abs() > 5) {
+      final bufferContainsRound = (ptsBuffer.sum > 0 &&
+          ((ptsBuffer.sum % _settings.match == 0) ||
+              (ptsBuffer.sum % roundPoints(_settings.match)) == 0));
+      final previousPointsLongAgo = (previousRound != null &&
+          round.time.difference(previousRound.time).inSeconds.abs() > 5);
+      final currentIsRound = (ptsBuffer.sum > 0 &&
+          ((round._total() % _settings.match == 0) ||
+              (round._total() % roundPoints(_settings.match)) == 0));
+
+      if (bufferContainsRound || previousPointsLongAgo || currentIsRound) {
         consRounds.add(SchieberRound(ptsBuffer));
         ptsBuffer = [0, 0];
       }
@@ -286,5 +284,99 @@ class SchieberScore implements Score {
       }
     }
     return weisPts;
+  }
+
+  @override
+  List<String> winner() {
+    List<String> winners = [];
+
+    for (final t in team) {
+      if (t.win ?? false) {
+        winners.add(t.name);
+      }
+    }
+    // if winners already known
+    if (winners.isNotEmpty) return winners;
+
+    if (_settings.goalTypePoints) {
+      for (final t in team) {
+        if (t.sum() > t.goalPoints) {
+          winners.add(t.name);
+          t.win = true;
+        }
+      }
+    } else {
+      if (noOfRounds() >= goalRounds) {
+        for (final i in [0, 1]) {
+          if (team[i].sum() >= team[(i + 1) % 2].sum()) {
+            winners.add(team[i].name);
+            team[i].win = true;
+          }
+        }
+      }
+    }
+    return winners;
+  }
+
+  @override
+  void setWinner(String teamName) {
+    for (var t in team) {
+      if (t.name != teamName) {
+        t.win = false;
+      }
+    }
+  }
+
+  void checkHill(BuildContext context) {
+    final hillers = passedHill();
+    if (hillers.length == 2) {
+      setHiller(String teamName) {
+        for (var t in team) {
+          if (t.name != teamName) {
+            t.hill = false;
+          }
+        }
+      }
+
+      Future.delayed(
+          Duration.zero,
+          () => hillDialog(
+              context: context,
+              hillers: hillers,
+              setHillerFunction: setHiller));
+    }
+  }
+
+  List<String> passedHill() {
+    for (final t in team) {
+      if (t.hill ?? false) {
+        return [];
+      }
+    }
+
+    List<String> hillers = [];
+    if (_settings.goalTypePoints) {
+      for (final t in team) {
+        if (t.sum() > t.goalPoints / 2) {
+          hillers.add(t.name);
+          t.hill = true;
+        }
+      }
+    } else {
+      if (noOfRounds() == (goalRounds / 2).ceil()) {
+        for (final i in [0, 1]) {
+          if (team[i].sum() >= team[(i + 1) % 2].sum()) {
+            hillers.add(team[i].name);
+            team[i].hill = true;
+          }
+        }
+      }
+    }
+    if (hillers.isNotEmpty) {
+      for (final t in team) {
+        t.hill ??= false;
+      }
+    }
+    return hillers;
   }
 }

@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
+import 'package:jasstafel/common/dialog/winner_dialog.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -16,6 +18,9 @@ abstract class Score {
 
   void reset(int? duration);
   int noOfRounds();
+
+  List<String> winner();
+  void setWinner(String team);
 }
 
 class BoardData<T, S extends Score> {
@@ -114,6 +119,18 @@ class BoardData<T, S extends Score> {
     score.reset(common.timestamps.duration());
     common.reset();
     save();
+  }
+
+  void checkGameOver(BuildContext context) {
+    final winners = score.winner();
+    if (winners.isNotEmpty && common.justFinished()) {
+      Future.delayed(
+          Duration.zero,
+          () => winnerDialog(
+              context: context,
+              winners: winners,
+              setWinnerFunction: score.setWinner));
+    }
   }
 
   void saveProfiles() async {

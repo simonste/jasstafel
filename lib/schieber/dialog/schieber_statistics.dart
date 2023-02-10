@@ -5,8 +5,9 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 class SchieberStatisticsButton extends IconButton {
-  SchieberStatisticsButton(BuildContext context, data, {super.key})
+  SchieberStatisticsButton(BuildContext context, data)
       : super(
+            key: const Key('statistics'),
             onPressed: () {
               dialogBuilder(context, data);
             },
@@ -27,16 +28,21 @@ Future<void> dialogBuilder(
               var fontWeight =
                   rowType == RowType.bold ? FontWeight.w400 : FontWeight.w100;
 
-              text(String string) {
+              text(String string, {Key? key}) {
                 return Expanded(
                     child: Text(
+                  key: key,
                   string,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: fontWeight),
                 ));
               }
 
-              return Row(children: [text(left), text(title), text(right)]);
+              return Row(children: [
+                text(left, key: Key("${title}_1")),
+                text(title),
+                text(right, key: Key("${title}_2"))
+              ]);
             }
 
             dataRow(List<int> pts, String title) {
@@ -70,6 +76,8 @@ Future<void> dialogBuilder(
             children.add(dataRow(total, context.l10n.total));
             children.add(row(hill[0] == 1 ? "✓" : "", hill[1] == 1 ? "✓" : "",
                 context.l10n.hill));
+            children.add(row(win[0] == 1 ? "✓" : "", win[1] == 1 ? "✓" : "",
+                context.l10n.win));
 
             children.add(const Divider());
             children.add(Text(context.l10n.total));

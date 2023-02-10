@@ -1,3 +1,4 @@
+import 'package:jasstafel/coiffeur/dialog/coiffeur_info.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -178,4 +179,17 @@ class CoiffeurScore implements Score {
     }
     return rounds;
   }
+
+  @override
+  List<String> winner() {
+    final winner = CoiffeurInfo(_settings, this).winner();
+    List<String> winners = [];
+    for (final w in winner.winner) {
+      winners.add(teamName[w]);
+    }
+    return winners;
+  }
+
+  @override
+  void setWinner(String team) {}
 }
