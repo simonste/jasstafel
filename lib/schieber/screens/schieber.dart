@@ -3,7 +3,6 @@ import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
-import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -132,8 +131,8 @@ class _SchieberState extends State<Schieber> {
   }
 
   void _openDialog(int teamId) async {
-    final input = await schieberDialogBuilder(context, teamId,
-        roundPoints(data.settings.match), data.score.team[teamId]);
+    final input = await schieberDialogBuilder(
+        context, teamId, data.settings.match, data.score.team[teamId]);
     if (input == null) {
       return; // empty name not allowed
     }

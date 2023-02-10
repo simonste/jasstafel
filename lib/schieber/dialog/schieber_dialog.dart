@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 
 class Points {
@@ -49,7 +50,7 @@ class PointsController extends TextEditingController {
 }
 
 Future<Points?> schieberDialogBuilder(
-    BuildContext context, int teamId, int ppr, TeamData teamData) {
+    BuildContext context, int teamId, int matchPts, TeamData teamData) {
   int factor = 1;
 
   return showDialog<Points>(
@@ -62,7 +63,10 @@ Future<Points?> schieberDialogBuilder(
         }
 
         pointsOtherTeam() {
-          return (ppr - ptsController.getPoints()) * factor;
+          if (ptsController.getPoints() == matchPts) {
+            return 0;
+          }
+          return (roundPoints(matchPts) - ptsController.getPoints()) * factor;
         }
 
         return StatefulBuilder(
@@ -80,6 +84,7 @@ Future<Points?> schieberDialogBuilder(
                       : "$n";
 
               return InkWell(
+                  key: Key("key_$number"),
                   onTap: () => setState(() {
                         if (number == "←") {
                           ptsController.delete();
@@ -136,11 +141,10 @@ Future<Points?> schieberDialogBuilder(
           }
 
           String getSummary() {
-            if (pointsOtherTeam() > 0) {
-              return context.l10n
-                  .totalWithOpponent(pointsTeam(), pointsOtherTeam());
-            }
-            return context.l10n.totalPoints(pointsTeam());
+            return context.l10n.totalWithOpponent(
+              pointsTeam(),
+              pointsOtherTeam(),
+            );
           }
 
           TextButton getAction(String text) {
@@ -176,7 +180,7 @@ Future<Points?> schieberDialogBuilder(
                     getFactorWidget(),
                     getTextField(),
                     getButton("∅", 0),
-                    getButton(context.l10n.match, ppr),
+                    getButton(context.l10n.match, matchPts),
                   ]),
                   Text(getSummary()),
                   Container(height: 20),

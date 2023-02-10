@@ -197,6 +197,7 @@ class SchieberTeam extends StatelessWidget {
         right: hMargin,
         width: width * 0.2,
         child: GestureDetector(
+          key: Key("add_$teamId"),
           onTap: () => dialogs..addPoints(teamId),
           child: SvgPicture.asset('assets/actions/add.svg'),
         ));

@@ -140,6 +140,57 @@ void main() {
     expect(text(const Key("sum_1")), "139");
   });
 
+  testWidgets('add round', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key("add_1")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("2"));
+    await tester.tap(find.text("3"));
+    await tester.tap(find.byKey(const Key('dropdownFactor')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('4x').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Ok"));
+    await tester.pumpAndSettle();
+    expect(text(const Key("sum_0")), "536");
+    expect(text(const Key("sum_1")), "92");
+  });
+
+  testWidgets('add match', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key("add_0")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("2"));
+    await tester.tap(find.text("Match"));
+    await tester.tap(find.text("Ok"));
+    await tester.pumpAndSettle();
+    expect(text(const Key("sum_0")), "257");
+    expect(text(const Key("sum_1")), "0");
+  });
+
+  testWidgets('add weis', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key("add_0")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('dropdownFactor')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('3x').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("2"));
+    await tester.tap(find.text("∅")); // reset
+    await tester.tap(find.text("5"));
+    await tester.tap(find.text("1"));
+    await tester.tap(find.text("←")); // delete 1
+    await tester.tap(find.byKey(const Key("key_0")));
+    await tester.tap(find.text("Weis"));
+    await tester.pumpAndSettle();
+    expect(text(const Key("sum_0")), "150");
+    expect(text(const Key("sum_1")), "0");
+  });
+
   testWidgets('profile', (tester) async {
     await tester.launchApp();
 
