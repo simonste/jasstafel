@@ -112,8 +112,8 @@ class _SchieberState extends State<Schieber> {
               () => setState(() => data.reset()),
               deleteAllFunction: () {
                 setState(() {
-                  data.score.statistics.reset();
                   data.reset();
+                  data.score.statistics.reset();
                 });
               },
             ),
@@ -165,6 +165,7 @@ class _SchieberState extends State<Schieber> {
       return; // empty name not allowed
     }
     setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
       data.score.add(input.points1, input.points2);
       data.save();
     });
@@ -176,6 +177,7 @@ class _SchieberState extends State<Schieber> {
         Vibration.vibrate(duration: 50);
       }
       setState(() {
+        data.common.timestamps.addPoints(data.score.totalPoints());
         if (teamId == 0) {
           data.score.add(pts, 0);
         } else {

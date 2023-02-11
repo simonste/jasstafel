@@ -257,6 +257,11 @@ class SchieberScore implements Score {
     return noOfRounds;
   }
 
+  @override
+  int totalPoints() {
+    return team[0].sum() + team[1].sum();
+  }
+
   List<int> matches() {
     var matches = [0, 0];
     for (var round in _consolidateRounds()) {

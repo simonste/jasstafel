@@ -91,6 +91,11 @@ class CoiffeurScore implements Score {
     }
   }
 
+  @override
+  int totalPoints() {
+    return total(0) + total(1);
+  }
+
   int total(team) {
     assert(team < 3);
     int sum = 0;

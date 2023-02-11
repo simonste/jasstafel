@@ -7,7 +7,8 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
-// cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl
+// cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
+// cspell:ignore: aktuelle runde stiche
 
 String? text(Key key, {int? elementNo}) {
   var elements = find.byKey(key).evaluate();
@@ -42,6 +43,13 @@ extension SchieberHelper on WidgetTester {
       await pumpAndSettle();
     }
     await tap(find.text((weis ?? false) ? 'Weis' : 'Ok'));
+    await pumpAndSettle();
+  }
+
+  Future<void> delete(String buttonText) async {
+    await tap(find.byKey(const Key('delete')));
+    await pumpAndSettle();
+    await tap(find.text(buttonText));
     await pumpAndSettle();
   }
 }
@@ -305,5 +313,75 @@ void main() {
 
     expect(find.text('Gewonnen!'), findsOneWidget);
   });
+  testWidgets('delete button', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('add20_1')));
+    await tester.addPoints(['add_0', 'key_6', 'key_2']);
+
+    await tester.delete('Alles');
+
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '0');
+  });
+
+  testWidgets('delete only current round', (tester) async {
+    await tester.launchApp();
+
+    await tester.addPoints(['add_0', 'key_Match'], factor: '7x');
+    await tester.addPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.delete('Aktuelle Runde');
+
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '0');
+
+    await tester.tap(find.byKey(const Key('statistics')));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('Stiche_1'), elementNo: 0), '0');
+    expect(text(const Key('Stiche_2'), elementNo: 0), '0');
+    expect(text(const Key('Sieg_1')), '');
+    expect(text(const Key('Sieg_2')), '');
+
+    expect(text(const Key('Stiche_1'), elementNo: 1), '2609');
+    expect(text(const Key('Stiche_2'), elementNo: 1), '132');
+    expect(text(const Key('Siege_1')), '1');
+    expect(text(const Key('Siege_2')), '0');
+
+    await tester.tap(find.text('Ok'));
+  });
+
+  testWidgets('delete everything', (tester) async {
+    await tester.launchApp();
+
+    await tester.addPoints(['add_0', 'key_Match'], factor: '7x');
+    await tester.addPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.delete('Alles');
+
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '0');
+
+    await tester.tap(find.byKey(const Key('statistics')));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('Stiche_1'), elementNo: 0), '0');
+    expect(text(const Key('Stiche_2'), elementNo: 0), '0');
+    expect(text(const Key('Sieg_1')), '');
+    expect(text(const Key('Sieg_2')), '');
+
+    expect(text(const Key('Stiche_1'), elementNo: 1), '0');
+    expect(text(const Key('Stiche_2'), elementNo: 1), '0');
+    expect(text(const Key('Siege_1')), '0');
+    expect(text(const Key('Siege_2')), '0');
+
+    await tester.tap(find.text('Ok'));
   });
 }

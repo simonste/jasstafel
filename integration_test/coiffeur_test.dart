@@ -1,15 +1,18 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
-// cspell:ignore: punkte verwenden prämie ändern abbrechen
+// cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen
 
 String? text(Key key) {
   var coiffeurCellWidget =
@@ -404,5 +407,49 @@ void main() {
     expect(find.text('Team 1'), findsNWidgets(2));
     expect(find.text('Team 2'), findsNWidgets(2));
     expect(find.text('Team 3'), findsNWidgets(2));
+  });
+
+  testWidgets('time stopped', (tester) async {
+    clockSpeed = 120;
+
+    minPlayed() {
+      final elapsed = text(const Key('elapsed'))!;
+      return int.parse(elapsed.split(" ")[0]);
+    }
+
+    await tester.launchApp();
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Auswertungsspalte'));
+    await tester.slideTo(find.byType(Slider), 6);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.addPoints('0:0', 140);
+    final t1 = minPlayed();
+    sleep(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(minPlayed(), greaterThan(t1));
+    await tester.addPoints('0:1', 140);
+    await tester.addPoints('0:2', 140);
+    await tester.addPoints('0:3', 140);
+    await tester.addPoints('0:4', 140);
+    await tester.addPoints('0:5', 140);
+    await tester.addPoints('1:5', 110);
+    await tester.addPoints('1:4', 110);
+    await tester.addPoints('1:3', 110);
+    await tester.addPoints('1:2', 110);
+
+    expect(find.text('Gewonnen!'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    final tEnd = minPlayed();
+    sleep(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(minPlayed(), tEnd);
+
+    await tester.addPoints('1:1', 110);
+    expect(minPlayed(), greaterThan(tEnd));
   });
 }

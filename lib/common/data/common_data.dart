@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'common_data.g.dart';
 
+var clockSpeed = 1;
+
+extension JassDurationHelper on Duration {
+  int get elapsed {
+    return (inMilliseconds / 1000 / 60 * clockSpeed).floor();
+  }
+}
+
 @JsonSerializable()
 class Timestamps {
   DateTime? startTime;
@@ -15,13 +23,18 @@ class Timestamps {
 
   Map<String, dynamic> toJson() => _$TimestampsToJson(this);
 
+  void reset() {
+    startTime = DateTime.now();
+    finishTime = null;
+  }
+
   int? duration() {
     int minutes = 1000;
     if (startTime != null) {
       if (finishTime != null) {
-        minutes = finishTime!.difference(startTime!).inMinutes;
+        minutes = finishTime!.difference(startTime!).elapsed;
       } else {
-        minutes = DateTime.now().difference(startTime!).inMinutes;
+        minutes = DateTime.now().difference(startTime!).elapsed;
       }
     }
 
@@ -37,6 +50,24 @@ class Timestamps {
       return context.l10n.duration(dur);
     }
     return "";
+  }
+
+  void addPoints(int totalPts) {
+    if (totalPts == 0 &&
+        (startTime == null ||
+            DateTime.now().difference(startTime!).elapsed < 10)) {
+      reset();
+    } else if (finishTime != null) {
+      finishTime = DateTime.now();
+    }
+  }
+
+  bool justFinished() {
+    if (finishTime == null) {
+      finishTime = DateTime.now();
+      return true;
+    }
+    return false;
   }
 }
 
@@ -66,51 +97,7 @@ class CommonData {
   Map<String, dynamic> toJson() => _$CommonDataToJson(this);
 
   void reset() {
-    timestamps.startTime = DateTime.now();
-    timestamps.finishTime = null;
+    timestamps.reset();
     whoIsNext.whoBeginsOffset = null;
-  }
-
-  void firstPoints() {
-    if (timestamps.startTime == null ||
-        DateTime.now().difference(timestamps.startTime!).inMinutes < 10) {
-      reset();
-    }
-  }
-
-  bool justFinished() {
-    if (timestamps.finishTime == null) {
-      timestamps.finishTime = DateTime.now();
-      return true;
-    }
-    return false;
-  }
-
-  List<dynamic> dump() {
-    return [
-      timestamps.startTime,
-      timestamps.finishTime,
-      whoIsNext.swapPlayers,
-      whoIsNext.whoBeginsOffset
-    ];
-  }
-
-  void restore(List<String> values) {
-    try {
-      timestamps.startTime = DateTime.parse(values[0]);
-    } on FormatException {
-      timestamps.startTime = null;
-    }
-    try {
-      timestamps.finishTime = DateTime.parse(values[1]);
-    } on FormatException {
-      timestamps.finishTime = null;
-    }
-    whoIsNext.swapPlayers = values[2];
-    try {
-      whoIsNext.whoBeginsOffset = int.parse(values[3]);
-    } on FormatException {
-      whoIsNext.whoBeginsOffset = null;
-    }
   }
 }

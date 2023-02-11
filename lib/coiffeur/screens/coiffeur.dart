@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +10,7 @@ import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_row.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
@@ -30,6 +33,7 @@ class _CoiffeurState extends State<Coiffeur> {
   var data = BoardData(
       CoiffeurSettings(), CoiffeurScore(), CoiffeurSettingsKeys().data);
   final typeNameGroup = AutoSizeGroup();
+  Timer? updateTimer;
 
   void restoreData() async {
     data = await data.load() as BoardData<CoiffeurSettings, CoiffeurScore>;
@@ -47,6 +51,9 @@ class _CoiffeurState extends State<Coiffeur> {
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
     data.checkGameOver(context);
+    if (updateTimer != null) {
+      updateTimer!.cancel();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +101,6 @@ class _CoiffeurState extends State<Coiffeur> {
     var cells = [
       CoiffeurCell(
         context.l10n.noOfRounds(data.score.noOfRounds()),
-        onTap: () {},
         leftBorder: false,
         textScaleFactor: 1.0,
       ),
@@ -106,9 +112,14 @@ class _CoiffeurState extends State<Coiffeur> {
       cells.add(teamWidget(2));
     } else if (data.settings.thirdColumn) {
       cells.add(CoiffeurCell(
+        key: const Key('elapsed'),
         data.common.timestamps.elapsed(context),
         textScaleFactor: 1.0,
       ));
+
+      final updateInterval = 60000 / const Duration(minutes: 1).elapsed ~/ 2;
+      updateTimer =
+          Timer(Duration(milliseconds: updateInterval), () => setState(() {}));
     }
     return CoiffeurRow(cells);
   }
@@ -221,9 +232,7 @@ class _CoiffeurState extends State<Coiffeur> {
         await pointsDialogBuilder(context, controller, title: titleWidget);
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
-      if (data.score.noOfRounds() == 0) {
-        data.common.firstPoints();
-      }
+      data.common.timestamps.addPoints(data.score.totalPoints());
       if (input.scratch) {
         data.score.rows[row].pts[team].scratch();
       } else {

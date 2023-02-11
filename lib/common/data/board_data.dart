@@ -18,6 +18,7 @@ abstract class Score {
 
   void reset(int? duration);
   int noOfRounds();
+  int totalPoints();
 
   List<String> winner();
   void setWinner(String team);
@@ -123,7 +124,7 @@ class BoardData<T, S extends Score> {
 
   void checkGameOver(BuildContext context) {
     final winners = score.winner();
-    if (winners.isNotEmpty && common.justFinished()) {
+    if (winners.isNotEmpty && common.timestamps.justFinished()) {
       Future.delayed(
           Duration.zero,
           () => winnerDialog(

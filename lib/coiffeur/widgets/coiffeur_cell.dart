@@ -57,7 +57,8 @@ class CoiffeurCell extends Expanded {
       return Container(
           alignment: Alignment.center,
           decoration: border(leftBorder, scratch),
-          child: Text(
+          child: AutoSizeText(
+            textAlign: TextAlign.center,
             name,
             textScaleFactor: textScaleFactor,
           ));
