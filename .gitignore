@@ -40,3 +40,9 @@ app.*.map.json
 
 # Generated dart files
 *.g.dart
+
+# Generated icons
+*ic_launcher.png
+*Icon*.png
+*favicon.png
+
