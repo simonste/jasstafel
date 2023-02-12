@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/common/board.dart';
-import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'overall_test.dart';
 
 // cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
 // cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
@@ -22,14 +23,6 @@ String? text(Key key, {int? elementNo}) {
 }
 
 extension SchieberHelper on WidgetTester {
-  Future<void> launchApp() async {
-    app.main();
-    // pump three times to assure android app is launched
-    await pumpAndSettle();
-    await pumpAndSettle();
-    await pumpAndSettle();
-  }
-
   Future<void> addPoints(List<String> keys,
       {String? factor, bool? weis}) async {
     for (final key in keys) {

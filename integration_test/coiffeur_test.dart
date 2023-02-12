@@ -7,9 +7,10 @@ import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/common_data.dart';
-import 'package:jasstafel/main.dart' as app;
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'overall_test.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
 // cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen
@@ -30,14 +31,6 @@ String? text(Key key) {
 }
 
 extension CoiffeurHelper on WidgetTester {
-  Future<void> launchApp() async {
-    app.main();
-    // pump three times to assure android app is launched
-    await pumpAndSettle();
-    await pumpAndSettle();
-    await pumpAndSettle();
-  }
-
   Future<void> addPoints(String teamRow, int points, {String? tapKey}) async {
     await tap(find.byKey(Key(teamRow)));
     await pumpAndSettle();
