@@ -155,6 +155,17 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   CoiffeurRow get _createFooter {
+    var highlight = List.filled(3, false);
+    final winner = CoiffeurInfo(data.settings, data.score).winner().winner;
+    for (final w in winner) {
+      highlight[w] = true;
+    }
+
+    totalCell(int i) {
+      return CoiffeurPointsCell.number(data.score.total(i),
+          highlight: highlight[i], key: Key("sum_$i"));
+    }
+
     var cells = [
       Expanded(
         child: Text(
@@ -163,13 +174,11 @@ class _CoiffeurState extends State<Coiffeur> {
           textScaleFactor: 2,
         ),
       ),
-      CoiffeurPointsCell.number(data.score.total(0), key: const Key("sum_0")),
-      CoiffeurPointsCell.number(data.score.total(1), key: const Key("sum_1")),
+      totalCell(0),
+      totalCell(1),
     ];
     if (data.settings.threeTeams || data.settings.thirdColumn) {
-      cells.add(
-        CoiffeurPointsCell.number(data.score.total(2), key: const Key("sum_2")),
-      );
+      cells.add(totalCell(2));
     }
 
     return CoiffeurRow(cells, topBorder: true);
