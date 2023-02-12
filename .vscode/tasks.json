@@ -16,9 +16,16 @@
       "problemMatcher": []
     },
     {
+      "label": "Generate Icons",
+      "type": "flutter",
+      "command": "flutter",
+      "args": ["pub", "run", "flutter_launcher_icons:main"],
+      "problemMatcher": []
+    },
+    {
       "label": "Start Android emulator",
       "command": "emulator",
-      "args": ["-avd", "Pixel_6_API_Sv2",],
+      "args": ["-avd", "Pixel_6_API_Sv2"],
       "options": {
         "cwd": "${env:HOME}/Android/Sdk/tools/"
       },
