@@ -35,7 +35,7 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var cardWidth = MediaQuery.of(context).size.width * 0.35;
+    var cardWidth = MediaQuery.of(context).size.width * 0.3;
 
     List<DraggableGridItem> children = [];
     swapMap.get().forEach((key, value) {

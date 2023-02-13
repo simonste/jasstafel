@@ -7,8 +7,10 @@ import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
 import 'package:jasstafel/common/dialog/winner_dialog.dart';
+import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
+import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -40,6 +42,8 @@ class BoardData<T, S extends Score> {
       return Board.schieber;
     } else if (string == "CoiffeurScore") {
       return Board.coiffeur;
+    } else if (string == "MolotowScore") {
+      return Board.molotow;
     } else {
       assert(false);
     }
@@ -60,6 +64,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.coiffeur:
         (score as CoiffeurScore).setSettings(settings);
+        break;
+      case Board.molotow:
+        (score as MolotowScore).setSettings(settings);
         break;
     }
   }
@@ -84,6 +91,10 @@ class BoardData<T, S extends Score> {
       case Board.coiffeur:
         (settings as CoiffeurSettings).fromPreferences(preferences);
         (settings as CoiffeurSettings).toPreferences(preferences);
+        break;
+      case Board.molotow:
+        (settings as MolotowSettings).fromPreferences(preferences);
+        (settings as MolotowSettings).toPreferences(preferences);
         break;
     }
     _updateSettings();
@@ -110,6 +121,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.coiffeur:
         (settings as CoiffeurSettings).data = str;
+        break;
+      case Board.molotow:
+        (settings as MolotowSettings).data = str;
         break;
     }
     _updateSettings();
@@ -157,6 +171,11 @@ class BoardData<T, S extends Score> {
           coiffeurSettings.fromJson(json);
           coiffeurSettings.toPreferences(preferences);
           break;
+        case Board.molotow:
+          var molotowSettings = settings as MolotowSettings;
+          molotowSettings.fromJson(json);
+          molotowSettings.toPreferences(preferences);
+          break;
       }
       _updateSettings();
       json = jsonDecode(json[dataKey]);
@@ -172,6 +191,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.coiffeur:
         score = CoiffeurScore.fromJson(json) as S;
+        break;
+      case Board.molotow:
+        score = MolotowScore.fromJson(json) as S;
         break;
     }
   }

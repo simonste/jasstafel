@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/molotow/screens/molotow.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
@@ -72,9 +73,10 @@ class MyApp extends StatelessWidget {
           canvasColor: Colors.black,
           colorScheme: ColorScheme.dark(
             surface: Colors.grey.shade800, // top bar
-            primary: Colors.blue.shade600, // buttons/ progress bar
             background: Colors.grey.shade600, // progress bar
-            secondary: Colors.blue, // settings
+            primary: Colors.blue.shade800, // buttons / progress bar
+            secondary: Colors.blue.shade800, // settings
+            tertiary: Colors.grey.shade800, // molotow round
           )),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -86,7 +88,8 @@ class MyApp extends StatelessWidget {
       },
       routes: {
         Board.schieber.name: (context) => const Schieber(),
-        Board.coiffeur.name: (context) => const Coiffeur()
+        Board.coiffeur.name: (context) => const Coiffeur(),
+        Board.molotow.name: (context) => const Molotow()
       },
       initialRoute: lastBoard,
     );

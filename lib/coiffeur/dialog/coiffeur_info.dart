@@ -24,11 +24,6 @@ class Winner {
   Winner(this.winner, this.loser);
 }
 
-int roundedInt(int value, bool rounded) {
-  final factor = rounded ? 0.1 : 1;
-  return (value * factor).round();
-}
-
 class CoiffeurInfo {
   CoiffeurInfo(this._settings, this._score)
       : teams = _settings.threeTeams ? 3 : 2,

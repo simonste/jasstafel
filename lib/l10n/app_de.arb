@@ -402,6 +402,7 @@
     }
   },
   "hideGuess": "Ansagen verstecken",
+  "addRound": "Runde eingeben",
   "handWeis": "Handweis",
   "tableWeis": "Tischweis",
   "fremdWeis": "Fremdweis (2x)",

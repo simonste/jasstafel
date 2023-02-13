@@ -1,0 +1,13 @@
+MolotowSettings:
+  Players:
+    store: "molotow_players"
+    default: 4
+  PointsPerRound:
+    store: "molotow_points_per_round"
+    default: 157
+  Rounded:
+    store: "molotow_rounded"
+    default: false
+  Data:
+    store: "molotow"
+    default: "{}"

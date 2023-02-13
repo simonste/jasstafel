@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
 
+class InputWrap<T> {
+  T? value;
+}
+
 class JasstafelTestApp extends MaterialApp {
   JasstafelTestApp({super.key, child})
       : super(

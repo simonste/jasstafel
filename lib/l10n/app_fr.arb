@@ -134,6 +134,7 @@
   "zeroGuess": "Ann.=0",
   "zeroDiff": "Diff.=0",
   "avgRoundGuess": "Une moyenne de {averageGuess} points annoncés par tour.",
+  "addRound": "Entrer le tour",
   "handWeis": "Annonce de la main",
   "tableWeis": "Annonce de la table",
   "fremdWeis": "Annonce étrangère (2x)",

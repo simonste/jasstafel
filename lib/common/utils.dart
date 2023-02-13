@@ -13,3 +13,8 @@ int roundPoints(int matchPoints) {
   }
   return 157;
 }
+
+int roundedInt(int value, bool rounded) {
+  final factor = rounded ? 0.1 : 1;
+  return (value * factor).round();
+}

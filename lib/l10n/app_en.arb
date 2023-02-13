@@ -161,6 +161,7 @@
   "zeroDiff": "Diff.=",
   "avgRoundGuess": "On average {averageGuess} points were predicted per round.",
   "hideGuess": "Hide predictions",
+  "addRound": "Enter round",
   "handWeis": "Hand weis",
   "tableWeis": "Table weis",
   "fremdWeis": "Foreign weis (2x)",

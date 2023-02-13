@@ -20,6 +20,10 @@ class BoardTitle extends Theme {
                   value: Board.coiffeur,
                   child: Text(context.l10n.coiffeur),
                 ),
+                DropdownMenuItem(
+                  value: Board.molotow,
+                  child: Text(context.l10n.molotow),
+                ),
               ],
               onChanged: (value) {
                 PrefService.of(context)

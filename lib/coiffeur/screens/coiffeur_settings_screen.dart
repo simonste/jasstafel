@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -25,7 +26,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
     CoiffeurSettings settings = widget.boardData.settings;
     subTitle(int pts) {
       return settings.rounded
-          ? context.l10n.pointsRounded((pts * 0.1).round())
+          ? context.l10n.pointsRounded(roundedInt(pts, settings.rounded))
           : "";
     }
 
