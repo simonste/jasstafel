@@ -54,6 +54,7 @@ dependencies:
   archive: ^3.3.0
   auto_size_text: ^3.0.0
   wakelock: ^0.6.2
+  restart_app: ^1.1.2
 
 dev_dependencies:
   test: ^1.21.4

@@ -32,9 +32,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Locale getLanguage(context, locale, supportedLocales) {
-    var appLanguage =
-        PrefService.of(context).get(CommonSettings.keys.appLanguage);
+  Locale getLanguage(appLanguage, locale, supportedLocales) {
     if (appLanguage != null) {
       return Locale(appLanguage);
     }
@@ -81,7 +79,8 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       localeResolutionCallback: (locale, supportedLocales) {
-        var language = getLanguage(context, locale, supportedLocales);
+        var language =
+            getLanguage(settings.appLanguage, locale, supportedLocales);
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },

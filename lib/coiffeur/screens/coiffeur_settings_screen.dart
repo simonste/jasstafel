@@ -8,6 +8,7 @@ import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:restart_app/restart_app.dart';
 
 class CoiffeurSettingsScreen extends StatefulWidget {
   final BoardData boardData;
@@ -137,6 +138,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             DropdownMenuItem(value: 'en', child: Text('English')),
             DropdownMenuItem(value: 'fr', child: Text('Français')),
           ],
+          onChange: (value) => Restart.restartApp(),
           cancel: Text(context.l10n.cancel),
         ),
       ]),

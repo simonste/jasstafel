@@ -580,6 +580,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  restart_app:
+    dependency: "direct main"
+    description:
+      name: restart_app
+      sha256: fed4f0756df1fd3a84dbb78fe35869f54ddb1e095604d5843bfc60b76e1398fd
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   shared_preferences:
     dependency: "direct main"
     description:
