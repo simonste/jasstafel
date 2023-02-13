@@ -8,6 +8,7 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
@@ -57,6 +58,14 @@ class MyApp extends StatelessWidget {
     if (!Platform.isLinux) {
       Wakelock.toggle(enable: settings.keepScreenOn);
     }
+
+    List<DeviceOrientation> po = [];
+    if (settings.screenOrientation == 1 || lastBoard == Board.schieber.name) {
+      po = [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown];
+    } else if (settings.screenOrientation == 2) {
+      po = [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight];
+    }
+    SystemChrome.setPreferredOrientations(po);
 
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,

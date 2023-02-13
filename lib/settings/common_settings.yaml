@@ -8,3 +8,6 @@ CommonSettings:
   LastBoard:
     store: "lastBoard"
     default: 0
+  ScreenOrientation:
+    store: "orientation"
+    default: 0

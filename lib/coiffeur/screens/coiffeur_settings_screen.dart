@@ -119,6 +119,16 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefCheckbox(
             title: Text(context.l10n.keepScreenOn),
             pref: CommonSettings.keys.keepScreenOn),
+        PrefChoice<int>(
+          title: Text(context.l10n.screenOrientation),
+          pref: CommonSettings.keys.screenOrientation,
+          items: [
+            DropdownMenuItem(value: 0, child: Text(context.l10n.sensor)),
+            DropdownMenuItem(value: 1, child: Text(context.l10n.portrait)),
+            DropdownMenuItem(value: 2, child: Text(context.l10n.landscape)),
+          ],
+          cancel: Text(context.l10n.cancel),
+        ),
         PrefChoice<String>(
           title: Text(context.l10n.language),
           pref: CommonSettings.keys.appLanguage,
