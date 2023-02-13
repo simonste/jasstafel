@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
@@ -5,6 +7,7 @@ import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
@@ -48,9 +51,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lastBoard = Board
-        .values[PrefService.of(context).get(CommonSettings.keys.lastBoard) ?? 0]
-        .name;
+    var settings = CommonSettings();
+    settings.fromPrefService(context);
+    final lastBoard = Board.values[settings.lastBoard].name;
+    if (!Platform.isLinux) {
+      Wakelock.toggle(enable: settings.keepScreenOn);
+    }
 
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
