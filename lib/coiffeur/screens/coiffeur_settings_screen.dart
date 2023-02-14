@@ -22,17 +22,16 @@ class CoiffeurSettingsScreen extends StatefulWidget {
 class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final pref = PrefService.of(context);
-    final keys = CoiffeurSettings.keys;
+    CoiffeurSettings settings = widget.boardData.settings;
     subTitle(int pts) {
-      return pref.get(keys.rounded)
+      return settings.rounded
           ? context.l10n.pointsRounded((pts * 0.1).round())
           : "";
     }
 
-    final matchPointsSubTitle = subTitle(pref.get(keys.match));
-    final bonusPointsSubTitle = subTitle(pref.get(keys.bonusValue));
-    final counterPointsSubTitle = subTitle(pref.get(keys.counterLoss));
+    final matchPointsSubTitle = subTitle(settings.match);
+    final bonusPointsSubTitle = subTitle(settings.bonusValue);
+    final counterPointsSubTitle = subTitle(settings.counterLoss);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,8 +45,10 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             page: ProfilePage(widget.boardData, () => setState(() {}))),
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefCheckbox(
-            title: Text(context.l10n.denominator10),
-            pref: CoiffeurSettings.keys.rounded),
+          title: Text(context.l10n.denominator10),
+          pref: CoiffeurSettings.keys.rounded,
+          onChange: (value) => settings.rounded = value,
+        ),
         PrefNumber(
           title: Text(context.l10n.matchPoints),
           subtitle: Text(matchPointsSubTitle),
@@ -63,7 +64,9 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
           pref: CoiffeurSettings.keys.bonus,
           onChange: (value) async {
             final proposedMatchPoints = value ? 157 : 257;
-            if (proposedMatchPoints == pref.get(keys.match)) return;
+            final pref = PrefService.of(context);
+            final key = CoiffeurSettings.keys.match;
+            if (proposedMatchPoints == pref.get(key)) return;
 
             confirmDialog(
                 context: context,
@@ -75,8 +78,10 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                   DialogAction(
                       text: context.l10n.ok,
                       action: () {
-                        pref.set(
-                            CoiffeurSettings.keys.match, proposedMatchPoints);
+                        final pref = PrefService.of(context);
+                        final key = CoiffeurSettings.keys.match;
+                        pref.set(key, proposedMatchPoints);
+                        settings.match = proposedMatchPoints;
                       })
                 ]);
           },

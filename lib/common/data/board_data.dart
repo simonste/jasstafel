@@ -79,9 +79,11 @@ class BoardData<T, S extends Score> {
     switch (boardType) {
       case Board.schieber:
         (settings as SchieberSettings).fromPreferences(preferences);
+        (settings as SchieberSettings).toPreferences(preferences);
         break;
       case Board.coiffeur:
         (settings as CoiffeurSettings).fromPreferences(preferences);
+        (settings as CoiffeurSettings).toPreferences(preferences);
         break;
     }
     _updateSettings();
