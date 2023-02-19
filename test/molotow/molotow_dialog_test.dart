@@ -7,8 +7,9 @@ import '../helper/testapp.dart';
 // cspell: ignore: abbrechen
 
 extension DialogHelper on WidgetTester {
-  Future<void> openDialog(InputWrap dialogInput,
+  Future<InputWrap> openDialog(
       {required List<String> playerNames, hand = false}) async {
+    var dialogInput = InputWrap();
     await pumpWidget(
         JasstafelTestApp(child: Builder(builder: (BuildContext context) {
       return Center(
@@ -24,6 +25,7 @@ extension DialogHelper on WidgetTester {
 
     await tap(find.text('Foo'));
     await pump();
+    return dialogInput;
   }
 }
 
@@ -31,9 +33,7 @@ void main() {
   const playerNames = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"];
 
   testWidgets('hand weis', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       hand: true,
     );
@@ -50,9 +50,7 @@ void main() {
   });
 
   testWidgets('hand weis player 6', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(4),
       hand: true,
     );
@@ -72,9 +70,7 @@ void main() {
   });
 
   testWidgets('check cancel', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames,
       hand: false,
     );
@@ -93,9 +89,7 @@ void main() {
   });
 
   testWidgets('table weis', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       hand: false,
     );
@@ -111,9 +105,7 @@ void main() {
   });
 
   testWidgets('table weis 2x', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       hand: false,
     );

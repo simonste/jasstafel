@@ -72,8 +72,11 @@ class CoiffeurTypeCell extends StatelessWidget {
         ? context.l10n.xRound(row + 1)
         : context.l10n.xTimes(row + 1);
 
-    final input = await coiffeurTypeDialogBuilder(context, title, controller,
-        data.score.rows[row].factor, data.settings.customFactor);
+    final input = await coiffeurTypeDialogBuilder(context,
+        title: title,
+        controller: controller,
+        factor: data.score.rows[row].factor,
+        customFactor: data.settings.customFactor);
     if (input == null || input.factor == 0 || input.type.isEmpty) {
       return; // empty name not allowed
     }

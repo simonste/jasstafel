@@ -13,11 +13,12 @@ String inputFieldText(Key key) {
 }
 
 extension DialogHelper on WidgetTester {
-  Future<void> openDialog(InputWrap dialogInput,
+  Future<InputWrap> openDialog(
       {required List<String> playerNames,
       int pointsPerRound = 157,
       bool rounded = false,
       List<int?>? previousPts}) async {
+    var dialogInput = InputWrap();
     await pumpWidget(
         JasstafelTestApp(child: Builder(builder: (BuildContext context) {
       return Center(
@@ -37,6 +38,7 @@ extension DialogHelper on WidgetTester {
 
     await tap(find.text('Foo'));
     await pump();
+    return dialogInput;
   }
 }
 
@@ -44,9 +46,7 @@ void main() {
   const playerNames = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"];
 
   testWidgets('cancel', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
     );
 
@@ -59,9 +59,7 @@ void main() {
   });
 
   testWidgets('ok not allowed when not finished', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
     );
 
@@ -74,9 +72,7 @@ void main() {
   });
 
   testWidgets('ok is allowed on edit', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       previousPts: [null, null, 20, 60],
     );
@@ -87,9 +83,7 @@ void main() {
   });
 
   testWidgets('add points', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
     );
 
@@ -109,9 +103,7 @@ void main() {
   });
 
   testWidgets('add 157', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
     );
 
@@ -125,9 +117,7 @@ void main() {
   });
 
   testWidgets('0 remaining', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 3),
     );
 
@@ -143,9 +133,7 @@ void main() {
   });
 
   testWidgets('press enter', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 3),
     );
 
@@ -165,9 +153,7 @@ void main() {
   });
 
   testWidgets('edit', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       previousPts: [null, null, 20, 60],
     );
@@ -181,9 +167,7 @@ void main() {
   });
 
   testWidgets('edit round', (WidgetTester tester) async {
-    var dialogInput = InputWrap();
-    await tester.openDialog(
-      dialogInput,
+    var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
       previousPts: [50, 27, 20, 60],
     );

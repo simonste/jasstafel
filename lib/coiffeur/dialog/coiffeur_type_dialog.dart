@@ -47,12 +47,11 @@ String proposedType(BuildContext context, n) {
   return context.l10n.wunsch;
 }
 
-Future<CoiffeurType?> coiffeurTypeDialogBuilder(
-    BuildContext context,
-    String title,
-    TextEditingController controller,
-    int factor,
-    bool customFactor) {
+Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
+    {required String title,
+    required TextEditingController controller,
+    required int factor,
+    required bool customFactor}) {
   return showDialog<CoiffeurType>(
       context: context,
       builder: (BuildContext context) {
