@@ -13,12 +13,25 @@ class CoiffeurCell extends Expanded {
     leftBorder = true,
     scratch = false,
     highlight = false,
-    group,
+    alignment = Alignment.center,
+    AutoSizeGroup? group,
   }) : super(
-            child: _createChild(text, onTap, textScaleFactor, leftBorder,
-                scratch, highlight, group));
+            child: _createChild(
+          text,
+          onTap,
+          textScaleFactor,
+          leftBorder,
+          scratch,
+          highlight,
+          alignment,
+          group,
+        ));
 
-  static BoxDecoration decoration(leftBorder, highlight, scratch) {
+  static BoxDecoration decoration(
+    bool leftBorder,
+    bool highlight,
+    bool scratch,
+  ) {
     if (leftBorder) {
       var border = const Border(
           left: BorderSide(
@@ -44,13 +57,21 @@ class CoiffeurCell extends Expanded {
     return const BoxDecoration();
   }
 
-  static Widget _createChild(String name, onTap, textScaleFactor, leftBorder,
-      scratch, highlight, group) {
+  static Widget _createChild(
+    String name,
+    onTap,
+    textScaleFactor,
+    bool leftBorder,
+    bool scratch,
+    bool highlight,
+    Alignment alignment,
+    AutoSizeGroup? group,
+  ) {
     if (onTap != null) {
       return InkWell(
           onTap: onTap,
           child: Container(
-              alignment: Alignment.center,
+              alignment: alignment,
               decoration: decoration(leftBorder, highlight, scratch),
               child: AutoSizeText(name,
                   maxLines: 2,
@@ -58,10 +79,10 @@ class CoiffeurCell extends Expanded {
                   group: group)));
     } else {
       return Container(
-          alignment: Alignment.center,
+          alignment: alignment,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: decoration(leftBorder, highlight, scratch),
           child: AutoSizeText(
-            textAlign: TextAlign.center,
             name,
             textScaleFactor: textScaleFactor,
           ));
@@ -79,7 +100,8 @@ class CoiffeurPointsCell extends CoiffeurCell {
       super.onTap,
       super.textScaleFactor,
       super.leftBorder,
-      super.highlight})
+      super.highlight,
+      super.alignment})
       : super(_getNumberString(pts));
 
   static String _getNumberString(int? pts) {

@@ -148,7 +148,10 @@ class _CoiffeurState extends State<Coiffeur> {
     if (data.settings.threeTeams) {
       cells.add(teamWidget(2, i));
     } else if (data.settings.thirdColumn) {
-      cells.add(CoiffeurPointsCell.number(data.score.diff(i)));
+      final diff = data.score.diff(i);
+      final alignment =
+          ((diff ?? 0) > 0) ? Alignment.centerLeft : Alignment.centerRight;
+      cells.add(CoiffeurPointsCell.number(diff, alignment: alignment));
     }
 
     return CoiffeurRow(cells, topBorder: true);
