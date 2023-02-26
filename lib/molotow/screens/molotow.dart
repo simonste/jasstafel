@@ -94,7 +94,7 @@ class _MolotowState extends State<Molotow> {
         }
       }
       var decoration = (header || footer)
-          ? BoxDecoration(color: Theme.of(context).colorScheme.primary)
+          ? BoxDecoration(color: Theme.of(context).colorScheme.secondary)
           : round
               ? BoxDecoration(
                   color: Theme.of(context).colorScheme.tertiary,

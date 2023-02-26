@@ -48,7 +48,7 @@ class SchieberTeam extends StatelessWidget {
         : (data.score.noOfRounds() / data.score.goalRounds);
     final hMargin = width * 0.05;
     final strokeHeight = height * 0.2;
-    final strokesWidth = width * 0.4;
+    final strokesWidth = width * 0.5;
     final numberWidth = width * 0.2;
 
     final top1 = height * 0.1;
@@ -84,27 +84,30 @@ class SchieberTeam extends StatelessWidget {
       }
     }
 
+    strokesBox(int pts) {
+      final i = teamData.values.indexOf(pts);
+      final type = pts == 50 ? StrokeType.X : StrokeType.I;
+      var strokes = teamData.strokes[i];
+      if (pts == 100 && data.settings.drawZ) {
+        strokes += teamData.strokes[4] * 5;
+      }
+      return GestureDetector(
+          key: Key("add${pts}_$teamId"),
+          onTap: () => dialogs.onTap(teamId, pts),
+          child: SchieberStrokes(type, strokes, data.settings.bigScore));
+    }
+
     strokes20() {
       return Positioned(
-        width: strokesWidth,
+        width: width * 0.6,
         height: strokeHeight,
         top: top3,
         left: hMargin,
-        child: GestureDetector(
-            key: Key("add20_$teamId"),
-            onTap: () => dialogs.onTap(teamId, 20),
-            child: SchieberStrokes(
-                StrokeType.I, teamData.strokes[1], data.settings.bigScore)),
+        child: strokesBox(20),
       );
     }
 
     strokes50() {
-      var strokesBox = GestureDetector(
-          key: Key("add50_$teamId"),
-          onTap: () => dialogs.onTap(teamId, 50),
-          child: SchieberStrokes(
-              StrokeType.X, teamData.strokes[2], data.settings.bigScore));
-
       if (data.settings.drawZ) {
         var dx = width - 2 * hMargin;
         var dy = height - 2 * top1 - strokeHeight;
@@ -114,9 +117,9 @@ class SchieberTeam extends StatelessWidget {
             width: strokesWidth,
             height: strokeHeight,
             top: top2 * 1.1,
-            left: hMargin * 4.5,
+            left: hMargin * 4.0,
             child: RotationTransition(
-                turns: AlwaysStoppedAnimation(angle), child: strokesBox));
+                turns: AlwaysStoppedAnimation(angle), child: strokesBox(50)));
       }
 
       return Positioned(
@@ -124,26 +127,17 @@ class SchieberTeam extends StatelessWidget {
         height: strokeHeight,
         top: top2,
         left: hMargin,
-        child: strokesBox,
+        child: strokesBox(50),
       );
     }
 
     strokes100() {
-      var strokes = teamData.strokes[3];
-      if (data.settings.drawZ) {
-        strokes += teamData.strokes[4] * 5;
-      }
-
       return Positioned(
-        width: strokesWidth,
+        width: data.settings.drawZ ? width * 0.8 : strokesWidth,
         height: strokeHeight,
         top: top1,
         left: hMargin,
-        child: GestureDetector(
-            key: Key("add100_$teamId"),
-            onTap: () => dialogs.onTap(teamId, 100),
-            child:
-                SchieberStrokes(StrokeType.I, strokes, data.settings.bigScore)),
+        child: strokesBox(100),
       );
     }
 
@@ -152,7 +146,7 @@ class SchieberTeam extends StatelessWidget {
         return const SizedBox.shrink();
       }
       return Positioned(
-        width: strokesWidth,
+        width: width * 0.4,
         height: strokeHeight,
         top: top1,
         right: hMargin,

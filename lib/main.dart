@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.dark(
             surface: Colors.grey.shade800, // top bar
             background: Colors.grey.shade600, // progress bar
-            primary: Colors.blue.shade800, // buttons / progress bar
+            primary: Colors.blue.shade200, // buttons / progress bar
             secondary: Colors.blue.shade800, // settings
             tertiary: Colors.grey.shade800, // molotow round
           )),
