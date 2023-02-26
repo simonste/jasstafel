@@ -219,15 +219,17 @@ class CoiffeurInfoButton extends IconButton {
       BuildContext context, BoardData<CoiffeurSettings, CoiffeurScore> data)
       : super(
             onPressed: () {
-              dialogBuilder(context, CoiffeurInfo(data.settings, data.score));
+              dialogBuilder(context, CoiffeurInfo(data.settings, data.score),
+                  data.common.timestamps.elapsed(context));
             },
             icon: const Icon(Icons.info_outline),
             key: const Key("InfoButton"));
 }
 
-enum RowType { bold, normal }
+enum RowType { title, bold, normal }
 
-Future<void> dialogBuilder(BuildContext context, CoiffeurInfo info) {
+Future<void> dialogBuilder(
+    BuildContext context, CoiffeurInfo info, String elapsed) {
   return showDialog<void>(
       context: context,
       builder: (context) {
@@ -240,6 +242,7 @@ Future<void> dialogBuilder(BuildContext context, CoiffeurInfo info) {
                     child: Text(
                   string,
                   textAlign: TextAlign.center,
+                  textScaleFactor: (rowType == RowType.title) ? 1.3 : 1,
                   style: TextStyle(
                       fontWeight: (rowType == RowType.normal)
                           ? FontWeight.w100
@@ -270,8 +273,12 @@ Future<void> dialogBuilder(BuildContext context, CoiffeurInfo info) {
             }
 
             List<Widget> children = [
+              Text(elapsed,
+                  style: const TextStyle(fontWeight: FontWeight.w100)),
+              const Divider(),
               rowS("", [info.teamName(0), info.teamName(1), info.teamName(2)],
-                  rowType: RowType.bold),
+                  rowType: RowType.title),
+              const Divider(),
               rowI("Pts",
                   [info.result[0].pts, info.result[1].pts, info.result[2].pts],
                   rowType: RowType.bold),

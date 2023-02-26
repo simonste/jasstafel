@@ -75,6 +75,7 @@ class CoiffeurCell extends Expanded {
               decoration: decoration(leftBorder, highlight, scratch),
               child: AutoSizeText(name,
                   maxLines: 2,
+                  textAlign: TextAlign.center,
                   textScaleFactor: textScaleFactor,
                   group: group)));
     } else {
