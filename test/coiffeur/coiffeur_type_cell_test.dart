@@ -38,7 +38,7 @@ void main() {
     await tester.pumpWidget(widget);
 
     expect(find.text('6'), findsOneWidget);
-    expect(find.text('Ondenufe'), findsOneWidget);
+    expect(find.text('Undenufe'), findsOneWidget);
 
     await tester.longPress(find.byType(InkWell));
     await tester.pumpAndSettle();

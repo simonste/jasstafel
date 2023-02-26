@@ -37,6 +37,7 @@
   },
 
   "cmake.configureOnOpen": false,
+  "cmake.sourceDirectory": "${workspaceFolder}/linux",
   "cSpell.words": [
     "autofocus",
     "cupertino",
@@ -67,6 +68,7 @@
     "schilten",
     "sublist",
     "tannenbaum",
+    "undenufe",
     "wakelock",
     "weis",
     "wunsch"

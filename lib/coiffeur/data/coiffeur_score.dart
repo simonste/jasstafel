@@ -75,7 +75,7 @@ class CoiffeurScore implements Score {
     rows[2] = (RowSettings(3, "Rosen"));
     rows[3] = (RowSettings(4, "Schilten"));
     rows[4] = (RowSettings(5, "Obenabe"));
-    rows[5] = (RowSettings(6, "Ondenufe"));
+    rows[5] = (RowSettings(6, "Undenufe"));
     rows[6] = (RowSettings(7, "Slalom"));
     rows[7] = (RowSettings(8, "Gusti"));
     rows[8] = (RowSettings(9, "Wunsch"));
