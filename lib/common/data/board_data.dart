@@ -138,7 +138,7 @@ class BoardData<T, S extends Score> {
     save();
   }
 
-  void checkGameOver(BuildContext context) {
+  void checkGameOver(BuildContext context, {required bool goalTypePoints}) {
     final winners = score.winner();
     if (winners.isNotEmpty && common.timestamps.justFinished()) {
       Future.delayed(
@@ -146,7 +146,8 @@ class BoardData<T, S extends Score> {
           () => winnerDialog(
               context: context,
               winners: winners,
-              setWinnerFunction: score.setWinner));
+              setWinnerFunction: score.setWinner,
+              goalTypePoints: goalTypePoints));
     }
   }
 

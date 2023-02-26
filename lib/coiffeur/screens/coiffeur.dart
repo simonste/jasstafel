@@ -50,7 +50,7 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
-    data.checkGameOver(context);
+    data.checkGameOver(context, goalTypePoints: false);
     if (updateTimer != null) {
       updateTimer!.cancel();
     }

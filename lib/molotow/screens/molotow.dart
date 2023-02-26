@@ -47,7 +47,7 @@ class _MolotowState extends State<Molotow> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel molotow');
-    data.checkGameOver(context);
+    data.checkGameOver(context, goalTypePoints: true);
     if (updateTimer != null) {
       updateTimer!.cancel();
     }

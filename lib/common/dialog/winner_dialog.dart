@@ -5,12 +5,17 @@ import 'package:jasstafel/common/localization.dart';
 Future<void> winnerDialog(
     {required BuildContext context,
     required List<String> winners,
-    required Function setWinnerFunction}) {
+    required Function setWinnerFunction,
+    bool goalTypePoints = true}) {
   if (winners.length == 1) {
+    final subtitle = goalTypePoints
+        ? context.l10n.winner(winners.first)
+        : context.l10n.winnerRounds(winners.first);
+
     return confirmDialog(
         context: context,
         title: context.l10n.gameOver,
-        subtitle: context.l10n.winner(winners.first),
+        subtitle: subtitle,
         actions: []);
   } else {
     return _bothDialog(

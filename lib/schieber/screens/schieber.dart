@@ -47,7 +47,7 @@ class _SchieberState extends State<Schieber> {
     developer.log('build', name: 'jasstafel schieber');
 
     data.score.checkHill(context);
-    data.checkGameOver(context);
+    data.checkGameOver(context, goalTypePoints: data.settings.goalTypePoints);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
