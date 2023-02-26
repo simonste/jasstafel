@@ -520,4 +520,41 @@ void main() {
     ]);
     expectNoWinner(info);
   });
+
+  test('two teams requires 2 matches', () {
+    settings.rows = 11;
+    score.setSettings(settings);
+
+    score.rows[0].pts[0].scratch();
+    score.rows[0].pts[1].scratch();
+    score.rows[1].pts[0].pts = 87;
+    score.rows[1].pts[1].pts = 126;
+    score.rows[2].pts[0].pts = 110;
+    score.rows[2].pts[1].pts = 65;
+    score.rows[3].pts[0].pts = 120;
+    score.rows[3].pts[1].pts = 123;
+    score.rows[4].pts[0].pts = 79;
+    score.rows[4].pts[1].pts = 74;
+    //score.rows[5].pts[0].pts;
+    score.rows[5].pts[1].pts = 92;
+    score.rows[6].pts[0].pts = 97;
+    score.rows[6].pts[1].pts = 257;
+    score.rows[7].pts[0].pts = 138;
+    score.rows[7].pts[1].pts = 113;
+    score.rows[8].pts[0].pts = 143;
+    score.rows[8].pts[1].pts = 257;
+    //score.rows[9].pts[0].pts;
+    score.rows[9].pts[1].pts = 140;
+    score.rows[10].pts[0].pts = 140;
+    score.rows[10].pts[1].pts = 123;
+
+    final info = CoiffeurInfo(settings, score);
+    // can win
+    expect(info.result[0].max, greaterThan(info.result[1].pts));
+
+    expectHints(info, [
+      Hint.winPoints('Team 1', pts: 228),
+    ]);
+    expectNoWinner(info);
+  });
 }
