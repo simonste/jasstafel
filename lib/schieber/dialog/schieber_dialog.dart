@@ -104,18 +104,31 @@ Future<Points?> schieberDialogBuilder(
           }
 
           Widget getFactorWidget() {
-            var list = List<int>.generate(7, (i) => i + 1);
-            return DropdownButton<int>(
+            var list = teamData.flip
+                ? List<int>.generate(7, (i) => 7 - i)
+                : List<int>.generate(7, (i) => i + 1);
+
+            var items = list.map((v) {
+              final text = Text("${v}x");
+              return DropdownMenuItem(
+                  value: v,
+                  child: teamData.flip
+                      ? RotatedBox(quarterTurns: 2, child: text)
+                      : text);
+            }).toList();
+
+            final button = DropdownButton<int>(
               key: const Key("dropdownFactor"),
               value: factor,
               onChanged: (value) => setState(() => factor = value!),
-              items: list.map((v) {
-                return DropdownMenuItem(
-                  value: v,
-                  child: Text("${v}x"),
-                );
-              }).toList(),
+              items: items,
             );
+
+            if (teamData.flip) {
+              return RotatedBox(quarterTurns: 2, child: button);
+            } else {
+              return button;
+            }
           }
 
           Widget getTextField() {
