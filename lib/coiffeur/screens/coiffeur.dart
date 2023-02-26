@@ -61,7 +61,8 @@ class _CoiffeurState extends State<Coiffeur> {
         actions: [
           WhoIsNextButton(
               context,
-              data.score.teamName.sublist(0, data.settings.threeTeams ? 3 : 2),
+              WhoIsNextButton.guessPlayerNames(data.score.teamName
+                  .sublist(0, data.settings.threeTeams ? 3 : 2)),
               data.score.noOfRounds(),
               data.common.whoIsNext,
               () => data.save()),

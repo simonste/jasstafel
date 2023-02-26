@@ -5,13 +5,11 @@ import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
 class WhoIsNextButton extends IconButton {
-  WhoIsNextButton(BuildContext context, List<String> teams, int rounds,
-      WhoIsNext whoIsNext, Function saveFunction,
-      {bool playerNames = false})
+  WhoIsNextButton(BuildContext context, List<String> players, int rounds,
+      WhoIsNext whoIsNext, Function saveFunction)
       : super(
             key: const Key('whoIsNext'),
             onPressed: () {
-              var players = playerNames ? teams : guessPlayerNames(teams);
               dialogBuilder(context,
                   WhoIsNextData(players, rounds, whoIsNext, saveFunction));
             },

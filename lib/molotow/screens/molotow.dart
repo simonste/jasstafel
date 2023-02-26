@@ -158,7 +158,6 @@ class _MolotowState extends State<Molotow> {
             data.score.noOfRounds(),
             data.common.whoIsNext,
             () => data.save(),
-            playerNames: true,
           ),
           DeleteButton(
             context,

@@ -90,16 +90,25 @@ class _SchieberState extends State<Schieber> {
               textScaleFactor: 2, key: const Key("GoalRounds")));
     }
 
+    var players = WhoIsNextButton.guessPlayerNames(
+        [data.score.team[0].name, data.score.team[1].name]);
+    if (data.settings.differentGoals) {
+      // only 3 players
+      for (var i = 0; i < 2; i++) {
+        final j = (i + 1) % 2;
+        if (data.score.team[i].goalPoints < data.score.team[j].goalPoints) {
+          players = WhoIsNextButton.guessPlayerNames([data.score.team[j].name]);
+          players.add(data.score.team[i].name);
+        }
+      }
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: BoardTitle(Board.schieber, context),
           actions: [
-            WhoIsNextButton(
-                context,
-                [data.score.team[0].name, data.score.team[1].name],
-                data.score.noOfRounds(),
-                data.common.whoIsNext,
-                () => data.save()),
+            WhoIsNextButton(context, players, data.score.noOfRounds(),
+                data.common.whoIsNext, () => data.save()),
             SchieberHistoryButton(context, data, () {
               setState(() {
                 data.score.undo();
