@@ -59,13 +59,16 @@ Future<void> dialogBuilder(BuildContext context,
                 rowType: RowType.bold));
             children.add(const Divider());
 
+            var rows = <Widget>[];
             for (var round in rounds.reversed) {
-              children.add(row("${round.pts[0]}", "${round.pts[1]}",
+              rows.add(row("${round.pts[0]}", "${round.pts[1]}",
                   delete: round == rounds.last,
                   rowType: round.isRound(data.settings.match)
                       ? RowType.bold
                       : RowType.normal));
             }
+            children.add(Expanded(
+                child: SingleChildScrollView(child: Column(children: rows))));
 
             return AlertDialog(
               title: Text(context.l10n.currentRound),
