@@ -1,4 +1,4 @@
-name: Jasstafel CI
+name: JassTafel CI
 on: [push]
 jobs:
   build-android:
@@ -36,30 +36,83 @@ jobs:
       #     script: flutter test integration_test --verbose
       - name: Build
         run: flutter build appbundle
+
   build-ios:
     runs-on: macos-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
+
+      - name: Install the Apple certificate
+        uses: apple-actions/import-codesign-certs@master
+        with:
+          p12-file-base64: ${{ secrets.P12_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+
+      - name: Install the provisioning profile
+        env:
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
       - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.7.1"
           channel: "stable"
           cache: true
+
       - name: Get dependencies
         run: flutter pub get
-      - name: Install pods
-        run: cd ios && pod install && cd ..
+      - name: Generate icons
+        run: flutter pub run flutter_launcher_icons:main
       - name: Generate translations
         run: flutter gen-l10n
       - name: Generate sources
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
       - name: Test
         run: flutter test
+
       - name: Build
-        run: flutter build ios --release --no-codesign
+        run: |
+          flutter build ipa --release --export-options-plist=ios/Runner/ExportOptions.plist
+
+      - name: ipa artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ipa
+          path: build/ios/ipa/*.ipa
+
+  release-ios:
+    needs: [build-ios]
+    runs-on: macos-latest
+    steps:
+      - name: Get release-ipa from artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ipa
+
+      - name: Install API Key
+        env:
+          API_KEY: ${{ secrets.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY_BASE64: ${{ secrets.APPSTORE_API_PRIVATE_KEY_BASE64 }}
+        run: |
+          mkdir ~/private_keys
+          echo -n "$APPSTORE_API_PRIVATE_KEY_BASE64" | base64 --decode -o ~/private_keys/AuthKey_$API_KEY.p8
+
+      - name: upload app
+        env:
+          API_KEY: ${{ secrets.APPSTORE_API_KEY_ID }}
+          API_ISSUER: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APP_PATH: "*.ipa"
+        run: |
+          xcrun altool --validate-app -f $APP_PATH -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
+          xcrun altool --upload-app -f $APP_PATH -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER

@@ -105,6 +105,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icon.png"
+  image_path_ios: "assets/icon_ios.png"
   web:
     generate: true
     image_path: "assets/icon.png"
