@@ -11,42 +11,6 @@ import 'overall_test.dart';
 // cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
 // cspell:ignore: aktuelle runde stiche
 
-String? text(Key key, {int? elementNo}) {
-  var elements = find.byKey(key).evaluate();
-  Text textWidget;
-  if (elementNo == null) {
-    textWidget = elements.single.widget as Text;
-  } else {
-    textWidget = elements.elementAt(elementNo).widget as Text;
-  }
-  return textWidget.data;
-}
-
-extension SchieberHelper on WidgetTester {
-  Future<void> addPoints(List<String> keys,
-      {String? factor, bool? weis}) async {
-    for (final key in keys) {
-      await tap(find.byKey(Key(key)));
-      await pumpAndSettle();
-    }
-    if (factor != null) {
-      await tap(find.byKey(const Key('dropdownFactor')));
-      await pumpAndSettle();
-      await tap(find.text(factor).last);
-      await pumpAndSettle();
-    }
-    await tap(find.text((weis ?? false) ? 'Weis' : 'Ok'));
-    await pumpAndSettle();
-  }
-
-  Future<void> delete(String buttonText) async {
-    await tap(find.byKey(const Key('delete')));
-    await pumpAndSettle();
-    await tap(find.text(buttonText));
-    await pumpAndSettle();
-  }
-}
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -166,7 +130,7 @@ void main() {
   testWidgets('add round', (tester) async {
     await tester.launchApp();
 
-    await tester.addPoints(['add_1', 'key_2', 'key_3'], factor: '4x');
+    await tester.addSchieberPoints(['add_1', 'key_2', 'key_3'], factor: '4x');
 
     expect(text(const Key('sum_0')), '536');
     expect(text(const Key('sum_1')), '92');
@@ -175,7 +139,7 @@ void main() {
   testWidgets('add match', (tester) async {
     await tester.launchApp();
 
-    await tester.addPoints(['add_0', 'key_2', 'key_Match']);
+    await tester.addSchieberPoints(['add_0', 'key_2', 'key_Match']);
 
     expect(text(const Key('sum_0')), '257');
     expect(text(const Key('sum_1')), '0');
@@ -184,7 +148,7 @@ void main() {
   testWidgets('add weis', (tester) async {
     await tester.launchApp();
 
-    await tester.addPoints(
+    await tester.addSchieberPoints(
         ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_←', 'key_0'],
         factor: '3x', weis: true);
 
@@ -251,7 +215,7 @@ void main() {
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
 
-    await tester.addPoints(['add_1', 'key_7', 'key_3'], factor: '3x');
+    await tester.addSchieberPoints(['add_1', 'key_7', 'key_3'], factor: '3x');
 
     expect(find.text('Bergpreis'), findsOneWidget);
     await tester.tap(find.text('Team 2').last);
@@ -260,7 +224,7 @@ void main() {
     expect(text(const Key('sum_0')), '252');
     expect(text(const Key('sum_1')), '219');
 
-    await tester.addPoints(['add_0', 'flip', 'key_Match']);
+    await tester.addSchieberPoints(['add_0', 'flip', 'key_Match']);
 
     expect(find.text('Gewonnen!'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -301,8 +265,8 @@ void main() {
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
 
-    await tester.addPoints(['add_1', 'key_7', 'key_8']);
-    await tester.addPoints(['add_0', 'key_5', 'key_8']);
+    await tester.addSchieberPoints(['add_1', 'key_7', 'key_8']);
+    await tester.addSchieberPoints(['add_0', 'key_5', 'key_8']);
 
     expect(find.text('Gewonnen!'), findsOneWidget);
   });
@@ -310,7 +274,7 @@ void main() {
     await tester.launchApp();
 
     await tester.tap(find.byKey(const Key('add20_1')));
-    await tester.addPoints(['add_0', 'key_6', 'key_2']);
+    await tester.addSchieberPoints(['add_0', 'key_6', 'key_2']);
 
     await tester.delete('Alles');
 
@@ -321,8 +285,9 @@ void main() {
   testWidgets('delete only current round', (tester) async {
     await tester.launchApp();
 
-    await tester.addPoints(['add_0', 'key_Match'], factor: '7x');
-    await tester.addPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.addSchieberPoints(['add_0', 'key_Match'], factor: '7x');
+    await tester
+        .addSchieberPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
@@ -351,8 +316,9 @@ void main() {
   testWidgets('delete everything', (tester) async {
     await tester.launchApp();
 
-    await tester.addPoints(['add_0', 'key_Match'], factor: '7x');
-    await tester.addPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.addSchieberPoints(['add_0', 'key_Match'], factor: '7x');
+    await tester
+        .addSchieberPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();

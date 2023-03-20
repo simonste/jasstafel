@@ -9,39 +9,6 @@ import 'overall_test.dart';
 
 // cspell:ignore: spielername runde eingeben handweis tischweis zurück punkte
 
-String? text(Key key, {int? elementNo}) {
-  var elements = find.byKey(key).evaluate();
-  Text textWidget;
-  if (elementNo == null) {
-    textWidget = elements.single.widget as Text;
-  } else {
-    textWidget = elements.elementAt(elementNo).widget as Text;
-  }
-  return textWidget.data;
-}
-
-extension MolotowHelper on WidgetTester {
-  Future<void> addPoints(String teamRow, int points, {String? tapKey}) async {
-    await tap(find.byKey(Key(teamRow)));
-    await pumpAndSettle();
-    await enterText(find.byType(TextField), '$points');
-    await pump();
-    if (tapKey != null) {
-      await tap(find.byKey(Key(tapKey)));
-    }
-    await tap(find.text('Ok'));
-    await pumpAndSettle();
-  }
-
-  Future<void> slideTo(Finder slider, int value) async {
-    final prefSlider = slider.evaluate().single.widget as Slider;
-    final totalWidth = getSize(slider).width;
-    final range = prefSlider.max - prefSlider.min;
-    final calculatedOffset = (value - prefSlider.value) * (totalWidth / range);
-    await dragFrom(getCenter(slider), Offset(calculatedOffset, 0));
-  }
-}
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -110,12 +77,7 @@ void main() {
   testWidgets('rounded', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Punkte auf 10er Runden'));
-    await tester.pump();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.tapSetting(['Punkte auf 10er Runden']);
 
     await tester.tap(find.byTooltip('Runde eingeben'));
     await tester.pump();
