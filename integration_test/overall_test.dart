@@ -78,7 +78,9 @@ extension AppHelper on WidgetTester {
     if (tapKey != null) {
       await tap(find.byKey(Key(tapKey)));
     }
-    await tap(find.text('Ok'));
+    if (tapKey != 'scratch') {
+      await tap(find.text('Ok'));
+    }
     await pumpAndSettle();
   }
 
@@ -115,8 +117,13 @@ extension AppHelper on WidgetTester {
     final prefSlider = slider.evaluate().single.widget as Slider;
     final totalWidth = getSize(slider).width;
     final range = prefSlider.max - prefSlider.min;
-    final calculatedOffset = (value - prefSlider.value) * (totalWidth / range);
-    await dragFrom(getCenter(slider), Offset(calculatedOffset, 0));
+    final distancePerIncrement = (totalWidth / range);
+    final currentOffsetFromCenter =
+        (prefSlider.value - prefSlider.min - range / 2) * distancePerIncrement;
+    final offsetFromCurrent = (value - prefSlider.value) * distancePerIncrement;
+
+    final sliderPos = getCenter(slider) + Offset(currentOffsetFromCenter, 0);
+    await dragFrom(sliderPos, Offset(offsetFromCurrent, 0));
   }
 }
 

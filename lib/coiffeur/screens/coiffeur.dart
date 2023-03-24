@@ -48,6 +48,12 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   @override
+  void dispose() {
+    updateTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
     data.checkGameOver(context, goalTypePoints: false);
