@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
@@ -30,12 +28,6 @@ class CoiffeurTypeCell extends StatelessWidget {
     final thirdCol = (data.settings.thirdColumn || data.settings.threeTeams);
     final double unit = thirdCol ? 4 : 6;
 
-    double scaleFactor = 1.0;
-    if (context.findRenderObject() != null) {
-      final cellSize = (context.findRenderObject() as RenderBox).size;
-      scaleFactor = max(cellSize.height / 50, cellSize.width / 50);
-    }
-
     return Expanded(
         child: InkWell(
       onLongPress: () {
@@ -58,8 +50,9 @@ class CoiffeurTypeCell extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: AutoSizeText(
                   name,
+                  wrapWords: false,
                   maxLines: 2,
-                  textScaleFactor: 0.6 * scaleFactor,
+                  style: const TextStyle(fontSize: 1000),
                   group: group,
                 ),
               )),

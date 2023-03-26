@@ -33,6 +33,7 @@ class _CoiffeurState extends State<Coiffeur> {
   var data = BoardData(
       CoiffeurSettings(), CoiffeurScore(), CoiffeurSettingsKeys().data);
   final typeNameGroup = AutoSizeGroup();
+  final cellGroup = AutoSizeGroup();
   Timer? updateTimer;
 
   void restoreData() async {
@@ -105,7 +106,7 @@ class _CoiffeurState extends State<Coiffeur> {
         onTap: () {
           _stringDialog(team);
         },
-        textScaleFactor: 1.2,
+        maxLines: 2,
         group: teamNameGroup,
       );
     }
@@ -114,7 +115,7 @@ class _CoiffeurState extends State<Coiffeur> {
       CoiffeurCell(
         context.l10n.noOfRounds(data.score.noOfRounds()),
         leftBorder: false,
-        textScaleFactor: 0.6,
+        group: typeNameGroup,
       ),
       teamWidget(0),
       teamWidget(1),
@@ -126,7 +127,8 @@ class _CoiffeurState extends State<Coiffeur> {
       cells.add(CoiffeurCell(
         key: const Key('elapsed'),
         data.common.timestamps.elapsed(context),
-        textScaleFactor: 0.6,
+        maxLines: 2,
+        group: typeNameGroup,
       ));
 
       final updateInterval = 60000 / const Duration(minutes: 1).elapsed ~/ 2;
@@ -144,6 +146,7 @@ class _CoiffeurState extends State<Coiffeur> {
           _pointsDialog(team, row);
         },
         key: Key("$team:$row"),
+        group: cellGroup,
       );
     }
 
@@ -177,18 +180,16 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     totalCell(int i) {
-      return CoiffeurPointsCell.number(data.score.total(i),
-          highlight: highlight[i], key: Key("sum_$i"));
+      return CoiffeurPointsCell.number(
+        data.score.total(i),
+        highlight: highlight[i],
+        group: cellGroup,
+        key: Key("sum_$i"),
+      );
     }
 
     var cells = [
-      Expanded(
-        child: Text(
-          context.l10n.total,
-          textAlign: TextAlign.center,
-          textScaleFactor: 2,
-        ),
-      ),
+      CoiffeurCell(context.l10n.total, leftBorder: false, group: typeNameGroup),
       totalCell(0),
       totalCell(1),
     ];

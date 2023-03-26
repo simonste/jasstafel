@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
@@ -7,7 +5,7 @@ import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 class CoiffeurCell extends StatelessWidget {
   final String text;
   final GestureTapCallback? onTap;
-  final double textScaleFactor;
+  final int maxLines;
   final bool leftBorder;
   final bool scratch;
   final bool highlight;
@@ -18,7 +16,7 @@ class CoiffeurCell extends StatelessWidget {
     this.text, {
     super.key,
     this.onTap,
-    this.textScaleFactor = 1.8,
+    this.maxLines = 1,
     this.leftBorder = true,
     this.scratch = false,
     this.highlight = false,
@@ -28,17 +26,11 @@ class CoiffeurCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = 1.0;
-    if (context.findRenderObject() != null) {
-      final cellSize = (context.findRenderObject() as RenderBox).size;
-      scaleFactor = max(cellSize.height / 50, cellSize.width / 100);
-    }
-
     return Expanded(
         child: _createChild(
       text,
       onTap,
-      textScaleFactor * scaleFactor,
+      maxLines,
       leftBorder,
       scratch,
       highlight,
@@ -50,7 +42,7 @@ class CoiffeurCell extends StatelessWidget {
   static Widget _createChild(
     String name,
     onTap,
-    textScaleFactor,
+    int maxLines,
     bool leftBorder,
     bool scratch,
     bool highlight,
@@ -63,19 +55,22 @@ class CoiffeurCell extends StatelessWidget {
           child: Container(
               alignment: alignment,
               decoration: decoration(leftBorder, highlight, scratch),
+              padding: const EdgeInsets.all(20),
               child: AutoSizeText(name,
-                  maxLines: 2,
+                  maxLines: maxLines,
+                  style: const TextStyle(fontSize: 1000),
                   textAlign: TextAlign.center,
-                  textScaleFactor: textScaleFactor,
                   group: group)));
     } else {
       return Container(
           alignment: alignment,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.all(15),
           decoration: decoration(leftBorder, highlight, scratch),
           child: AutoSizeText(
             name,
-            textScaleFactor: textScaleFactor,
+            maxLines: maxLines,
+            style: const TextStyle(fontSize: 1000),
+            group: group,
           ));
     }
   }
@@ -113,16 +108,16 @@ class CoiffeurCell extends StatelessWidget {
 
 class CoiffeurPointsCell extends CoiffeurCell {
   CoiffeurPointsCell(CoiffeurPoints pts,
-      {super.key, super.onTap, super.textScaleFactor, super.leftBorder})
-      : super(_getString(pts), scratch: pts.scratched);
+      {super.key, super.onTap, super.leftBorder, AutoSizeGroup? group})
+      : super(_getString(pts), scratch: pts.scratched, group: group);
 
   CoiffeurPointsCell.number(int? pts,
       {super.key,
       super.onTap,
-      super.textScaleFactor,
       super.leftBorder,
       super.highlight,
-      super.alignment})
+      super.alignment,
+      super.group})
       : super(_getNumberString(pts));
 
   static String _getNumberString(int? pts) {
