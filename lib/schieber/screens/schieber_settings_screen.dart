@@ -66,22 +66,22 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 pref: SchieberSettings.keys.vibrate)
           ],
         ),
-        // PrefCheckbox(
-        //     title: Text(context.l10n.backside),
-        //     pref: SchieberSettings.keys.backside),
-        // PrefDisabler(
-        //   reversed: true,
-        //   pref: SchieberSettings.keys.backside,
-        //   children: [
-        //     PrefSlider(
-        //       title: Text(context.l10n.columns2ndBoard),
-        //       pref: SchieberSettings.keys.backsideColumns,
-        //       min: 2,
-        //       max: 6,
-        //       trailing: (num v) => Text("$v"),
-        //     ),
-        //   ],
-        // ),
+        PrefCheckbox(
+            title: Text(context.l10n.backsideSetting),
+            pref: SchieberSettings.keys.backside),
+        PrefDisabler(
+          reversed: true,
+          pref: SchieberSettings.keys.backside,
+          children: [
+            PrefSlider(
+              title: Text(context.l10n.backsideColumns),
+              pref: SchieberSettings.keys.backsideColumns,
+              min: 2,
+              max: 6,
+              trailing: (num v) => Text("$v"),
+            ),
+          ],
+        ),
         PrefCheckbox(
             title: Text(context.l10n.bigScore),
             pref: SchieberSettings.keys.bigScore),

@@ -94,7 +94,8 @@ class SchieberTeam extends StatelessWidget {
       return GestureDetector(
           key: Key("add${pts}_$teamId"),
           onTap: () => dialogs.onTap(teamId, pts),
-          child: SchieberStrokes(type, strokes, data.settings.bigScore));
+          child:
+              SchieberStrokes(type, strokes, shaded: data.settings.bigScore));
     }
 
     strokes20() {
@@ -150,8 +151,8 @@ class SchieberTeam extends StatelessWidget {
         height: strokeHeight,
         top: top1,
         right: hMargin,
-        child: SchieberStrokes(
-            StrokeType.V, teamData.strokes[4], data.settings.bigScore),
+        child: SchieberStrokes(StrokeType.V, teamData.strokes[4],
+            shaded: data.settings.bigScore),
       );
     }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
+import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
@@ -88,6 +89,23 @@ extension AppHelper on WidgetTester {
     }
     await tap(find.text((weis ?? false) ? 'Weis' : 'Ok'));
     await pumpAndSettle();
+  }
+
+  Future<int> backsideStrokes(int player, int num) async {
+    for (var i = 0; i < num; i++) {
+      await tap(find.byKey(Key('add$player:$player')));
+    }
+    await pumpAndSettle();
+
+    var strokeWidgets = find.descendant(
+        of: find.byKey(Key('column$player')),
+        matching: find.byType(SchieberStrokes));
+
+    var totalStrokes = 0;
+    for (var element in strokeWidgets.evaluate()) {
+      totalStrokes += (element.widget as SchieberStrokes).strokes;
+    }
+    return totalStrokes;
   }
 
   Future<void> addMolotowPoints(String teamRow, int points,

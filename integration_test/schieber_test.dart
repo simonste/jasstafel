@@ -9,7 +9,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
 // cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
-// cspell:ignore: aktuelle runde stiche
+// cspell:ignore: aktuelle runde stiche rückseite verwenden
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -76,12 +76,7 @@ void main() {
   testWidgets('change goal points 2', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('verschiedene Zielpunkte'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.tapSetting(['verschiedene Zielpunkte']);
 
     expect(find.text('2500'), findsNWidgets(2));
 
@@ -342,5 +337,34 @@ void main() {
     expect(text(const Key('Siege_2')), '0');
 
     await tester.tap(find.text('Ok'));
+  });
+
+  testWidgets('backside', (tester) async {
+    await tester.launchApp();
+
+    expect(find.byKey(const Key('backside')), findsNothing);
+    await tester.tapSetting(['Rückseite verwenden']);
+    await tester.tap(find.byKey(const Key('backside')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Team 1a'), findsOneWidget);
+    expect(find.text('Team 1b'), findsOneWidget);
+    expect(find.text('Team 2a'), findsOneWidget);
+    expect(find.text('Team 2b'), findsOneWidget);
+
+    expect(await tester.backsideStrokes(0, 2), 2);
+    expect(await tester.backsideStrokes(1, 15), 15);
+    expect(await tester.backsideStrokes(0, 2), 4);
+    expect(await tester.backsideStrokes(2, 2), 2);
+
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+    await tester.delete('Alles');
+    await tester.tap(find.byKey(const Key('backside')));
+    await tester.pumpAndSettle();
+
+    expect(await tester.backsideStrokes(0, 0), 4);
+    await tester.delete('Ok');
+    expect(await tester.backsideStrokes(0, 0), 0);
   });
 }

@@ -6,12 +6,14 @@ class SchieberStrokes extends StatelessWidget {
   final StrokeType type;
   final int strokes;
   final bool shaded;
+  final double widthFactor;
 
-  const SchieberStrokes(this.type, this.strokes, this.shaded, {super.key});
+  const SchieberStrokes(this.type, this.strokes,
+      {this.shaded = false, this.widthFactor = 0.01, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final strokeWidth = MediaQuery.of(context).size.width * 0.01;
+    final strokeWidth = MediaQuery.of(context).size.width * widthFactor;
     final paint = Paint()
       ..color = shaded ? Colors.grey.shade700 : Colors.white
       ..strokeWidth = strokeWidth;
@@ -51,7 +53,7 @@ abstract class StrokePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 
   List<Offset> points(int i);

@@ -193,6 +193,12 @@ class SchieberScore implements Score {
     rounds.clear();
   }
 
+  void resetBackside() {
+    for (var bsd in backside) {
+      bsd.strokes = 0;
+    }
+  }
+
   void add(pts1, pts2) {
     final round = SchieberRound([pts1, pts2]);
     rounds.add(round);

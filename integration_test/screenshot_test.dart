@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: auswertungsspalte runde eingeben handweis tischweis hilfslinien anzeigen
+// cspell:ignore: auswertungsspalte runde eingeben handweis tischweis hilfslinien
+// cspell:ignore: anzeigen rückseite verwenden
 
 bool driverTest = false;
 
@@ -55,6 +56,15 @@ void main() {
 
     await tester.tapSetting(['Hilfslinien (Z) anzeigen']);
     await tester.takeScreenshot(binding, 'schieber2');
+
+    await tester.tapSetting(['Rückseite verwenden']);
+    await tester.tap(find.byKey(const Key('backside')));
+    await tester.pumpAndSettle();
+    expect(await tester.backsideStrokes(0, 2), 2);
+    expect(await tester.backsideStrokes(1, 15), 15);
+    expect(await tester.backsideStrokes(0, 2), 4);
+    expect(await tester.backsideStrokes(2, 2), 2);
+    await tester.takeScreenshot(binding, 'schieber3');
   });
 
   testWidgets('coiffeur #1', (tester) async {

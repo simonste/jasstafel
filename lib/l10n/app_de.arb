@@ -59,21 +59,23 @@
       }
     }
   },
-  "teamName1": "Team 1",
-  "teamName2": "Team 2",
-  "teamName3": "Team 3",
-  "teamName4": "Team 4",
-  "teamName5": "Team 5",
-  "teamName6": "Team 6",
+  "teamNo": "Team {no}",
+  "@teamNo": {
+    "placeholders": {
+      "no": {
+        "type": "int"
+      }
+    }
+  },
   "teamName": "Teamname",
-  "player1": "Spieler 1",
-  "player2": "Spieler 2",
-  "player3": "Spieler 3",
-  "player4": "Spieler 4",
-  "player5": "Spieler 5",
-  "player6": "Spieler 6",
-  "player7": "Spieler 7",
-  "player8": "Spieler 8",
+  "playerNo": "Spieler {no}",
+  "@playerNo": {
+    "placeholders": {
+      "no": {
+        "type": "int"
+      }
+    }
+  },
   "playerName": "Spielername",
   "goalPoints": "Zielpunkte",
   "goalPoints1": "Zielpunkte Team 1",
@@ -93,8 +95,9 @@
     }
   },
   "reset": "Punkte zurücksetzen",
-  "backside": "Rückseite verwenden",
-  "columns2ndBoard": "Spalten auf der Rückseite",
+  "backsideTitle": "Schieber Rückseite",
+  "backsideSetting": "Rückseite verwenden",
+  "backsideColumns": "Spalten auf der Rückseite",
   "differentGoals": "verschiedene Zielpunkte",
   "pointsPerRound": "Punkte pro Runde",
   "keepScreenOn": "Bildschirm immer an",

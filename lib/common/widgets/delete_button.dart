@@ -3,11 +3,17 @@ import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class DeleteButton extends IconButton {
-  DeleteButton(BuildContext context, Function deleteFunction,
-      {Function? deleteAllFunction})
+  DeleteButton(BuildContext context,
+      {required Function deleteFunction,
+      Function? deleteAllFunction,
+      String resetHint = ''})
       : super(
             key: const Key('delete'),
             onPressed: () {
+              if (resetHint.isEmpty) {
+                resetHint = context.l10n.resetConfirm;
+              }
+
               var actions = <DialogAction>[];
               if (deleteAllFunction != null) {
                 actions.add(DialogAction(
@@ -23,7 +29,7 @@ class DeleteButton extends IconButton {
                   title: context.l10n.reset,
                   subtitle: deleteAllFunction != null
                       ? context.l10n.deleteWhat
-                      : context.l10n.resetConfirm,
+                      : resetHint,
                   actions: actions);
             },
             icon: const Icon(Icons.delete));

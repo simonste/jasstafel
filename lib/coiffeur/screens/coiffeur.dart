@@ -76,7 +76,7 @@ class _CoiffeurState extends State<Coiffeur> {
           CoiffeurInfoButton(context, data),
           DeleteButton(
             context,
-            () => setState(() => data.reset()),
+            deleteFunction: () => setState(() => data.reset()),
           ),
           SettingsButton(CoiffeurSettingsScreen(data), context,
               () => setState(() => data.settings.fromPrefService(context))),

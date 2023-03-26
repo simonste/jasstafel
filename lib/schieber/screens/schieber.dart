@@ -12,6 +12,7 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/dialog/schieber_dialog.dart';
 import 'package:jasstafel/schieber/dialog/schieber_history.dart';
 import 'package:jasstafel/schieber/dialog/schieber_statistics.dart';
+import 'package:jasstafel/schieber/screens/schieber_backside.dart';
 import 'package:jasstafel/schieber/screens/schieber_settings_screen.dart';
 import 'package:jasstafel/schieber/widgets/schieber_team.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -103,32 +104,37 @@ class _SchieberState extends State<Schieber> {
       }
     }
 
+    List<Widget>? actions = [
+      WhoIsNextButton(context, players, data.score.noOfRounds(),
+          data.common.whoIsNext, () => data.save()),
+      SchieberHistoryButton(context, data, () {
+        setState(() {
+          data.score.undo();
+          data.save();
+        });
+      }),
+      SchieberStatisticsButton(context, data),
+      DeleteButton(
+        context,
+        deleteFunction: () => setState(() => data.reset()),
+        deleteAllFunction: () {
+          setState(() {
+            data.reset();
+            data.score.statistics.reset();
+          });
+        },
+      ),
+      SettingsButton(SchieberSettingsScreen(data), context,
+          () => setState(() => data.settings.fromPrefService(context)))
+    ];
+    if (data.settings.backside) {
+      actions.insert(0, BacksideButton(context, () => data.load()));
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: BoardTitle(Board.schieber, context),
-          actions: [
-            WhoIsNextButton(context, players, data.score.noOfRounds(),
-                data.common.whoIsNext, () => data.save()),
-            SchieberHistoryButton(context, data, () {
-              setState(() {
-                data.score.undo();
-                data.save();
-              });
-            }),
-            SchieberStatisticsButton(context, data),
-            DeleteButton(
-              context,
-              () => setState(() => data.reset()),
-              deleteAllFunction: () {
-                setState(() {
-                  data.reset();
-                  data.score.statistics.reset();
-                });
-              },
-            ),
-            SettingsButton(SchieberSettingsScreen(data), context,
-                () => setState(() => data.settings.fromPrefService(context))),
-          ],
+          actions: actions,
         ),
         body: Stack(children: [
           Column(

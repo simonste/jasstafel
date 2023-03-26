@@ -161,7 +161,7 @@ class _MolotowState extends State<Molotow> {
           ),
           DeleteButton(
             context,
-            () => setState(() => data.reset()),
+            deleteFunction: () => setState(() => data.reset()),
           ),
           SettingsButton(MolotowSettingsScreen(data), context,
               () => setState(() => data.settings.fromPrefService(context))),
