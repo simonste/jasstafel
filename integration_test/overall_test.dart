@@ -23,16 +23,7 @@ String? text(Key key, {int? elementNo}) {
 String? cellText(Key key) {
   var coiffeurCellWidget =
       find.byKey(key).evaluate().single.widget as CoiffeurCell;
-  Container container;
-  if (coiffeurCellWidget.child is InkWell) {
-    container = (coiffeurCellWidget.child as InkWell).child as Container;
-  } else {
-    container = coiffeurCellWidget.child as Container;
-  }
-  if (container.child is AutoSizeText) {
-    return (container.child as AutoSizeText).data;
-  }
-  return (container.child as Text).data;
+  return coiffeurCellWidget.text;
 }
 
 extension AppHelper on WidgetTester {

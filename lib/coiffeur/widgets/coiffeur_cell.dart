@@ -1,60 +1,50 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 
-class CoiffeurCell extends Expanded {
+class CoiffeurCell extends StatelessWidget {
+  final String text;
   final GestureTapCallback? onTap;
+  final double textScaleFactor;
+  final bool leftBorder;
+  final bool scratch;
+  final bool highlight;
+  final Alignment alignment;
+  final AutoSizeGroup? group;
 
-  CoiffeurCell(
-    String text, {
+  const CoiffeurCell(
+    this.text, {
     super.key,
     this.onTap,
-    textScaleFactor = 1.8,
-    leftBorder = true,
-    scratch = false,
-    highlight = false,
-    alignment = Alignment.center,
-    AutoSizeGroup? group,
-  }) : super(
-            child: _createChild(
-          text,
-          onTap,
-          textScaleFactor,
-          leftBorder,
-          scratch,
-          highlight,
-          alignment,
-          group,
-        ));
+    this.textScaleFactor = 1.8,
+    this.leftBorder = true,
+    this.scratch = false,
+    this.highlight = false,
+    this.alignment = Alignment.center,
+    this.group,
+  });
 
-  static BoxDecoration decoration(
-    bool leftBorder,
-    bool highlight,
-    bool scratch,
-  ) {
-    if (leftBorder) {
-      var border = const Border(
-          left: BorderSide(
-        color: Colors.white,
-      ));
-
-      if (scratch) {
-        return BoxDecoration(
-          image: const DecorationImage(
-            fit: BoxFit.fill,
-            image: AssetImage("assets/images/scratch.png"),
-          ),
-          border: border,
-          color: highlight ? Colors.blue.shade600 : null,
-        );
-      }
-
-      return BoxDecoration(
-        border: border,
-        color: highlight ? Colors.blue.shade600 : null,
-      );
+  @override
+  Widget build(BuildContext context) {
+    double scaleFactor = 1.0;
+    if (context.findRenderObject() != null) {
+      final cellSize = (context.findRenderObject() as RenderBox).size;
+      scaleFactor = max(cellSize.height / 50, cellSize.width / 100);
     }
-    return const BoxDecoration();
+
+    return Expanded(
+        child: _createChild(
+      text,
+      onTap,
+      textScaleFactor * scaleFactor,
+      leftBorder,
+      scratch,
+      highlight,
+      alignment,
+      group,
+    ));
   }
 
   static Widget _createChild(
@@ -88,6 +78,36 @@ class CoiffeurCell extends Expanded {
             textScaleFactor: textScaleFactor,
           ));
     }
+  }
+
+  static BoxDecoration decoration(
+    bool leftBorder,
+    bool highlight,
+    bool scratch,
+  ) {
+    if (leftBorder) {
+      var border = const Border(
+          left: BorderSide(
+        color: Colors.white,
+      ));
+
+      if (scratch) {
+        return BoxDecoration(
+          image: const DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage("assets/images/scratch.png"),
+          ),
+          border: border,
+          color: highlight ? Colors.blue.shade600 : null,
+        );
+      }
+
+      return BoxDecoration(
+        border: border,
+        color: highlight ? Colors.blue.shade600 : null,
+      );
+    }
+    return const BoxDecoration();
   }
 }
 

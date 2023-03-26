@@ -100,16 +100,21 @@ class _CoiffeurState extends State<Coiffeur> {
     final teamNameGroup = AutoSizeGroup();
 
     Widget teamWidget(team) {
-      return CoiffeurCell(data.score.teamName[team], onTap: () {
-        _stringDialog(team);
-      }, group: teamNameGroup);
+      return CoiffeurCell(
+        data.score.teamName[team],
+        onTap: () {
+          _stringDialog(team);
+        },
+        textScaleFactor: 1.2,
+        group: teamNameGroup,
+      );
     }
 
     var cells = [
       CoiffeurCell(
         context.l10n.noOfRounds(data.score.noOfRounds()),
         leftBorder: false,
-        textScaleFactor: 1.0,
+        textScaleFactor: 0.6,
       ),
       teamWidget(0),
       teamWidget(1),
@@ -121,7 +126,7 @@ class _CoiffeurState extends State<Coiffeur> {
       cells.add(CoiffeurCell(
         key: const Key('elapsed'),
         data.common.timestamps.elapsed(context),
-        textScaleFactor: 1.0,
+        textScaleFactor: 0.6,
       ));
 
       final updateInterval = 60000 / const Duration(minutes: 1).elapsed ~/ 2;
