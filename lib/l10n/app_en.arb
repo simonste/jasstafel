@@ -5,7 +5,7 @@
   "differenzler": "Differenzler",
   "molotow": "Molotov",
   "guggitaler": "Guggitaler",
-  "punktetafel": "Scoreboard",
+  "pointBoard": "Scoreboard",
   "settingsTitle": "{type} - Settings",
   "commonSettings": "General Settings",
   "teamNo": "Team {no}",

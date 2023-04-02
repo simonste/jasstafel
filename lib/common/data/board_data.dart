@@ -8,9 +8,11 @@ import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
 import 'package:jasstafel/common/dialog/winner_dialog.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
+import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
+import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -44,6 +46,8 @@ class BoardData<T, S extends Score> {
       return Board.coiffeur;
     } else if (string == "MolotowScore") {
       return Board.molotow;
+    } else if (string == "PointBoardScore") {
+      return Board.pointBoard;
     } else {
       assert(false);
     }
@@ -67,6 +71,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.molotow:
         (score as MolotowScore).setSettings(settings);
+        break;
+      case Board.pointBoard:
+        (score as PointBoardScore).setSettings(settings);
         break;
     }
   }
@@ -96,6 +103,10 @@ class BoardData<T, S extends Score> {
         (settings as MolotowSettings).fromPreferences(preferences);
         (settings as MolotowSettings).toPreferences(preferences);
         break;
+      case Board.pointBoard:
+        (settings as PointBoardSettings).fromPreferences(preferences);
+        (settings as PointBoardSettings).toPreferences(preferences);
+        break;
     }
     _updateSettings();
 
@@ -124,6 +135,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.molotow:
         (settings as MolotowSettings).data = str;
+        break;
+      case Board.pointBoard:
+        (settings as PointBoardSettings).data = str;
         break;
     }
     _updateSettings();
@@ -177,6 +191,11 @@ class BoardData<T, S extends Score> {
           molotowSettings.fromJson(json);
           molotowSettings.toPreferences(preferences);
           break;
+        case Board.pointBoard:
+          var pointBoardSettings = settings as PointBoardSettings;
+          pointBoardSettings.fromJson(json);
+          pointBoardSettings.toPreferences(preferences);
+          break;
       }
       _updateSettings();
       json = jsonDecode(json[dataKey]);
@@ -195,6 +214,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.molotow:
         score = MolotowScore.fromJson(json) as S;
+        break;
+      case Board.pointBoard:
+        score = PointBoardScore.fromJson(json) as S;
         break;
     }
   }

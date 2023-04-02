@@ -24,6 +24,10 @@ class BoardTitle extends Theme {
                   value: Board.molotow,
                   child: Text(context.l10n.molotow),
                 ),
+                DropdownMenuItem(
+                  value: Board.pointBoard,
+                  child: Text(context.l10n.pointBoard),
+                ),
               ],
               onChanged: (value) {
                 PrefService.of(context)

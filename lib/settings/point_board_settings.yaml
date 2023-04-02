@@ -1,0 +1,13 @@
+PointBoardSettings:
+  Players:
+    store: "point_board_players"
+    default: 4
+  PointsPerRound:
+    store: "point_board_points_per_round"
+    default: 157
+  Rounded:
+    store: "point_board_rounded"
+    default: false
+  Data:
+    store: "point_board"
+    default: "{}"
