@@ -8,6 +8,15 @@ MolotowSettings:
   Rounded:
     store: "molotow_rounded"
     default: false
+  GoalType:
+    store: "molotow_goal_type"
+    default: 0
+  GoalPoints:
+    store: "molotow_goal_points"
+    default: 1000
+  GoalRounds:
+    store: "molotow_goal_rounds"
+    default: 10
   Data:
     store: "molotow"
     default: "{}"

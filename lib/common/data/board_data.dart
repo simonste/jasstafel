@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
 import 'package:jasstafel/common/dialog/winner_dialog.dart';
@@ -26,6 +27,7 @@ abstract class Score {
 
   List<String> winner();
   void setWinner(String team);
+  List<String> loser(); // not empty if fewest points win
 }
 
 class BoardData<T, S extends Score> {
@@ -152,7 +154,7 @@ class BoardData<T, S extends Score> {
     save();
   }
 
-  void checkGameOver(BuildContext context, {required bool goalTypePoints}) {
+  void checkGameOver(BuildContext context, {required GoalType goalType}) {
     final winners = score.winner();
     if (winners.isNotEmpty && common.timestamps.justFinished()) {
       Future.delayed(
@@ -160,8 +162,9 @@ class BoardData<T, S extends Score> {
           () => winnerDialog(
               context: context,
               winners: winners,
+              losers: score.loser(),
               setWinnerFunction: score.setWinner,
-              goalTypePoints: goalTypePoints));
+              goalType: goalType));
     }
   }
 

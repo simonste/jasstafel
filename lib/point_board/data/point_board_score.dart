@@ -68,12 +68,13 @@ class PointBoardScore implements Score {
   List<String> winner() {
     List<String> winners = [];
     bool gameOver = false;
-    if (_settings.goalType == 1) {
+    if (_settings.goalType == GoalType.points.index) {
       for (var i = 0; i < _settings.players; i++) {
         if (total(i) >= _settings.goalPoints) gameOver = true;
       }
     }
-    if (_settings.goalType == 2 && noOfRounds() == _settings.goalRounds) {
+    if (_settings.goalType == GoalType.rounds.index &&
+        noOfRounds() == _settings.goalRounds) {
       gameOver = true;
     }
     if (gameOver) {
@@ -90,6 +91,27 @@ class PointBoardScore implements Score {
       }
     }
     return winners;
+  }
+
+  @override
+  List<String> loser() {
+    if (_settings.goalType == GoalType.points.index &&
+        !_settings.goalMax &&
+        winner().isNotEmpty) {
+      List<String> losers = [];
+      int worst = -10000;
+      for (var i = 0; i < _settings.players; i++) {
+        final playerPoints = total(i);
+        if (playerPoints > worst) {
+          losers = [playerName[i]];
+          worst = playerPoints;
+        } else if (playerPoints == worst) {
+          losers.add(playerName[i]);
+        }
+      }
+      return losers;
+    }
+    return [];
   }
 
   int total(int player) {

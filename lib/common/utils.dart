@@ -1,3 +1,5 @@
+enum GoalType { noGoal, points, rounds }
+
 int matchPoints(int pointsPerRound) {
   if (pointsPerRound % 157 == 0) {
     int decks = (pointsPerRound / 157).round();

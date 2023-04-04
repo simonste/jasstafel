@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'overall_test.dart';
 
 // cspell:ignore: spielername runde eingeben handweis tischweis zurück punkte
+// cspell:ignore: kein ziel zielpunkte anzahl erreicht gewonnen
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -176,5 +177,96 @@ void main() {
     expect(text(const Key('sum_1')), '20');
     expect(text(const Key('sum_2')), '20');
     expect(text(const Key('sum_3')), '0');
+  });
+
+  testWidgets('goal points', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('kein Ziel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zielpunkte').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zielpunkte').last);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '88');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Runde eingeben'));
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('pts_0')), '70');
+    await tester.enterText(find.byKey(const Key('pts_1')), '70');
+    await tester.enterText(find.byKey(const Key('pts_2')), '17');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Tischweis'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Spieler 2').last);
+    await tester.pump();
+    await tester.tap(find.text('50'));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.text(
+            'Spieler 4 hat gewonnen!\n\nSpieler 2 hat die Zielpunkte erreicht!'),
+        findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('sum_0')), '70');
+    expect(text(const Key('sum_1')), '120');
+    expect(text(const Key('sum_2')), '17');
+    expect(text(const Key('sum_3')), '0');
+  });
+
+  testWidgets('goal rounds', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.slideTo(find.byType(Slider), 2);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('kein Ziel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Anzahl Runden').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Anzahl Runden').last);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '3');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(find.byTooltip('Handweis'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Spieler 1').last);
+      await tester.pump();
+      await tester.tap(find.text('20'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Runde eingeben'));
+      await tester.pump();
+      await tester.enterText(find.byKey(const Key('pts_0')), '80');
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('pts_1')));
+      await tester.pump();
+      await tester.tap(find.text('Ok'));
+      await tester.pumpAndSettle();
+    }
+
+    expect(find.text('Spieler 1 hat gewonnen!'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('sum_0')), '180');
+    expect(text(const Key('sum_1')), '231');
   });
 }

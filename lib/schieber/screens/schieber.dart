@@ -4,6 +4,7 @@ import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -48,7 +49,9 @@ class _SchieberState extends State<Schieber> {
     developer.log('build', name: 'jasstafel schieber');
 
     data.score.checkHill(context);
-    data.checkGameOver(context, goalTypePoints: data.settings.goalTypePoints);
+    data.checkGameOver(context,
+        goalType:
+            data.settings.goalTypePoints ? GoalType.points : GoalType.rounds);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 

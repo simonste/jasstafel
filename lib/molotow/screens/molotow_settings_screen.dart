@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/widgets/pref_hider_generic.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
+import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:pref/pref.dart';
@@ -22,6 +24,8 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     MolotowSettings settings = widget.boardData.settings;
+    final goalPointsSubTitle =
+        subTitle(settings.goalPoints, settings.rounded, context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +39,13 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             page: ProfilePage(widget.boardData, () => setState(() {}))),
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefCheckbox(
-            title: Text(context.l10n.denominator10),
-            pref: MolotowSettings.keys.rounded,
-            onChange: (value) => settings.rounded = value),
+          title: Text(context.l10n.denominator10),
+          pref: MolotowSettings.keys.rounded,
+          onChange: (value) {
+            settings.rounded = value;
+            setState(() {});
+          },
+        ),
         PrefNumber(
           title: Text(context.l10n.pointsPerRound),
           pref: MolotowSettings.keys.pointsPerRound,
@@ -49,6 +57,37 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
           min: 2,
           max: 8,
           trailing: (num v) => Text('$v'),
+        ),
+        PrefDropdown(
+          title: Text(context.l10n.goalType),
+          pref: MolotowSettings.keys.goalType,
+          items: [
+            DropdownMenuItem(value: 0, child: Text(context.l10n.noGoal)),
+            DropdownMenuItem(value: 1, child: Text(context.l10n.goalPoints)),
+            DropdownMenuItem(value: 2, child: Text(context.l10n.rounds)),
+          ],
+          onChange: (value) => {},
+        ),
+        PrefHiderGeneric(
+          pref: MolotowSettings.keys.goalType,
+          nullValue: 1,
+          children: [
+            PrefNumber(
+              title: Text(context.l10n.goalPoints),
+              subtitle: Text(goalPointsSubTitle),
+              pref: MolotowSettings.keys.goalPoints,
+            ),
+          ],
+        ),
+        PrefHiderGeneric(
+          pref: MolotowSettings.keys.goalType,
+          nullValue: 2,
+          children: [
+            PrefNumber(
+              title: Text(context.l10n.rounds),
+              pref: MolotowSettings.keys.goalRounds,
+            ),
+          ],
         ),
         PrefTitle(title: Text(context.l10n.commonSettings)),
         PrefCheckbox(

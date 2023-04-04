@@ -45,7 +45,8 @@ class _PointBoardState extends State<PointBoard> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel point board');
-    data.checkGameOver(context, goalTypePoints: true);
+    data.checkGameOver(context,
+        goalType: GoalType.values[data.settings.goalType]);
     if (updateTimer != null) {
       updateTimer!.cancel();
     }

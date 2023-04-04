@@ -1,5 +1,6 @@
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -40,7 +41,7 @@ void main() {
     var score = PointBoardScore();
     var settings = PointBoardSettings();
     settings.players = 3;
-    settings.goalType = 1;
+    settings.goalType = GoalType.points.index;
     settings.goalPoints = 100;
     score.setSettings(settings);
 
@@ -48,13 +49,14 @@ void main() {
     score.rows.add(PointBoardRow([54, 60, 20]));
 
     expect(score.winner(), ["Spieler 2"]);
+    expect(score.loser(), []); // no loser with maximum points
   });
 
   test('check two winner points', () {
     var score = PointBoardScore();
     var settings = PointBoardSettings();
     settings.players = 3;
-    settings.goalType = 1;
+    settings.goalType = GoalType.points.index;
     settings.goalPoints = 100;
     score.setSettings(settings);
 
@@ -62,13 +64,14 @@ void main() {
     score.rows.add(PointBoardRow([54, 60, 100]));
 
     expect(score.winner(), ["Spieler 2", "Spieler 3"]);
+    expect(score.loser(), []); // no loser with maximum points
   });
 
   test('check winner points minimum', () {
     var score = PointBoardScore();
     var settings = PointBoardSettings();
     settings.players = 3;
-    settings.goalType = 1;
+    settings.goalType = GoalType.points.index;
     settings.goalPoints = 100;
     settings.goalMax = false;
     score.setSettings(settings);
@@ -77,13 +80,14 @@ void main() {
     score.rows.add(PointBoardRow([54, 60, 20]));
 
     expect(score.winner(), ["Spieler 3"]);
+    expect(score.loser(), ["Spieler 2"]);
   });
 
   test('check winner rounds', () {
     var score = PointBoardScore();
     var settings = PointBoardSettings();
     settings.players = 3;
-    settings.goalType = 2;
+    settings.goalType = GoalType.rounds.index;
     settings.goalRounds = 3;
     score.setSettings(settings);
 
@@ -95,5 +99,6 @@ void main() {
     score.rows.add(PointBoardRow([74, 10, 20]));
 
     expect(score.winner(), ["Spieler 1"]);
+    expect(score.loser(), []); // no loser with rounds
   });
 }

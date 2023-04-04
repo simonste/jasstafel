@@ -193,5 +193,10 @@ class CoiffeurScore implements Score {
   }
 
   @override
+  List<String> loser() {
+    return [];
+  }
+
+  @override
   void setWinner(String team) {}
 }

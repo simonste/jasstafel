@@ -13,6 +13,7 @@ import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
@@ -57,7 +58,7 @@ class _CoiffeurState extends State<Coiffeur> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel coiffeur');
-    data.checkGameOver(context, goalTypePoints: false);
+    data.checkGameOver(context, goalType: GoalType.rounds);
     if (updateTimer != null) {
       updateTimer!.cancel();
     }

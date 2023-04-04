@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/utils.dart';
 
 Future<void> winnerDialog(
     {required BuildContext context,
     required List<String> winners,
+    required List<String> losers,
     required Function setWinnerFunction,
-    bool goalTypePoints = true}) {
+    GoalType goalType = GoalType.points}) {
   if (winners.length == 1) {
-    final subtitle = goalTypePoints
+    var subtitle = (goalType == GoalType.points && losers.isEmpty)
         ? context.l10n.winner(winners.first)
         : context.l10n.winnerRounds(winners.first);
+
+    if (losers.isNotEmpty) {
+      subtitle += "\n\n${context.l10n.winner(losers.first)}";
+    }
 
     return confirmDialog(
         context: context,

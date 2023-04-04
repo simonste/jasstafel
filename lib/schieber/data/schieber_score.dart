@@ -330,6 +330,11 @@ class SchieberScore implements Score {
   }
 
   @override
+  List<String> loser() {
+    return [];
+  }
+
+  @override
   void setWinner(String teamName) {
     for (var t in team) {
       if (t.name != teamName) {
