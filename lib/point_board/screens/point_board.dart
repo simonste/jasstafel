@@ -51,10 +51,7 @@ class _PointBoardState extends State<PointBoard> {
     }
 
     rowWidget(List<String> data,
-        {bool header = false,
-        bool footer = false,
-        bool round = false,
-        int? rowNo}) {
+        {bool header = false, bool footer = false, int? rowNo}) {
       List<Widget> children = [
         SizedBox(
             width: 20,
@@ -93,13 +90,11 @@ class _PointBoardState extends State<PointBoard> {
       }
       var decoration = (header || footer)
           ? BoxDecoration(color: Theme.of(context).colorScheme.secondary)
-          : round
-              ? BoxDecoration(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  border: Border(
-                      bottom: BorderSide(
-                          color: Theme.of(context).colorScheme.onPrimary)))
-              : null;
+          : BoxDecoration(
+              color: Theme.of(context).colorScheme.tertiary,
+              border: Border(
+                  bottom: BorderSide(
+                      color: Theme.of(context).colorScheme.onPrimary)));
 
       return Container(
           height: (header || footer) ? 30 : null,
@@ -123,14 +118,10 @@ class _PointBoardState extends State<PointBoard> {
       return rowWidget(list, footer: true);
     }
 
-    int roundNo = 0;
     pointRow(int rowNo) {
       final row = data.score.rows[rowNo];
       List<String> list = [''];
-      if (row.isRound) {
-        roundNo++;
-        list[0] = '$roundNo';
-      }
+      list[0] = '${rowNo + 1}';
       row.pts.sublist(0, data.settings.players).forEach((pts) {
         if (pts != null) {
           list.add('${roundedInt(pts, data.settings.rounded)}');
@@ -138,7 +129,7 @@ class _PointBoardState extends State<PointBoard> {
           list.add('-');
         }
       });
-      return rowWidget(list, round: row.isRound, rowNo: rowNo);
+      return rowWidget(list, rowNo: rowNo);
     }
 
     List<Widget> rows = [];
@@ -210,7 +201,7 @@ class _PointBoardState extends State<PointBoard> {
     if (input == null) return;
     setState(() {
       if (editRowNo == null) {
-        data.score.rows.add(PointBoardRow(input, isRound: true));
+        data.score.rows.add(PointBoardRow(input));
       } else {
         data.score.rows[editRowNo].pts = input;
       }

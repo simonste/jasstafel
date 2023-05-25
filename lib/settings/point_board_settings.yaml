@@ -8,6 +8,18 @@ PointBoardSettings:
   Rounded:
     store: "point_board_rounded"
     default: false
+  GoalType:
+    store: "point_board_goal_type"
+    default: 0
+  GoalPoints:
+    store: "point_board_goal_points"
+    default: 1000
+  GoalRounds:
+    store: "point_board_goal_rounds"
+    default: 10
+  GoalMax:
+    store: "point_board_goal_maximum"
+    default: true
   Data:
     store: "point_board"
     default: "{}"

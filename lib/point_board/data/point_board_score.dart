@@ -10,10 +10,9 @@ class PointBoardRow {
       _$PointBoardRowFromJson(json);
   Map<String, dynamic> toJson() => _$PointBoardRowToJson(this);
 
-  bool isRound;
   List<int?> pts = List.filled(8, null);
 
-  PointBoardRow(this.pts, {required this.isRound}) {
+  PointBoardRow(this.pts) {
     for (var i = pts.length; i < 8; i++) {
       pts.add(null);
     }
@@ -45,11 +44,7 @@ class PointBoardScore implements Score {
 
   @override
   int noOfRounds() {
-    var n = 0;
-    for (final row in rows) {
-      if (row.isRound) n++;
-    }
-    return n;
+    return rows.length;
   }
 
   @override
@@ -71,7 +66,30 @@ class PointBoardScore implements Score {
 
   @override
   List<String> winner() {
-    return [];
+    List<String> winners = [];
+    bool gameOver = false;
+    if (_settings.goalType == 1) {
+      for (var i = 0; i < _settings.players; i++) {
+        if (total(i) >= _settings.goalPoints) gameOver = true;
+      }
+    }
+    if (_settings.goalType == 2 && noOfRounds() == _settings.goalRounds) {
+      gameOver = true;
+    }
+    if (gameOver) {
+      final factor = _settings.goalMax ? 1 : -1;
+      int best = -10000;
+      for (var i = 0; i < _settings.players; i++) {
+        final playerPoints = factor * total(i);
+        if (playerPoints > best) {
+          winners = [playerName[i]];
+          best = playerPoints;
+        } else if (playerPoints == best) {
+          winners.add(playerName[i]);
+        }
+      }
+    }
+    return winners;
   }
 
   int total(int player) {
