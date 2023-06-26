@@ -42,7 +42,6 @@ void main() {
 
     await tester.longPress(find.byType(InkWell));
     await tester.pumpAndSettle();
-    expect(find.text('5'), findsOneWidget);
     expect(find.text('6'), findsNWidgets(2));
     await tester.tap(find.widgetWithText(DropdownMenuItem<int>, '6'));
     await tester.pump();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
-import 'package:jasstafel/common/utils.dart';
+import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -24,15 +24,12 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     CoiffeurSettings settings = widget.boardData.settings;
-    subTitle(int pts) {
-      return settings.rounded
-          ? context.l10n.pointsRounded(roundedInt(pts, settings.rounded))
-          : "";
-    }
-
-    final matchPointsSubTitle = subTitle(settings.match);
-    final bonusPointsSubTitle = subTitle(settings.bonusValue);
-    final counterPointsSubTitle = subTitle(settings.counterLoss);
+    final matchPointsSubTitle =
+        subTitle(settings.match, settings.rounded, context);
+    final bonusPointsSubTitle =
+        subTitle(settings.bonusValue, settings.rounded, context);
+    final counterPointsSubTitle =
+        subTitle(settings.counterLoss, settings.rounded, context);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +45,10 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefCheckbox(
           title: Text(context.l10n.denominator10),
           pref: CoiffeurSettings.keys.rounded,
-          onChange: (value) => settings.rounded = value,
+          onChange: (value) {
+            settings.rounded = value;
+            setState(() {});
+          },
         ),
         PrefNumber(
           title: Text(context.l10n.matchPoints),
