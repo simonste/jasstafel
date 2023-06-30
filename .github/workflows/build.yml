@@ -1,5 +1,7 @@
 name: JassTafel CI
 on: [push]
+env:
+  FLUTTER_VERSION: 3.10.2
 jobs:
   build-android:
     if: ${{ false }}
@@ -23,7 +25,7 @@ jobs:
       - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.7.1"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
           cache: true
 
@@ -88,7 +90,7 @@ jobs:
       - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.7.1"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
           cache: true
 
@@ -137,7 +139,7 @@ jobs:
       - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.7.1"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
           cache: true
 
