@@ -50,8 +50,7 @@ class _SchieberState extends State<Schieber> {
 
     data.score.checkHill(context);
     data.checkGameOver(context,
-        goalType:
-            data.settings.goalTypePoints ? GoalType.points : GoalType.rounds);
+        goalType: GoalType.values[data.settings.goalType]);
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
@@ -134,6 +133,19 @@ class _SchieberState extends State<Schieber> {
       actions.insert(0, BacksideButton(context, () => data.load()));
     }
 
+    Widget center;
+    switch (GoalType.values[data.settings.goalType]) {
+      case GoalType.points:
+        center = goalPoints();
+        break;
+      case GoalType.rounds:
+        center = goalRounds();
+        break;
+      case GoalType.noGoal:
+        center = Container();
+        break;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: BoardTitle(Board.schieber, context),
@@ -147,8 +159,7 @@ class _SchieberState extends State<Schieber> {
                 SchieberTeam(0, data, dialogs),
                 SchieberTeam(1, data, dialogs),
               ]),
-          Center(
-              child: data.settings.goalTypePoints ? goalPoints() : goalRounds())
+          Center(child: center)
         ]));
   }
 

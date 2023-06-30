@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:test/test.dart';
@@ -242,7 +243,7 @@ void main() {
   test('hill & winner rounds', () {
     var score = SchieberScore();
     var settings = SchieberSettings();
-    settings.goalTypePoints = false;
+    settings.goalType = GoalType.rounds.index;
     score.setSettings(settings);
     score.goalRounds = 3;
 
@@ -268,7 +269,7 @@ void main() {
   test('both passed hill rounds', () {
     var score = SchieberScore();
     var settings = SchieberSettings();
-    settings.goalTypePoints = false;
+    settings.goalType = GoalType.rounds.index;
     score.setSettings(settings);
     score.goalRounds = 4;
 
@@ -281,7 +282,7 @@ void main() {
   test('both win rounds', () {
     var score = SchieberScore();
     var settings = SchieberSettings();
-    settings.goalTypePoints = false;
+    settings.goalType = GoalType.rounds.index;
     score.setSettings(settings);
     score.goalRounds = 2;
 

@@ -1,7 +1,7 @@
 SchieberSettings:
-  GoalTypePoints:
-    store: "schieber_goal"
-    default: true
+  GoalType:
+    store: "schieber_goal_type"
+    default: 1
   DifferentGoals:
     store: "schieber_different_goals"
     default: false

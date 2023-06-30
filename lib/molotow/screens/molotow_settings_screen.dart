@@ -5,6 +5,7 @@ import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/setting_utils.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:pref/pref.dart';
@@ -62,15 +63,19 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
           title: Text(context.l10n.goalType),
           pref: MolotowSettings.keys.goalType,
           items: [
-            DropdownMenuItem(value: 0, child: Text(context.l10n.noGoal)),
-            DropdownMenuItem(value: 1, child: Text(context.l10n.goalPoints)),
-            DropdownMenuItem(value: 2, child: Text(context.l10n.rounds)),
+            DropdownMenuItem(
+                value: GoalType.noGoal.index, child: Text(context.l10n.noGoal)),
+            DropdownMenuItem(
+                value: GoalType.points.index,
+                child: Text(context.l10n.goalPoints)),
+            DropdownMenuItem(
+                value: GoalType.rounds.index, child: Text(context.l10n.rounds)),
           ],
           onChange: (value) => {},
         ),
         PrefHiderGeneric(
           pref: MolotowSettings.keys.goalType,
-          nullValue: 1,
+          nullValue: GoalType.points.index,
           children: [
             PrefNumber(
               title: Text(context.l10n.goalPoints),
@@ -81,7 +86,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
         ),
         PrefHiderGeneric(
           pref: MolotowSettings.keys.goalType,
-          nullValue: 2,
+          nullValue: GoalType.rounds.index,
           children: [
             PrefNumber(
               title: Text(context.l10n.rounds),

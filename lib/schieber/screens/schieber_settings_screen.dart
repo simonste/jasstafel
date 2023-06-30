@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/utils.dart';
+import 'package:jasstafel/common/widgets/pref_disabler_generic.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -33,15 +35,21 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
         PrefTitle(title: Text(context.l10n.countingType)),
         PrefDropdown(
           title: Text(context.l10n.goalType),
-          pref: SchieberSettings.keys.goalTypePoints,
+          pref: SchieberSettings.keys.goalType,
           items: [
-            DropdownMenuItem(value: true, child: Text(context.l10n.goalPoints)),
-            DropdownMenuItem(value: false, child: Text(context.l10n.rounds)),
+            DropdownMenuItem(
+                value: GoalType.noGoal.index, child: Text(context.l10n.noGoal)),
+            DropdownMenuItem(
+                value: GoalType.points.index,
+                child: Text(context.l10n.goalPoints)),
+            DropdownMenuItem(
+                value: GoalType.rounds.index, child: Text(context.l10n.rounds)),
           ],
         ),
-        PrefDisabler(
-          pref: SchieberSettings.keys.goalTypePoints,
+        PrefDisablerGeneric(
+          pref: SchieberSettings.keys.goalType,
           reversed: true,
+          nullValue: GoalType.points.index,
           children: [
             PrefCheckbox(
                 title: Text(context.l10n.differentGoals),

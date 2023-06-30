@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_hider_generic.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -67,15 +68,19 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
           title: Text(context.l10n.goalType),
           pref: PointBoardSettings.keys.goalType,
           items: [
-            DropdownMenuItem(value: 0, child: Text(context.l10n.noGoal)),
-            DropdownMenuItem(value: 1, child: Text(context.l10n.goalPoints)),
-            DropdownMenuItem(value: 2, child: Text(context.l10n.rounds)),
+            DropdownMenuItem(
+                value: GoalType.noGoal.index, child: Text(context.l10n.noGoal)),
+            DropdownMenuItem(
+                value: GoalType.points.index,
+                child: Text(context.l10n.goalPoints)),
+            DropdownMenuItem(
+                value: GoalType.rounds.index, child: Text(context.l10n.rounds)),
           ],
           onChange: (value) => {},
         ),
         PrefHiderGeneric(
           pref: PointBoardSettings.keys.goalType,
-          nullValue: 1,
+          nullValue: GoalType.points.index,
           children: [
             PrefNumber(
               title: Text(context.l10n.goalPoints),
@@ -86,7 +91,7 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
         ),
         PrefHiderGeneric(
           pref: PointBoardSettings.keys.goalType,
-          nullValue: 2,
+          nullValue: GoalType.rounds.index,
           children: [
             PrefNumber(
               title: Text(context.l10n.rounds),

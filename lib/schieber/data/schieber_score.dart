@@ -309,14 +309,14 @@ class SchieberScore implements Score {
     // if winners already known
     if (winners.isNotEmpty) return winners;
 
-    if (_settings.goalTypePoints) {
+    if (_settings.goalType == GoalType.points.index) {
       for (final t in team) {
         if (t.sum() > t.goalPoints) {
           winners.add(t.name);
           t.win = true;
         }
       }
-    } else {
+    } else if (_settings.goalType == GoalType.rounds.index) {
       if (noOfRounds() >= goalRounds) {
         for (final i in [0, 1]) {
           if (team[i].sum() >= team[(i + 1) % 2].sum()) {
@@ -371,14 +371,14 @@ class SchieberScore implements Score {
     }
 
     List<String> hillers = [];
-    if (_settings.goalTypePoints) {
+    if (_settings.goalType == GoalType.points.index) {
       for (final t in team) {
         if (t.sum() > t.goalPoints / 2) {
           hillers.add(t.name);
           t.hill = true;
         }
       }
-    } else {
+    } else if (_settings.goalType == GoalType.rounds.index) {
       if (noOfRounds() == (goalRounds / 2).ceil()) {
         for (final i in [0, 1]) {
           if (team[i].sum() >= team[(i + 1) % 2].sum()) {

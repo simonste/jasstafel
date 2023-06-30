@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/widgets/schieber_background_z.dart';
 import 'package:jasstafel/schieber/widgets/schieber_progress.dart';
@@ -43,9 +44,17 @@ class SchieberTeam extends StatelessWidget {
     final teamData = data.score.team[teamId];
     final pts = teamData.sum();
 
-    final progress = data.settings.goalTypePoints
-        ? (pts / data.score.team[teamId].goalPoints)
-        : (data.score.noOfRounds() / data.score.goalRounds);
+    progress() {
+      switch (GoalType.values[data.settings.goalType]) {
+        case GoalType.points:
+          return (pts / data.score.team[teamId].goalPoints);
+        case GoalType.rounds:
+          return (data.score.noOfRounds() / data.score.goalRounds);
+        case GoalType.noGoal:
+          return 0.0;
+      }
+    }
+
     final hMargin = width * 0.05;
     final strokeHeight = height * 0.2;
     final strokesWidth = width * 0.5;
@@ -204,8 +213,8 @@ class SchieberTeam extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Stack(children: [
-        SchieberProgress(progress, false),
-        SchieberProgress(progress, true),
+        SchieberProgress(progress(), false),
+        SchieberProgress(progress(), true),
         backgroundZ(),
         teamName,
         strokes20(),
