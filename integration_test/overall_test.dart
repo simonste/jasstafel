@@ -53,6 +53,14 @@ extension AppHelper on WidgetTester {
     await tap(find.byKey(const Key('SettingsButton')));
     await pumpAndSettle();
     for (String setting in settings) {
+      final settingFinder = find.text(setting);
+      if (!any(settingFinder)) {
+        await scrollUntilVisible(
+          settingFinder,
+          100.0,
+          scrollable: find.byType(Scrollable),
+        );
+      }
       await tap(find.text(setting));
       await pumpAndSettle();
     }

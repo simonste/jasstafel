@@ -5,7 +5,8 @@ import 'dart:developer' as developer;
 Future<void> main() async {
   try {
     await integrationDriver(
-      onScreenshot: (String screenshotName, List<int> screenshotBytes) async {
+      onScreenshot: (String screenshotName, List<int> screenshotBytes,
+          [Map<String, Object?>? args]) async {
         final File image = await File('screenshots/$screenshotName.png')
             .create(recursive: true);
         image.writeAsBytesSync(screenshotBytes);
