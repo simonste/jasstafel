@@ -43,14 +43,24 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> delete(String buttonText) async {
-    await tap(find.byKey(const Key('delete')));
+    final settingFinder = find.byKey(const Key('delete'));
+    if (!any(settingFinder)) {
+      await tap(find.byType(PopupMenuButton));
+      await pumpAndSettle();
+    }
+    await tap(settingFinder);
     await pumpAndSettle();
     await tap(find.text(buttonText));
     await pumpAndSettle();
   }
 
   Future<void> tapSetting(List<String> settings) async {
-    await tap(find.byKey(const Key('SettingsButton')));
+    final settingFinder = find.byKey(const Key('SettingsButton'));
+    if (!any(settingFinder)) {
+      await tap(find.byType(PopupMenuButton));
+      await pumpAndSettle();
+    }
+    await tap(settingFinder);
     await pumpAndSettle();
     for (String setting in settings) {
       final settingFinder = find.text(setting);

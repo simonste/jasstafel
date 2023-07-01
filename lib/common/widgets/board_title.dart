@@ -39,3 +39,43 @@ class BoardTitle extends Theme {
           ),
         );
 }
+
+List<Widget> shrinkActions(List<Widget> actions, int max,
+    {List<Type> priority = const []}) {
+  if (actions.length > max) {
+    List<IconButton> iconButtons = [];
+    Widget? action;
+    while ((actions.length + 1) > max) {
+      try {
+        if (priority.isNotEmpty) {
+          action = actions
+              .firstWhere((element) => priority.first == element.runtimeType);
+          actions.remove(action);
+          priority.removeAt(0);
+        }
+      } catch (e) {
+        // remove leftmost
+      }
+      action ??= actions.removeAt(0);
+      iconButtons.add(action as IconButton);
+    }
+    actions.insert(actions.length,
+        PopupMenuButton(itemBuilder: (BuildContext context) {
+      // unwrap icon buttons to be able to call Navigator.pop (close drop down)
+      List<PopupMenuItem> popupItems = [];
+      for (var element in iconButtons) {
+        popupItems.add(PopupMenuItem(
+            child: GestureDetector(
+          key: element.key,
+          onTap: () {
+            Navigator.pop(context);
+            element.onPressed!();
+          },
+          child: element.icon,
+        )));
+      }
+      return popupItems;
+    }));
+  }
+  return actions;
+}

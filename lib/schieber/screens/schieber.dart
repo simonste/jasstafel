@@ -132,6 +132,12 @@ class _SchieberState extends State<Schieber> {
     if (data.settings.backside) {
       actions.insert(0, BacksideButton(context, () => data.load()));
     }
+    final width = MediaQuery.of(context).size.width;
+    actions = shrinkActions(actions, (width / 70).floor(), priority: [
+      SettingsButton<SchieberSettingsScreen>,
+      DeleteButton,
+      SchieberStatisticsButton
+    ]);
 
     Widget center;
     switch (GoalType.values[data.settings.goalType]) {
