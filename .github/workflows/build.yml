@@ -110,11 +110,6 @@ jobs:
 
       - name: Take screenshots
         run: |
-          # Set a variable with Flutter's path
-          FLUTTER_PATH="$(which flutter)"
-          FLUTTER_PATH=${FLUTTER_PATH/\/bin\/flutter/""}
-          # Update IntegrationTestPlugin.m
-          sed -i '' -e "51s/^//p; 51s/^.*/  \[\[IntegrationTestPlugin instance\] setupChannels\:registrar\.messenger\]\;/" $FLUTTER_PATH'/packages/integration_test/ios/Classes/IntegrationTestPlugin.m'
           sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
           flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
       - name: screenshot artifact
