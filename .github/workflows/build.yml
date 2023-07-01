@@ -111,7 +111,7 @@ jobs:
       - name: Take screenshots
         run: |
           sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
-          flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
+          flutter drive --no-enable-impeller --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
       - name: Screenshot artifact
         uses: actions/upload-artifact@v3
         with:
