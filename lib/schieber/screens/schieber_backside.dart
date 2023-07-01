@@ -69,7 +69,7 @@ class _SchieberBacksideState extends State<SchieberBackside> {
     final screen = MediaQuery.of(context).size;
     final columnWidth = screen.width / columns;
     final padding = columnWidth * 0.15;
-    final strokeWidthFactor = columnWidth / 10000 * 0.8;
+    final strokeWidthFactor = 0.03 * pow(columns, -1.0);
 
     final double strokeHeight = columns == 2 ? 100 : 70;
     var mostStrokes = 0;
