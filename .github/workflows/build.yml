@@ -45,7 +45,7 @@ jobs:
       #   with:
       #     api-level: 29
       #     profile: ${{ matrix.device }}
-      #     script: flutter test integration_test/app_test.dart --verbose
+      #     script: flutter test integration_test
 
       - name: Take screenshots
         uses: reactivecircus/android-emulator-runner@v2
@@ -106,20 +106,20 @@ jobs:
       - name: Test
         run: flutter test
       # - name: Integration test
-      #   run: flutter test integration_test/app_test.dart --verbose
+      #   run: flutter test integration_test
 
       - name: Take screenshots
         run: |
           sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
           flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
-      - name: screenshot artifact
+      - name: Screenshot artifact
         uses: actions/upload-artifact@v3
         with:
           name: screenshots_ios_${{ matrix.device }}
           path: screenshots/*
 
   build-ios:
-    if: ${{ false }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [test-ios]
     runs-on: macos-latest
     steps:
