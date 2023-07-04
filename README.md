@@ -1,5 +1,7 @@
 # Jasstafel
 
+[![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg)](https://github.com/simonste/jasstafel/actions/workflows/build.yml)
+
 Version 2.0 of the Jasstafel. Now for Android & iOS (& more)
 
 ## Getting Started

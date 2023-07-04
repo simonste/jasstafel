@@ -49,29 +49,22 @@ class CoiffeurCell extends StatelessWidget {
     Alignment alignment,
     AutoSizeGroup? group,
   ) {
+    final container = Container(
+        alignment: alignment,
+        decoration: decoration(leftBorder, highlight, scratch),
+        padding: const EdgeInsets.all(10),
+        child: AutoSizeText(
+          name,
+          maxLines: maxLines,
+          style: const TextStyle(fontSize: 1000),
+          textAlign: TextAlign.center,
+          group: group,
+        ));
+
     if (onTap != null) {
-      return InkWell(
-          onTap: onTap,
-          child: Container(
-              alignment: alignment,
-              decoration: decoration(leftBorder, highlight, scratch),
-              padding: const EdgeInsets.all(20),
-              child: AutoSizeText(name,
-                  maxLines: maxLines,
-                  style: const TextStyle(fontSize: 1000),
-                  textAlign: TextAlign.center,
-                  group: group)));
+      return InkWell(onTap: onTap, child: container);
     } else {
-      return Container(
-          alignment: alignment,
-          padding: const EdgeInsets.all(15),
-          decoration: decoration(leftBorder, highlight, scratch),
-          child: AutoSizeText(
-            name,
-            maxLines: maxLines,
-            style: const TextStyle(fontSize: 1000),
-            group: group,
-          ));
+      return container;
     }
   }
 
