@@ -222,5 +222,6 @@ class BoardData<T, S extends Score> {
         score = PointBoardScore.fromJson(json) as S;
         break;
     }
+    _updateSettings();
   }
 }

@@ -113,6 +113,9 @@ void main() {
     expect(cellText(const Key('sum_0')), '${9 * 8 + 4 * 8}');
     expect(cellText(const Key('sum_1')), '${4 * 6}');
     expect(cellText(const Key('sum_2')), '${4 * 2}');
+
+    await tester.switchBoard(from: 'Coiffeur', to: 'Coiffeur');
+    expect(cellText(const Key('1:3')), '6');
   });
 
   testWidgets('change no of rounds', (tester) async {

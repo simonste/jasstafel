@@ -96,6 +96,9 @@ void main() {
     expect(text(const Key('sum_1')), '2');
     expect(text(const Key('sum_2')), '3');
     expect(text(const Key('sum_3')), '9');
+
+    await tester.switchBoard(from: 'Molotow', to: 'Molotow');
+    expect(text(const Key('sum_0')), '1');
   });
 
   testWidgets('only 2 players', (tester) async {
