@@ -3,8 +3,7 @@ on: [push]
 env:
   FLUTTER_VERSION: 3.16.0
 jobs:
-  build-android:
-    if: ${{ false }}
+  test-android:
     strategy:
       matrix:
         device:
@@ -52,15 +51,83 @@ jobs:
         with:
           api-level: 29
           profile: ${{ matrix.device }}
-          script: flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
+          script: |
+            sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
+            flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
       - name: screenshot artifact
         uses: actions/upload-artifact@v3
         with:
           name: screenshots_android_${{ matrix.device }}
           path: screenshots/*
 
+  build-android:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [test-android]
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "12.x"
+          cache: "gradle"
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Generate icons
+        run: flutter pub run flutter_launcher_icons:main
+      - name: Generate translations
+        run: flutter gen-l10n
+      - name: Generate sources
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
       - name: Build
         run: flutter build appbundle
+
+      - name: Sign App Bundle
+        uses: ilharp/sign-android-release@v1
+        with:
+          releaseDir: build/app/outputs/bundle/release/
+          signingKey: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keyAlias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+
+      - name: Android app bundle artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle
+          path: |
+            build/app/outputs/bundle/release/app-release-signed.aab
+            build/app/outputs/mapping/release/mapping.txt
+
+  release-android:
+    needs: [build-android]
+    runs-on: macos-latest
+    steps:
+      - name: Get release-bundle from artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: bundle
+
+      - name: Upload to Play Store (Beta Testing)
+        uses: r0adkll/upload-google-play@v1.0.18
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
+          packageName: ch.simonste.jasstafel
+          releaseFiles: bundle/release/app-release-signed.aab
+          mappingFile: mapping/release/mapping.txt
+          track: beta
 
   test-ios:
     strategy:

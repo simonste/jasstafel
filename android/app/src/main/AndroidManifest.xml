@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.simonste.jasstafel2">
+    package="ch.simonste.jasstafel">
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:label="Jasstafel"

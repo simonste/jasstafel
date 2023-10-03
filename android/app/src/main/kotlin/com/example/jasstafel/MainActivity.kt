@@ -1,4 +1,4 @@
-package ch.simonste.jasstafel2
+package ch.simonste.jasstafel
 
 import io.flutter.embedding.android.FlutterActivity
 
