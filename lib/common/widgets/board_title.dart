@@ -25,6 +25,10 @@ class BoardTitle extends Theme {
                   child: Text(context.l10n.molotow),
                 ),
                 DropdownMenuItem(
+                  value: Board.differenzler,
+                  child: Text(context.l10n.differenzler),
+                ),
+                DropdownMenuItem(
                   value: Board.pointBoard,
                   child: Text(context.l10n.pointBoard),
                 ),

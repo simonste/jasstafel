@@ -147,6 +147,56 @@ void main() {
     await tester.takeScreenshot(binding, 'molotow1');
   });
 
+  testWidgets('differenzler #1', (tester) async {
+    await tester.launchApp();
+    await binding?.convertFlutterSurfaceToImage();
+    await tester.switchBoard(from: 'Schieber', to: 'Differenzler');
+
+    await tester.rename('Spieler 1', 'John');
+    await tester.rename('Spieler 2', 'Paul');
+    await tester.rename('Spieler 3', 'Ringo');
+    await tester.rename('Spieler 4', 'George');
+
+    await tester.addDifferenzlerGuessPoints('John', 66);
+    await tester.addDifferenzlerGuessPoints('Paul', 20);
+    await tester.addDifferenzlerGuessPoints('Ringo', 0);
+    await tester.addDifferenzlerGuessPoints('George', 50);
+    await tester.addRound({
+      'pts_0': 58,
+      'pts_1': 31,
+      'pts_2': 0,
+      'pts_3': null,
+    });
+
+    await tester.addDifferenzlerGuessPoints('John', 12);
+    await tester.addDifferenzlerGuessPoints('Paul', 78);
+    await tester.addDifferenzlerGuessPoints('Ringo', 44);
+    await tester.addDifferenzlerGuessPoints('George', 30);
+    await tester.addRound({
+      'pts_0': 22,
+      'pts_1': 77,
+      'pts_2': 12,
+      'pts_3': null,
+    });
+
+    await tester.addDifferenzlerGuessPoints('John', 0);
+    await tester.addDifferenzlerGuessPoints('Paul', 0);
+    await tester.addDifferenzlerGuessPoints('Ringo', 70);
+    await tester.addDifferenzlerGuessPoints('George', 66);
+    await tester.addRound({
+      'pts_0': 0,
+      'pts_1': 0,
+      'pts_2': 99,
+      'pts_3': null,
+    });
+
+    await tester.addDifferenzlerGuessPoints('John', 33);
+    await tester.addDifferenzlerGuessPoints('Paul', 33);
+    await tester.addDifferenzlerGuessPoints('George', 33);
+
+    await tester.takeScreenshot(binding, 'differenzler1');
+  });
+
   testWidgets('punktetafel #1', (tester) async {
     await tester.launchApp();
     await binding?.convertFlutterSurfaceToImage();

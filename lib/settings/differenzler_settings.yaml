@@ -1,0 +1,22 @@
+DifferenzlerSettings:
+  Players:
+    store: "differenzler_players"
+    default: 4
+  PointsPerRound:
+    store: "differenzler_points_per_round"
+    default: 157
+  HideGuess:
+    store: "differenzler_hide_guess"
+    default: true
+  GoalType:
+    store: "differenzler_goal_type"
+    default: 0
+  GoalPoints:
+    store: "differenzler_goal_points"
+    default: 1000
+  GoalRounds:
+    store: "differenzler_goal_rounds"
+    default: 10
+  Data:
+    store: "differenzler"
+    default: "{}"

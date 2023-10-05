@@ -7,7 +7,7 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
 
-// cspell:ignore: zurück runde eingeben spielername
+// cspell:ignore: zurück runde eingeben spielername ansage
 
 String? text(Key key, {int? elementNo}) {
   var elements = find.byKey(key).evaluate();
@@ -147,6 +147,15 @@ extension AppHelper on WidgetTester {
       }
       await pump();
     }
+    await tap(find.text('Ok'));
+    await pumpAndSettle();
+  }
+
+  Future<void> addDifferenzlerGuessPoints(String playerName, int guess) async {
+    await tap(find.byTooltip('Ansage von $playerName'));
+    await pump();
+    await enterText(find.byType(TextField), '$guess');
+    await pump();
     await tap(find.text('Ok'));
     await pumpAndSettle();
   }
