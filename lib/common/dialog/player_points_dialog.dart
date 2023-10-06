@@ -8,6 +8,9 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
     bool rounded = false,
     List<int?>? previousPts,
     Widget? title}) {
+  if (previousPts != null && title == null) {
+    title = Text(context.l10n.roundEdit);
+  }
   title ??= Text(context.l10n.addRound);
 
   List<TextEditingController> controllers = [];
