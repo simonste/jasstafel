@@ -34,26 +34,26 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  archive: ^3.3.7
+  archive: ^3.4.4
   auto_size_text: ^3.0.0
-  build: ^2.3.1
-  code_builder: ^4.5.0
-  collection: ^1.17.1
-  cupertino_icons: ^1.0.2
-  dart_style: ^2.3.1
+  build: ^2.4.1
+  code_builder: ^4.7.0
+  collection: ^1.17.2
+  cupertino_icons: ^1.0.6
+  dart_style: ^2.3.2
   flutter_draggable_gridview: ^0.0.8
   flutter_svg: ^2.0.7
-  intl: ^0.18.0
+  intl: ^0.18.1
   json_annotation: ^4.8.1
   pref: ^2.7.1
   restart_app: ^1.2.1
-  shared_preferences: ^2.1.2
+  shared_preferences: ^2.2.1
   vibration: ^1.7.7
   wakelock: ^0.6.2
   yaml: ^3.1.2
 
 dev_dependencies:
-  test: ^1.21.4
+  test: ^1.24.3
   mockito: ^5.4.2
 
   flutter_test:
@@ -63,7 +63,7 @@ dev_dependencies:
 
   build_runner: ^2.4.5
   flutter_launcher_icons: ^0.13.1
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.3
   json_serializable: ^6.7.0
 
 # The following section is specific to Flutter packages.
