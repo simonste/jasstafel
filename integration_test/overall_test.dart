@@ -4,6 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
 
@@ -156,6 +157,30 @@ extension AppHelper on WidgetTester {
     await pump();
     await enterText(find.byType(TextField), '$guess');
     await pump();
+    await tap(find.text('Ok'));
+    await pumpAndSettle();
+  }
+
+  Future<void> scrollNumberPicker(String key, int value) async {
+    final picker =
+        find.byKey(Key(key)).evaluate().single.widget as NumberPicker;
+    final center = getCenter(find.byKey(Key(key)));
+    final offsetY = (picker.value - value) * picker.itemHeight;
+    final TestGesture testGesture = await startGesture(center);
+    await testGesture.moveBy(Offset(0.0, offsetY));
+    await pump();
+  }
+
+  Future<void> addGuggitalerPoints(
+      String player, Map<String, int?> picker) async {
+    await tap(find.byTooltip('Runde eingeben'));
+    await pump();
+    await tap(find.text(player).last);
+    for (var key in picker.keys) {
+      if (picker[key] != null) {
+        await scrollNumberPicker(key, picker[key]!);
+      }
+    }
     await tap(find.text('Ok'));
     await pumpAndSettle();
   }

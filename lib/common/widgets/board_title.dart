@@ -29,6 +29,10 @@ class BoardTitle extends Theme {
                   child: Text(context.l10n.differenzler),
                 ),
                 DropdownMenuItem(
+                  value: Board.guggitaler,
+                  child: Text(context.l10n.guggitaler),
+                ),
+                DropdownMenuItem(
                   value: Board.pointBoard,
                   child: Text(context.l10n.pointBoard),
                 ),

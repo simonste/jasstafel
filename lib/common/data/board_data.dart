@@ -9,10 +9,12 @@ import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
 import 'package:jasstafel/common/dialog/winner_dialog.dart';
 import 'package:jasstafel/differenzler/data/differenzler_score.dart';
+import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
+import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -54,6 +56,8 @@ class BoardData<T, S extends Score> {
       return Board.pointBoard;
     } else if (string == "DifferenzlerScore") {
       return Board.differenzler;
+    } else if (string == "GuggitalerScore") {
+      return Board.guggitaler;
     } else {
       assert(false);
     }
@@ -83,6 +87,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.differenzler:
         (score as DifferenzlerScore).setSettings(settings);
+        break;
+      case Board.guggitaler:
+        (score as GuggitalerScore).setSettings(settings);
         break;
     }
   }
@@ -120,6 +127,10 @@ class BoardData<T, S extends Score> {
         (settings as DifferenzlerSettings).fromPreferences(preferences);
         (settings as DifferenzlerSettings).toPreferences(preferences);
         break;
+      case Board.guggitaler:
+        (settings as GuggitalerSettings).fromPreferences(preferences);
+        (settings as GuggitalerSettings).toPreferences(preferences);
+        break;
     }
     _updateSettings();
 
@@ -154,6 +165,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.differenzler:
         (settings as DifferenzlerSettings).data = str;
+        break;
+      case Board.guggitaler:
+        (settings as GuggitalerSettings).data = str;
         break;
     }
     _updateSettings();
@@ -218,6 +232,11 @@ class BoardData<T, S extends Score> {
           differenzlerSettings.fromJson(json);
           differenzlerSettings.toPreferences(preferences);
           break;
+        case Board.guggitaler:
+          var guggitalerSettings = settings as GuggitalerSettings;
+          guggitalerSettings.fromJson(json);
+          guggitalerSettings.toPreferences(preferences);
+          break;
       }
       _updateSettings();
       json = jsonDecode(json[dataKey]);
@@ -242,6 +261,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.differenzler:
         score = DifferenzlerScore.fromJson(json) as S;
+        break;
+      case Board.guggitaler:
+        score = GuggitalerScore.fromJson(json) as S;
         break;
     }
     _updateSettings();

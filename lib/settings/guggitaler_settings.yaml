@@ -1,0 +1,7 @@
+GuggitalerSettings:
+  Players:
+    store: "guggitaler_players"
+    default: 4
+  Data:
+    store: "guggitaler"
+    default: "{}"
