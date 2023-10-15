@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
@@ -27,7 +26,6 @@ class PointBoard extends StatefulWidget {
 class _PointBoardState extends State<PointBoard> {
   var data = BoardData(
       PointBoardSettings(), PointBoardScore(), PointBoardSettingsKeys().data);
-  final typeNameGroup = AutoSizeGroup();
   Timer? updateTimer;
 
   void restoreData() async {

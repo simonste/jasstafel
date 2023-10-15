@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/board.dart';
@@ -29,7 +28,6 @@ class Molotow extends StatefulWidget {
 class _MolotowState extends State<Molotow> {
   var data =
       BoardData(MolotowSettings(), MolotowScore(), MolotowSettingsKeys().data);
-  final typeNameGroup = AutoSizeGroup();
   Timer? updateTimer;
 
   void restoreData() async {
