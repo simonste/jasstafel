@@ -2,6 +2,9 @@ PointBoardSettings:
   Players:
     store: "point_board_players"
     default: 4
+  EnablePointsPerRound:
+    store: "point_board_enable_points_per_round"
+    default: true
   PointsPerRound:
     store: "point_board_points_per_round"
     default: 157

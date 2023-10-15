@@ -48,14 +48,20 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
             setState(() {});
           },
         ),
-        PrefNumber(
-          title: Text(context.l10n.pointsPerRound),
-          pref: PointBoardSettings.keys.pointsPerRound,
-        ),
         PrefCheckbox(
-            title: Text(context.l10n.positiveGoal),
-            pref: PointBoardSettings.keys.goalMax,
-            onChange: (value) => settings.goalMax = value),
+          title: Text(context.l10n.enablePpr),
+          pref: PointBoardSettings.keys.enablePointsPerRound,
+          onChange: (value) => {},
+        ),
+        PrefDisabler(
+            pref: PointBoardSettings.keys.enablePointsPerRound,
+            reversed: true,
+            children: [
+              PrefNumber(
+                title: Text(context.l10n.pointsPerRound),
+                pref: PointBoardSettings.keys.pointsPerRound,
+              ),
+            ]),
         PrefTitle(title: Text(context.l10n.settings)),
         PrefSlider(
           title: Text(context.l10n.diffPlayers),
@@ -99,6 +105,16 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
             ),
           ],
         ),
+        PrefHiderGeneric(
+            pref: PointBoardSettings.keys.goalType,
+            nullValue: GoalType.noGoal.index,
+            reversed: true,
+            children: [
+              PrefCheckbox(
+                  title: Text(context.l10n.positiveGoal),
+                  pref: PointBoardSettings.keys.goalMax,
+                  onChange: (value) => settings.goalMax = value),
+            ]),
         PrefTitle(title: Text(context.l10n.commonSettings)),
         PrefCheckbox(
             title: Text(context.l10n.keepScreenOn),

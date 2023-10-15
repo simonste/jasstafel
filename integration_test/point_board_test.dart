@@ -184,8 +184,6 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Je mehr Punkte desto besser'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('kein Ziel'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zielpunkte').first);
@@ -194,6 +192,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '88');
     await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Je mehr Punkte desto besser'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
@@ -275,8 +275,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 2);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Je mehr Punkte desto besser'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('kein Ziel'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').first);
@@ -285,6 +283,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '3');
     await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Je mehr Punkte desto besser'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();

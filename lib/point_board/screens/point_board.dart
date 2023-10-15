@@ -196,7 +196,9 @@ class _PointBoardState extends State<PointBoard> {
         (editRowNo != null) ? data.score.rows[editRowNo].pts : null;
     final input = await playerPointsDialogBuilder(context,
         playerNames: data.score.playerName.sublist(0, data.settings.players),
-        pointsPerRound: data.settings.pointsPerRound,
+        pointsPerRound: data.settings.enablePointsPerRound
+            ? data.settings.pointsPerRound
+            : null,
         rounded: data.settings.rounded,
         previousPts: previousPts);
     if (input == null) return;

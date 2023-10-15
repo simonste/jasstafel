@@ -4,7 +4,7 @@ import 'package:jasstafel/common/utils.dart';
 
 Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
     {required List<String> playerNames,
-    required int pointsPerRound,
+    required int? pointsPerRound,
     bool rounded = false,
     List<int?>? previousPts,
     Widget? title}) {
@@ -20,7 +20,7 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
     focusNodes.add(FocusNode());
   }
 
-  int previousTotal = pointsPerRound;
+  int previousTotal = pointsPerRound ?? 0;
   if (previousPts != null) {
     previousTotal = 0;
     for (var i = 0; i < controllers.length; i++) {
@@ -49,18 +49,20 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
               points.add(null);
             }
           }
-          var remainingPts = pointsPerRound - total;
+          var remainingPts = (pointsPerRound ?? 0) - total;
 
           fillRemaining() {
-            for (var i = 0; i < controllers.length; i++) {
-              if (points[i] == null) {
-                points[i] = remainingPts;
-                controllers[i].text = "$remainingPts";
+            if (pointsPerRound != null) {
+              for (var i = 0; i < controllers.length; i++) {
+                if (points[i] == null) {
+                  points[i] = remainingPts;
+                  controllers[i].text = "$remainingPts";
+                }
               }
+              total = pointsPerRound;
+              noOfEmpty = 0;
+              remainingPts = 0;
             }
-            total = pointsPerRound;
-            noOfEmpty = 0;
-            remainingPts = 0;
           }
 
           if (remainingPts == 0) {

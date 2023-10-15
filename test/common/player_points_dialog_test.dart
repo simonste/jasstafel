@@ -15,7 +15,7 @@ String inputFieldText(Key key) {
 extension DialogHelper on WidgetTester {
   Future<InputWrap> openDialog(
       {required List<String> playerNames,
-      int pointsPerRound = 157,
+      int? pointsPerRound = 157,
       bool rounded = false,
       List<int?>? previousPts}) async {
     var dialogInput = InputWrap();
@@ -180,5 +180,27 @@ void main() {
     await tester.tap(find.text('Ok'));
     await tester.pump();
     expect(dialogInput.value, [27, 50, 20, 60]);
+  });
+
+  testWidgets('no fix points per round', (WidgetTester tester) async {
+    var dialogInput = await tester.openDialog(
+        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+
+    await tester.enterText(find.byKey(const Key('pts_0')), '27');
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('pts_1')), '50');
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('pts_2')), '30');
+    await tester.pump();
+    expect(find.byKey(const Key('remainingPoints')), findsNothing);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(inputFieldText(const Key('pts_3')), '');
+    await tester.enterText(find.byKey(const Key('pts_3')), '0');
+    await tester.pump();
+
+    await tester.tap(find.text('Ok'));
+    await tester.pump();
+    expect(dialogInput.value, [27, 50, 30, 0]);
   });
 }
