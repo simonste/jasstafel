@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/dialog/player_points_dialog.dart';
+import 'package:jasstafel/common/utils.dart';
 
 import '../helper/testapp.dart';
 
@@ -43,7 +44,7 @@ extension DialogHelper on WidgetTester {
 }
 
 void main() {
-  const playerNames = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"];
+  var playerNames = List.generate(Players.max, (i) => "P${i + 1}");
 
   testWidgets('cancel', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(

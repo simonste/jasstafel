@@ -10,10 +10,10 @@ class PointBoardRow {
       _$PointBoardRowFromJson(json);
   Map<String, dynamic> toJson() => _$PointBoardRowToJson(this);
 
-  List<int?> pts = List.filled(8, null);
+  List<int?> pts = List.filled(Players.max, null);
 
   PointBoardRow(this.pts) {
-    for (var i = pts.length; i < 8; i++) {
+    for (var i = pts.length; i < Players.max; i++) {
       pts.add(null);
     }
   }
@@ -28,16 +28,7 @@ class PointBoardScore implements Score {
   PointBoardSettings _settings = PointBoardSettings();
   void setSettings(settings) => _settings = settings;
 
-  List<String> playerName = [
-    "Spieler 1",
-    "Spieler 2",
-    "Spieler 3",
-    "Spieler 4",
-    "Spieler 5",
-    "Spieler 6",
-    "Spieler 7",
-    "Spieler 8"
-  ];
+  var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <PointBoardRow>[];
 
   PointBoardScore();

@@ -20,3 +20,8 @@ int roundedInt(int value, bool rounded) {
   final factor = rounded ? 0.1 : 1;
   return (value * factor).round();
 }
+
+class Players {
+  static int get min => 2;
+  static int get max => 8;
+}

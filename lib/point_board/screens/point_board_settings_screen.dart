@@ -66,8 +66,8 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
         PrefSlider(
           title: Text(context.l10n.diffPlayers),
           pref: PointBoardSettings.keys.players,
-          min: 2,
-          max: 8,
+          min: Players.min,
+          max: Players.max,
           trailing: (num v) => Text('$v'),
         ),
         PrefDropdown(

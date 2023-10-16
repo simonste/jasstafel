@@ -233,7 +233,7 @@ class _MolotowState extends State<Molotow> {
           data.score.rows.last.pts[index] == null) {
         data.score.rows.last.pts[index] = pts;
       } else {
-        List<int?> round = List.filled(8, null);
+        List<int?> round = List.filled(Players.max, null);
         round[index] = pts;
         data.score.rows.add(MolotowRow(round, isRound: false));
       }

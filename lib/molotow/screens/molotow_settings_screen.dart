@@ -55,8 +55,8 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
         PrefSlider(
           title: Text(context.l10n.diffPlayers),
           pref: MolotowSettings.keys.players,
-          min: 2,
-          max: 8,
+          min: Players.min,
+          max: Players.max,
           trailing: (num v) => Text('$v'),
         ),
         PrefDropdown(
