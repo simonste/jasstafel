@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: auswertungsspalte runde eingeben handweis tischweis hilfslinien
+// cspell:ignore: auswertungsspalte runde handweis tischweis hilfslinien
 // cspell:ignore: anzeigen rückseite verwenden punkte zurück
 
 bool driverTest = false;
@@ -109,16 +109,12 @@ void main() {
     await binding?.convertFlutterSurfaceToImage();
     await tester.switchBoard(from: 'Schieber', to: 'Molotow');
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '14');
-    await tester.enterText(find.byKey(const Key('pts_1')), '23');
-    await tester.enterText(find.byKey(const Key('pts_2')), '26');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_3')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 14,
+      'pts_1': 23,
+      'pts_2': 26,
+      'pts_3': null,
+    });
 
     await tester.tap(find.byTooltip('Handweis'));
     await tester.pumpAndSettle();
@@ -141,16 +137,12 @@ void main() {
     await tester.tap(find.text('50'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '51');
-    await tester.enterText(find.byKey(const Key('pts_1')), '0');
-    await tester.enterText(find.byKey(const Key('pts_2')), '66');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_3')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 51,
+      'pts_1': 0,
+      'pts_2': 66,
+      'pts_3': null,
+    });
 
     await tester.takeScreenshot(binding, 'molotow1');
   });
@@ -172,57 +164,41 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '1');
-    await tester.enterText(find.byKey(const Key('pts_1')), '0');
-    await tester.enterText(find.byKey(const Key('pts_2')), '2');
-    await tester.enterText(find.byKey(const Key('pts_3')), '0');
-    await tester.enterText(find.byKey(const Key('pts_4')), '1');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_5')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 1,
+      'pts_1': 0,
+      'pts_2': 2,
+      'pts_3': 0,
+      'pts_4': 1,
+      'pts_5': null,
+    });
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '0');
-    await tester.enterText(find.byKey(const Key('pts_1')), '0');
-    await tester.enterText(find.byKey(const Key('pts_2')), '3');
-    await tester.enterText(find.byKey(const Key('pts_3')), '3');
-    await tester.enterText(find.byKey(const Key('pts_4')), '3');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_5')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 0,
+      'pts_1': 0,
+      'pts_2': 3,
+      'pts_3': 3,
+      'pts_4': 3,
+      'pts_5': null,
+    });
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '2');
-    await tester.enterText(find.byKey(const Key('pts_1')), '4');
-    await tester.enterText(find.byKey(const Key('pts_2')), '1');
-    await tester.enterText(find.byKey(const Key('pts_3')), '0');
-    await tester.enterText(find.byKey(const Key('pts_4')), '2');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_5')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 2,
+      'pts_1': 4,
+      'pts_2': 1,
+      'pts_3': 0,
+      'pts_4': 2,
+      'pts_5': null,
+    });
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '7');
-    await tester.enterText(find.byKey(const Key('pts_1')), '0');
-    await tester.enterText(find.byKey(const Key('pts_2')), '1');
-    await tester.enterText(find.byKey(const Key('pts_3')), '0');
-    await tester.enterText(find.byKey(const Key('pts_4')), '0');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_5')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 7,
+      'pts_1': 0,
+      'pts_2': 1,
+      'pts_3': 0,
+      'pts_4': 0,
+      'pts_5': null,
+    });
 
     await tester.takeScreenshot(binding, 'punktetafel1');
   });

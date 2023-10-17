@@ -7,7 +7,7 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
 
-// cspell:ignore: zurück
+// cspell:ignore: zurück runde eingeben
 
 String? text(Key key, {int? elementNo}) {
   var elements = find.byKey(key).evaluate();
@@ -134,6 +134,21 @@ extension AppHelper on WidgetTester {
     await pump();
     if (tapKey != null) {
       await tap(find.byKey(Key(tapKey)));
+    }
+    await tap(find.text('Ok'));
+    await pumpAndSettle();
+  }
+
+  Future<void> addRound(Map<String, int?> points) async {
+    await tap(find.byTooltip('Runde eingeben'));
+    await pump();
+    for (var key in points.keys) {
+      if (points[key] != null) {
+        await enterText(find.byKey(Key(key)), '${points[key]}');
+      } else {
+        await tap(find.byKey(Key(key)));
+      }
+      await pump();
     }
     await tap(find.text('Ok'));
     await pumpAndSettle();

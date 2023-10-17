@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: spielername runde eingeben handweis tischweis zurück punkte
+// cspell:ignore: spielername runde handweis tischweis zurück punkte
 // cspell:ignore: kein ziel zielpunkte anzahl erreicht gewonnen
 
 void main() {
@@ -40,17 +40,12 @@ void main() {
   testWidgets('add points', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-
-    await tester.enterText(find.byKey(const Key('pts_0')), '10');
-    await tester.enterText(find.byKey(const Key('pts_1')), '20');
-    await tester.enterText(find.byKey(const Key('pts_2')), '30');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_3')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 10,
+      'pts_1': 20,
+      'pts_2': 30,
+      'pts_3': null,
+    });
 
     expect(text(const Key('sum_0')), '10');
     expect(text(const Key('sum_1')), '20');
@@ -80,17 +75,12 @@ void main() {
 
     await tester.tapSetting(['Punkte auf 10er Runden']);
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-
-    await tester.enterText(find.byKey(const Key('pts_0')), '14');
-    await tester.enterText(find.byKey(const Key('pts_1')), '23');
-    await tester.enterText(find.byKey(const Key('pts_2')), '26');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_3')));
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 14,
+      'pts_1': 23,
+      'pts_2': 26,
+      'pts_3': null,
+    });
 
     expect(text(const Key('sum_0')), '1');
     expect(text(const Key('sum_1')), '2');
@@ -113,14 +103,7 @@ void main() {
 
     expect(find.text('Spieler 3'), findsNothing);
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-
-    await tester.enterText(find.byKey(const Key('pts_0')), '77');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('pts_1')));
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({'pts_0': 77, 'pts_1': null});
 
     expect(text(const Key('sum_0')), '77');
     expect(text(const Key('sum_1')), '80');
@@ -129,13 +112,7 @@ void main() {
   testWidgets('edit round', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-
-    await tester.enterText(find.byKey(const Key('pts_0')), '157');
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({'pts_0': 157});
 
     await tester.longPress(find.text('0').first);
 
@@ -199,14 +176,11 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Runde eingeben'));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('pts_0')), '70');
-    await tester.enterText(find.byKey(const Key('pts_1')), '70');
-    await tester.enterText(find.byKey(const Key('pts_2')), '17');
-    await tester.pump();
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.addRound({
+      'pts_0': 70,
+      'pts_1': 70,
+      'pts_2': 17,
+    });
 
     await tester.tap(find.byTooltip('Tischweis'));
     await tester.pumpAndSettle();
@@ -255,14 +229,7 @@ void main() {
       await tester.tap(find.text('20'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byTooltip('Runde eingeben'));
-      await tester.pump();
-      await tester.enterText(find.byKey(const Key('pts_0')), '80');
-      await tester.pump();
-      await tester.tap(find.byKey(const Key('pts_1')));
-      await tester.pump();
-      await tester.tap(find.text('Ok'));
-      await tester.pumpAndSettle();
+      await tester.addRound({'pts_0': 80, 'pts_1': null});
     }
 
     expect(find.text('Spieler 1 hat gewonnen!'), findsOneWidget);
