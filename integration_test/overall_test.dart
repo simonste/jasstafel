@@ -7,7 +7,7 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
 
-// cspell:ignore: zurück runde eingeben
+// cspell:ignore: zurück runde eingeben spielername
 
 String? text(Key key, {int? elementNo}) {
   var elements = find.byKey(key).evaluate();
@@ -139,6 +139,16 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
+  Future<void> rename(String from, String to) async {
+    await tap(find.text(from));
+    await pumpAndSettle();
+    expect(find.text('Spielername'), findsWidgets);
+    await enterText(find.byType(TextField), to);
+    await pump();
+    await tap(find.text('Ok'));
+    await pumpAndSettle();
+  }
+
   Future<void> addRound(Map<String, int?> points) async {
     await tap(find.byTooltip('Runde eingeben'));
     await pump();
@@ -156,7 +166,8 @@ extension AppHelper on WidgetTester {
 
   Future<void> slideTo(Finder slider, int value) async {
     final prefSlider = slider.evaluate().single.widget as Slider;
-    final totalWidth = getSize(slider).width;
+    const sliderPadding = 24;
+    final totalWidth = getSize(slider).width - 2 * sliderPadding;
     final range = prefSlider.max - prefSlider.min;
     final distancePerIncrement = (totalWidth / range);
     final currentOffsetFromCenter =

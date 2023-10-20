@@ -24,15 +24,8 @@ void main() {
   testWidgets('change name', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.text('Spieler 1'));
-    await tester.pumpAndSettle();
+    await tester.rename('Spieler 1', 'Simon');
 
-    expect(find.text('Spielername'), findsWidgets);
-    await tester.enterText(find.byType(TextField), 'Simon');
-    await tester.pump();
-
-    await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
     expect(find.text('Spieler 1'), findsNothing);
     expect(find.text('Simon'), findsOneWidget);
   });
