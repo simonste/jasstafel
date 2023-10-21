@@ -13,6 +13,7 @@ import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/differenzler/data/differenzler_score.dart';
+import 'package:jasstafel/differenzler/dialog/differenzler_statistics.dart';
 import 'package:jasstafel/differenzler/screens/differenzler_settings_screen.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'dart:developer' as developer;
@@ -53,7 +54,7 @@ class _DifferenzlerState extends State<Differenzler> {
       updateTimer!.cancel();
     }
 
-    if (data.score.rows.isEmpty || data.score.rows.last.made() > 0) {
+    if (data.score.rows.isEmpty || data.score.rows.last.isPlayed()) {
       data.score.rows.add(DifferenzlerRow());
     }
 
@@ -214,6 +215,7 @@ class _DifferenzlerState extends State<Differenzler> {
             data.common.whoIsNext,
             () => data.save(),
           ),
+          DifferenzlerStatisticsButton(context, data),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),

@@ -146,6 +146,7 @@
   "totalGuessed": "Predicted: {totalGuess}",
   "playerNo": "Player {no}",
   "avgGuess": "Prediction Ø ",
+  "avgPoints": "Points Ø ",
   "zeroGuess": "Pred.=",
   "zeroDiff": "Diff.=",
   "avgRoundGuess": "On average {averageGuess} points were predicted per round.",

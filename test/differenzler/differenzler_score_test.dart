@@ -105,4 +105,28 @@ void main() {
     expect(score.winner(), ["Spieler 3"]);
     expect(score.loser(), []); // no loser with rounds
   });
+
+  test('count guesses', () {
+    var score = DifferenzlerScore();
+
+    score.rows.add(DifferenzlerRow());
+    score.rows.last.guesses = [10, 20, 2, 50];
+    score.rows.last.pts = [15, 22, 6, 52];
+
+    score.rows.add(DifferenzlerRow());
+    score.rows.last.guesses = [10, 20, 2, 50];
+    score.rows.last.pts = [10, 10, 24, 51];
+
+    score.rows.add(DifferenzlerRow());
+    score.rows.last.guesses = [10, 20, 6, 50]; // ignored
+
+    expect(score.avgGuessed(0), 10);
+    expect(score.avgGuessed(1), 20);
+    expect(score.avgGuessed(2), 2);
+    expect(score.avgGuessed(3), 50);
+    expect(score.avgPoints(0), 12.5);
+    expect(score.avgPoints(1), 16);
+    expect(score.avgPoints(2), 15);
+    expect(score.avgPoints(3), 51.5);
+  });
 }

@@ -120,6 +120,7 @@
   "totalGuessed": "Éstimation: {totalGuess}",
   "playerNo": "Joueur {no}",
   "avgGuess": "Ø annonce ",
+  "avgPoints": "Points Ø ",
   "zeroGuess": "Ann.=0",
   "zeroDiff": "Diff.=0",
   "avgRoundGuess": "Une moyenne de {averageGuess} points annoncés par tour.",

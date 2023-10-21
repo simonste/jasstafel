@@ -394,6 +394,7 @@
     }
   },
   "avgGuess": "Ansage Ø ",
+  "avgPoints": "Punkte Ø ",
   "zeroGuess": "Ans.=0",
   "zeroDiff": "Diff.=0",
   "avgRoundGuess": "Durchschnittlich wurden pro Runde {averageGuess} Punkte angesagt.",

@@ -24,6 +24,10 @@ class DifferenzlerRow {
     return true;
   }
 
+  bool isPlayed() {
+    return made() > 0;
+  }
+
   int diff(int player) {
     if (guesses[player] == null) {
       return 0;
@@ -148,5 +152,29 @@ class DifferenzlerScore implements Score {
       total += row.diff(player);
     }
     return total;
+  }
+
+  double avgGuessed(int player) {
+    var total = 0;
+    var playedRows = 0;
+    for (final row in rows) {
+      if (row.isPlayed()) {
+        total += row.guesses[player] ?? 0;
+        playedRows++;
+      }
+    }
+    return total / playedRows;
+  }
+
+  double avgPoints(int player) {
+    var total = 0;
+    var playedRows = 0;
+    for (final row in rows) {
+      if (row.isPlayed()) {
+        total += row.pts[player] ?? 0;
+        playedRows++;
+      }
+    }
+    return total / playedRows;
   }
 }
