@@ -100,4 +100,22 @@ void main() {
     expect(score.winner(), ["Spieler 3"]);
     expect(score.loser(), []); // no loser with rounds
   });
+
+  test('count weis', () {
+    var score = MolotowScore();
+
+    score.rows.add(MolotowRow([60, 20], isRound: false));
+    score.rows.add(MolotowRow([15, 88, 54], isRound: true));
+    score.rows.add(MolotowRow([null, null, -10], isRound: false));
+
+    expect(score.total(0), 75);
+    expect(score.total(1), 108);
+    expect(score.total(2), 44);
+    expect(score.handWeis(0), 0);
+    expect(score.handWeis(1), 0);
+    expect(score.handWeis(2), -10);
+    expect(score.tableWeis(0), 60);
+    expect(score.tableWeis(1), 20);
+    expect(score.tableWeis(2), 0);
+  });
 }

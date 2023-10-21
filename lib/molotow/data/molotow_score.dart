@@ -114,4 +114,24 @@ class MolotowScore implements Score {
     }
     return p;
   }
+
+  int handWeis(int player) {
+    var p = 0;
+    for (final row in rows) {
+      if (!row.isRound && (row.pts[player] ?? 0) < 0) {
+        p += roundedInt(row.pts[player] ?? 0, _settings.rounded);
+      }
+    }
+    return p;
+  }
+
+  int tableWeis(int player) {
+    var p = 0;
+    for (final row in rows) {
+      if (!row.isRound && (row.pts[player] ?? 0) > 0) {
+        p += roundedInt(row.pts[player] ?? 0, _settings.rounded);
+      }
+    }
+    return p;
+  }
 }

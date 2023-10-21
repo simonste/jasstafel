@@ -14,6 +14,7 @@ import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/molotow/dialog/molotow_dialog.dart';
+import 'package:jasstafel/molotow/dialog/molotow_statistics.dart';
 import 'package:jasstafel/molotow/screens/molotow_settings_screen.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'dart:developer' as developer;
@@ -158,6 +159,7 @@ class _MolotowState extends State<Molotow> {
             data.common.whoIsNext,
             () => data.save(),
           ),
+          MolotowStatisticsButton(context, data),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
