@@ -256,6 +256,7 @@ class _DifferenzlerState extends State<Differenzler> {
     final input = await pointsDialogBuilder(context, controller, title: title);
     if (input == null) return;
     setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
       data.score.rows.last.guesses[player] = input.value!;
       data.save();
     });

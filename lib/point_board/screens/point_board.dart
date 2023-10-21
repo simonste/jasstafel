@@ -201,6 +201,7 @@ class _PointBoardState extends State<PointBoard> {
         previousPts: previousPts);
     if (input == null) return;
     setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
       if (editRowNo == null) {
         data.score.rows.add(PointBoardRow(input));
       } else {

@@ -228,6 +228,7 @@ class _MolotowState extends State<Molotow> {
         hand: hand);
     if (input == null) return;
     setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
       final index = data.score.playerName.indexOf(input.player);
       final pts = hand ? -input.points : input.points;
 
@@ -253,6 +254,7 @@ class _MolotowState extends State<Molotow> {
         previousPts: previousPts);
     if (input == null) return;
     setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
       if (editRowNo == null) {
         data.score.rows.add(MolotowRow(input, isRound: true));
       } else {
