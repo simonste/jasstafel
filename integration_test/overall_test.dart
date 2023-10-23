@@ -126,19 +126,6 @@ extension AppHelper on WidgetTester {
     return totalStrokes;
   }
 
-  Future<void> addMolotowPoints(String teamRow, int points,
-      {String? tapKey}) async {
-    await tap(find.byKey(Key(teamRow)));
-    await pumpAndSettle();
-    await enterText(find.byType(TextField), '$points');
-    await pump();
-    if (tapKey != null) {
-      await tap(find.byKey(Key(tapKey)));
-    }
-    await tap(find.text('Ok'));
-    await pumpAndSettle();
-  }
-
   Future<void> rename(String from, String to) async {
     await tap(find.text(from));
     await pumpAndSettle();
