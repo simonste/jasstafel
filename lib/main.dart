@@ -9,6 +9,10 @@ import 'package:jasstafel/differenzler/screens/differenzler.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/settings/differenzler_settings.g.dart';
+import 'package:jasstafel/settings/guggitaler_settings.g.dart';
+import 'package:jasstafel/settings/molotow_settings.g.dart';
+import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
 import 'package:wakelock/wakelock.dart';
@@ -23,7 +27,11 @@ void main() async {
   final service = await PrefServiceShared.init(
       defaults: CommonSettings.defaults
         ..addAll(CoiffeurSettings.defaults)
-        ..addAll(SchieberSettings.defaults));
+        ..addAll(SchieberSettings.defaults)
+        ..addAll(MolotowSettings.defaults)
+        ..addAll(PointBoardSettings.defaults)
+        ..addAll(DifferenzlerSettings.defaults)
+        ..addAll(GuggitalerSettings.defaults));
 
   runApp(
     PrefService(
