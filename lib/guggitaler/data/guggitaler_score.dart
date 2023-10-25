@@ -97,4 +97,12 @@ class GuggitalerScore implements Score {
     }
     return p;
   }
+
+  int columnSum(int player, int column) {
+    var p = 0;
+    for (final row in rows) {
+      p += row.pts[player][column] ?? 0;
+    }
+    return p;
+  }
 }

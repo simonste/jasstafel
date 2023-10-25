@@ -12,6 +12,7 @@ import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/guggitaler/dialog/guggitaler_dialog.dart';
+import 'package:jasstafel/guggitaler/dialog/guggitaler_statistics.dart';
 import 'package:jasstafel/guggitaler/screens/guggitaler_settings_screen.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'dart:developer' as developer;
@@ -156,6 +157,7 @@ class _GuggitalerState extends State<Guggitaler> {
             data.common.whoIsNext,
             () => data.save(),
           ),
+          GuggitalerStatisticsButton(context, data),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
