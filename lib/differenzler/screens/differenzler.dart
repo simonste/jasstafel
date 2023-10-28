@@ -5,6 +5,7 @@ import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/player_points_dialog.dart';
+import 'package:jasstafel/common/dialog/statistics_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
@@ -13,7 +14,6 @@ import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/differenzler/data/differenzler_score.dart';
-import 'package:jasstafel/differenzler/dialog/differenzler_statistics.dart';
 import 'package:jasstafel/differenzler/screens/differenzler_settings_screen.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'dart:developer' as developer;
@@ -204,6 +204,33 @@ class _DifferenzlerState extends State<Differenzler> {
                 child: const Icon(Icons.add)))
         : const SizedBox();
 
+    List<List<String>> stats = [];
+    var avgGuess = 0.0;
+    for (var p = 0; p < data.settings.players; p++) {
+      final gu = data.score.avgGuessed(p);
+      var zeroGuessed = 0;
+      var zeroDiff = 0;
+      for (final row in data.score.rows) {
+        if (row.isPlayed()) {
+          zeroGuessed += (row.guesses[p] == 0) ? 1 : 0;
+          zeroDiff += (row.diff(p) == 0) ? 1 : 0;
+        }
+      }
+
+      final pts = data.score.avgPoints(p);
+      if (data.score.rows.first.isPlayed()) {
+        stats.add([
+          data.score.playerName[p],
+          '$gu',
+          '$zeroGuessed',
+          '$zeroDiff',
+          '$pts'
+        ]);
+        avgGuess += gu;
+      } else {
+        stats.add([data.score.playerName[p], "?", "?", "?", "?"]);
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: BoardTitle(Board.differenzler, context),
@@ -215,7 +242,19 @@ class _DifferenzlerState extends State<Differenzler> {
             data.common.whoIsNext,
             () => data.save(),
           ),
-          DifferenzlerStatisticsButton(context, data),
+          StatisticsButton(
+              context,
+              data.common.timestamps.elapsed(context),
+              [
+                context.l10n.avgGuess,
+                context.l10n.zeroGuess,
+                context.l10n.zeroDiff,
+                context.l10n.avgPoints
+              ],
+              stats,
+              summary: data.score.rows.first.isPlayed()
+                  ? context.l10n.avgRoundGuess((avgGuess).round())
+                  : null),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/statistics_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
@@ -11,8 +12,8 @@ import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
+import 'package:jasstafel/guggitaler/data/guggitaler_values.dart';
 import 'package:jasstafel/guggitaler/dialog/guggitaler_dialog.dart';
-import 'package:jasstafel/guggitaler/dialog/guggitaler_statistics.dart';
 import 'package:jasstafel/guggitaler/screens/guggitaler_settings_screen.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'dart:developer' as developer;
@@ -146,6 +147,19 @@ class _GuggitalerState extends State<Guggitaler> {
       rows.add(guggitalerRow(i));
     }
 
+    List<String> colHeader = [];
+    for (var i = 0; i < GuggitalerValues.length; i++) {
+      colHeader.add(GuggitalerValues.type(i, context));
+    }
+    List<List<String>> stats = [];
+    for (var p = 0; p < data.settings.players; p++) {
+      var cols = [data.score.playerName[p]];
+      for (var i = 0; i < GuggitalerValues.length; i++) {
+        cols.add(data.score.columnSum(p, i).toString());
+      }
+      stats.add(cols);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: BoardTitle(Board.guggitaler, context),
@@ -157,7 +171,8 @@ class _GuggitalerState extends State<Guggitaler> {
             data.common.whoIsNext,
             () => data.save(),
           ),
-          GuggitalerStatisticsButton(context, data),
+          StatisticsButton(context, data.common.timestamps.elapsed(context),
+              colHeader, stats),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),

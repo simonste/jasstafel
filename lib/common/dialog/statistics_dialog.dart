@@ -1,25 +1,24 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:jasstafel/differenzler/data/differenzler_score.dart';
-import 'package:jasstafel/settings/differenzler_settings.g.dart';
 
-class DifferenzlerStatisticsButton extends IconButton {
-  DifferenzlerStatisticsButton(BuildContext context, data)
+class StatisticsButton extends IconButton {
+  StatisticsButton(BuildContext context, String elapsed, List<String> colHeader,
+      List<List<String>> data,
+      {String? summary})
       : super(
             key: const Key('statistics'),
             onPressed: () {
-              dialogBuilder(context, data);
+              dialogBuilder(context, elapsed, colHeader, data, summary);
             },
             icon: const Icon(Icons.bar_chart));
 }
 
 enum RowType { bold, normal }
 
-Future<void> dialogBuilder(BuildContext context,
-    BoardData<DifferenzlerSettings, DifferenzlerScore> data) {
+Future<void> dialogBuilder(BuildContext context, String elapsed,
+    List<String> colHeader, List<List<String>> data, String? summary) {
   return showDialog<void>(
       context: context,
       builder: (context) {
@@ -37,7 +36,7 @@ Future<void> dialogBuilder(BuildContext context,
                         child: AutoSizeText(
                           key: key,
                           string,
-                          maxLines: 1,
+                          maxLines: first ? 2 : 1,
                           textAlign: first ? TextAlign.left : TextAlign.center,
                           group: first ? nameGroup : group,
                         )));
@@ -53,45 +52,17 @@ Future<void> dialogBuilder(BuildContext context,
                       .toList());
             }
 
-            List<Widget> children = [
-              Text(data.common.timestamps.elapsed(context)),
-              const Divider()
-            ];
-            children.add(row([
-              "",
-              context.l10n.avgGuess,
-              context.l10n.zeroGuess,
-              context.l10n.zeroDiff,
-              context.l10n.avgPoints,
-            ]));
+            List<Widget> children = [Text(elapsed), const Divider()];
+            colHeader.insert(0, "");
+            children.add(row(colHeader));
 
-            var avgGuess = 0.0;
-            for (var p = 0; p < data.settings.players; p++) {
-              final gu = data.score.avgGuessed(p);
-              var zeroGuessed = 0;
-              var zeroDiff = 0;
-              for (final row in data.score.rows) {
-                if (row.isPlayed()) {
-                  zeroGuessed += (row.guesses[p] == 0) ? 1 : 0;
-                  zeroDiff += (row.diff(p) == 0) ? 1 : 0;
-                }
-              }
-
-              final pts = data.score.avgPoints(p);
-              children.add(row([
-                data.score.playerName[p],
-                '$gu',
-                '$zeroGuessed',
-                '$zeroDiff',
-                '$pts'
-              ]));
-              avgGuess += gu;
+            for (var d in data) {
+              children.add(row(d));
             }
 
-            if (data.score.rows.first.isPlayed()) {
+            if (summary != null) {
               children.add(const Divider());
-              children
-                  .add(Text(context.l10n.avgRoundGuess((avgGuess).round())));
+              children.add(Text(summary));
             }
 
             return AlertDialog(

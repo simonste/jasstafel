@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/player_points_dialog.dart';
+import 'package:jasstafel/common/dialog/statistics_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
@@ -14,7 +15,6 @@ import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/molotow/dialog/molotow_dialog.dart';
-import 'package:jasstafel/molotow/dialog/molotow_statistics.dart';
 import 'package:jasstafel/molotow/screens/molotow_settings_screen.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'dart:developer' as developer;
@@ -148,6 +148,14 @@ class _MolotowState extends State<Molotow> {
       rows.add(molotowRow(i));
     }
 
+    List<List<String>> stats = [];
+    for (var p = 0; p < data.settings.players; p++) {
+      final hw = data.score.handWeis(p);
+      final tw = data.score.tableWeis(p);
+      final tricks = data.score.total(p) - hw - tw;
+      stats.add([data.score.playerName[p], '$hw', '$tw', '$tricks']);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: BoardTitle(Board.molotow, context),
@@ -159,7 +167,15 @@ class _MolotowState extends State<Molotow> {
             data.common.whoIsNext,
             () => data.save(),
           ),
-          MolotowStatisticsButton(context, data),
+          StatisticsButton(
+              context,
+              data.common.timestamps.elapsed(context),
+              [
+                context.l10n.handWeis,
+                context.l10n.tableWeis,
+                context.l10n.tricks
+              ],
+              stats),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
