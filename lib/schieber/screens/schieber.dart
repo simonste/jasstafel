@@ -106,7 +106,7 @@ class _SchieberState extends State<Schieber> {
       }
     }
 
-    List<Widget>? actions = [
+    List<Widget> actions = [
       WhoIsNextButton(context, players, data.score.noOfRounds(),
           data.common.whoIsNext, () => data.save()),
       SchieberHistoryButton(context, data, () {
@@ -132,12 +132,6 @@ class _SchieberState extends State<Schieber> {
     if (data.settings.backside) {
       actions.insert(0, BacksideButton(context, () => data.load()));
     }
-    final width = MediaQuery.of(context).size.width;
-    actions = shrinkActions(actions, (width / 70).floor(), priority: [
-      SettingsButton<SchieberSettingsScreen>,
-      DeleteButton,
-      SchieberStatisticsButton
-    ]);
 
     Widget center;
     switch (GoalType.values[data.settings.goalType]) {
@@ -153,10 +147,15 @@ class _SchieberState extends State<Schieber> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: BoardTitle(Board.schieber, context),
-          actions: actions,
-        ),
+        appBar: TitleBar(
+            board: Board.schieber,
+            context: context,
+            actions: actions,
+            priority: const [
+              SettingsButton<SchieberSettingsScreen>,
+              DeleteButton,
+              SchieberStatisticsButton
+            ]),
         body: Stack(children: [
           Column(
               mainAxisSize: MainAxisSize.min,

@@ -13,7 +13,10 @@ class WhoIsNextButton extends IconButton {
               dialogBuilder(context,
                   WhoIsNextData(players, rounds, whoIsNext, saveFunction));
             },
-            icon: SvgPicture.asset("assets/actions/who_is_next.svg"));
+            icon: SvgPicture.asset(
+              "assets/actions/who_is_next.svg",
+              width: 24,
+            ));
 
   static List<String> splitTeamName(String teamName, {int? limit}) {
     var playerNames = teamName.split(RegExp("[-&/+]"));

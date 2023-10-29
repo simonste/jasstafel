@@ -64,8 +64,9 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: BoardTitle(Board.coiffeur, context),
+      appBar: TitleBar(
+        board: Board.coiffeur,
+        context: context,
         actions: [
           WhoIsNextButton(
               context,

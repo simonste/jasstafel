@@ -161,8 +161,9 @@ class _GuggitalerState extends State<Guggitaler> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: BoardTitle(Board.guggitaler, context),
+      appBar: TitleBar(
+        board: Board.guggitaler,
+        context: context,
         actions: [
           WhoIsNextButton(
             context,

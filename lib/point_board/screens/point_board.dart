@@ -137,8 +137,9 @@ class _PointBoardState extends State<PointBoard> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: BoardTitle(Board.pointBoard, context),
+      appBar: TitleBar(
+        board: Board.pointBoard,
+        context: context,
         actions: [
           WhoIsNextButton(
             context,

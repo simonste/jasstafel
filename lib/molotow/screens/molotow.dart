@@ -157,8 +157,9 @@ class _MolotowState extends State<Molotow> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: BoardTitle(Board.molotow, context),
+      appBar: TitleBar(
+        board: Board.molotow,
+        context: context,
         actions: [
           WhoIsNextButton(
             context,

@@ -4,6 +4,23 @@ import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:pref/pref.dart';
 
+class TitleBar extends AppBar {
+  TitleBar(
+      {super.key,
+      required Board board,
+      required List<Widget> actions,
+      required BuildContext context,
+      List<Type> priority = const []})
+      : super(
+          title: BoardTitle(board, context),
+          actions: shrinkActions(
+            actions: actions,
+            context: context,
+            priority: priority,
+          ),
+        );
+}
+
 class BoardTitle extends Theme {
   BoardTitle(Board board, BuildContext context, {super.key})
       : super(
@@ -48,23 +65,30 @@ class BoardTitle extends Theme {
         );
 }
 
-List<Widget> shrinkActions(List<Widget> actions, int max,
-    {List<Type> priority = const []}) {
-  if (actions.length > max) {
+List<Widget> shrinkActions(
+    {required List<Widget> actions,
+    required BuildContext context,
+    required List<Type> priority}) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  const iconWidth = 40;
+  const boardTitleWidth = 113 + 16 + 16;
+  final maxActions = ((screenWidth - boardTitleWidth) / iconWidth).floor();
+
+  var priorityCopy = [...priority];
+  if (actions.length > maxActions) {
     List<IconButton> iconButtons = [];
-    Widget? action;
-    while ((actions.length + 1) > max) {
-      try {
-        if (priority.isNotEmpty) {
-          action = actions
-              .firstWhere((element) => priority.first == element.runtimeType);
-          actions.remove(action);
-          priority.removeAt(0);
-        }
-      } catch (e) {
+
+    while ((actions.length + 1) > maxActions) {
+      Widget? action;
+      if (priorityCopy.isNotEmpty) {
+        action = actions
+            .firstWhere((element) => priorityCopy.first == element.runtimeType);
+        actions.remove(action);
+        priorityCopy.removeAt(0);
+      } else {
         // remove leftmost
+        action = actions.removeAt(0);
       }
-      action ??= actions.removeAt(0);
       iconButtons.add(action as IconButton);
     }
     actions.insert(actions.length,

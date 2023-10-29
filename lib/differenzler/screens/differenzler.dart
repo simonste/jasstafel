@@ -232,8 +232,9 @@ class _DifferenzlerState extends State<Differenzler> {
       }
     }
     return Scaffold(
-      appBar: AppBar(
-        title: BoardTitle(Board.differenzler, context),
+      appBar: TitleBar(
+        board: Board.differenzler,
+        context: context,
         actions: [
           WhoIsNextButton(
             context,
