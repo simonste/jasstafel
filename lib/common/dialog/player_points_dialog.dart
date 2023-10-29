@@ -118,10 +118,11 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
           }
           return AlertDialog(
             title: title,
-            content: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: columns),
+            content: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: columns)),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
