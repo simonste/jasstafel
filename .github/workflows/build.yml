@@ -1,7 +1,7 @@
 name: JassTafel CI
 on: [push]
 env:
-  FLUTTER_VERSION: 3.10.2
+  FLUTTER_VERSION: 3.16.0
 jobs:
   build-android:
     if: ${{ false }}
