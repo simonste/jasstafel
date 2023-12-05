@@ -4,12 +4,12 @@ import 'package:pref/pref.dart';
 
 class ProfileButton extends StatelessWidget {
   const ProfileButton({
-    Key? key,
+    super.key,
     this.title,
     required this.page,
     this.subtitle,
     this.pageTitle,
-  }) : super(key: key);
+  });
 
   final Widget? title;
   final Widget? pageTitle;

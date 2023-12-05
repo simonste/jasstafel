@@ -92,7 +92,7 @@ Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
                   Text(
                     context.l10n.whoBeginsInfo,
                     style: const TextStyle(fontWeight: FontWeight.w100),
-                    textScaleFactor: 0.8,
+                    textScaler: const TextScaler.linear(0.8),
                   )
                 ],
               ),

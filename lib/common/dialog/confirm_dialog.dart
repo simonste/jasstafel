@@ -50,7 +50,7 @@ Future<void> confirmDialog(
                   Text(
                     subtitle,
                     style: const TextStyle(fontWeight: FontWeight.w100),
-                    textScaleFactor: 0.8,
+                    textScaler: const TextScaler.linear(0.8),
                   )
                 ],
               ),

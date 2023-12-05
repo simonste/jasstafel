@@ -60,7 +60,7 @@ abstract class StrokePainter extends CustomPainter {
 }
 
 class StrokePainterI extends StrokePainter {
-  StrokePainterI(strokes, strokeWidth) : super(strokes, strokeWidth);
+  StrokePainterI(super.strokes, super.strokeWidth);
 
   @override
   List<Offset> points(int i) {
@@ -74,7 +74,7 @@ class StrokePainterI extends StrokePainter {
 }
 
 class StrokePainterX extends StrokePainter {
-  StrokePainterX(strokes, strokeWidth) : super(strokes, strokeWidth);
+  StrokePainterX(super.strokes, super.strokeWidth);
 
   @override
   List<Offset> points(int i) {
@@ -89,7 +89,7 @@ class StrokePainterX extends StrokePainter {
 }
 
 class StrokePainterV extends StrokePainter {
-  StrokePainterV(strokes, strokeWidth) : super(strokes, strokeWidth);
+  StrokePainterV(super.strokes, super.strokeWidth);
 
   @override
   List<Offset> points(int i) {

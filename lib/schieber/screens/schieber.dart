@@ -71,7 +71,8 @@ class _SchieberState extends State<Schieber> {
                 apply: (int value) => setGoalPoints(value),
                 title: Text(context.l10n.goalPoints)),
             child: Text(data.score.team[teamId].goalPoints.toString(),
-                textScaleFactor: 2, key: Key("GoalPoints$teamId")));
+                textScaler: const TextScaler.linear(2),
+                key: Key("GoalPoints$teamId")));
       }
 
       if (data.settings.differentGoals) {
@@ -90,7 +91,8 @@ class _SchieberState extends State<Schieber> {
               apply: (int value) => data.score.goalRounds = value,
               title: Text(context.l10n.rounds)),
           child: Text("${data.score.noOfRounds()} / ${data.score.goalRounds}",
-              textScaleFactor: 2, key: const Key("GoalRounds")));
+              textScaler: const TextScaler.linear(2),
+              key: const Key("GoalRounds")));
     }
 
     var players = WhoIsNextButton.guessPlayerNames(

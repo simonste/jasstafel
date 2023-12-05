@@ -79,7 +79,7 @@ class _DifferenzlerState extends State<Differenzler> {
           key: key,
           data[i],
           textAlign: TextAlign.center,
-          textScaleFactor: header ? 1 : 2,
+          textScaler: TextScaler.linear(header ? 1 : 2),
         );
 
         if (header) {

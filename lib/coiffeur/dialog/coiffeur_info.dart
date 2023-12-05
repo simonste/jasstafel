@@ -242,7 +242,8 @@ Future<void> dialogBuilder(
                     child: Text(
                   string,
                   textAlign: TextAlign.center,
-                  textScaleFactor: (rowType == RowType.title) ? 1.3 : 1,
+                  textScaler:
+                      TextScaler.linear((rowType == RowType.title) ? 1.3 : 1),
                   style: TextStyle(
                       fontWeight: (rowType == RowType.normal)
                           ? FontWeight.w100

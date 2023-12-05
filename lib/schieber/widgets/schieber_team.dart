@@ -69,17 +69,20 @@ class SchieberTeam extends StatelessWidget {
       left: width * 0.01,
       child: GestureDetector(
           onTap: () => dialogs.editTeamName(teamId),
-          child: Text(teamData.name, textScaleFactor: 2)),
+          child: Text(teamData.name, textScaler: const TextScaler.linear(2))),
     );
     teamPoints() {
       if (data.settings.bigScore) {
         return Center(
-            child: Text("$pts", textScaleFactor: 4, key: Key("sum_$teamId")));
+            child: Text("$pts",
+                textScaler: const TextScaler.linear(4),
+                key: Key("sum_$teamId")));
       }
       return Positioned(
         top: height * 0.01,
         right: width * 0.01,
-        child: Text("$pts", textScaleFactor: 2, key: Key("sum_$teamId")),
+        child: Text("$pts",
+            textScaler: const TextScaler.linear(2), key: Key("sum_$teamId")),
       );
     }
 
@@ -181,7 +184,7 @@ class SchieberTeam extends StatelessWidget {
               child: Center(
                   child: Text(
                 "${teamData.strokes[0]}",
-                textScaleFactor: 3,
+                textScaler: const TextScaler.linear(3),
                 textAlign: TextAlign.right,
               )),
             ));

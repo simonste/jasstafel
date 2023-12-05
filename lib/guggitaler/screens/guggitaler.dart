@@ -70,7 +70,7 @@ class _GuggitalerState extends State<Guggitaler> {
           key: key,
           data[i],
           textAlign: TextAlign.center,
-          textScaleFactor: header ? 1 : 2,
+          textScaler: TextScaler.linear(header ? 1 : 2),
         );
 
         if (header) {

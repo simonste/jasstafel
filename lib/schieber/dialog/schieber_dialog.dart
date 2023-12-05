@@ -137,7 +137,7 @@ Future<Points?> schieberDialogBuilder(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   ptsController.text,
-                  textScaleFactor: 2,
+                  textScaler: const TextScaler.linear(2),
                 ),
               ),
             );

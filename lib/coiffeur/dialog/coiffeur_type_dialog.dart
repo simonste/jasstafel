@@ -74,7 +74,7 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
                   CoiffeurTypeImage(context, type, width: 30),
                   Text(
                     type,
-                    textScaleFactor: 0.7,
+                    textScaler: const TextScaler.linear(0.7),
                   )
                 ]),
               );
