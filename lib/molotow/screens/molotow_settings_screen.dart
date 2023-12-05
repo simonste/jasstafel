@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
-import 'package:jasstafel/common/widgets/pref_hider_generic.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -76,6 +75,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
         PrefHiderGeneric(
           pref: MolotowSettings.keys.goalType,
           nullValue: GoalType.points.index,
+          reversed: true,
           children: [
             PrefNumber(
               title: Text(context.l10n.goalPoints),
@@ -87,6 +87,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
         PrefHiderGeneric(
           pref: MolotowSettings.keys.goalType,
           nullValue: GoalType.rounds.index,
+          reversed: true,
           children: [
             PrefNumber(
               title: Text(context.l10n.rounds),

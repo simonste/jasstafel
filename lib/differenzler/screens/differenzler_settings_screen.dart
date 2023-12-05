@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
-import 'package:jasstafel/common/widgets/pref_hider_generic.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -75,6 +74,7 @@ class _DifferenzlerSettingsScreenState
         PrefHiderGeneric(
           pref: DifferenzlerSettings.keys.goalType,
           nullValue: GoalType.points.index,
+          reversed: true,
           children: [
             PrefNumber(
               title: Text(context.l10n.goalPoints),
@@ -85,6 +85,7 @@ class _DifferenzlerSettingsScreenState
         PrefHiderGeneric(
           pref: DifferenzlerSettings.keys.goalType,
           nullValue: GoalType.rounds.index,
+          reversed: true,
           children: [
             PrefNumber(
               title: Text(context.l10n.rounds),
