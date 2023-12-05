@@ -191,12 +191,16 @@ extension AppHelper on WidgetTester {
     final totalWidth = getSize(slider).width - 2 * sliderPadding;
     final range = prefSlider.max - prefSlider.min;
     final distancePerIncrement = (totalWidth / range);
-    final currentOffsetFromCenter =
-        (prefSlider.value - prefSlider.min - range / 2) * distancePerIncrement;
-    final offsetFromCurrent = (value - prefSlider.value) * distancePerIncrement;
-
+    final ticksFromCenter = prefSlider.value - prefSlider.min - (range / 2);
+    final currentOffsetFromCenter = ticksFromCenter * distancePerIncrement;
     final sliderPos = getCenter(slider) + Offset(currentOffsetFromCenter, 0);
-    await dragFrom(sliderPos, Offset(offsetFromCurrent, 0));
+    final slideTicks = value - prefSlider.value;
+    final offsetFromCurrent = slideTicks * distancePerIncrement;
+    // overshoot seems to be necessary
+    final overshoot = offsetFromCurrent.sign * 0.1 * distancePerIncrement;
+    await dragFrom(sliderPos, Offset(offsetFromCurrent + overshoot, 0));
+    await pumpAndSettle();
+    expect((slider.evaluate().single.widget as Slider).value, value);
   }
 }
 

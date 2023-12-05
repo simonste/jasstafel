@@ -73,7 +73,6 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 2);
-    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -195,7 +194,6 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 2);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('kein Ziel'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').first);
@@ -228,7 +226,6 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 2);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('kein Ziel'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').first);

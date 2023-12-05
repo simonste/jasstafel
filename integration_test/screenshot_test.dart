@@ -205,7 +205,6 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 6);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Punkte pro Runde'));
     await tester.pump();
     await tester.enterText(find.byType(TextField), '9');

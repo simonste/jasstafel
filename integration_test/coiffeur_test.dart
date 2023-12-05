@@ -124,7 +124,6 @@ void main() {
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
     await tester.slideTo(find.byType(Slider), 6);
-    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -299,7 +298,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('Auswertungsspalte'));
     await tester.slideTo(find.byType(Slider), 10);
-    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -344,7 +342,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Auswertungsspalte'));
     await tester.slideTo(find.byType(Slider), 6);
-    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
