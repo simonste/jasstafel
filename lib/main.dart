@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/guggitaler/screens/guggitaler.dart';
@@ -15,7 +13,7 @@ import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:pref/pref.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -65,9 +63,7 @@ class MyApp extends StatelessWidget {
     var settings = CommonSettings();
     settings.fromPrefService(context);
     final lastBoard = Board.values[settings.lastBoard].name;
-    if (!Platform.isLinux) {
-      Wakelock.toggle(enable: settings.keepScreenOn);
-    }
+    WakelockPlus.toggle(enable: settings.keepScreenOn);
 
     List<DeviceOrientation> po = [];
     if (settings.screenOrientation == 1 || lastBoard == Board.schieber.name) {
