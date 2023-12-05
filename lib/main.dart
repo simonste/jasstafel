@@ -77,10 +77,11 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) => context.l10n.appName,
       theme: ThemeData(
           brightness: Brightness.dark,
-          canvasColor: Colors.black,
+          canvasColor: Colors.grey.shade800, // drop down
+          dialogBackgroundColor: Colors.grey.shade800,
           colorScheme: ColorScheme.dark(
             surface: Colors.grey.shade800, // top bar
-            background: Colors.grey.shade600, // progress bar
+            background: Colors.black, // progress bar
             primary: Colors.blue.shade200, // buttons / progress bar
             secondary: Colors.blue.shade800, // settings
             tertiary: Colors.grey.shade800, // molotow round
