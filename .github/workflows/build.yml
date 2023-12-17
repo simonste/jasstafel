@@ -2,6 +2,8 @@ name: JassTafel CI
 on: [push]
 env:
   FLUTTER_VERSION: 3.16.0
+
+# cspell:disable
 jobs:
   test-android:
     strategy:
