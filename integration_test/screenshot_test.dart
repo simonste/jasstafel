@@ -15,6 +15,18 @@ import 'overall_test.dart';
 bool driverTest = false;
 
 extension AppHelper on WidgetTester {
+  Future<void> prepare(
+      IntegrationTestWidgetsFlutterBinding? binding, String board) async {
+    await launchApp();
+    await binding?.convertFlutterSurfaceToImage();
+    await pumpAndSettle();
+    while (find.byType(DropdownButton<Board>).evaluate().isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+      await pumpAndSettle();
+    }
+    await switchBoard(to: board);
+  }
+
   Future<void> takeScreenshot(
       IntegrationTestWidgetsFlutterBinding? binding, name) async {
     if (Platform.isAndroid) {
@@ -45,8 +57,7 @@ void main() {
   });
 
   testWidgets('schieber #1', (tester) async {
-    await tester.launchApp();
-    await binding?.convertFlutterSurfaceToImage();
+    await tester.prepare(binding, "Schieber");
 
     await tester.addSchieberPoints(['add_1', 'key_2', 'key_3'], factor: '4x');
     await tester.addSchieberPoints(['add_1', 'key_8', 'key_3'], factor: '2x');
@@ -68,9 +79,7 @@ void main() {
   });
 
   testWidgets('coiffeur #1', (tester) async {
-    await tester.launchApp();
-    await binding?.convertFlutterSurfaceToImage();
-    await tester.switchBoard(from: 'Schieber', to: 'Coiffeur');
+    await tester.prepare(binding, "Coiffeur");
 
     await tester.addCoiffeurPoints('0:0', 0, tapKey: "scratch");
     await tester.addCoiffeurPoints('0:6', 87);
@@ -105,9 +114,7 @@ void main() {
   });
 
   testWidgets('molotow #1', (tester) async {
-    await tester.launchApp();
-    await binding?.convertFlutterSurfaceToImage();
-    await tester.switchBoard(from: 'Schieber', to: 'Molotow');
+    await tester.prepare(binding, "Molotow");
 
     await tester.addRound({
       'pts_0': 14,
@@ -148,9 +155,7 @@ void main() {
   });
 
   testWidgets('differenzler #1', (tester) async {
-    await tester.launchApp();
-    await binding?.convertFlutterSurfaceToImage();
-    await tester.switchBoard(from: 'Schieber', to: 'Differenzler');
+    await tester.prepare(binding, "Differenzler");
 
     await tester.rename('Spieler 1', 'John');
     await tester.rename('Spieler 2', 'Paul');
@@ -198,9 +203,7 @@ void main() {
   });
 
   testWidgets('punktetafel #1', (tester) async {
-    await tester.launchApp();
-    await binding?.convertFlutterSurfaceToImage();
-    await tester.switchBoard(from: 'Schieber', to: 'Punktetafel');
+    await tester.prepare(binding, "Punktetafel");
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();

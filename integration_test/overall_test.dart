@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
+import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -36,8 +37,8 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> switchBoard({required String from, required String to}) async {
-    await tap(find.text(from).last);
+  Future<void> switchBoard({required String to}) async {
+    await tap(find.byType(DropdownButton<Board>));
     await pumpAndSettle();
     await tap(find.text(to).last);
     await pumpAndSettle();
@@ -71,6 +72,7 @@ extension AppHelper on WidgetTester {
           100.0,
           scrollable: find.byType(Scrollable),
         );
+        await pumpAndSettle();
       }
       await tap(find.text(setting));
       await pumpAndSettle();
@@ -219,17 +221,17 @@ void main() {
     await tester.tap(find.byKey(const Key('add100_0')));
     await tester.tap(find.byKey(const Key('add50_1')));
 
-    await tester.switchBoard(from: 'Schieber', to: 'Coiffeur');
+    await tester.switchBoard(to: 'Coiffeur');
 
     await tester.addCoiffeurPoints('0:2', 77);
     await tester.pumpAndSettle();
 
-    await tester.switchBoard(from: 'Coiffeur', to: 'Schieber');
+    await tester.switchBoard(to: 'Schieber');
 
     expect(text(const Key('sum_0')), '100');
     expect(text(const Key('sum_1')), '50');
 
-    await tester.switchBoard(from: 'Schieber', to: 'Coiffeur');
+    await tester.switchBoard(to: 'Coiffeur');
 
     expect(cellText(const Key('sum_0')), '${3 * 77}');
     expect(cellText(const Key('sum_1')), '0');

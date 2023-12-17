@@ -63,7 +63,7 @@ void main() {
     expect(text(const Key('sum_2')), '3');
     expect(text(const Key('sum_3')), '9');
 
-    await tester.switchBoard(from: 'Punktetafel', to: 'Punktetafel');
+    await tester.switchBoard(to: 'Punktetafel');
     expect(text(const Key('sum_0')), '1');
   });
 
