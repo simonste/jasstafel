@@ -63,11 +63,7 @@ dev_dependencies:
     sdk: flutter
 
   build_runner: ^2.4.5
-  flutter_launcher_icons:
-    git:
-      url: https://github.com/OutdatedGuy/flutter_launcher_icons.git
-      ref: feat/monochrome-icons-support
-
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.1
   json_serializable: ^6.7.0
 
