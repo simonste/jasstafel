@@ -27,6 +27,7 @@ class BoardTitle extends Theme {
           data: ThemeData.dark(),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<Board>(
+              isExpanded: true,
               value: board,
               items: <DropdownMenuItem<Board>>[
                 DropdownMenuItem(
