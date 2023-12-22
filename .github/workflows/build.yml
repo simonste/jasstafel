@@ -115,7 +115,7 @@ jobs:
             build/app/outputs/mapping/release/mapping.txt
 
   release-android:
-    needs: [build-android]
+    needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
       - name: Get release-bundle from artifacts
@@ -243,7 +243,7 @@ jobs:
           path: build/ios/ipa/*.ipa
 
   release-ios:
-    needs: [build-ios]
+    needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
       - name: Get release-ipa from artifacts
