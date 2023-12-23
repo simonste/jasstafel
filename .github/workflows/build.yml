@@ -64,7 +64,7 @@ jobs:
           path: screenshots/*
 
   build-android:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }} || (startsWith(github.ref, 'refs/tags/'))
     needs: [test-android]
     runs-on: macos-latest
     steps:
@@ -115,6 +115,7 @@ jobs:
             build/app/outputs/mapping/release/mapping.txt
 
   release-android:
+    if: (startsWith(github.ref, 'refs/tags/'))
     needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
@@ -189,7 +190,7 @@ jobs:
           path: screenshots/*
 
   build-ios:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }} || (startsWith(github.ref, 'refs/tags/'))
     needs: [test-ios]
     runs-on: macos-latest
     steps:
@@ -243,6 +244,7 @@ jobs:
           path: build/ios/ipa/*.ipa
 
   release-ios:
+    if: (startsWith(github.ref, 'refs/tags/'))
     needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
