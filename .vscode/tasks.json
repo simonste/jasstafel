@@ -19,7 +19,7 @@
       "label": "Generate Icons",
       "type": "flutter",
       "command": "flutter",
-      "args": ["pub", "run", "flutter_launcher_icons:main"],
+      "args": ["pub", "run", "flutter_launcher_icons"],
       "problemMatcher": []
     },
     {

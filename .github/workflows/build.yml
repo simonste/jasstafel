@@ -1,7 +1,7 @@
 name: JassTafel CI
 on: [push]
 env:
-  FLUTTER_VERSION: 3.16.0
+  FLUTTER_VERSION: 3.16.5
 
 # cspell:disable
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Generate icons
-        run: flutter pub run flutter_launcher_icons:main
+        run: flutter pub run flutter_launcher_icons
       - name: Generate translations
         run: flutter gen-l10n
       - name: Generate sources
@@ -88,7 +88,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Generate icons
-        run: flutter pub run flutter_launcher_icons:main
+        run: flutter pub run flutter_launcher_icons
       - name: Generate translations
         run: flutter gen-l10n
       - name: Generate sources
@@ -168,7 +168,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Generate icons
-        run: flutter pub run flutter_launcher_icons:main
+        run: flutter pub run flutter_launcher_icons
       - name: Generate translations
         run: flutter gen-l10n
       - name: Generate sources
@@ -212,7 +212,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Generate icons
-        run: flutter pub run flutter_launcher_icons:main
+        run: flutter pub run flutter_launcher_icons
       - name: Generate translations
         run: flutter gen-l10n
       - name: Generate sources
