@@ -2,7 +2,15 @@
 
 [![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg)](https://github.com/simonste/jasstafel/actions/workflows/build.yml)
 
-Version 2.0 of the Jasstafel. Now for Android & iOS (& more)
+Jasstafel for Android & iOS (& more)
+
+## About
+
+Jasstafel is an app to write points in the swiss card game Jass.
+
+| Android | Android (F-Droid) | iOS |
+|:-:|:-:|:-:|
+| [<img src="assets/badges/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=ch.simonste.jasstafel) | [<img src="assets/badges/f-droid-badge.png" height="50">](https://f-droid.org/en/packages/ch.simonste.jasstafel/) | [<img src="assets/badges/appstore-badge.png" height="50">](https://apps.apple.com/ch/app/schweizer-jasstafel/id1672847164) |
 
 ## Getting Started
 
