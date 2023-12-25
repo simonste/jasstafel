@@ -202,7 +202,7 @@ class _SchieberState extends State<Schieber> {
     }
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());
-      data.score.add(input.points1, input.points2);
+      data.score.add(input.points1, input.points2, weis: input.weis);
       data.save();
     });
   }
@@ -215,9 +215,9 @@ class _SchieberState extends State<Schieber> {
       setState(() {
         data.common.timestamps.addPoints(data.score.totalPoints());
         if (teamId == 0) {
-          data.score.add(pts, 0);
+          data.score.add(pts, 0, weis: true);
         } else {
-          data.score.add(0, pts);
+          data.score.add(0, pts, weis: true);
         }
         data.save();
       });

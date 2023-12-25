@@ -6,6 +6,7 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 class Points {
   int points1;
   int points2;
+  bool weis = false;
 
   Points(this.points1, this.points2, swap) {
     if (swap) {
@@ -168,9 +169,10 @@ Future<Points?> schieberDialogBuilder(
               ),
               child: Text(text),
               onPressed: () {
-                var ptsOther =
-                    (text == context.l10n.weis) ? 0 : pointsOtherTeam();
+                final weis = (text == context.l10n.weis);
+                var ptsOther = (weis) ? 0 : pointsOtherTeam();
                 var pts = Points(pointsTeam(), ptsOther, teamId == 1);
+                pts.weis = weis;
                 Navigator.of(context).pop(pts);
               },
             );

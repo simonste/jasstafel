@@ -291,4 +291,11 @@ void main() {
     score.add(70, 87);
     expect(score.winner().length, 2);
   });
+
+  test('enforce weis points', () {
+    var score = SchieberScore();
+
+    score.add(0, 55, weis: true);
+    expect(score.weisPoints(), [0, 55]);
+  });
 }

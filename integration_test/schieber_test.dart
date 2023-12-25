@@ -151,6 +151,22 @@ void main() {
     expect(text(const Key('sum_1')), '0');
   });
 
+  testWidgets('add weis explicit', (tester) async {
+    await tester.launchApp();
+
+    await tester.addSchieberPoints(['add_1', 'key_3', 'key_0'],
+        factor: '2x', weis: true);
+
+    expect(text(const Key('sum_0')), '0');
+    expect(text(const Key('sum_1')), '60');
+
+    await tester.tap(find.byKey(const Key('statistics')));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('Weis_1'), elementNo: 0), '0');
+    expect(text(const Key('Weis_2'), elementNo: 0), '60');
+  });
+
   testWidgets('profile', (tester) async {
     await tester.launchApp();
 

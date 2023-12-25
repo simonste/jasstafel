@@ -15,8 +15,9 @@ class SchieberRound {
 
   DateTime time = DateTime.now();
   var pts = [0, 0];
+  bool weis;
 
-  SchieberRound(this.pts);
+  SchieberRound(this.pts, {this.weis = false});
 
   int _total() {
     return pts[0] + pts[1];
@@ -199,9 +200,8 @@ class SchieberScore implements Score {
     }
   }
 
-  void add(pts1, pts2) {
-    final round = SchieberRound([pts1, pts2]);
-    rounds.add(round);
+  void add(pts1, pts2, {weis = false}) {
+    rounds.add(SchieberRound([pts1, pts2], weis: weis));
     team[0].add(pts1);
     team[1].add(pts2);
   }
@@ -215,6 +215,10 @@ class SchieberScore implements Score {
 
     List<SchieberRound> consRounds = [];
 
+    bool previousIsWeis() {
+      return (previousRound != null && previousRound.weis);
+    }
+
     List<int> ptsBuffer = [0, 0];
     for (var round in rounds) {
       final bufferContainsRound = (ptsBuffer.sum > 0 &&
@@ -225,9 +229,14 @@ class SchieberScore implements Score {
       final currentIsRound = (ptsBuffer.sum > 0 &&
           ((round._total() % _settings.match == 0) ||
               (round._total() % roundPoints(_settings.match)) == 0));
+      final currentIsWeis = round.weis;
 
-      if (bufferContainsRound || previousPointsLongAgo || currentIsRound) {
-        consRounds.add(SchieberRound(ptsBuffer));
+      if (bufferContainsRound ||
+          previousPointsLongAgo ||
+          currentIsRound ||
+          currentIsWeis ||
+          previousIsWeis()) {
+        consRounds.add(SchieberRound(ptsBuffer, weis: previousIsWeis()));
         ptsBuffer = [0, 0];
       }
       ptsBuffer[0] += round.pts[0];
@@ -235,7 +244,7 @@ class SchieberScore implements Score {
       previousRound = round;
     }
     if (previousRound != null) {
-      consRounds.add(SchieberRound(ptsBuffer));
+      consRounds.add(SchieberRound(ptsBuffer, weis: previousIsWeis()));
     }
 
     return consRounds;
@@ -288,7 +297,7 @@ class SchieberScore implements Score {
     for (var round in _consolidateRounds()) {
       if (!round.isRound(_settings.match)) {
         for (var i = 0; i < team.length; i++) {
-          if (round.pts[i] % 20 == 0 || round.pts[i] % 50 == 0) {
+          if (round.weis || round.pts[i] % 20 == 0 || round.pts[i] % 50 == 0) {
             weisPts[i] += round.pts[i];
           }
         }
