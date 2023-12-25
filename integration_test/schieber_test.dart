@@ -144,7 +144,7 @@ void main() {
     await tester.launchApp();
 
     await tester.addSchieberPoints(
-        ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_←', 'key_0'],
+        ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_⌫', 'key_0'],
         factor: '3x', weis: true);
 
     expect(text(const Key('sum_0')), '150');

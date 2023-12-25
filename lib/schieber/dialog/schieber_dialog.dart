@@ -78,7 +78,7 @@ Future<Points?> schieberDialogBuilder(
               }
 
               final String number = (n == 12)
-                  ? "←"
+                  ? "⌫"
                   : (n == 11)
                       ? "0"
                       : "$n";
@@ -86,7 +86,7 @@ Future<Points?> schieberDialogBuilder(
               return InkWell(
                   key: Key("key_$number"),
                   onTap: () => setState(() {
-                        if (number == "←") {
+                        if (number == "⌫") {
                           ptsController.delete();
                         } else {
                           ptsController.add(number);
