@@ -1,0 +1,3 @@
+Version 4.0.0
+
+Completely rewritten app to be ready for future updates

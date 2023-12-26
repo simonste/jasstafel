@@ -1,0 +1,55 @@
+Jass board to count the points while playing Jass simply with the Android smartphone or tablet.
+
+It is possible to write the points at the Schieber, Coiffeur, Differenzler, Molotov and other Jass types. 
+
+
+*************************
+
+For all boards it is possible to have several profiles. Settings and scores are stored independently. For example, you don't have to delete an unfinished round to be able to play Jass with other players. Even if different rules are used depending on the composition, this can easily be solved by a profile.
+
+The current profile can be shared by AndroidBeam (NFC) simply with another device. For this the board of one device has to be open and the devices have to be held back to back. This is helpful, for example, when the battery is empty or when complex profile settings have to be made.
+
+*************************
+
+Schieber panel:
+- Write points individually (1/20/50/100) for Weis,...
+- Write complete rounds incl. multiplier (1x-7x) and opponent points
+- Input dialog can be rotated (for 1 or 2 writers)
+- Individual entries or complete rounds can be undone.
+- Different number of target points possible
+- Adjustable score per round (e.g. for double cards 314)
+- Extensive statistics
+- Backside to write down strokes for wins/matches,...
+
+Coiffeur board:
+- The types of jass can be chosen according to your preferences.
+- 16 predefined jass types + the possibility to enter your own (without picture).
+- The number of rounds played can be between 6 and 12.
+- It can be written for 2 or 3 teams.
+- Multipliers can be changed manually if desired.
+- Statistics about achievable points as well as conditions how a team becomes unreachable.
+- If a team is unreachable, this will be displayed.
+
+Differenzler board:
+- 2-8 players
+- Announcements remain hidden until the first points have been entered.
+- Points from the last outstanding player are automatically calculated.
+- Points from the last round can be changed afterwards (long press).
+
+Molotov board:
+- 2-8 players
+- Writing Weis in 3 clicks
+- When writing rounds, the outstanding points are calculated automatically.
+- Points can be edited later (long press)
+- Points can be written exactly or rounded.
+
+Score board:
+This is a general score board, which should allow you to write many more types of Jass.
+- 2-8 players
+- Target points / number of rounds can be set
+- In order to be able to write faster, the number of points per round can be set. (Outstanding points are calculated automatically).
+
+*************************
+
+The source code of the app is available online:
+https://github.com/simonste/jasstafel

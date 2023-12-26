@@ -1,0 +1,46 @@
+Jasstafel / l'ardoise à Jass : est l'application idéale pour facilement compter les points au Jass avec votre Smartphone ou votre tablette.
+De plus, elle permet le comptage des points de toutes les variantes suivantes : Jass, Coiffeur, l'estimation, Molotov...
+Et surtout, tout a été conçu pour réduire le nombre de clics nécessaires au marquage des points au strict minimum.
+
+*************************
+
+L'ardoise pour le chibre:
+- Possibilité d'entrer les annonces directement par pression sur l'écran (1/20/50/100).
+- Saisie des points facilitée, avec multiplicateur (1x à 7x) et calcul automatique des points adverses.
+- Le dialogue de saisie des points peut être inversé ou non (pour la saisie des scores par un ou deux joueurs).
+- Annulation de la dernière saisie ou du tour complet possible.
+- Possibilité d'avoir des scores cibles différents entre les équipes (ex. pour la mise aux Rois).
+- Possibilité de changer le nombre total des points par tour (ex. jeu à deux paquets de cartes 314).
+- Statistiques étendues.
+- Verso de l'ardoise possible pour le marquage des matchs ou autre via des coches.
+
+Coiffeur:
+- Il est possible de choisir sa variante de jeu préférée.
+- 16 variantes prédéfinies + la possibilité de définir sa propre variante (sans illustration).
+- Le nombre de tours à jouer peut aller de 6 à 12.
+- Deux ou trois équipes à choix.
+- Les multiplicateurs peuvent être changés manuellement si désiré.
+- Des statistiques sur les points à atteindre pour rester en jeu ou pour gagner... 
+- Un avertissement apparaît lorsqu'une équipe n'est plus possible a rattraper.
+
+L'estimation (différence):
+- 2 à 8 joueurs
+- Les mises restent cachées jusqu'à la première saisie des points.
+- Les points du dernier joueur restant sont automatiquement calculés.
+- Les points du dernier tour peuvent être changés après-coup (appui prolongé).
+
+Molotov:
+- 2 à 8 joueurs.
+- Marquage des annonces en trois clics.
+- Lors de l'inscription des points du tour, les points adverses sont automatiquement calculés.
+- Les points sont modifiables après-coup (appui prolongé).
+- Les points peuvent être entrés de façon précise ou arrondie.
+
+Le tableau des scores:
+C'est un mode libre pour le marquage des points qui devrait permettre de jouer et suivre le score de toutes les variantes supplémentaires de Jass possibles.
+- 2 à 8 joueurs
+- Ponts cibles et nombre de tours configurables à souhait
+- Pour augmenter la rapidité de saisie, il est possible de fixer le nombre de points par tour (les points de l'adversaire sont calculés automatiquement).
+*************************
+L'application est open-source:
+https://github.com/simonste/jasstafel

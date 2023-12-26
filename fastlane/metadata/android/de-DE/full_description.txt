@@ -1,0 +1,58 @@
+Jass Tafel um die Punkte beim Jassen einfach mit dem Android-Smartphone oder Tablet zu zählen.
+
+Es ist möglich die Punkte beim Schieber, Coiffeur, Differenzler, Molotow und weiteren Jassarten zu schreiben. 
+
+Die Eingabemenüs sind so gestaltet, dass es möglich ist mit einer minimalen Anzahl an Klicks die Punkte zu schreiben.
+
+*************************
+
+Für alle Tafeln ist es möglich mehrere Profile zu führen. Einstellungen und Punktestände werden unabhängig gespeichert. So muss z.B. eine noch nicht beendete Runde nicht gelöscht werden um mit anderen Spielern zu Jassen. Auch wenn je nach Zusammensetzung nach unterschiedliche Regeln gespielt wird kann dies einfach über ein Profil gelöst werden.
+
+Das aktuelle Profil kann per AndroidBeam (NFC) auch einfach mit einem anderen Gerät geteilt werden. Dazu muss bei einem Gerät die Tafel geöffnet sein und die Geräte müssen Rücken an Rücken zueinander gehalten werden. Das ist z.B. bei leerem Akku oder aufwendigen Profileinstellungen hilfreich.
+
+Ebenfalls für alle Tafeln gibt es die Möglichkeit anzugeben wer als nächstes die Karten austeilen soll. Dazu gibt es im Statistik-Dialog ein 'Portrait'-Icon. Die Reihenfolge und wer zuerst dran ist muss natürlich initial mal festgelegt werden. Anschliessend wird aber automatisch nachgeführt. Dies soll helfen, wenn man sich mal nicht mehr erinnern kann wer dran ist. 
+
+*************************
+
+Schiebertafel:
+- Punkte einzeln schreiben (1/20/50/100) für Weis,...
+- Komplette Runden schreiben inkl. Multiplikator (1x-7x) und Gegnerpunkte
+- Eingabedialog kann gedreht werden (für 1 bzw. 2 Schreiber)
+- Einzelne Eingaben oder auch komplette Runden können rückgängig gemacht werden.
+- Verschiedene Zielpunktezahlen möglich (z.B Bieter)
+- Einstellbare Punktzahl pro Runde (z.B für Doppelkarten 314)
+- Umfangreiche Statistiken
+- Rückseite um Sieg/Match,... Striche zu notieren
+
+Coiffeurtafel:
+- Die Jassarten können nach eigenen Vorlieben gewählt werden.
+- 16 vordefinierte Jassarten + die Möglichkeit eine eigene einzugeben (ohne Bild).
+- Die Anzahl gespielter Runden kann zwischen 6 und 12 liegen.
+- Es kann für 2 oder 3 Teams geschrieben werden.
+- Multiplikatoren können manuell geändert werden falls gewünscht.
+- Statistiken über erreichbare Punkte sowie Bedingungen wie ein Team uneinholbar wird.
+- Wenn ein Team uneinholbar ist, wird dies angezeigt.
+
+Differenzlertafel:
+- 2-8 Spieler
+- Ansagen bleiben verborgen bis die ersten Punkte eingegeben wurden.
+- Punkte vom letzten ausstehenden Spieler werden automatisch berechnet.
+- Punkte der letzten Runde können nachträglich geändert werden (Lang Drücken)
+
+Molotowtafel:
+- 2-8 Spieler
+- Schreiben von Weisen in 3 Klicks
+- Beim Runden schreiben werden die ausstehenden Punkte automatisch berechnet.
+- Punkte nachträglich editierbar (Lang Drücken)
+- Punkte können exakt oder gerundet geschrieben werden.
+
+Punktetafel:
+Dies ist eine möglichst allgemeine Schreibtafel, die es erlauben sollte viele weitere Jassarten zu schreiben.
+- 2-8 Spieler
+- Zielpunkte / Anzahl Runden kann eingestellt werden
+- Um schneller schreiben zu können kann die Anzahl Punkte pro Runde eingestellt werden. (Ausstehende Punkte werden automatisch berechnet).
+
+*************************
+
+Der Quellcode der App ist online verfügbar:
+https://github.com/simonste/jasstafel
