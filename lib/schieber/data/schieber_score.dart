@@ -253,7 +253,9 @@ class SchieberScore implements Score {
   void undo() {
     rounds.removeLast();
 
-    team = [TeamData("Team 1"), TeamData("Team 2")];
+    for (var t in team) {
+      t.strokes = List.filled(5, 0);
+    }
     for (var round in rounds) {
       for (var i = 0; i < team.length; i++) {
         team[i].add(round.pts[i]);

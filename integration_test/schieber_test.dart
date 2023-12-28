@@ -383,4 +383,43 @@ void main() {
     await tester.delete('Ok');
     expect(await tester.backsideStrokes(0, 0), 0);
   });
+
+  testWidgets('history', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.text('Team 1'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'New Team');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('2500'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '2121');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    await tester.addSchieberPoints(['add_1', 'key_9', 'key_2'], factor: '3x');
+    await tester.tap(find.byKey(const Key('add20_1')));
+    await tester.tap(find.byKey(const Key('add20_1')));
+    await tester.pump();
+
+    expect(text(const Key('sum_0')), '195');
+    expect(text(const Key('sum_1')), '316');
+
+    await tester.tap(find.byKey(const Key('history')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('20'), findsNWidgets(2));
+    await tester.tap(find.byType(IconButton));
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(text(const Key('sum_1')), '296');
+    expect(find.text('New Team'), findsOneWidget);
+    expect(find.text('2121'), findsOneWidget);
+  });
 }

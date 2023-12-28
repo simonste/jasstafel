@@ -298,4 +298,26 @@ void main() {
     score.add(0, 55, weis: true);
     expect(score.weisPoints(), [0, 55]);
   });
+
+  test('undo', () {
+    var score = SchieberScore();
+    score.team[0].goalPoints = 4000;
+    score.team[1].goalPoints = 4000;
+    score.team[0].name = "T1";
+    score.team[1].name = "T2";
+
+    score.add(100, 57);
+    score.add(77, 80);
+    score.add(0, 50);
+
+    expect(score.team[0].sum(), 177);
+    expect(score.team[1].sum(), 187);
+
+    score.undo();
+
+    expect(score.team[0].sum(), 177);
+    expect(score.team[1].sum(), 137);
+    expect(score.team[0].name, "T1");
+    expect(score.team[1].name, "T2");
+  });
 }
