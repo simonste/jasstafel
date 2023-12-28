@@ -1,0 +1,4 @@
+Version 4.0.1
+
+Bugfixes
+- Ne pas change les nom d'équipes et le total à atteindre quand on efface un tour.

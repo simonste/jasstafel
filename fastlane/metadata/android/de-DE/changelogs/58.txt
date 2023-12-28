@@ -1,0 +1,4 @@
+Version 4.0.1
+
+Bugfixes
+- Teamnamen & Zielpunkte bleiben erhalten nach Runde rückgängig machen.

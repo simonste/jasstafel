@@ -1,0 +1,4 @@
+Version 4.0.1
+
+Bugfixes
+- Do not change team names and goal points on undo
