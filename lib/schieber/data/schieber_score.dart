@@ -93,14 +93,22 @@ class TeamData {
       strokes[0] += 10;
       strokes[1] += 2;
       strokes[2] -= 1;
-      if (strokes[2] < 0) {
-        strokes[2] += 2;
-        strokes[3] -= 1;
-        if (strokes[3] < 0) {
-          strokes[3] += 5;
-          strokes[4] -= 1;
-        }
-      }
+    }
+    if (strokes[2] < 0) {
+      strokes[2] += 2;
+      strokes[3] -= 1;
+    }
+    if (strokes[3] < 0) {
+      strokes[3] += 5;
+      strokes[4] -= 1;
+    }
+    if (strokes[4] < 0) {
+      final total = sum();
+      strokes[4] = 0;
+      strokes[3] = 0;
+      strokes[2] = 0;
+      strokes[1] = 0;
+      strokes[0] = total;
     }
   }
 }

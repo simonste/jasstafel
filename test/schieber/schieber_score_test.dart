@@ -151,6 +151,39 @@ void main() {
     expect(data.strokes[4], 0);
   });
 
+  test('strokes remove 110 from 110', () {
+    var data = TeamData();
+
+    data.strokes[0] = 0;
+    data.strokes[1] = 3;
+    data.strokes[2] = 1;
+    data.strokes[3] = 0;
+    data.strokes[4] = 0;
+    expect(data.sum(), 110);
+
+    data.add(-110);
+
+    expect(data.sum(), 0);
+    expect(data.strokes[0], 0);
+    expect(data.strokes[1], 0);
+    expect(data.strokes[2], 0);
+    expect(data.strokes[3], 0);
+    expect(data.strokes[4], 0);
+  });
+
+  test('strokes remove 60 from 0', () {
+    var data = TeamData();
+
+    data.add(-60);
+
+    expect(data.sum(), -60);
+    expect(data.strokes[0], -60);
+    expect(data.strokes[1], 0);
+    expect(data.strokes[2], 0);
+    expect(data.strokes[3], 0);
+    expect(data.strokes[4], 0);
+  });
+
   test('consolidate rounds', () {
     var score = SchieberScore();
 

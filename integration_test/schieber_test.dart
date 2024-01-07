@@ -150,6 +150,15 @@ void main() {
     expect(text(const Key('sum_1')), '813');
   });
 
+  testWidgets('add negative points', (tester) async {
+    await tester.launchApp();
+
+    await tester.addSchieberPoints(['add_0', 'key_4', 'key_+/-', 'key_3']);
+
+    expect(text(const Key('sum_0')), '-43');
+    expect(text(const Key('sum_1')), '0');
+  });
+
   testWidgets('add match', (tester) async {
     await tester.launchApp();
 

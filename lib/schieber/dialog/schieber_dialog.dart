@@ -53,6 +53,7 @@ class PointsController extends TextEditingController {
 Future<Points?> schieberDialogBuilder(
     BuildContext context, int teamId, int matchPts, TeamData teamData) {
   int factor = 1;
+  int sign = 1;
 
   return showDialog<Points>(
       context: context,
@@ -60,11 +61,11 @@ Future<Points?> schieberDialogBuilder(
         var ptsController = PointsController();
 
         pointsTeam() {
-          return ptsController.getPoints() * factor;
+          return ptsController.getPoints() * factor * sign;
         }
 
         pointsOtherTeam() {
-          if (ptsController.getPoints() == matchPts) {
+          if (ptsController.getPoints() == matchPts || sign == -1) {
             return 0;
           }
           return (roundPoints(matchPts) - ptsController.getPoints()) * factor;
@@ -132,9 +133,23 @@ Future<Points?> schieberDialogBuilder(
             }
           }
 
+          Widget getPlusMinusButton() {
+            return Expanded(
+                flex: 1,
+                child: InkWell(
+                  key: const Key("key_+/-"),
+                  child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(sign == 1 ? "+" : "-")),
+                  onTap: () => setState(() => sign *= -1),
+                ));
+          }
+
           Widget getTextField() {
             return Expanded(
+              flex: 3,
               child: Container(
+                alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   ptsController.text,
@@ -195,6 +210,7 @@ Future<Points?> schieberDialogBuilder(
                 children: [
                   Row(children: [
                     getFactorWidget(),
+                    getPlusMinusButton(),
                     getTextField(),
                     getButton("∅", 0),
                     getButton(context.l10n.match, matchPts),
