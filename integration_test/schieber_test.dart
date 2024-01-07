@@ -131,6 +131,25 @@ void main() {
     expect(text(const Key('sum_1')), '92');
   });
 
+  testWidgets('add round 514', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Punkte'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '514');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.addSchieberPoints(['add_0', 'key_4', 'key_3'], factor: '3x');
+
+    expect(text(const Key('sum_0')), '129');
+    expect(text(const Key('sum_1')), '813');
+  });
+
   testWidgets('add match', (tester) async {
     await tester.launchApp();
 

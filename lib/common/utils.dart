@@ -13,6 +13,9 @@ int roundPoints(int matchPoints) {
     int decks = (matchPoints / 257).round();
     return matchPoints - decks * 100;
   }
+  if (400 <= matchPoints && matchPoints < 520) {
+    return 314;
+  }
   return 157;
 }
 
