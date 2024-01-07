@@ -1,0 +1,4 @@
+Version 4.0.2
+
+- Minuspunkte beim Schieber sind nun wieder möglich.
+- Verbesserungen für Spiel mit 2 Kartensets

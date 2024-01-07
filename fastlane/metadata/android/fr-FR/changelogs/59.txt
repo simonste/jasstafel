@@ -1,0 +1,4 @@
+Version 4.0.2
+
+- Possibilité de points négatifs au chibre
+- Améliorations pour le jeu avec 2 sets de cartes

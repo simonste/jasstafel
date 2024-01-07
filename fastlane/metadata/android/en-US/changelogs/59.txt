@@ -1,0 +1,4 @@
+Version 4.0.2
+
+- Possibility for negative points in Schieber
+- Improvements for game with 2 card sets
