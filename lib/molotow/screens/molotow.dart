@@ -7,6 +7,7 @@ import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/player_points_dialog.dart';
 import 'package:jasstafel/common/dialog/statistics_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
+import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
@@ -52,77 +53,12 @@ class _MolotowState extends State<Molotow> {
       updateTimer!.cancel();
     }
 
-    rowWidget(List<String> data,
-        {bool header = false,
-        bool footer = false,
-        bool round = false,
-        int? rowNo}) {
-      List<Widget> children = [
-        SizedBox(
-            width: 20,
-            child: Text(
-              data[0],
-              textAlign: TextAlign.right,
-            ))
-      ];
-
-      for (var i = 1; i < data.length; i++) {
-        final key = footer ? Key('sum_${i - 1}') : null;
-        final text = Text(
-          key: key,
-          data[i],
-          textAlign: TextAlign.center,
-          textScaler: TextScaler.linear(header ? 1 : 2),
-        );
-
-        if (header) {
-          children.add(Expanded(
-              child: InkWell(
-            onTap: () => _stringDialog(i - 1),
-            child: text,
-          )));
-        } else if (footer) {
-          children.add(Expanded(
-            child: text,
-          ));
-        } else {
-          children.add(Expanded(
-              child: InkWell(
-            onLongPress: () => _pointsDialog(editRowNo: rowNo!),
-            child: text,
-          )));
-        }
-      }
-      var decoration = (header || footer)
-          ? BoxDecoration(color: Theme.of(context).colorScheme.secondary)
-          : round
-              ? BoxDecoration(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  border: Border(
-                      bottom: BorderSide(
-                          color: Theme.of(context).colorScheme.onPrimary)))
-              : null;
-
-      return Container(
-          height: (header || footer) ? 30 : null,
-          decoration: decoration,
-          child: Row(children: children));
-    }
-
-    header() {
-      List<String> list = [''];
-      data.score.playerName.sublist(0, data.settings.players).forEach((e) {
-        list.add(e);
-      });
-      return rowWidget(list, header: true);
-    }
-
     footer() {
       List<String> list = ['T'];
       for (var i = 0; i < data.settings.players; i++) {
         list.add('${data.score.total(i)}');
       }
-      return rowWidget(list, footer: true);
+      return rowFooter(list, context: context);
     }
 
     int roundNo = 0;
@@ -140,7 +76,11 @@ class _MolotowState extends State<Molotow> {
           list.add('-');
         }
       });
-      return rowWidget(list, round: row.isRound, rowNo: rowNo);
+      return defaultRow(list,
+          rowNo: rowNo,
+          isRound: row.isRound,
+          context: context,
+          pointsFunction: _pointsDialog);
     }
 
     List<Widget> rows = [];
@@ -187,7 +127,11 @@ class _MolotowState extends State<Molotow> {
       ),
       body: Stack(children: [
         Column(children: [
-          header(),
+          rowHeader(
+              playerNames: data.score.playerName,
+              players: data.settings.players,
+              headerFunction: _stringDialog,
+              context: context),
           Expanded(
             child: SingleChildScrollView(
               child: Column(children: rows),
