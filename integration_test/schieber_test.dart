@@ -396,6 +396,17 @@ void main() {
     expect(find.text('Team 2a'), findsOneWidget);
     expect(find.text('Team 2b'), findsOneWidget);
 
+    await tester.tap(find.text('Team 1b'));
+    await tester.pumpAndSettle();
+    expect(find.text('Teamname'), findsWidgets);
+    expect(find.byType(TextField), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'Toll');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('Team 1b'), findsNothing);
+    expect(find.text('Toll'), findsOneWidget);
+
     expect(await tester.backsideStrokes(0, 2), 2);
     expect(await tester.backsideStrokes(1, 15), 15);
     expect(await tester.backsideStrokes(0, 2), 4);
@@ -406,6 +417,8 @@ void main() {
     await tester.delete('Alles');
     await tester.tap(find.byKey(const Key('backside')));
     await tester.pumpAndSettle();
+
+    expect(find.text('Toll'), findsOneWidget);
 
     expect(await tester.backsideStrokes(0, 0), 4);
     await tester.delete('Ok');

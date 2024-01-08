@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
@@ -78,26 +79,6 @@ class _SchieberBacksideState extends State<SchieberBackside> {
     }
     final minRows = (screen.height / strokeHeight).floor() - 2;
     final noOfRows = max(minRows, (mostStrokes / strokesPerRow).ceil());
-
-    header() {
-      List<Widget> list = [];
-      for (var i = 0; i < columns; i++) {
-        final name = data.score.backside[i].name;
-
-        list.add(Expanded(
-          child: InkWell(
-              onTap: () => _stringDialog(i),
-              child: Text(
-                name,
-                textAlign: TextAlign.center,
-              )),
-        ));
-      }
-      final decoration =
-          BoxDecoration(color: Theme.of(context).colorScheme.secondary);
-      return Container(
-          height: 30, decoration: decoration, child: Row(children: list));
-    }
 
     background() {
       List<Widget> columnWidgets = [];
@@ -181,7 +162,12 @@ class _SchieberBacksideState extends State<SchieberBackside> {
           ],
         ),
         body: Column(children: [
-          header(),
+          rowHeader(
+              playerNames: data.score.backside.map((e) => e.name).toList(),
+              players: data.settings.backsideColumns,
+              headerFunction: _stringDialog,
+              context: context,
+              hideRoundColumn: true),
           Expanded(
               child: Stack(
             children: [

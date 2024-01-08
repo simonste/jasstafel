@@ -32,6 +32,7 @@ rowHeader({
   required int players,
   required Function headerFunction,
   required BuildContext context,
+  bool hideRoundColumn = false,
 }) {
   List<String> list = [''];
   playerNames.sublist(0, players).forEach((e) {
@@ -39,6 +40,9 @@ rowHeader({
   });
 
   List<Widget> children = rowContainer(list[0]);
+  if (hideRoundColumn) {
+    children.clear();
+  }
   for (var i = 1; i < list.length; i++) {
     children.add(Expanded(
         child: InkWell(
