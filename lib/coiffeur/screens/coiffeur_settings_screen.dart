@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/setting_utils.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -30,6 +31,9 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         subTitle(settings.bonusValue, settings.rounded, context);
     final counterPointsSubTitle =
         subTitle(settings.counterLoss, settings.rounded, context);
+
+    final currentMatchPoints =
+        PrefService.of(context).get(CoiffeurSettings.keys.match);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,13 +65,14 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             pref: CoiffeurSettings.keys.counterLoss),
         PrefCheckbox(
           title: Text(context.l10n.matchBonus),
-          subtitle: Text(context.l10n.matchBonusInfo(157)),
+          subtitle: Text(
+              context.l10n.matchBonusInfo(roundPoints(currentMatchPoints))),
           pref: CoiffeurSettings.keys.bonus,
           onChange: (value) async {
-            final proposedMatchPoints = value ? 157 : 257;
-            final pref = PrefService.of(context);
-            final key = CoiffeurSettings.keys.match;
-            if (proposedMatchPoints == pref.get(key)) return;
+            final proposedMatchPoints = value
+                ? roundPoints(currentMatchPoints)
+                : matchPoints(currentMatchPoints);
+            if (proposedMatchPoints == currentMatchPoints) return;
 
             confirmDialog(
                 context: context,

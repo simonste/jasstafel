@@ -245,10 +245,11 @@ class _CoiffeurState extends State<Coiffeur> {
               child: InkWell(
                   onTap: () {
                     try {
-                      controller.text =
-                          (157 - int.parse(controller.text)).toString();
+                      controller.text = (roundPoints(data.settings.match) -
+                              int.parse(controller.text))
+                          .toString();
                     } on FormatException {
-                      controller.text = "157";
+                      controller.text = "${roundPoints(data.settings.match)}";
                     }
                   },
                   key: const Key('157-x'),

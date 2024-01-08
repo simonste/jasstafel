@@ -280,6 +280,70 @@ void main() {
     expect(cellText(const Key('sum_1')), '${8 * 207}');
   });
 
+  testWidgets('toggle bonus 2 decks', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Punkte'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '514');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.addCoiffeurPoints('0:5', 157);
+    await tester.addCoiffeurPoints('1:6', 0, tapKey: "match");
+
+    expect(cellText(const Key('0:5')), '157');
+    expect(cellText(const Key('1:6')), '514');
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pumpAndSettle();
+    expect(find.text('Match-Punkte auf 314 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(cellText(const Key('0:5')), '157');
+    expect(cellText(const Key('1:6')), 'MATCH');
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pump();
+    expect(find.text('Match-Punkte auf 514 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(cellText(const Key('0:5')), '157');
+    expect(cellText(const Key('1:6')), '514');
+  });
+
+  testWidgets('add points 2 decks', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Match-Punkte'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '514');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.addCoiffeurPoints('0:5', 50, tapKey: '157-x');
+
+    expect(cellText(const Key('sum_0')), '${6 * 264}');
+  });
+
   testWidgets('ignore hidden cells', (tester) async {
     await tester.launchApp();
 
