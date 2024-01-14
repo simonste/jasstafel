@@ -463,4 +463,37 @@ void main() {
     expect(find.text('New Team'), findsOneWidget);
     expect(find.text('2121'), findsOneWidget);
   });
+
+  testWidgets('shrink actions', (tester) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool("additionalTestButtons", true);
+    await tester.launchApp();
+
+    expect(find.byKey(const Key('additionalTestButton6')), findsOneWidget);
+    expect(find.byType(PopupMenuButton), findsOneWidget);
+    expect(find.byKey(const Key('backside')), findsNothing);
+
+    await tester.tap(find.byType(PopupMenuButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Rückseite verwenden'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('backside')), findsOneWidget);
+
+    await tester.tap(find.byType(PopupMenuButton));
+    await tester.pumpAndSettle();
+    Finder popupMenuItemFinder = find.byType(PopupMenuItem).first;
+    await tester.tap(popupMenuItemFinder);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Rückseite verwenden'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('backside')), findsNothing);
+  });
 }

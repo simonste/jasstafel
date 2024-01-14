@@ -75,6 +75,19 @@ List<Widget> shrinkActions(
   const boardTitleWidth = 113 + 16 + 16;
   final maxActions = ((screenWidth - boardTitleWidth) / iconWidth).floor();
 
+  if (PrefService.of(context).get("additionalTestButtons") ?? false) {
+    // for debug / test: add additional buttons
+    for (var i = actions.length; i <= maxActions; ++i) {
+      actions.insert(
+          1,
+          IconButton(
+            key: Key("additionalTestButton$i"),
+            icon: const Icon(Icons.android),
+            onPressed: () {},
+          ));
+    }
+  }
+
   var priorityCopy = [...priority];
   if (actions.length > maxActions) {
     List<IconButton> iconButtons = [];
@@ -92,23 +105,26 @@ List<Widget> shrinkActions(
       }
       iconButtons.add(action as IconButton);
     }
-    actions.insert(actions.length,
-        PopupMenuButton(itemBuilder: (BuildContext context) {
-      // unwrap icon buttons to be able to call Navigator.pop (close drop down)
-      List<PopupMenuItem> popupItems = [];
-      for (var element in iconButtons) {
-        popupItems.add(PopupMenuItem(
-            child: GestureDetector(
-          key: element.key,
-          onTap: () {
-            Navigator.pop(context);
-            element.onPressed!();
-          },
-          child: element.icon,
-        )));
-      }
-      return popupItems;
-    }));
+    actions.insert(
+      actions.length,
+      PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          // unwrap icon buttons to be able to call Navigator.pop (close drop down)
+          List<PopupMenuItem> popupItems = [];
+          iconButtons.asMap().forEach((index, element) {
+            popupItems.add(PopupMenuItem(
+              key: element.key,
+              value: index,
+              child: element.icon,
+            ));
+          });
+          return popupItems;
+        },
+        onSelected: (value) {
+          iconButtons[value].onPressed!();
+        },
+      ),
+    );
   }
   return actions;
 }
