@@ -1,6 +1,6 @@
 # Jasstafel
 
-[![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg)](https://github.com/simonste/jasstafel/actions/workflows/build.yml)
+[![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/simonste/jasstafel/actions/workflows/build.yml?branch=main)
 
 Jasstafel for Android & iOS (& more)
 
