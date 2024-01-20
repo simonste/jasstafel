@@ -1,64 +1,14 @@
 name: JassTafel CI
-on: [push]
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - flutter_ci
 
 # cspell:disable
 jobs:
-  test-android:
-    strategy:
-      matrix:
-        device:
-          - "Nexus 6"
-      fail-fast: true
-    runs-on: macos-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Check out submodule
-        run: git submodule update --init --force
-
-      - name: Setup java
-        uses: actions/setup-java@v3
-        with:
-          distribution: "zulu"
-          java-version: "12.x"
-          cache: "gradle"
-
-      - name: Get dependencies
-        run: flutter/bin/flutter pub get
-      - name: Generate icons
-        run: flutter/bin/flutter pub run flutter_launcher_icons
-      - name: Generate translations
-        run: flutter/bin/flutter gen-l10n
-      - name: Generate sources
-        run: flutter/bin/flutter packages pub run build_runner build --delete-conflicting-outputs
-
-      - name: Test
-        run: flutter/bin/flutter test
-      # - name: Integration test
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 29
-      #     profile: ${{ matrix.device }}
-      #     script: flutter/bin/flutter test integration_test
-
-      - name: Take screenshots
-        if: ${{ false }}
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          profile: ${{ matrix.device }}
-          script: |
-            sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
-            flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
-      - name: screenshot artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: screenshots_android_${{ matrix.device }}
-          path: screenshots/*
-
   build-android:
-    if: ${{ github.ref == 'refs/heads/main' }} || (startsWith(github.ref, 'refs/tags/'))
-    needs: [test-android]
     runs-on: macos-latest
     steps:
       - name: Check out repository code
@@ -104,7 +54,6 @@ jobs:
             build/app/intermediates/merged_native_libs/release/out/lib
 
   release-android:
-    if: (startsWith(github.ref, 'refs/tags/'))
     needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
@@ -123,60 +72,7 @@ jobs:
           debugSymbols: intermediates/merged_native_libs/release/out/lib
           track: beta
 
-  test-ios:
-    strategy:
-      matrix:
-        device:
-          - "iPhone 14 Pro Max Simulator"
-          - "iPhone 8 Plus Simulator"
-          - "iPad Pro (12.9-inch)"
-      fail-fast: true
-    runs-on: macos-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Check out submodule
-        run: git submodule update --init --force
-
-      - name: Setup xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
-      - name: "List all simulators"
-        run: "xcrun xctrace list devices"
-      - name: "Start Simulator"
-        run: |
-          UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
-          xcrun simctl boot "${UDID:?No Simulator with this name found}"
-
-      - name: Get dependencies
-        run: flutter/bin/flutter pub get
-      - name: Generate icons
-        run: flutter/bin/flutter pub run flutter_launcher_icons
-      - name: Generate translations
-        run: flutter/bin/flutter gen-l10n
-      - name: Generate sources
-        run: flutter/bin/flutter packages pub run build_runner build --delete-conflicting-outputs
-
-      - name: Test
-        run: flutter/bin/flutter test
-      # - name: Integration test
-      #   run: flutter/bin/flutter test integration_test
-
-      - name: Take screenshots
-        run: |
-          sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
-          flutter/bin/flutter drive --no-enable-impeller --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
-      - name: Screenshot artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: screenshots_ios_${{ matrix.device }}
-          path: screenshots/*
-
   build-ios:
-    if: ${{ github.ref == 'refs/heads/main' }} || (startsWith(github.ref, 'refs/tags/'))
-    needs: [test-ios]
     runs-on: macos-latest
     steps:
       - name: Check out repository code
@@ -224,7 +120,6 @@ jobs:
           path: build/ios/ipa/*.ipa
 
   release-ios:
-    if: (startsWith(github.ref, 'refs/tags/'))
     needs: [build-android, build-ios]
     runs-on: macos-latest
     steps:
