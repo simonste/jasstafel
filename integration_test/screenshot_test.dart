@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'overall_test.dart';
 
 // cspell:ignore: auswertungsspalte runde handweis tischweis hilfslinien
-// cspell:ignore: anzeigen rückseite verwenden punkte zurück
+// cspell:ignore: anzeigen rückseite verwenden punkte zurück anzahl
 
 bool driverTest = false;
 
@@ -207,8 +207,8 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.slideTo(find.byType(Slider), 6);
-    await tester.tap(find.text('Punkte pro Runde'));
+    await tester.slideTo("Anzahl Spieler", 6);
+    await tester.tapInList('Punkte pro Runde');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '9');
     await tester.tap(find.text('Ok'));

@@ -56,6 +56,36 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
+  Future<void> scrollTo(String text) async {
+    final settingFinder = find.text(text);
+    if (!any(settingFinder)) {
+      await scrollUntilVisible(
+        settingFinder,
+        100.0,
+        scrollable: find.byType(Scrollable),
+      );
+      await pumpAndSettle();
+    }
+  }
+
+  Future<void> scrollUpTo(String text) async {
+    final settingFinder = find.text(text);
+    if (!any(settingFinder)) {
+      await scrollUntilVisible(
+        settingFinder,
+        -100.0,
+        scrollable: find.byType(Scrollable),
+      );
+      await pumpAndSettle();
+    }
+  }
+
+  Future<void> tapInList(String text) async {
+    await scrollTo(text);
+    await tap(find.text(text));
+    await pumpAndSettle();
+  }
+
   Future<void> tapSetting(List<String> settings) async {
     final settingFinder = find.byKey(const Key('SettingsButton'));
     if (!any(settingFinder)) {
@@ -65,17 +95,7 @@ extension AppHelper on WidgetTester {
     await tap(settingFinder);
     await pumpAndSettle();
     for (String setting in settings) {
-      final settingFinder = find.text(setting);
-      if (!any(settingFinder)) {
-        await scrollUntilVisible(
-          settingFinder,
-          100.0,
-          scrollable: find.byType(Scrollable),
-        );
-        await pumpAndSettle();
-      }
-      await tap(find.text(setting));
-      await pumpAndSettle();
+      await tapInList(setting);
     }
     await tap(find.byTooltip('Zurück'));
     await pumpAndSettle();
@@ -187,7 +207,9 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> slideTo(Finder slider, int value) async {
+  Future<void> slideTo(String text, int value) async {
+    await scrollTo(text);
+    final slider = find.byType(Slider);
     final prefSlider = slider.evaluate().single.widget as Slider;
     const sliderPadding = 24;
     final totalWidth = getSize(slider).width - 2 * sliderPadding;

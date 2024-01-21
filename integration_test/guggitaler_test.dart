@@ -46,7 +46,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.slideTo(find.byType(Slider), 2);
+    await tester.slideTo("Anzahl Spieler", 2);
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 

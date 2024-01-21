@@ -136,7 +136,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
@@ -214,8 +214,9 @@ void main() {
 
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Hilfslinien (Z) anzeigen'));
-    await tester.tap(find.text('verschiedene Zielpunkte'));
+    await tester.tapInList('Hilfslinien (Z) anzeigen');
+    await tester.scrollUpTo('verschiedene Zielpunkte');
+    await tester.tapInList('verschiedene Zielpunkte');
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -290,7 +291,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Zielpunkte'));
+    await tester.tapInList('Zielpunkte');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').last);
     await tester.pumpAndSettle();
@@ -477,7 +478,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Rückseite verwenden'));
+    await tester.tapInList('Rückseite verwenden');
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
@@ -489,7 +490,7 @@ void main() {
     Finder popupMenuItemFinder = find.byType(PopupMenuItem).first;
     await tester.tap(popupMenuItemFinder);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Rückseite verwenden'));
+    await tester.tapInList('Rückseite verwenden');
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();

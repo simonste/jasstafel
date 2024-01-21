@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'overall_test.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
-// cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen
+// cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen anzahl
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -123,7 +123,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.slideTo(find.byType(Slider), 6);
+    await tester.slideTo("Anzahl Runden", 6);
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -158,13 +158,13 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
-    await tester.tap(find.text('Auswertungsspalte'));
+    await tester.tapInList('Match-Prämie verwenden');
+    await tester.tapInList('Auswertungsspalte');
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
@@ -195,7 +195,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     expect(find.text('Match-Punkte auf 157 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -208,7 +208,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
     await tester.tap(find.text('Abbrechen'));
@@ -221,10 +221,10 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 257 ändern?'), findsNothing);
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -247,12 +247,12 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
     await tester.tap(find.text('Ok'));
-    await tester.pump();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.pumpAndSettle();
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
@@ -263,11 +263,12 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbrechen'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.scrollUpTo('Match-Punkte');
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '207');
     await tester.tap(find.text('Ok'));
@@ -285,7 +286,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
@@ -301,7 +302,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     expect(find.text('Match-Punkte auf 314 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -314,7 +315,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Prämie verwenden'));
+    await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 514 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -331,7 +332,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Match-Punkte'));
+    await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
@@ -358,10 +359,10 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('3 Teams'));
+    await tester.tapInList('3 Teams');
     await tester.pump();
-    await tester.tap(find.text('Auswertungsspalte'));
-    await tester.slideTo(find.byType(Slider), 10);
+    await tester.tapInList('Auswertungsspalte');
+    await tester.slideTo("Anzahl Runden", 10);
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -404,8 +405,8 @@ void main() {
     await tester.launchApp();
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Auswertungsspalte'));
-    await tester.slideTo(find.byType(Slider), 6);
+    await tester.tapInList('Auswertungsspalte');
+    await tester.slideTo("Anzahl Runden", 6);
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
