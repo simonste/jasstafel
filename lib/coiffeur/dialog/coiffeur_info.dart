@@ -300,10 +300,11 @@ Future<void> dialogBuilder(
 
             return AlertDialog(
               title: Text(context.l10n.currentRound),
-              content: Column(
+              content: SingleChildScrollView(
+                  child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: children,
-              ),
+              )),
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(

@@ -56,13 +56,17 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
 
         final autoSizeGroupPlayer = AutoSizeGroup();
         final autoSizeGroupCategory = AutoSizeGroup();
+        final screenSize = MediaQuery.of(context).size;
+        final landscape = screenSize.width > screenSize.height;
+        final playersPerRow = landscape ? 4 : 2;
 
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           List<Widget> rows = [];
 
           appendPlayer(String player) {
-            if (rows.isEmpty || (rows.last as Row).children.length == 2) {
+            if (rows.isEmpty ||
+                (rows.last as Row).children.length == playersPerRow) {
               // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
               rows.add(Row(children: []));
             }

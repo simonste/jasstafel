@@ -113,7 +113,8 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
 
           return AlertDialog(
             title: Text(title),
-            content: Column(
+            content: SingleChildScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -139,7 +140,7 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
                   createRow(3),
                 ])
               ],
-            ),
+            )),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
