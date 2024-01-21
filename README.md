@@ -1,6 +1,9 @@
 # Jasstafel
 
-[![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/simonste/jasstafel/actions/workflows/build.yml?branch=main)
+[![JassTafel CI](https://github.com/simonste/jasstafel/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/simonste/jasstafel/actions/workflows/test.yml?branch=main)
+[![JassTafel CD](https://github.com/simonste/jasstafel/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/simonste/jasstafel/actions/workflows/build.yml?branch=main)
+[![F-Droid release](https://img.shields.io/f-droid/v/ch.simonste.jasstafel.svg?logo=F-Droid)](https://f-droid.org/en/packages/ch.simonste.jasstafel/)
+[![GitHub](https://img.shields.io/github/license/simonste/jasstafel)](https://github.com/simonste/jasstafel/blob/main/LICENSE)
 
 Jasstafel for Android & iOS (& more)
 
@@ -10,7 +13,7 @@ Jasstafel is an app to write points in the swiss card game Jass.
 
 | Android | Android (F-Droid) | iOS |
 |:-:|:-:|:-:|
-| [<img src="assets/badges/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=ch.simonste.jasstafel) | [<img src="assets/badges/f-droid-badge.png" height="50">](https://f-droid.org/en/packages/ch.simonste.jasstafel/) | [<img src="assets/badges/appstore-badge.png" height="50">](https://apps.apple.com/ch/app/schweizer-jasstafel/id1672847164) |
+| [<img src="assets/badges/google-play-badge.png" height="50" alt="Google Play">](https://play.google.com/store/apps/details?id=ch.simonste.jasstafel) | [<img src="assets/badges/f-droid-badge.png" height="50" alt="F-Droid">](https://f-droid.org/en/packages/ch.simonste.jasstafel/) | [<img src="assets/badges/appstore-badge.png" height="50" alt="App Store">](https://apps.apple.com/ch/app/schweizer-jasstafel/id1672847164) |
 
 ## Getting Started
 

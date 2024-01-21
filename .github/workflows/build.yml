@@ -1,4 +1,4 @@
-name: JassTafel CI
+name: JassTafel CD
 on:
   push:
     tags:
