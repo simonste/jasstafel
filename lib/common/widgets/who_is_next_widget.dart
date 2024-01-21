@@ -37,11 +37,18 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final landscape = screenSize.width > screenSize.height;
-    var cardWidth =
-        landscape ? screenSize.height * 0.2 : screenSize.width * 0.3;
+    var cardWidth = screenSize.width * 0.3;
+    var crossAxisCount = 2;
+    var mainAxisCount = (players / crossAxisCount).ceil();
+    if (landscape) {
+      cardWidth = screenSize.height * 0.2;
+      (crossAxisCount, mainAxisCount) = (mainAxisCount, crossAxisCount);
+    }
+    final map = swapMap.get(landscape: landscape);
+    final List<int> keyList = map.keys.toList();
 
     List<DraggableGridItem> children = [];
-    swapMap.get().forEach((i, value) {
+    for (var i in keyList) {
       final key = Key("$i");
       children.add(DraggableGridItem(
           isDraggable: true,
@@ -50,32 +57,29 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
               color: Colors.black12,
               child: InkWell(
                   onLongPress: () => setState(() {
-                        swapMap.select(key);
+                        swapMap
+                            .select(PlayerId(int.tryParse(key.toString()[3])!));
                         widget.data.saveFunction();
                       }),
                   child: SizedBox(
                       height: cardWidth,
                       width: cardWidth,
-                      child: Center(child: value))))));
-    });
+                      child: Center(child: map[i]))))));
+    }
 
     return SizedBox(
-        height: cardWidth * (players / 2).ceil(),
-        width: cardWidth * 2,
+        height: cardWidth * mainAxisCount,
+        width: cardWidth * crossAxisCount,
         child: DraggableGridViewBuilder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
             ),
             children: children,
             isOnlyLongPress: false,
             dragCompletion: (list, int beforeIndex, int afterIndex) {
-              List<int> keyList = swapMap.get().keys.toList();
-
-              final tmp = keyList[beforeIndex];
-              keyList[beforeIndex] = keyList[afterIndex];
-              keyList[afterIndex] = tmp;
-
-              swapMap.set(keyList);
+              final i1 = keyList[beforeIndex];
+              final i2 = keyList[afterIndex];
+              swapMap.swap(PlayerId(i1), PlayerId(i2));
               widget.data.saveFunction();
               setState(() {});
             },
