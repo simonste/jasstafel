@@ -94,8 +94,8 @@ jobs:
 
       - name: Test
         run: flutter/bin/flutter test
-      # - name: Integration test
-      #   run: flutter/bin/flutter test integration_test
+      - name: Integration test
+        run: flutter/bin/flutter test integration_test
 
       - name: Take screenshots
         run: |

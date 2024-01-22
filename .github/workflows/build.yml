@@ -1,4 +1,4 @@
-name: JassTafel CD
+name: Jasstafel CD
 on:
   push:
     tags:
