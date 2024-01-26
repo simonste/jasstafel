@@ -26,4 +26,47 @@ void main() {
 
     expectTextColor(tester, '2', Colors.blue);
   });
+
+  testWidgets('restore offset 1', (WidgetTester tester) async {
+    var whoIsNext = WhoIsNext();
+    whoIsNext.whoBeginsOffset = 1;
+
+    final widget = makeTestable(WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})));
+    await tester.pumpWidget(widget);
+
+    expectTextColor(tester, '1', Colors.white);
+    expectTextColor(tester, '2', Colors.blue);
+    expectTextColor(tester, '3', Colors.white);
+    expectTextColor(tester, '4', Colors.white);
+  });
+
+  testWidgets('restore offset 1 round 2', (WidgetTester tester) async {
+    var whoIsNext = WhoIsNext();
+    whoIsNext.whoBeginsOffset = 1;
+
+    final widget = makeTestable(WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4'], 2, whoIsNext, () {})));
+    await tester.pumpWidget(widget);
+
+    expectTextColor(tester, '1', Colors.white);
+    expectTextColor(tester, '2', Colors.white);
+    expectTextColor(tester, '3', Colors.white);
+    expectTextColor(tester, '4', Colors.blue);
+  });
+
+  testWidgets('restore offset swap', (WidgetTester tester) async {
+    var whoIsNext = WhoIsNext();
+    whoIsNext.whoBeginsOffset = 1;
+    whoIsNext.swapPlayers = "[0, 1, 3, 2]"; // player 2&4 swapped
+
+    final widget = makeTestable(WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})));
+    await tester.pumpWidget(widget);
+
+    expectTextColor(tester, '1', Colors.white);
+    expectTextColor(tester, '2', Colors.white);
+    expectTextColor(tester, '3', Colors.white);
+    expectTextColor(tester, '4', Colors.blue);
+  });
 }
