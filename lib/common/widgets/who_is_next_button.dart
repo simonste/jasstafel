@@ -84,15 +84,19 @@ Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
           builder: (context, setState) {
             return AlertDialog(
               title: Text(context.l10n.whoBegins),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
+              content: Wrap(
                 children: [
-                  Text(context.l10n.noOfRounds(whoIsNextData.rounds)),
-                  WhoIsNextWidget(whoIsNextData),
-                  Text(
-                    context.l10n.whoBeginsInfo,
-                    style: const TextStyle(fontWeight: FontWeight.w100),
-                    textScaler: const TextScaler.linear(0.8),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(context.l10n.noOfRounds(whoIsNextData.rounds)),
+                      WhoIsNextWidget(whoIsNextData),
+                      Text(
+                        context.l10n.whoBeginsInfo,
+                        style: const TextStyle(fontWeight: FontWeight.w100),
+                        textScaler: const TextScaler.linear(0.8),
+                      ),
+                    ],
                   )
                 ],
               ),
