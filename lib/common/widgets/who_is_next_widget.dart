@@ -38,7 +38,8 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
     var cardWidth = MediaQuery.of(context).size.width * 0.3;
 
     List<DraggableGridItem> children = [];
-    swapMap.get().forEach((key, value) {
+    swapMap.get().forEach((i, value) {
+      final key = Key("$i");
       children.add(DraggableGridItem(
           isDraggable: true,
           child: Card(
@@ -64,13 +65,14 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
             ),
             children: children,
             isOnlyLongPress: false,
-            dragCompletion: (List<DraggableGridItem> list, int beforeIndex,
-                int afterIndex) {
-              List<int> newList = list
-                  .map((element) => int.parse(element.child.key.toString()[3]))
-                  .toList();
+            dragCompletion: (list, int beforeIndex, int afterIndex) {
+              List<int> keyList = swapMap.get().keys.toList();
 
-              swapMap.set(newList);
+              final tmp = keyList[beforeIndex];
+              keyList[beforeIndex] = keyList[afterIndex];
+              keyList[afterIndex] = tmp;
+
+              swapMap.set(keyList);
               widget.data.saveFunction();
               setState(() {});
             },

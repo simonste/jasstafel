@@ -45,13 +45,13 @@ class SwapMap {
     return newList;
   }
 
-  Map<Key, Widget> get() {
+  Map<int, Widget> get() {
     var newList = _reorder();
 
-    Map<Key, Widget> map = {};
+    Map<int, Widget> map = {};
     for (var i = 0; i < _data.players.length; i++) {
       map.putIfAbsent(
-          Key("${_list[i]}"),
+          _list[i],
           () => Text(newList[i],
               style: TextStyle(
                   color: (i == selected) ? Colors.blue : Colors.white)));

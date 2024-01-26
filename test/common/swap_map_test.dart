@@ -92,7 +92,7 @@ void main() {
     expect(map2list(sm.get()), ['P1', 'P2', 'P3', 'P4']);
   });
 
-  test('save & restore', () async {
+  test('save & restore', () {
     var data = WhoIsNextData(['P1', 'P2', 'P3', 'P4'], 0, WhoIsNext(), () {});
     var sm = SwapMap(data);
     sm.set([1, 2, 0, 3]);
@@ -113,7 +113,7 @@ void main() {
     expect(highlighted(sm.get()), 'P3');
   });
 
-  test('save & restore selected', () async {
+  test('save & restore selected', () {
     var data = WhoIsNextData(['P1', 'P2', 'P3', 'P4'], 0, WhoIsNext(), () {});
     var sm = SwapMap(data);
     sm.select(const Key("1"));
@@ -123,7 +123,7 @@ void main() {
     expect(highlighted(sm2.get()), 'P2');
   });
 
-  test('save & restore selected 2', () async {
+  test('save & restore selected 2', () {
     var data = WhoIsNextData(['P1', 'P2', 'P3', 'P4'], 0, WhoIsNext(), () {});
     var sm = SwapMap(data);
     sm.set([3, 0, 2, 1]);
@@ -135,7 +135,7 @@ void main() {
     expect(highlighted(sm2.get()), 'P2');
   });
 
-  test('rounds', () async {
+  test('rounds', () {
     var data = WhoIsNextData(['P1', 'P2', 'P3', 'P4'], 0, WhoIsNext(), () {});
     var sm = SwapMap(data);
     sm.select(const Key("0"));
@@ -153,7 +153,7 @@ void main() {
     expect(highlighted(SwapMap(data).get()), 'P4');
   });
 
-  test('change selected', () async {
+  test('change selected', () {
     var data = WhoIsNextData(['P1', 'P2', 'P3', 'P4'], 0, WhoIsNext(), () {});
     var sm = SwapMap(data);
     sm.select(const Key("0"));
