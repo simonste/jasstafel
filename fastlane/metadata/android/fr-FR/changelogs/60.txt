@@ -1,0 +1,3 @@
+Version 4.0.3
+
+- Améliorations pour le format paysage
