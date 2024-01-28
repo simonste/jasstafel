@@ -13,7 +13,7 @@ Jasstafel is an app to write points in the swiss card game Jass.
 
 | Android | Android (F-Droid) | iOS |
 |:-:|:-:|:-:|
-| [<img src="assets/badges/google-play-badge.png" height="50" alt="Google Play">](https://play.google.com/store/apps/details?id=ch.simonste.jasstafel) | [<img src="assets/badges/f-droid-badge.png" height="50" alt="F-Droid">](https://f-droid.org/en/packages/ch.simonste.jasstafel/) | [<img src="assets/badges/appstore-badge.png" height="50" alt="App Store">](https://apps.apple.com/ch/app/schweizer-jasstafel/id1672847164) |
+[![Google Play](assets/badges/google-play-badge.png)](https://play.google.com/store/apps/details?id=ch.simonste.jasstafel) | [![F-Droid](assets/badges/f-droid-badge.png)](https://f-droid.org/en/packages/ch.simonste.jasstafel/) | [![App Store](assets/badges/appstore-badge.png)](https://apps.apple.com/ch/app/schweizer-jasstafel/id1672847164) |
 
 ## Getting Started
 
