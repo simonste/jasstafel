@@ -12,12 +12,12 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Check out submodule
         run: git submodule update --init --force
 
       - name: Setup java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "zulu"
           java-version: "12.x"
@@ -51,7 +51,7 @@ jobs:
             sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
             flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
       - name: screenshot artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots_android_${{ matrix.device }}
           path: screenshots/*
@@ -67,7 +67,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Check out submodule
         run: git submodule update --init --force
 
@@ -102,7 +102,7 @@ jobs:
           sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
           flutter/bin/flutter drive --no-enable-impeller --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
       - name: Screenshot artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots_ios_${{ matrix.device }}
           path: screenshots/*
