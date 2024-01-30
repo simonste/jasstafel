@@ -1,5 +1,8 @@
 name: Jasstafel CI
-on: [push]
+on:
+  push:
+    branches:
+      - "**"
 
 # cspell:disable
 jobs:
