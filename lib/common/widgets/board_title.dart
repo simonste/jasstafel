@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -32,27 +33,27 @@ class BoardTitle extends Theme {
               items: <DropdownMenuItem<Board>>[
                 DropdownMenuItem(
                   value: Board.schieber,
-                  child: Text(context.l10n.schieber),
+                  child: AutoSizeText(context.l10n.schieber),
                 ),
                 DropdownMenuItem(
                   value: Board.coiffeur,
-                  child: Text(context.l10n.coiffeur),
+                  child: AutoSizeText(context.l10n.coiffeur),
                 ),
                 DropdownMenuItem(
                   value: Board.molotow,
-                  child: Text(context.l10n.molotow),
+                  child: AutoSizeText(context.l10n.molotow),
                 ),
                 DropdownMenuItem(
                   value: Board.differenzler,
-                  child: Text(context.l10n.differenzler),
+                  child: AutoSizeText(context.l10n.differenzler),
                 ),
                 DropdownMenuItem(
                   value: Board.guggitaler,
-                  child: Text(context.l10n.guggitaler),
+                  child: AutoSizeText(context.l10n.guggitaler),
                 ),
                 DropdownMenuItem(
                   value: Board.pointBoard,
-                  child: Text(context.l10n.pointBoard),
+                  child: AutoSizeText(context.l10n.pointBoard),
                 ),
               ],
               onChanged: (value) {
