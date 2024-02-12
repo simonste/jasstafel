@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SchieberProgress extends Container {
+class Progress extends Container {
   final bool flip;
   final double progress;
 
-  SchieberProgress(this.progress, this.flip, {super.key});
+  Progress(this.progress, {required this.flip, super.key});
 
   @override
   Widget build(BuildContext context) {

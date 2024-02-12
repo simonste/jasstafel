@@ -6,7 +6,7 @@ import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schieber/widgets/schieber_background_z.dart';
-import 'package:jasstafel/schieber/widgets/schieber_progress.dart';
+import 'package:jasstafel/common/widgets/progress.dart';
 import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 
@@ -216,8 +216,8 @@ class SchieberTeam extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Stack(children: [
-        SchieberProgress(progress(), false),
-        SchieberProgress(progress(), true),
+        Progress(progress(), flip: false),
+        Progress(progress(), flip: true),
         backgroundZ(),
         teamName,
         strokes20(),
