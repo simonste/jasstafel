@@ -1,1 +1,9 @@
-enum Board { schieber, coiffeur, molotow, pointBoard, differenzler, guggitaler }
+enum Board {
+  schieber,
+  coiffeur,
+  molotow,
+  pointBoard,
+  differenzler,
+  guggitaler,
+  schlaeger
+}

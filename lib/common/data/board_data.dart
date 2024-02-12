@@ -13,12 +13,14 @@ import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
+import 'package:jasstafel/schlaeger/data/schlaeger_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
+import 'package:jasstafel/settings/schlaeger_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -58,6 +60,8 @@ class BoardData<T, S extends Score> {
       return Board.differenzler;
     } else if (string == "GuggitalerScore") {
       return Board.guggitaler;
+    } else if (string == "SchlaegerScore") {
+      return Board.schlaeger;
     } else {
       assert(false);
     }
@@ -90,6 +94,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.guggitaler:
         (score as GuggitalerScore).setSettings(settings);
+        break;
+      case Board.schlaeger:
+        (score as SchlaegerScore).setSettings(settings);
         break;
     }
   }
@@ -131,6 +138,10 @@ class BoardData<T, S extends Score> {
         (settings as GuggitalerSettings).fromPreferences(preferences);
         (settings as GuggitalerSettings).toPreferences(preferences);
         break;
+      case Board.schlaeger:
+        (settings as SchlaegerSettings).fromPreferences(preferences);
+        (settings as SchlaegerSettings).toPreferences(preferences);
+        break;
     }
     _updateSettings();
 
@@ -168,6 +179,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.guggitaler:
         (settings as GuggitalerSettings).data = str;
+        break;
+      case Board.schlaeger:
+        (settings as SchlaegerSettings).data = str;
         break;
     }
     _updateSettings();
@@ -237,6 +251,11 @@ class BoardData<T, S extends Score> {
           guggitalerSettings.fromJson(json);
           guggitalerSettings.toPreferences(preferences);
           break;
+        case Board.schlaeger:
+          var schlaegerSettings = settings as SchlaegerSettings;
+          schlaegerSettings.fromJson(json);
+          schlaegerSettings.toPreferences(preferences);
+          break;
       }
       _updateSettings();
       json = jsonDecode(json[dataKey]);
@@ -264,6 +283,9 @@ class BoardData<T, S extends Score> {
         break;
       case Board.guggitaler:
         score = GuggitalerScore.fromJson(json) as S;
+        break;
+      case Board.schlaeger:
+        score = SchlaegerScore.fromJson(json) as S;
         break;
     }
     _updateSettings();

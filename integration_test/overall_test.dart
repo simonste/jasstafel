@@ -207,6 +207,22 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
+  Future<void> addSchlaegerRound(Map<String, int?> points) async {
+    await tap(find.byTooltip('Runde eingeben'));
+    await pump();
+    for (var key in points.keys) {
+      if (points[key] != null) {
+        await tap(find.descendant(
+          of: find.byKey(Key(key)),
+          matching: find.text("${points[key]}"),
+        ));
+      }
+      await pump();
+    }
+    await tap(find.text('Ok'));
+    await pumpAndSettle();
+  }
+
   Future<void> slideTo(String text, int value) async {
     await scrollTo(text);
     final slider = find.byType(Slider);

@@ -52,6 +52,10 @@ class BoardTitle extends Theme {
                   child: AutoSizeText(context.l10n.guggitaler),
                 ),
                 DropdownMenuItem(
+                  value: Board.schlaeger,
+                  child: AutoSizeText(context.l10n.schlaeger),
+                ),
+                DropdownMenuItem(
                   value: Board.pointBoard,
                   child: AutoSizeText(context.l10n.pointBoard),
                 ),

@@ -1,0 +1,16 @@
+SchlaegerSettings:
+  Players:
+    store: "schlaeger_players"
+    default: 3
+  GoalType:
+    store: "schlaeger_goal_type"
+    default: 1
+  GoalPoints:
+    store: "schlaeger_goal_points"
+    default: 9
+  GoalRounds:
+    store: "schlaeger_goal_rounds"
+    default: 10
+  Data:
+    store: "schlaeger"
+    default: "{}"

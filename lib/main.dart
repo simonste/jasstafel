@@ -5,6 +5,7 @@ import 'package:jasstafel/molotow/screens/molotow.dart';
 import 'package:jasstafel/point_board/screens/point_board.dart';
 import 'package:jasstafel/differenzler/screens/differenzler.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
+import 'package:jasstafel/schlaeger/screens/schlaeger.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
         Board.pointBoard.name: (context) => const PointBoard(),
         Board.differenzler.name: (context) => const Differenzler(),
         Board.guggitaler.name: (context) => const Guggitaler(),
+        Board.schlaeger.name: (context) => const Schlaeger(),
       },
       initialRoute: lastBoard,
     );
