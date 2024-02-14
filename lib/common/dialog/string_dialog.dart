@@ -3,8 +3,8 @@ import 'package:jasstafel/common/localization.dart';
 
 Future<String?> stringDialogBuilder(
     BuildContext context, TextEditingController controller,
-    {Widget? title}) {
-  title ??= Text(context.l10n.teamName);
+    {String? title}) {
+  var titleWidget = Text(title ?? context.l10n.teamName);
   return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
@@ -17,9 +17,10 @@ Future<String?> stringDialogBuilder(
       }
 
       return AlertDialog(
-        title: title,
+        title: titleWidget,
         content: TextField(
-            decoration: InputDecoration(hintText: context.l10n.teamName),
+            decoration:
+                InputDecoration(hintText: title ?? context.l10n.teamName),
             autofocus: true,
             keyboardType: TextInputType.text,
             controller: controller,

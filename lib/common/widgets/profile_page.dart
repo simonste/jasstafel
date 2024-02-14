@@ -87,9 +87,8 @@ class ProfilePageState<T> extends State<ProfilePage> {
     var controller = TextEditingController();
     controller.text = value.toString();
 
-    var title = Text(context.l10n.profileName);
-
-    final input = await stringDialogBuilder(context, controller, title: title);
+    final input = await stringDialogBuilder(context, controller,
+        title: context.l10n.profileName);
     if (input != null) {
       if (value.isEmpty) {
         copyProfile(widget.boardData.profiles.active, input);

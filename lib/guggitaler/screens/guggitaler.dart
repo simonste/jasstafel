@@ -148,8 +148,8 @@ class _GuggitalerState extends State<Guggitaler> {
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final title = Text(context.l10n.playerName);
-    final input = await stringDialogBuilder(context, controller, title: title);
+    final input = await stringDialogBuilder(context, controller,
+        title: context.l10n.playerName);
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;

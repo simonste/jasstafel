@@ -9,7 +9,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
 // cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
-// cspell:ignore: aktuelle runde stiche rückseite verwenden
+// cspell:ignore: aktuelle runde stiche rückseite verwenden spielername
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -399,7 +399,7 @@ void main() {
 
     await tester.tap(find.text('Team 1b'));
     await tester.pumpAndSettle();
-    expect(find.text('Teamname'), findsWidgets);
+    expect(find.text('Spielername'), findsWidgets);
     expect(find.byType(TextField), findsOneWidget);
     await tester.enterText(find.byType(TextField), 'Toll');
     await tester.pump();
