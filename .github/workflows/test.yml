@@ -11,7 +11,6 @@ jobs:
       matrix:
         device:
           - "Nexus 6"
-      fail-fast: true
     runs-on: macos-latest
     steps:
       - name: Check out repository code
@@ -66,7 +65,6 @@ jobs:
           - "iPhone 14 Pro Max Simulator"
           - "iPhone 8 Plus Simulator"
           - "iPad Pro (12.9-inch)"
-      fail-fast: true
     runs-on: macos-latest
     steps:
       - name: Check out repository code
