@@ -163,5 +163,19 @@ void main() {
     expectTextColor(tester, '6', Colors.white);
 
     tester.expectOrder(['1', '6', '2', '5', '3', '4']);
+
+    await tester.longPress(find.text('4'));
+    await tester.pumpAndSettle();
+    expectTextColor(tester, '4', Colors.blue);
+
+    // swap 2 & 6
+    await tester.drag(find.text('2'), const Offset(-50, 0));
+    await tester.pumpAndSettle();
+    tester.expectOrder(['1', '2', '6', '5', '3', '4']);
+
+    // swap 3 & 1
+    await tester.drag(find.text('3'), const Offset(-50, -50));
+    await tester.pumpAndSettle();
+    tester.expectOrder(['3', '2', '6', '5', '1', '4']);
   });
 }
