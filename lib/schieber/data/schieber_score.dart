@@ -23,8 +23,8 @@ class SchieberRound {
     return pts[0] + pts[1];
   }
 
-  bool isRound(int matchPoints) {
-    return (_total() % roundPoints(matchPoints) == 0 ||
+  bool isRound(int matchPoints, int pointsPerRound) {
+    return (_total() % pointsPerRound == 0 ||
         (pts[0] == 0 || pts[1] == 0) && (_total() % matchPoints == 0));
   }
 }
@@ -231,12 +231,12 @@ class SchieberScore implements Score {
     for (var round in rounds) {
       final bufferContainsRound = (ptsBuffer.sum > 0 &&
           ((ptsBuffer.sum % _settings.match == 0) ||
-              (ptsBuffer.sum % roundPoints(_settings.match)) == 0));
+              (ptsBuffer.sum % _settings.pointsPerRound) == 0));
       final previousPointsLongAgo = (previousRound != null &&
           round.time.difference(previousRound.time).inSeconds.abs() > 5);
       final currentIsRound = (ptsBuffer.sum > 0 &&
           ((round._total() % _settings.match == 0) ||
-              (round._total() % roundPoints(_settings.match)) == 0));
+              (round._total() % _settings.pointsPerRound) == 0));
       final currentIsWeis = round.weis;
 
       if (bufferContainsRound ||
@@ -275,7 +275,7 @@ class SchieberScore implements Score {
   int noOfRounds() {
     int noOfRounds = 0;
     for (var round in _consolidateRounds()) {
-      if (round.isRound(_settings.match)) {
+      if (round.isRound(_settings.match, _settings.pointsPerRound)) {
         noOfRounds++;
       }
     }
@@ -290,7 +290,7 @@ class SchieberScore implements Score {
   List<int> matches() {
     var matches = [0, 0];
     for (var round in _consolidateRounds()) {
-      if (round.isRound(_settings.match)) {
+      if (round.isRound(_settings.match, _settings.pointsPerRound)) {
         for (var i = 0; i < team.length; i++) {
           var other = (i + 1) % 2;
           if (round.pts[other] == 0) {
@@ -305,7 +305,7 @@ class SchieberScore implements Score {
   List<int> weisPoints() {
     var weisPts = [0, 0];
     for (var round in _consolidateRounds()) {
-      if (!round.isRound(_settings.match)) {
+      if (!round.isRound(_settings.match, _settings.pointsPerRound)) {
         for (var i = 0; i < team.length; i++) {
           if (round.weis || round.pts[i] % 20 == 0 || round.pts[i] % 50 == 0) {
             weisPts[i] += round.pts[i];

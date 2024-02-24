@@ -122,6 +122,16 @@
   "winnerBoth": "Beide Teams haben die Zielpunkte erreicht!\nWer war zuerst?",
   "hillBoth": "Beide Teams haben den Bergpreis erreicht!\nWer war zuerst?",
   "teamNameChanged": "Teamname geändert!",
+  "matchPointsChanged": "Match-Punkte geändert!",
+  "pointsPerRoundChanged": "Punkte pro Runde geändert!",
+  "resetPointsPerRound": "Punkte pro Runde auf {points} ändern?",
+  "@resetPointsPerRound": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
   "deleteWhat": "Was soll zurückgesetzt werden?",
   "resetAll": "Alles",
   "invalidInput": "ungültige Eingabe",

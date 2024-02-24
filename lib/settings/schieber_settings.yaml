@@ -8,6 +8,9 @@ SchieberSettings:
   Match:
     store: "schieber_match"
     default: 257
+  PointsPerRound:
+    store: "schieber_points_per_round"
+    default: 157
   Backside:
     store: "schieber_backside"
     default: false

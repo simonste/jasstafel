@@ -63,7 +63,8 @@ Future<void> dialogBuilder(BuildContext context,
             for (var round in rounds.reversed) {
               rows.add(row("${round.pts[0]}", "${round.pts[1]}",
                   delete: round == rounds.last,
-                  rowType: round.isRound(data.settings.match)
+                  rowType: round.isRound(
+                          data.settings.match, data.settings.pointsPerRound)
                       ? RowType.bold
                       : RowType.normal));
             }

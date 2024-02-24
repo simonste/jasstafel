@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 
 class Points {
@@ -50,8 +49,8 @@ class PointsController extends TextEditingController {
   }
 }
 
-Future<Points?> schieberDialogBuilder(
-    BuildContext context, int teamId, int matchPts, TeamData teamData) {
+Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
+    int matchPts, int roundPts, TeamData teamData) {
   int factor = 1;
   int sign = 1;
 
@@ -68,7 +67,7 @@ Future<Points?> schieberDialogBuilder(
           if (ptsController.getPoints() == matchPts || sign == -1) {
             return 0;
           }
-          return (roundPoints(matchPts) - ptsController.getPoints()) * factor;
+          return (roundPts - ptsController.getPoints()) * factor;
         }
 
         return StatefulBuilder(

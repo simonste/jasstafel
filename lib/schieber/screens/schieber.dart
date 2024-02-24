@@ -196,7 +196,11 @@ class _SchieberState extends State<Schieber> {
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(
-        context, teamId, data.settings.match, data.score.team[teamId]);
+        context,
+        teamId,
+        data.settings.match,
+        data.settings.pointsPerRound,
+        data.score.team[teamId]);
     if (input == null) {
       return; // empty name not allowed
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -21,6 +22,12 @@ class SchieberSettingsScreen extends StatefulWidget {
 class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    SchieberSettings settings = widget.boardData.settings;
+    final currentMatchPoints =
+        PrefService.of(context).get(SchieberSettings.keys.match);
+    final currentPointsPerRound =
+        PrefService.of(context).get(SchieberSettings.keys.pointsPerRound);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.schieber)),
@@ -56,8 +63,50 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
           ],
         ),
         PrefNumber(
-          title: Text(context.l10n.matchPoints),
-          pref: SchieberSettings.keys.match,
+            title: Text(context.l10n.matchPoints),
+            pref: SchieberSettings.keys.match,
+            onChange: (value) async {
+              final proposedPointsPerRound = roundPoints(value!);
+              if (currentPointsPerRound == proposedPointsPerRound) return;
+
+              confirmDialog(
+                  context: context,
+                  title: context.l10n.matchPointsChanged,
+                  subtitle:
+                      context.l10n.resetPointsPerRound(proposedPointsPerRound),
+                  actions: [
+                    DialogAction(
+                        text: context.l10n.ok,
+                        action: () {
+                          final pref = PrefService.of(context);
+                          final key = SchieberSettings.keys.pointsPerRound;
+                          pref.set(key, proposedPointsPerRound);
+                          settings.pointsPerRound = proposedPointsPerRound;
+                        })
+                  ]);
+            }),
+        PrefNumber(
+          title: Text(context.l10n.pointsPerRound),
+          pref: SchieberSettings.keys.pointsPerRound,
+          onChange: (value) async {
+            final proposedMatchPoints = matchPoints(value!);
+            if (currentMatchPoints == proposedMatchPoints) return;
+
+            confirmDialog(
+                context: context,
+                title: context.l10n.pointsPerRoundChanged,
+                subtitle: context.l10n.resetMatchPoints(proposedMatchPoints),
+                actions: [
+                  DialogAction(
+                      text: context.l10n.ok,
+                      action: () {
+                        final pref = PrefService.of(context);
+                        final key = SchieberSettings.keys.match;
+                        pref.set(key, proposedMatchPoints);
+                        settings.match = proposedMatchPoints;
+                      })
+                ]);
+          },
         ),
         PrefTitle(title: Text(context.l10n.settings)),
         PrefCheckbox(

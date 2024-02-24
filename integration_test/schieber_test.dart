@@ -9,7 +9,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
 // cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
-// cspell:ignore: aktuelle runde stiche rückseite verwenden spielername
+// cspell:ignore: aktuelle runde stiche rückseite verwenden spielername ändern
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -141,6 +141,9 @@ void main() {
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
+    expect(find.text('Punkte pro Runde auf 314 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
@@ -148,6 +151,30 @@ void main() {
 
     expect(text(const Key('sum_0')), '129');
     expect(text(const Key('sum_1')), '813');
+  });
+
+  testWidgets('change points per round', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tapInList('Punkte pro Runde');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '160');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tapInList('Punkte pro Runde');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '314');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('Match-Punkte auf 514 ändern?'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('314'), findsOneWidget);
+    expect(find.text('514'), findsOneWidget);
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
   });
 
   testWidgets('add negative points', (tester) async {

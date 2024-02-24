@@ -7,7 +7,8 @@ import '../../integration_test/overall_test.dart';
 import '../helper/testapp.dart';
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog({required int matchPoints}) async {
+  Future<InputWrap> openDialog(
+      {required int matchPoints, int roundPoints = 157}) async {
     var dialogInput = InputWrap();
     await pumpWidget(
         JasstafelTestApp(child: Builder(builder: (BuildContext context) {
@@ -16,7 +17,7 @@ extension DialogHelper on WidgetTester {
           child: const Text('Foo'),
           onTap: () async {
             dialogInput.value = await schieberDialogBuilder(
-                context, 0, matchPoints, TeamData());
+                context, 0, matchPoints, roundPoints, TeamData());
           },
         ),
       );
@@ -76,7 +77,8 @@ void main() {
   });
 
   testWidgets('add match 514', (WidgetTester tester) async {
-    var dialogInput = await tester.openDialog(matchPoints: 514);
+    var dialogInput =
+        await tester.openDialog(matchPoints: 514, roundPoints: 314);
 
     await tester.addSchieberPoints(['key_4', 'key_Match'], factor: '2x');
 
@@ -85,12 +87,33 @@ void main() {
   });
 
   testWidgets('add round 514', (WidgetTester tester) async {
-    var dialogInput = await tester.openDialog(matchPoints: 514);
+    var dialogInput =
+        await tester.openDialog(matchPoints: 514, roundPoints: 314);
 
     await tester.addSchieberPoints(['key_4', 'key_8']);
 
     expect(dialogInput.value!.points1, 48);
     expect(dialogInput.value!.points2, 314 - 48);
+  });
+
+  testWidgets('add match 260', (WidgetTester tester) async {
+    var dialogInput =
+        await tester.openDialog(matchPoints: 260, roundPoints: 160);
+
+    await tester.addSchieberPoints(['key_4', 'key_Match'], factor: '2x');
+
+    expect(dialogInput.value!.points1, 2 * 260);
+    expect(dialogInput.value!.points2, 0);
+  });
+
+  testWidgets('add round 160', (WidgetTester tester) async {
+    var dialogInput =
+        await tester.openDialog(matchPoints: 260, roundPoints: 160);
+
+    await tester.addSchieberPoints(['key_4', 'key_8']);
+
+    expect(dialogInput.value!.points1, 48);
+    expect(dialogInput.value!.points2, 160 - 48);
   });
 
   testWidgets('tap outside', (WidgetTester tester) async {
