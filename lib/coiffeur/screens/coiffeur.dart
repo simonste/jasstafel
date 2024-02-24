@@ -113,11 +113,16 @@ class _CoiffeurState extends State<Coiffeur> {
       );
     }
 
+    final separateCellForElapsedTime =
+        data.settings.thirdColumn && !data.settings.threeTeams;
     var cells = [
       CoiffeurCell(
-        context.l10n.noOfRounds(data.score.noOfRounds()),
+        separateCellForElapsedTime
+            ? context.l10n.noOfRounds(data.score.noOfRounds())
+            : "${context.l10n.noOfRounds(data.score.noOfRounds())}\n${data.common.timestamps.elapsed(context)}",
         leftBorder: false,
         group: typeNameGroup,
+        maxLines: separateCellForElapsedTime ? 1 : 2,
       ),
       teamWidget(0),
       teamWidget(1),
