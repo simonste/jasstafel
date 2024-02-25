@@ -1,0 +1,5 @@
+Version 4.1.0
+
+- Neue Tafel: Schläger
+- Punkte pro Runde können beim Schieber gesetzt werden
+- Spieldauer wird beim Coiffeur auch ohne Auswertungsspalte angezeigt.

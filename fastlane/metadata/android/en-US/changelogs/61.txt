@@ -1,0 +1,5 @@
+Version 4.1.0
+
+- New type: Schläger
+- Points per round can be set for Schieber
+- Playing time is also displayed at the coiffeur without evaluation column.

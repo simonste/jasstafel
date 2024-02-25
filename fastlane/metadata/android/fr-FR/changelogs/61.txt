@@ -1,0 +1,5 @@
+Version 4.1.0
+
+- Nouveau type: Schläger
+- Points par tour pour le chibre
+- La durée du jeu est affichée chez le coiffeur, même sans colonne d'évaluation.
