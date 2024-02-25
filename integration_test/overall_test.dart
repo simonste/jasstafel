@@ -58,7 +58,7 @@ extension AppHelper on WidgetTester {
 
   Future<void> scrollTo(String text) async {
     final settingFinder = find.text(text);
-    if (!any(settingFinder)) {
+    if (!any(settingFinder) || !any(settingFinder.hitTestable())) {
       await scrollUntilVisible(
         settingFinder,
         100.0,
