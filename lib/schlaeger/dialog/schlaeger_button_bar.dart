@@ -13,16 +13,9 @@ class SchlaegerButtonBar extends StatefulWidget {
 class _SchlaegerButtonBarState extends State<SchlaegerButtonBar> {
   List<bool> selections = List.generate(6, (i) => i == 0);
   int selected = 0;
+  final textScaler = const TextScaler.linear(1.5);
 
   List<int?> points = [null, -1, 0, 1, 2, 3];
-  List<Widget> buttons = [
-    const Text("x"),
-    const Text("-1"),
-    const Text("0"),
-    const Text("1"),
-    const Text("2"),
-    const Text("3")
-  ];
 
   void select(int i) {
     if (i == selected) {
@@ -45,6 +38,15 @@ class _SchlaegerButtonBarState extends State<SchlaegerButtonBar> {
   @override
   Widget build(BuildContext context) {
     final buttonWidth = MediaQuery.of(context).size.width * 0.1;
+
+    List<Widget> buttons = [
+      Text("x", textScaler: textScaler),
+      Text("-1", textScaler: textScaler),
+      Text("0", textScaler: textScaler),
+      Text("1", textScaler: textScaler),
+      Text("2", textScaler: textScaler),
+      Text("3", textScaler: textScaler)
+    ];
 
     return ToggleButtons(
       isSelected: selections,

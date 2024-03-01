@@ -95,7 +95,11 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                       }),
                   child: Column(
                     children: [
-                      SizedBox(height: 50, child: Center(child: Text(number)))
+                      SizedBox(
+                          height: 50,
+                          child: Center(
+                              child: Text(number,
+                                  textScaler: const TextScaler.linear(1.8))))
                     ],
                   ));
             }
