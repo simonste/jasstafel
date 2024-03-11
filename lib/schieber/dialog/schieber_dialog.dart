@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
+import 'package:jasstafel/schieber/dialog/schieber_button_bar.dart';
 
 class Points {
   int points1;
@@ -108,34 +109,6 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                 children: [cell(i * 3 + 1), cell(i * 3 + 2), cell(i * 3 + 3)]);
           }
 
-          Widget getFactorWidget() {
-            var list = teamData.flip
-                ? List<int>.generate(7, (i) => 7 - i)
-                : List<int>.generate(7, (i) => i + 1);
-
-            var items = list.map((v) {
-              final text = Text("${v}x");
-              return DropdownMenuItem(
-                  value: v,
-                  child: teamData.flip
-                      ? RotatedBox(quarterTurns: 2, child: text)
-                      : text);
-            }).toList();
-
-            final button = DropdownButton<int>(
-              key: const Key("dropdownFactor"),
-              value: factor,
-              onChanged: (value) => setState(() => factor = value!),
-              items: items,
-            );
-
-            if (teamData.flip) {
-              return RotatedBox(quarterTurns: 2, child: button);
-            } else {
-              return button;
-            }
-          }
-
           Widget getPlusMinusButton() {
             return Expanded(
                 flex: 1,
@@ -156,7 +129,7 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   ptsController.text,
-                  textScaler: const TextScaler.linear(2),
+                  textScaler: const TextScaler.linear(3),
                 ),
               ),
             );
@@ -212,12 +185,15 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(children: [
-                    getFactorWidget(),
                     getPlusMinusButton(),
                     getTextField(),
                     getButton("∅", 0),
                     getButton(context.l10n.match, matchPts),
                   ]),
+                  SchieberButtonBar(
+                    (int p) => setState(() => factor = p),
+                    key: const Key("factor"),
+                  ),
                   Text(getSummary()),
                   Container(height: 20),
                   Table(children: [

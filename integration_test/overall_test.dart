@@ -123,8 +123,6 @@ extension AppHelper on WidgetTester {
       await pumpAndSettle();
     }
     if (factor != null) {
-      await tap(find.byKey(const Key('dropdownFactor')));
-      await pumpAndSettle();
       await tap(find.text(factor).last);
       await pumpAndSettle();
     }
