@@ -72,6 +72,29 @@ void main() {
     expect(dialogInput.value, null);
   });
 
+  testWidgets('ok allowed without points per round',
+      (WidgetTester tester) async {
+    var dialogInput = await tester.openDialog(
+        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+
+    await tester.enterText(find.byKey(const Key('pts_1')), '12');
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pump();
+    expect(dialogInput.value, [null, 12, null, null]);
+  });
+
+  testWidgets('ok not allowed without points per round when empty',
+      (WidgetTester tester) async {
+    var dialogInput = await tester.openDialog(
+        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+
+    await tester.tap(find.text('Ok'));
+    await tester.pump();
+    expect(find.text('Ok'), findsOneWidget);
+    expect(dialogInput.value, null);
+  });
+
   testWidgets('ok is allowed on edit', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),

@@ -137,7 +137,9 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
                 ),
                 child: Text(context.l10n.ok),
                 onPressed: () => {
-                  if (noOfEmpty == 0 || previousPts != null)
+                  if (noOfEmpty == 0 ||
+                      previousPts != null ||
+                      (pointsPerRound == null && noOfEmpty != points.length))
                     {Navigator.of(context).pop(points)}
                 },
               ),
