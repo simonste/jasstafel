@@ -151,9 +151,12 @@ class SchlaegerPlayer extends StatelessWidget {
         ),
         PositionedMargin(
           margins: pointsMargin,
-          child: Text("$pts",
-              textScaler: const TextScaler.linear(4),
-              key: Key("sum_$playerId")),
+          child: GestureDetector(
+              onLongPress: () =>
+                  editRoundDialog(editRowNo: data.score.rows.length - 1),
+              child: Text("$pts",
+                  textScaler: const TextScaler.linear(6),
+                  key: Key("sum_$playerId"))),
         ),
       ]),
     );
