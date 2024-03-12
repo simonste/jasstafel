@@ -15,6 +15,7 @@ Future<List<int?>?> schlaegerDialogBuilder(BuildContext context,
   return showDialog<List<int?>?>(
       context: context,
       builder: (BuildContext context) {
+        final screenSize = MediaQuery.of(context).size;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           List<int?> points = List.generate(playerNames.length, (_) => null);
@@ -22,7 +23,8 @@ Future<List<int?>?> schlaegerDialogBuilder(BuildContext context,
           var columns = <Widget>[];
           for (var i = 0; i < playerNames.length; i++) {
             columns.add(Text(playerNames[i]));
-            columns.add(SizedBox(
+            columns.add(ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: screenSize.height * 0.1),
               child: SchlaegerButtonBar(
                 (int? p) => points[i] = p,
                 previousPoints: previousPts?[i],
@@ -34,10 +36,12 @@ Future<List<int?>?> schlaegerDialogBuilder(BuildContext context,
           return AlertDialog(
             title: title,
             content: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: columns)),
+                child: Wrap(children: [
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: columns)
+            ])),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
