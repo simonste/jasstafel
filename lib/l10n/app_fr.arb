@@ -190,5 +190,10 @@
   "nfc": "Transférer les paramètres par NFC",
   "nfcNotAvailable": "L'appareil ne prend pas en charge NFC",
   "nfcDisabled": "NFC désactivé",
-  "nfcEnabled": "Maintiens les smartphones ensemble pour transférer les paramètres."
+  "nfcEnabled": "Maintiens les smartphones ensemble pour transférer les paramètres.",
+  "missingPlayer": "Empty field",
+  "missingP1": "haut gauche",
+  "missingP2": "haut droite",
+  "missingP3": "bas gauche",
+  "missingP4": "bas droite"
 }

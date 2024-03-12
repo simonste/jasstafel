@@ -50,6 +50,24 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
           max: SchlaegerPlayers.max,
           trailing: (num v) => Text('$v'),
         ),
+        PrefDisablerGeneric(
+          reversed: false,
+          nullValue: 4,
+          pref: SchlaegerSettings.keys.players,
+          children: [
+            PrefDropdown(
+              title: Text(context.l10n.missingPlayer),
+              pref: SchlaegerSettings.keys.missingPlayer,
+              items: [
+                DropdownMenuItem(value: 0, child: Text(context.l10n.missingP1)),
+                DropdownMenuItem(value: 1, child: Text(context.l10n.missingP2)),
+                DropdownMenuItem(value: 2, child: Text(context.l10n.missingP3)),
+                DropdownMenuItem(value: 3, child: Text(context.l10n.missingP4)),
+              ],
+              onChange: (value) => {},
+            ),
+          ],
+        ),
         PrefDropdown(
           title: Text(context.l10n.goalType),
           pref: SchlaegerSettings.keys.goalType,

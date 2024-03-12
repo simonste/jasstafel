@@ -505,5 +505,10 @@
       }
     }
   },
-  "replaceProfileHint": "Die aktuellen Einstellungen und Spielstände werden überschrieben!"
+  "replaceProfileHint": "Die aktuellen Einstellungen und Spielstände werden überschrieben!",
+  "missingPlayer": "Leeres Feld",
+  "missingP1": "Oben Links",
+  "missingP2": "Oben Rechts",
+  "missingP3": "Unten Links",
+  "missingP4": "Unten Rechts"
 }

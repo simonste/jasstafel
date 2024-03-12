@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: zurück ziel zielpunkte anzahl erreicht gewonnen
+// cspell:ignore: zurück ziel zielpunkte anzahl erreicht gewonnen unten rechts links
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +43,29 @@ void main() {
     expect(text(const Key('sum_1')), '1');
     expect(text(const Key('sum_2')), '-1');
     expect(find.byKey(const Key('sum_3')), findsNothing);
+  });
+
+  testWidgets('3 players lower left', (tester) async {
+    await tester.launchApp();
+
+    expect(find.text('Spieler 4'), findsNothing);
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Unten Rechts').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Unten Links'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Spieler 4'), findsNothing);
+
+    await tester.addSchlaegerRound({
+      'pts_0': 2,
+      'pts_1': 1,
+      'pts_2': -1,
+    });
   });
 
   testWidgets('4 players', (tester) async {

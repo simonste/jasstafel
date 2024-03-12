@@ -2,6 +2,9 @@ SchlaegerSettings:
   Players:
     store: "schlaeger_players"
     default: 3
+  MissingPlayer:
+    store: "schlaeger_missing_player"
+    default: 3
   GoalType:
     store: "schlaeger_goal_type"
     default: 1

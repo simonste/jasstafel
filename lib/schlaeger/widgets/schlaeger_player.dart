@@ -35,18 +35,19 @@ class PositionedMargin extends Positioned {
 
 class SchlaegerPlayer extends StatelessWidget {
   final BoardData<SchlaegerSettings, SchlaegerScore> data;
-  final int playerId;
+  final int? playerId;
   final Function(int) editNameDialog;
   final Function({int? editRowNo}) editRoundDialog;
+  final int position;
 
   const SchlaegerPlayer(
       this.playerId, this.data, this.editNameDialog, this.editRoundDialog,
-      {super.key});
+      {required this.position, super.key});
 
   @override
   Widget build(BuildContext context) {
     decoration() {
-      if (playerId % 2 == 0) {
+      if (position % 2 == 0) {
         return const BoxDecoration(
             border: Border(
                 right: BorderSide(
@@ -58,7 +59,10 @@ class SchlaegerPlayer extends StatelessWidget {
 
     return Expanded(
         child: Container(
-            decoration: decoration(), child: _team(playerId, data, context)));
+            decoration: decoration(),
+            child: playerId == null
+                ? const SizedBox(child: Stack())
+                : _team(playerId!, data, context)));
   }
 
   Widget _team(int playerId, BoardData<SchlaegerSettings, SchlaegerScore> data,
@@ -94,8 +98,8 @@ class SchlaegerPlayer extends StatelessWidget {
       }
     }
 
-    final a = playerId < 2;
-    final b = playerId % 2 != 0;
+    final a = position < 2;
+    final b = position % 2 != 0;
     final v1 = height * 0.01;
     final h1 = width * 0.05;
 
@@ -117,8 +121,8 @@ class SchlaegerPlayer extends StatelessWidget {
       child: Stack(children: [
         Progress(
           progress(),
-          bottom: playerId < 2,
-          flip: playerId % 2 != 0,
+          bottom: position < 2,
+          flip: position % 2 != 0,
         ),
         PositionedMargin(
           margins: nameMargin,

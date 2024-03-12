@@ -197,5 +197,10 @@
   "nfc": "Transfer settings via NFC",
   "nfcNotAvailable": "Device does not support NFC",
   "nfcDisabled": "NFC switched off",
-  "nfcEnabled": "Hold the smartphones together to transfer the settings."
+  "nfcEnabled": "Hold the smartphones together to transfer the settings.",
+  "missingPlayer": "Empty field",
+  "missingP1": "upper left",
+  "missingP2": "upper right",
+  "missingP3": "lower left",
+  "missingP4": "lower right"
 }

@@ -50,6 +50,18 @@ class _SchlaegerState extends State<Schlaeger> {
       updateTimer!.cancel();
     }
 
+    var playerWidgets = <Widget>[];
+    var playerCounter = 0;
+    for (int i = 0; i < 4; i++) {
+      var player =
+          (data.settings.players != 4 && data.settings.missingPlayer == i)
+              ? null
+              : playerCounter++;
+      playerWidgets.add(SchlaegerPlayer(
+          player, data, _stringDialog, _pointsDialog,
+          position: i));
+    }
+
     return Scaffold(
       appBar: TitleBar(
         board: Board.schlaeger,
@@ -79,20 +91,12 @@ class _SchlaegerState extends State<Schlaeger> {
                 child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                  SchlaegerPlayer(0, data, _stringDialog, _pointsDialog),
-                  SchlaegerPlayer(1, data, _stringDialog, _pointsDialog),
-                ])),
+                    children: [playerWidgets[0], playerWidgets[1]])),
             Expanded(
                 child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                  SchlaegerPlayer(2, data, _stringDialog, _pointsDialog),
-                  data.settings.players == 4
-                      ? SchlaegerPlayer(3, data, _stringDialog, _pointsDialog)
-                      : const Expanded(child: SizedBox()),
-                ]))
+                    children: [playerWidgets[2], playerWidgets[3]]))
           ],
         ),
         Center(
