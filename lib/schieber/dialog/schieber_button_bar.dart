@@ -48,7 +48,7 @@ class _SchieberButtonBarState extends State<SchieberButtonBar> {
       }),
       constraints:
           BoxConstraints(minWidth: buttonWidth, minHeight: buttonWidth),
-      fillColor: Colors.blue,
+      fillColor: Theme.of(context).colorScheme.background,
       children: buttons,
     );
   }
