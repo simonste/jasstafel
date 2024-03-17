@@ -28,7 +28,9 @@ if [ ! -f "res/AppleWWDRCA.cer" ]; then
     cd ..
 fi
 
+# This has to be refreshed after 1 year
 if [ ! -f "ios_distribution.cer" ]; then
+    rm res/ios_distribution.pem
     echo "FAIL: ios_distribution certificate missing"
     echo "Create Certificate of type iOS Distribution @ https://developer.apple.com/account/resources/certificates/list"
     echo "Download it to ios_distribution.cer"
@@ -36,12 +38,14 @@ if [ ! -f "ios_distribution.cer" ]; then
 fi
 
 if [ ! -f "res/ios_distribution.pem" ]; then
+    rm ios_distribution.p12
     echo "Prepare ios_distribution certificate"
     openssl x509 -inform der -in ios_distribution.cer -out res/ios_distribution.pem
 fi
 
 if [ ! -f "ios_distribution.p12" ]; then
     echo "Create P12 file"
+    echo "Use Password from Password Safe (Apple Developer)"
     openssl pkcs12 -export -legacy -clcerts -inkey pkpass.key -in res/ios_distribution.pem -certfile res/AppleWWDRCA.pem -name "Simon Steinmann" -out ios_distribution.p12
 fi
 
