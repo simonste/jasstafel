@@ -1,0 +1,5 @@
+Version 4.1.1
+
+- Schieber: Einfachere auswahl vom Multiplikator
+- Punktetafel: Ohne fixe Punkte pro Runde können Felder leer sein
+- Schläger: mehrere kleinere Optimierungen
