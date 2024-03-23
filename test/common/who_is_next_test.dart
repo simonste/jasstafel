@@ -105,6 +105,16 @@ void main() {
     expect(players[3], "Paul");
   });
 
+  test('2 teams CamelCase', () {
+    final players = guess([" MaMa", "SuSi"]);
+
+    expect(players.length, 4);
+    expect(players[0], "Ma");
+    expect(players[1], "Su");
+    expect(players[2], "Ma");
+    expect(players[3], "Si");
+  });
+
   test('2 teams double name', () {
     final players = guess(["Max A - Matthew B", "Peter K & Paul S"]);
 

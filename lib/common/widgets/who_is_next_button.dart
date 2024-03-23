@@ -18,10 +18,29 @@ class WhoIsNextButton extends IconButton {
               width: 24,
             ));
 
+  static List<String> splitAtUpperCaseLetters(String teamName) {
+    List<String> players = [];
+    int idx = 0;
+    for (int i = 1; i < teamName.length; i++) {
+      if (teamName[i] == teamName[i].toUpperCase()) {
+        players.add(teamName.substring(idx, i));
+        idx = i;
+      }
+    }
+    players.add(teamName.substring(idx));
+    return players;
+  }
+
   static List<String> splitTeamName(String teamName, {int? limit}) {
     var playerNames = teamName.split(RegExp("[-&/+]"));
     if (playerNames.length < 2 || playerNames[0].isEmpty) {
       playerNames = teamName.split(RegExp("[ ]+"));
+    }
+    if (playerNames.length < 2) {
+      final camelCaseSplit = splitAtUpperCaseLetters(teamName);
+      if (camelCaseSplit.length == 2) {
+        playerNames = camelCaseSplit;
+      }
     }
     if (limit != null) {
       if (playerNames.length > limit) {
