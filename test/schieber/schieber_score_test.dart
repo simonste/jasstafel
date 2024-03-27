@@ -353,4 +353,22 @@ void main() {
     expect(score.team[0].name, "T1");
     expect(score.team[1].name, "T2");
   });
+
+  test('count rounds', () {
+    var score = SchieberScore();
+
+    score.add(20, 0, weis: true);
+    score.add(77, 80);
+
+    expect(score.noOfRounds(), 1);
+  });
+
+  test('count matches', () {
+    var score = SchieberScore();
+
+    score.add(100, 0, weis: true);
+    score.add(77, 80);
+
+    expect(score.matches(), [0, 0]);
+  });
 }

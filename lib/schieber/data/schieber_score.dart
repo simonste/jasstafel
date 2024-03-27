@@ -244,8 +244,10 @@ class SchieberScore implements Score {
           currentIsRound ||
           currentIsWeis ||
           previousIsWeis()) {
-        consRounds.add(SchieberRound(ptsBuffer, weis: previousIsWeis()));
-        ptsBuffer = [0, 0];
+        if (ptsBuffer[0] != 0 || ptsBuffer[1] != 0) {
+          consRounds.add(SchieberRound(ptsBuffer, weis: previousIsWeis()));
+          ptsBuffer = [0, 0];
+        }
       }
       ptsBuffer[0] += round.pts[0];
       ptsBuffer[1] += round.pts[1];
