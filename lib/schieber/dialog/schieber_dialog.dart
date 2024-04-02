@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
@@ -172,7 +173,10 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
           Widget dialog() {
             return AlertDialog(
               title: Row(children: [
-                Text(context.l10n.pointsOf(teamData.name)),
+                SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: 50,
+                    child: AutoSizeText(context.l10n.pointsOf(teamData.name))),
                 Expanded(
                     child: InkWell(
                         key: const Key("flip"),

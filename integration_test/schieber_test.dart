@@ -32,13 +32,15 @@ void main() {
 
     expect(find.text('Teamname'), findsWidgets);
     expect(find.byType(TextField), findsOneWidget);
-    await tester.enterText(find.byType(TextField), 'Super Team');
+    await tester.enterText(find.byType(TextField), 'Super with long name Team');
     await tester.pump();
 
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
     expect(find.text('Team 1'), findsNothing);
-    expect(find.text('Super Team'), findsOneWidget);
+    expect(find.text('Super with long name Team'), findsOneWidget);
+
+    await tester.addSchieberPoints(['add_0', 'key_2', 'key_3'], factor: '2x');
   });
 
   testWidgets('do not accept empty team name', (tester) async {

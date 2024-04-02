@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/data/board_data.dart';
@@ -65,12 +66,19 @@ class SchieberTeam extends StatelessWidget {
     final top3 = top2 + (top1 + strokeHeight);
 
     final teamName = Positioned(
-      top: height * 0.01,
-      left: width * 0.01,
-      child: GestureDetector(
-          onTap: () => dialogs.editTeamName(teamId),
-          child: Text(teamData.name, textScaler: const TextScaler.linear(2))),
-    );
+        top: height * 0.01,
+        left: width * 0.01,
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.8,
+          child: GestureDetector(
+              onTap: () => dialogs.editTeamName(teamId),
+              child: AutoSizeText(
+                teamData.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textScaleFactor: 2,
+              )),
+        ));
     teamPoints() {
       if (data.settings.bigScore) {
         return Center(
