@@ -23,15 +23,14 @@ class GenerateSettings implements Builder {
     var name = settingsYaml.keys.first;
     final settings = SettingsGroup.parse(name, settingsYaml[name] as Map);
 
-    var library = Library((b) => {
-          b.directives.addAll([
-            Directive.import('package:flutter/widgets.dart'),
-            Directive.import('package:pref/pref.dart'),
-            Directive.import(
-                'package:shared_preferences/shared_preferences.dart')
-          ]),
-          b.body.addAll(settings.create())
-        });
+    var library = Library((b) {
+      b.directives.addAll([
+        Directive.import('package:flutter/widgets.dart'),
+        Directive.import('package:pref/pref.dart'),
+        Directive.import('package:shared_preferences/shared_preferences.dart')
+      ]);
+      b.body.addAll(settings.create());
+    });
 
     final emitter = DartEmitter.scoped();
     await buildStep.writeAsString(buildStep.inputId.changeExtension('.g.dart'),

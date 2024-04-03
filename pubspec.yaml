@@ -42,8 +42,11 @@ dependencies:
   code_builder: ^4.7.0
   collection: ^1.17.2
   cupertino_icons: ^1.0.6
-  dart_style: ^2.3.2
-  flutter_draggable_gridview: ^0.0.8
+  dart_style: ^2.3.6
+  flutter_draggable_gridview:
+    git:
+      url: https://github.com/simonste/flutter_draggable_gridview.git
+      ref: fix_update_list
   flutter_svg: ^2.0.7
   intl: ^0.18.1
   json_annotation: ^4.8.1
