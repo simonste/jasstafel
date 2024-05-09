@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "12.x"
+          java-version: "17.x"
           cache: "gradle"
 
       - name: Get dependencies
@@ -43,6 +43,7 @@ jobs:
           keyAlias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          buildToolsVersion: 34.0.0
 
       - name: Android app bundle artifact
         uses: actions/upload-artifact@v4
@@ -83,7 +84,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: "15.3.0"
 
       - name: Get dependencies
         run: flutter/bin/flutter pub get

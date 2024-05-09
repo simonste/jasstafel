@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "12.x"
+          java-version: "17.x"
           cache: "gradle"
 
       - name: Get dependencies
@@ -75,7 +75,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: "15.3.0"
 
       - name: "List all simulators"
         run: "xcrun xctrace list devices"
