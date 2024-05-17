@@ -119,8 +119,10 @@
       }
     }
   },
-  "winnerBoth": "Beide Teams haben die Zielpunkte erreicht!\nWer war zuerst?",
-  "hillBoth": "Beide Teams haben den Bergpreis erreicht!\nWer war zuerst?",
+  "winnerBothPoints": "Beide Teams haben die Zielpunkte erreicht!",
+  "winnerBoth": "Beide Teams haben gewonnen!",
+  "winnerFirst": "Wer war zuerst?",
+  "hillBoth": "Beide Teams haben den Bergpreis erreicht!",
   "teamNameChanged": "Teamname geändert!",
   "matchPointsChanged": "Match-Punkte geändert!",
   "pointsPerRoundChanged": "Punkte pro Runde geändert!",

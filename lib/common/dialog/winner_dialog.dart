@@ -24,10 +24,19 @@ Future<void> winnerDialog(
         subtitle: subtitle,
         actions: []);
   } else {
+    String subtitle;
+    if (goalType == GoalType.rounds) {
+      subtitle = context.l10n.winnerBoth;
+      winners.clear();
+    } else {
+      subtitle =
+          "${context.l10n.winnerBothPoints}\n${context.l10n.winnerFirst}";
+    }
+
     return _bothDialog(
         context: context,
         title: context.l10n.gameOver,
-        subtitle: context.l10n.winnerBoth,
+        subtitle: subtitle,
         winners: winners,
         setFunction: setWinnerFunction);
   }
@@ -40,7 +49,7 @@ Future<void> hillDialog(
   return _bothDialog(
       context: context,
       title: context.l10n.hill,
-      subtitle: context.l10n.hillBoth,
+      subtitle: "${context.l10n.hillBoth}\n${context.l10n.winnerFirst}",
       winners: hillers,
       setFunction: setHillerFunction);
 }

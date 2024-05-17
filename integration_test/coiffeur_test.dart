@@ -12,6 +12,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
 // cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen anzahl
+// cspell:ignore: beide haben
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -435,5 +436,17 @@ void main() {
 
     await tester.addCoiffeurPoints('1:1', 110);
     expect(minPlayed(), greaterThan(tEnd));
+  });
+
+  testWidgets('winner both', (tester) async {
+    await tester.launchApp();
+
+    for (var i = 0; i < 11; i++) {
+      await tester.addCoiffeurPoints('0:$i', 140);
+      await tester.addCoiffeurPoints('1:$i', 140);
+    }
+    expect(find.text('Beide Teams haben gewonnen!'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
   });
 }
