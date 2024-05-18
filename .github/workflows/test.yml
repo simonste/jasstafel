@@ -62,8 +62,8 @@ jobs:
     strategy:
       matrix:
         device:
-          - "iPhone 14 Pro Max Simulator"
-          - "iPhone 8 Plus Simulator"
+          - "iPhone 15 Pro Max Simulator"
+          - "iPhone SE"
           - "iPad Pro (12.9-inch)"
     runs-on: macos-latest
     steps:
