@@ -12,7 +12,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
 // cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen anzahl
-// cspell:ignore: beide haben
+// cspell:ignore: beide haben konter
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -448,5 +448,40 @@ void main() {
     expect(find.text('Beide Teams haben gewonnen!'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('counter ', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    await tester.slideTo("Anzahl Runden", 6);
+    await tester.pump();
+    await tester.tapInList('Konter-Match-Strafe');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '-500');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Zurück'));
+    await tester.pumpAndSettle();
+
+    await tester.addCoiffeurPoints('0:0', 0, tapKey: "scratch");
+    await tester.addCoiffeurPoints('0:1', 140);
+    await tester.addCoiffeurPoints('0:2', 80);
+    await tester.addCoiffeurPoints('0:3', 140);
+    await tester.addCoiffeurPoints('0:4', 140);
+    await tester.addCoiffeurPoints('0:5', 140);
+    await tester.addCoiffeurPoints('1:1', 0, tapKey: "match");
+    await tester.addCoiffeurPoints('1:2', 120);
+    await tester.addCoiffeurPoints('1:3', 60);
+    await tester.addCoiffeurPoints('1:4', 100);
+    await tester.addCoiffeurPoints('1:5', 0, tapKey: "match");
+
+    expect(find.text('Gewonnen!'), findsOneWidget);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    await tester.delete('Ok');
+
+    expect(find.text('0'), findsExactly(2));
   });
 }

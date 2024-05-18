@@ -36,7 +36,7 @@ class PrefNumber extends StatelessWidget {
         content: SingleChildScrollView(
           child: TextField(
             controller: controller,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(signed: false),
           ),
         ),
         actions: <Widget>[
@@ -53,6 +53,6 @@ class PrefNumber extends StatelessWidget {
       ),
     );
 
-    return result == true ? int.parse(controller.text) : value;
+    return result == true ? int.parse(controller.text).abs() : value;
   }
 }
