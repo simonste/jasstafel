@@ -1,0 +1,4 @@
+Version 4.1.3
+
+- Bugfix: Eingabe von negativen Zielpunkten, ... ist nicht mehr möglich
+- Anzeige Verbesserung wenn lange Teamnamen verwendet werden.

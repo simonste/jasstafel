@@ -1,0 +1,4 @@
+Version 4.1.3
+
+- prevent entry of negative goal points
+- layout improvements for long team names

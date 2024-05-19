@@ -1,0 +1,4 @@
+Version 4.1.3
+
+- saisie de score à atteindre négatifs, ... n'est plus possible.
+- amélioration de la mise en page pour les noms d'équipe longs
