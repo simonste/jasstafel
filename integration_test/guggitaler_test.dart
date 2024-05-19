@@ -84,7 +84,7 @@ void main() {
     await tester.longPress(find.text('-').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Spieler 1').last);
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.scrollNumberPicker('picker_0', 5);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();

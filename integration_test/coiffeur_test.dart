@@ -455,13 +455,13 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
-    await tester.slideTo("Anzahl Runden", 6);
-    await tester.pump();
     await tester.tapInList('Konter-Match-Strafe');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '-500');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
+    await tester.slideTo("Anzahl Runden", 6);
+    await tester.pump();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 

@@ -499,7 +499,7 @@ void main() {
     await preferences.setBool("additionalTestButtons", true);
     await tester.launchApp();
 
-    expect(find.byKey(const Key('additionalTestButton6')), findsOneWidget);
+    expect(find.byKey(const Key('additionalTestButton5')), findsOneWidget);
     expect(find.byType(PopupMenuButton), findsOneWidget);
     expect(find.byKey(const Key('backside')), findsNothing);
 

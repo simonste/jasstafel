@@ -235,7 +235,7 @@ extension AppHelper on WidgetTester {
     final slideTicks = value - prefSlider.value;
     final offsetFromCurrent = slideTicks * distancePerIncrement;
     // overshoot seems to be necessary
-    final overshoot = offsetFromCurrent.sign * 0.1 * distancePerIncrement;
+    final overshoot = offsetFromCurrent.sign * 0.4 * distancePerIncrement;
     await dragFrom(sliderPos, Offset(offsetFromCurrent + overshoot, 0));
     await pumpAndSettle();
     expect((slider.evaluate().single.widget as Slider).value, value);
