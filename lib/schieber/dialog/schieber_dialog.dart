@@ -174,9 +174,10 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
             return AlertDialog(
               title: Row(children: [
                 SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.6 - 50,
                     height: 50,
-                    child: AutoSizeText(context.l10n.pointsOf(teamData.name))),
+                    child: AutoSizeText(context.l10n.pointsOf(teamData.name),
+                        maxLines: 2)),
                 Expanded(
                     child: InkWell(
                         key: const Key("flip"),
