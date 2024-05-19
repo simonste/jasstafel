@@ -80,8 +80,9 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                 return const SizedBox.shrink();
               }
 
-              final String number = (n == 12)
-                  ? "⌫"
+              final isDeleteButton = (n == 12);
+              final String number = isDeleteButton
+                  ? "←"
                   : (n == 11)
                       ? "0"
                       : "$n";
@@ -89,7 +90,7 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
               return InkWell(
                   key: Key("key_$number"),
                   onTap: () => setState(() {
-                        if (number == "⌫") {
+                        if (isDeleteButton) {
                           ptsController.delete();
                         } else {
                           ptsController.add(number);
@@ -101,7 +102,7 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
                           height: 50,
                           child: Center(
                               child: Text(number,
-                                  textScaler: const TextScaler.linear(1.8))))
+                                  textScaler: const TextScaler.linear(2.5))))
                     ],
                   ));
             }
