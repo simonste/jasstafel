@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/schieber/widgets/schieber_strokes.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -31,10 +32,12 @@ String? cellText(Key key) {
 extension AppHelper on WidgetTester {
   Future<void> launchApp() async {
     app.main();
-    // pump three times to assure android app is launched
+    // pump and wait for Title bar to assure app is launched
     await pumpAndSettle();
-    await pumpAndSettle();
-    await pumpAndSettle();
+    while (find.byType(TitleBar).evaluate().isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+      await pumpAndSettle();
+    }
   }
 
   Future<void> switchBoard({required String to}) async {
