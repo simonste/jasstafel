@@ -7,12 +7,21 @@ on:
 # cspell:disable
 jobs:
   test-android:
+    if: ${{ !contains(github.ref, 'ios') }}
     strategy:
       matrix:
         device:
-          - "Nexus 6"
-    runs-on: macos-latest
+          - "pixel_6"
+          - "10.1in WXGA (Tablet)"
+    runs-on: ubuntu-latest
     steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls /dev/kvm
+
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Check out submodule
@@ -36,22 +45,20 @@ jobs:
 
       - name: Test
         run: flutter/bin/flutter test
-      # - name: Integration test
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 29
-      #     profile: ${{ matrix.device }}
-      #     script: flutter/bin/flutter test integration_test
-
-      - name: Take screenshots
-        if: ${{ false }}
+      - name: Integration test
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          arch: x86_64
+          disable-animations: true
+          disk-size: 6000M
+          heap-size: 600M
           profile: ${{ matrix.device }}
           script: |
-            sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
+            flutter/bin/flutter test integration_test
+            sed -i -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
             flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
+
       - name: screenshot artifact
         uses: actions/upload-artifact@v4
         with:
@@ -59,6 +66,7 @@ jobs:
           path: screenshots/*
 
   test-ios:
+    if: ${{ !contains(github.ref, 'android') }}
     strategy:
       matrix:
         device:
