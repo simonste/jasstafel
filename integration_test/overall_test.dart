@@ -71,6 +71,18 @@ extension AppHelper on WidgetTester {
     }
   }
 
+  Future<void> scrollToKey(Key key) async {
+    final settingFinder = find.byKey(key);
+    if (!any(settingFinder) || !any(settingFinder.hitTestable())) {
+      await scrollUntilVisible(
+        settingFinder,
+        100.0,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await pumpAndSettle();
+    }
+  }
+
   Future<void> scrollUpTo(String text) async {
     final settingFinder = find.text(text);
     if (!any(settingFinder)) {
@@ -162,8 +174,9 @@ extension AppHelper on WidgetTester {
 
   Future<void> addRound(Map<String, int?> points) async {
     await tap(find.byTooltip('Runde eingeben'));
-    await pump();
+    await pumpAndSettle();
     for (var key in points.keys) {
+      await scrollToKey(Key(key));
       if (points[key] != null) {
         await enterText(find.byKey(Key(key)), '${points[key]}');
       } else {
