@@ -81,8 +81,7 @@ class MyApp extends StatelessWidget {
           canvasColor: Colors.grey.shade800, // drop down
           dialogBackgroundColor: Colors.grey.shade800,
           colorScheme: ColorScheme.dark(
-            surface: Colors.grey.shade800, // top bar
-            background: Colors.black, // progress bar
+            surface: Colors.grey.shade800, // progress bar
             primary: Colors.blue.shade200, // buttons / progress bar
             secondary: Colors.blue.shade800, // settings
             tertiary: Colors.grey.shade800, // molotow round
