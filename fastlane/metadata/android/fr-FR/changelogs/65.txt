@@ -1,0 +1,3 @@
+Version 4.1.4
+
+- mise à jour vers la dernière version d'android
