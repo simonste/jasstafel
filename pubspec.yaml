@@ -53,7 +53,7 @@ dependencies:
   pref: ^2.7.2
   restart_app: ^1.2.1
   shared_preferences: ^2.2.1
-  vibration: ^1.7.7
+  vibration: ^2.0.0
   wakelock_plus: ^1.1.4
   yaml: ^3.1.2
   numberpicker: ^2.1.2

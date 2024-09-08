@@ -376,11 +376,16 @@ class SchieberScore implements Score {
       }
 
       Future.delayed(
-          Duration.zero,
-          () => hillDialog(
-              context: context,
-              hillers: hillers,
-              setHillerFunction: setHiller));
+        Duration.zero,
+        () {
+          if (context.mounted) {
+            hillDialog(
+                context: context,
+                hillers: hillers,
+                setHillerFunction: setHiller);
+          }
+        },
+      );
     }
   }
 

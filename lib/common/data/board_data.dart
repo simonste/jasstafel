@@ -200,13 +200,18 @@ class BoardData<T, S extends Score> {
     final winners = score.winner();
     if (winners.isNotEmpty && common.timestamps.justFinished()) {
       Future.delayed(
-          Duration.zero,
-          () => winnerDialog(
-              context: context,
-              winners: winners,
-              losers: score.loser(),
-              setWinnerFunction: score.setWinner,
-              goalType: goalType));
+        Duration.zero,
+        () {
+          if (context.mounted) {
+            winnerDialog(
+                context: context,
+                winners: winners,
+                losers: score.loser(),
+                setWinnerFunction: score.setWinner,
+                goalType: goalType);
+          }
+        },
+      );
     }
   }
 
