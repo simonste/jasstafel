@@ -78,6 +78,7 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) => context.l10n.appName,
       theme: ThemeData(
           brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
           canvasColor: Colors.grey.shade800, // drop down
           dialogBackgroundColor: Colors.grey.shade800,
           colorScheme: ColorScheme.dark(
