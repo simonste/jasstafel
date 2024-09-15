@@ -44,6 +44,9 @@ void main() {
     expect(text(const Key('sum_1')), '20');
     expect(text(const Key('sum_2')), '30');
     expect(text(const Key('sum_3')), '97');
+
+    await tester.delete("Ok");
+    expect(text(const Key('sum_0')), '0');
   });
 
   testWidgets('add handweis', (tester) async {

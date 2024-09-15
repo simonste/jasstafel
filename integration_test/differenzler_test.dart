@@ -64,6 +64,9 @@ void main() {
     expect(text(const Key('sum_1')), '0');
     expect(text(const Key('sum_2')), '5');
     expect(text(const Key('sum_3')), '3');
+
+    await tester.delete("Ok");
+    expect(text(const Key('sum_0')), '0');
   });
 
   testWidgets('only 2 players', (tester) async {
