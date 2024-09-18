@@ -10,6 +10,7 @@ import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
+import 'package:jasstafel/common/widgets/board_list_with_fab.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -125,49 +126,38 @@ class _MolotowState extends State<Molotow> {
               () => setState(() => data.settings.fromPrefService(context))),
         ],
       ),
-      body: Stack(children: [
-        Column(children: [
-          rowHeader(
-              playerNames: data.score.playerName,
-              players: data.settings.players,
-              headerFunction: _stringDialog,
-              context: context),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(children: rows),
-            ),
-          ),
-          footer()
-        ]),
-        Positioned(
-            right: 160,
-            bottom: 50,
-            child: FloatingActionButton(
-                heroTag: "hand_weis",
-                onPressed: () => _weisDialog(hand: true),
-                tooltip: context.l10n.handWeis,
-                child: SizedBox(
-                    height: 40,
-                    child: SvgPicture.asset('assets/actions/hand_weis.svg')))),
-        Positioned(
-            right: 90,
-            bottom: 50,
-            child: FloatingActionButton(
-                heroTag: "add_round",
-                onPressed: () => _pointsDialog(),
-                tooltip: context.l10n.addRound,
-                child: const Icon(Icons.add))),
-        Positioned(
-            right: 20,
-            bottom: 50,
-            child: FloatingActionButton(
-                heroTag: "table_weis",
-                onPressed: () => _weisDialog(hand: false),
-                tooltip: context.l10n.tableWeis,
-                child: SizedBox(
-                    height: 40,
-                    child: SvgPicture.asset('assets/actions/table_weis.svg')))),
-      ]),
+      body: BoardListWithFab(
+        header: rowHeader(
+            playerNames: data.score.playerName,
+            players: data.settings.players,
+            headerFunction: _stringDialog,
+            context: context),
+        rows: rows,
+        footer: footer(),
+        floatingActionButtons: [
+          FloatingActionButton(
+              heroTag: "hand_weis",
+              onPressed: () => _weisDialog(hand: true),
+              tooltip: context.l10n.handWeis,
+              child: SizedBox(
+                  height: 40,
+                  child: SvgPicture.asset('assets/actions/hand_weis.svg'))),
+          const SizedBox(width: 20),
+          FloatingActionButton(
+              heroTag: "add_round",
+              onPressed: () => _pointsDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add)),
+          const SizedBox(width: 20),
+          FloatingActionButton(
+              heroTag: "table_weis",
+              onPressed: () => _weisDialog(hand: false),
+              tooltip: context.l10n.tableWeis,
+              child: SizedBox(
+                  height: 40,
+                  child: SvgPicture.asset('assets/actions/table_weis.svg'))),
+        ],
+      ),
     );
   }
 

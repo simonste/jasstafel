@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
@@ -212,5 +216,26 @@ void main() {
 
     expect(text(const Key('sum_0')), '39');
     expect(text(const Key('sum_1')), '72');
+  });
+
+  testWidgets('scrollable', (tester) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var score = DifferenzlerScore();
+    var row = DifferenzlerRow();
+    row.guesses = [33, 28, 88, 0];
+    row.pts = [20, 40, 85, 12];
+    score.rows = List.filled(20, row);
+
+    await preferences.setString(
+        DifferenzlerSettings.keys.data, jsonEncode(score.toJson()));
+
+    await tester.launchApp();
+
+    expect(find.byTooltip('Ansage von Spieler 1').hitTestable(), findsNothing);
+    expect(find.byTooltip('Ansage von Spieler 2').hitTestable(), findsNothing);
+    await tester.addDifferenzlerGuessPoints('Spieler 1', 40);
+    expect(find.byTooltip('Ansage von Spieler 1'), findsNothing);
+    expect(
+        find.byTooltip('Ansage von Spieler 2').hitTestable(), findsOneWidget);
   });
 }

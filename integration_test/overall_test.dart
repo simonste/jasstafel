@@ -81,6 +81,11 @@ extension AppHelper on WidgetTester {
     }
   }
 
+  Future<void> scroll(Offset offset) async {
+    await drag(find.byType(SingleChildScrollView), offset);
+    await pumpAndSettle();
+  }
+
   Future<void> tapInList(String text) async {
     await scrollTo(find.text(text));
     await tap(find.text(text));
@@ -175,6 +180,7 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> addDifferenzlerGuessPoints(String playerName, int guess) async {
+    await scrollTo(find.byTooltip('Ansage von $playerName'));
     await tap(find.byTooltip('Ansage von $playerName'));
     await pump();
     await enterText(find.byType(TextField), '$guess');

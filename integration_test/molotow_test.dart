@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
@@ -232,5 +236,29 @@ void main() {
 
     expect(text(const Key('sum_0')), '180');
     expect(text(const Key('sum_1')), '231');
+  });
+
+  testWidgets('scrollable', (tester) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var score = MolotowScore();
+    score.rows = List.filled(20, MolotowRow([25, 50, 66, 16], isRound: true));
+
+    await preferences.setString(
+        MolotowSettings.keys.data, jsonEncode(score.toJson()));
+
+    await tester.launchApp();
+
+    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
+    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
+    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
+
+    await tester.scroll(const Offset(0, -300));
+
+    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
+    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
+    expect(tester.getCenter(find.byTooltip('Handweis')).dy, lessThan(500));
+
+    await tester.scroll(const Offset(0, 300));
+    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
   });
 }

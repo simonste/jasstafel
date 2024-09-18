@@ -8,6 +8,7 @@ import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
+import 'package:jasstafel/common/widgets/board_list_with_fab.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -119,29 +120,22 @@ class _GuggitalerState extends State<Guggitaler> {
               () => setState(() => data.settings.fromPrefService(context))),
         ],
       ),
-      body: Stack(children: [
-        Column(children: [
-          rowHeader(
-              playerNames: data.score.playerName,
-              players: data.settings.players,
-              headerFunction: _stringDialog,
-              context: context),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(children: rows),
-            ),
-          ),
-          footer()
-        ]),
-        Positioned(
-            right: 20,
-            bottom: 50,
-            child: FloatingActionButton(
-                heroTag: "add_round",
-                onPressed: () => _guggitalerDialog(),
-                tooltip: context.l10n.addRound,
-                child: const Icon(Icons.add))),
-      ]),
+      body: BoardListWithFab(
+        header: rowHeader(
+            playerNames: data.score.playerName,
+            players: data.settings.players,
+            headerFunction: _stringDialog,
+            context: context),
+        rows: rows,
+        footer: footer(),
+        floatingActionButtons: [
+          FloatingActionButton(
+              heroTag: "add_round",
+              onPressed: () => _guggitalerDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add))
+        ],
+      ),
     );
   }
 
