@@ -244,7 +244,7 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
     await tester.tapInList('Hilfslinien (Z) anzeigen');
-    await tester.scrollUpTo('verschiedene Zielpunkte');
+    await tester.scrollUpTo(find.text('verschiedene Zielpunkte'));
     await tester.tapInList('verschiedene Zielpunkte');
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();

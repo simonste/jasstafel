@@ -120,7 +120,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zielpunkte').first);
     await tester.pumpAndSettle();
-    await tester.scrollTo("Je mehr Punkte desto besser");
+    await tester.scrollTo(find.text("Je mehr Punkte desto besser"));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zielpunkte').last);
     await tester.pumpAndSettle();
@@ -158,7 +158,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zielpunkte').first);
     await tester.pumpAndSettle();
-    await tester.scrollTo("Je mehr Punkte desto besser");
+    await tester.scrollTo(find.text("Je mehr Punkte desto besser"));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zielpunkte').last);
     await tester.pumpAndSettle();
@@ -205,7 +205,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').first);
     await tester.pumpAndSettle();
-    await tester.scrollTo("Je mehr Punkte desto besser");
+    await tester.scrollTo(find.text("Je mehr Punkte desto besser"));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').last);
     await tester.pumpAndSettle();

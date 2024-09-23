@@ -59,23 +59,10 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> scrollTo(String text) async {
-    final settingFinder = find.text(text);
-    if (!any(settingFinder) || !any(settingFinder.hitTestable())) {
+  Future<void> scrollTo(Finder finder) async {
+    if (!any(finder) || !any(finder.hitTestable())) {
       await scrollUntilVisible(
-        settingFinder,
-        100.0,
-        scrollable: find.byType(Scrollable),
-      );
-      await pumpAndSettle();
-    }
-  }
-
-  Future<void> scrollToKey(Key key) async {
-    final settingFinder = find.byKey(key);
-    if (!any(settingFinder) || !any(settingFinder.hitTestable())) {
-      await scrollUntilVisible(
-        settingFinder,
+        finder,
         100.0,
         scrollable: find.byType(Scrollable).last,
       );
@@ -83,11 +70,10 @@ extension AppHelper on WidgetTester {
     }
   }
 
-  Future<void> scrollUpTo(String text) async {
-    final settingFinder = find.text(text);
-    if (!any(settingFinder)) {
+  Future<void> scrollUpTo(Finder finder) async {
+    if (!any(finder) || !any(finder.hitTestable())) {
       await scrollUntilVisible(
-        settingFinder,
+        finder,
         -100.0,
         scrollable: find.byType(Scrollable),
       );
@@ -96,7 +82,7 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> tapInList(String text) async {
-    await scrollTo(text);
+    await scrollTo(find.text(text));
     await tap(find.text(text));
     await pumpAndSettle();
   }
@@ -176,7 +162,7 @@ extension AppHelper on WidgetTester {
     await tap(find.byTooltip('Runde eingeben'));
     await pumpAndSettle();
     for (var key in points.keys) {
-      await scrollToKey(Key(key));
+      await scrollTo(find.byKey(Key(key)));
       if (points[key] != null) {
         await enterText(find.byKey(Key(key)), '${points[key]}');
       } else {
@@ -238,7 +224,7 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> slideTo(String text, int value) async {
-    await scrollTo(text);
+    await scrollTo(find.text(text));
     final slider = find.byType(Slider);
     final prefSlider = slider.evaluate().single.widget as Slider;
     const sliderPadding = 24;

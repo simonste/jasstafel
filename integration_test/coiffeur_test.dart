@@ -268,7 +268,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbrechen'));
     await tester.pumpAndSettle();
-    await tester.scrollUpTo('Match-Punkte');
+    await tester.scrollUpTo(find.text('Match-Punkte'));
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '207');
