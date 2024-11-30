@@ -371,4 +371,20 @@ void main() {
 
     expect(score.matches(), [0, 0]);
   });
+
+  test('winner exactly', () {
+    var score = SchieberScore();
+
+    score.team[0].goalPoints = 400;
+    score.team[1].goalPoints = 400;
+
+    score.add(100, 0, weis: true);
+    score.add(99, 58);
+
+    score.add(200, 0, weis: true);
+    expect(score.winner(), []);
+
+    score.add(1, 0, weis: true);
+    expect(score.winner(), ["Team 1"]);
+  });
 }

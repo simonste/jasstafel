@@ -332,7 +332,7 @@ class SchieberScore implements Score {
 
     if (_settings.goalType == GoalType.points.index) {
       for (final t in team) {
-        if (t.sum() > t.goalPoints) {
+        if (t.sum() >= t.goalPoints) {
           winners.add(t.name);
           t.win = true;
         }
