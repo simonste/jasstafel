@@ -399,7 +399,7 @@ class SchieberScore implements Score {
     List<String> hillers = [];
     if (_settings.goalType == GoalType.points.index) {
       for (final t in team) {
-        if (t.sum() > t.goalPoints / 2) {
+        if (t.sum() >= t.goalPoints / 2) {
           hillers.add(t.name);
           t.hill = true;
         }
