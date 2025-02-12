@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
+import 'package:jasstafel/coiffeur/widgets/coiffeur_cell.dart';
 import 'package:jasstafel/coiffeur/widgets/coiffeur_type_image.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -12,12 +13,14 @@ class CoiffeurTypeCell extends StatelessWidget {
   final int row;
   final Function updateParent;
   final AutoSizeGroup? group;
+  final bool grey;
 
   const CoiffeurTypeCell({
     required this.data,
     required this.row,
     required this.updateParent,
     this.group,
+    this.grey = false,
     super.key,
   });
 
@@ -28,42 +31,48 @@ class CoiffeurTypeCell extends StatelessWidget {
     final thirdCol = (data.settings.thirdColumn || data.settings.threeTeams);
     final double unit = thirdCol ? 4 : 6;
 
+    var stack = Stack(
+      fit: StackFit.expand,
+      children: [
+        Container(
+          padding: EdgeInsets.only(left: unit),
+          alignment: Alignment.centerLeft,
+          child: CoiffeurTypeImage(context, name, width: 6 * unit),
+        ),
+        Positioned(
+            left: 7 * unit,
+            top: 0,
+            bottom: 0,
+            right: 0,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: AutoSizeText(
+                name,
+                wrapWords: false,
+                maxLines: 2,
+                style: const TextStyle(fontSize: 1000),
+                group: group,
+              ),
+            )),
+        Positioned(
+          right: unit,
+          top: unit,
+          child: Text("$factor"),
+        ),
+      ],
+    );
+
     return Expanded(
+      child: Container(
+        decoration: CoiffeurCell.decoration(false, false, false, grey),
         child: InkWell(
-      onLongPress: () {
-        _coiffeurTypeDialog(context);
-      },
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: unit),
-            alignment: Alignment.centerLeft,
-            child: CoiffeurTypeImage(context, name, width: 6 * unit),
-          ),
-          Positioned(
-              left: 7 * unit,
-              top: 0,
-              bottom: 0,
-              right: 0,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: AutoSizeText(
-                  name,
-                  wrapWords: false,
-                  maxLines: 2,
-                  style: const TextStyle(fontSize: 1000),
-                  group: group,
-                ),
-              )),
-          Positioned(
-            right: unit,
-            top: unit,
-            child: Text("$factor"),
-          ),
-        ],
+          onLongPress: () {
+            _coiffeurTypeDialog(context);
+          },
+          child: stack,
+        ),
       ),
-    ));
+    );
   }
 
   void _coiffeurTypeDialog(BuildContext context) async {

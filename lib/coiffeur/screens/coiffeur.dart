@@ -146,15 +146,13 @@ class _CoiffeurState extends State<Coiffeur> {
   }
 
   CoiffeurRow _createRow(int i) {
+    final rowCompleted =
+        data.settings.greyCompletedRows && data.score.diff(i) != null;
+
     Widget teamWidget(team, row) {
-      return CoiffeurPointsCell(
-        data.score.points(row, team),
-        onTap: () {
-          _pointsDialog(team, row);
-        },
-        key: Key("$team:$row"),
-        group: cellGroup,
-      );
+      return CoiffeurPointsCell(data.score.points(row, team), onTap: () {
+        _pointsDialog(team, row);
+      }, key: Key("$team:$row"), group: cellGroup, grey: rowCompleted);
     }
 
     var cells = [
@@ -163,6 +161,7 @@ class _CoiffeurState extends State<Coiffeur> {
         row: i,
         updateParent: () => setState(() {}),
         group: typeNameGroup,
+        grey: rowCompleted,
       ),
       teamWidget(0, i),
       teamWidget(1, i),
@@ -173,7 +172,8 @@ class _CoiffeurState extends State<Coiffeur> {
       final diff = data.score.diff(i);
       final alignment =
           ((diff ?? 0) > 0) ? Alignment.centerLeft : Alignment.centerRight;
-      cells.add(CoiffeurPointsCell.number(diff, alignment: alignment));
+      cells.add(CoiffeurPointsCell.number(diff,
+          alignment: alignment, grey: rowCompleted));
     }
 
     return CoiffeurRow(cells, topBorder: true);

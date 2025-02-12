@@ -125,6 +125,9 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
         PrefCheckbox(
             title: Text(context.l10n.setFactorManually),
             pref: CoiffeurSettings.keys.customFactor),
+        PrefCheckbox(
+            title: Text(context.l10n.completedRows),
+            pref: CoiffeurSettings.keys.greyCompletedRows),
 
         //
         PrefTitle(title: Text(context.l10n.commonSettings)),

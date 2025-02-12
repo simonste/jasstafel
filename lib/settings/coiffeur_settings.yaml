@@ -17,6 +17,9 @@ CoiffeurSettings:
   CustomFactor:
     store: "coiffeur_custom_factor"
     default: false
+  GreyCompletedRows:
+    store: "coiffeur_grey_out_completed_rows"
+    default: false
   Bonus:
     store: "coiffeur_bonus"
     default: false

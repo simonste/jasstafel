@@ -9,6 +9,7 @@ class CoiffeurCell extends StatelessWidget {
   final bool leftBorder;
   final bool scratch;
   final bool highlight;
+  final bool grey;
   final Alignment alignment;
   final AutoSizeGroup? group;
 
@@ -20,6 +21,7 @@ class CoiffeurCell extends StatelessWidget {
     this.leftBorder = true,
     this.scratch = false,
     this.highlight = false,
+    this.grey = false,
     this.alignment = Alignment.center,
     this.group,
   });
@@ -34,6 +36,7 @@ class CoiffeurCell extends StatelessWidget {
       leftBorder,
       scratch,
       highlight,
+      grey,
       alignment,
       group,
     ));
@@ -46,12 +49,13 @@ class CoiffeurCell extends StatelessWidget {
     bool leftBorder,
     bool scratch,
     bool highlight,
+    bool grey,
     Alignment alignment,
     AutoSizeGroup? group,
   ) {
     final container = Container(
         alignment: alignment,
-        decoration: decoration(leftBorder, highlight, scratch),
+        decoration: decoration(leftBorder, highlight, scratch, grey),
         padding: const EdgeInsets.all(10),
         child: AutoSizeText(
           name,
@@ -72,7 +76,11 @@ class CoiffeurCell extends StatelessWidget {
     bool leftBorder,
     bool highlight,
     bool scratch,
+    bool grey,
   ) {
+    final color =
+        highlight ? Colors.blue.shade600 : (grey ? Colors.grey.shade800 : null);
+
     if (leftBorder) {
       var border = const Border(
           left: BorderSide(
@@ -86,22 +94,26 @@ class CoiffeurCell extends StatelessWidget {
             image: AssetImage("assets/images/scratch.png"),
           ),
           border: border,
-          color: highlight ? Colors.blue.shade600 : null,
+          color: color,
         );
       }
 
       return BoxDecoration(
         border: border,
-        color: highlight ? Colors.blue.shade600 : null,
+        color: color,
       );
     }
-    return const BoxDecoration();
+    return BoxDecoration(color: color);
   }
 }
 
 class CoiffeurPointsCell extends CoiffeurCell {
   CoiffeurPointsCell(CoiffeurPoints pts,
-      {super.key, super.onTap, super.leftBorder, AutoSizeGroup? group})
+      {super.key,
+      super.onTap,
+      super.leftBorder,
+      AutoSizeGroup? group,
+      super.grey})
       : super(_getString(pts), scratch: pts.scratched, group: group);
 
   CoiffeurPointsCell.number(int? pts,
@@ -110,7 +122,8 @@ class CoiffeurPointsCell extends CoiffeurCell {
       super.leftBorder,
       super.highlight,
       super.alignment,
-      super.group})
+      super.group,
+      super.grey})
       : super(_getNumberString(pts));
 
   static String _getNumberString(int? pts) {

@@ -105,6 +105,7 @@
   "threeTeams": "3 Teams",
   "thirdColumn": "Evaluation column",
   "setFactorManually": "Use your own multipliers",
+  "completedRows": "Grey out completed rows",
   "shown": "displayed",
   "hidden": "hidden",
   "coiffeurSummary": "Maximum possible points",
