@@ -33,8 +33,10 @@ class GenerateSettings implements Builder {
     });
 
     final emitter = DartEmitter.scoped();
-    await buildStep.writeAsString(buildStep.inputId.changeExtension('.g.dart'),
-        DartFormatter().format('${library.accept(emitter)}'));
+    await buildStep.writeAsString(
+        buildStep.inputId.changeExtension('.g.dart'),
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format('${library.accept(emitter)}'));
   }
 
   @override

@@ -9,7 +9,7 @@ import 'package:jasstafel/common/localization.dart';
 
 String encodeProfile(Map<String, dynamic> profile) {
   var bytes = utf8.encode(jsonEncode(profile));
-  return base64.encode(GZipEncoder().encode(bytes)!);
+  return base64.encode(GZipEncoder().encode(bytes));
 }
 
 Map<String, dynamic> decodeProfile(String encoded) {

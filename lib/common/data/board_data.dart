@@ -105,7 +105,7 @@ class BoardData<T, S extends Score> {
     final preferences = await SharedPreferences.getInstance();
 
     try {
-      var hasVibrator = await Vibration.hasVibrator() ?? false;
+      var hasVibrator = await Vibration.hasVibrator();
       if (hasVibrator) {
         supportsVibration = true;
       }

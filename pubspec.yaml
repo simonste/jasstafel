@@ -36,13 +36,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  archive: ^3.4.4
+  archive: ^4.0.2
   auto_size_text: ^3.0.0
   build: ^2.4.1
   code_builder: ^4.7.0
   collection: ^1.18.0
   cupertino_icons: ^1.0.6
-  dart_style: ^2.3.6
+  dart_style: ^3.0.1
   flutter_draggable_gridview:
     git:
       url: https://github.com/simonste/flutter_draggable_gridview.git
@@ -53,7 +53,7 @@ dependencies:
   pref: ^2.7.2
   restart_app: ^1.2.1
   shared_preferences: ^2.2.1
-  vibration: ^2.0.0
+  vibration: ^3.1.2
   wakelock_plus: ^1.1.4
   yaml: ^3.1.2
   numberpicker: ^2.1.2
