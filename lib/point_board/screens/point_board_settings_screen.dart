@@ -92,6 +92,10 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
               title: Text(context.l10n.goalPoints),
               subtitle: Text(goalPointsSubTitle),
               pref: PointBoardSettings.keys.goalPoints,
+              onChange: (value) {
+                settings.goalPoints = value!;
+                setState(() {});
+              },
             ),
           ],
         ),

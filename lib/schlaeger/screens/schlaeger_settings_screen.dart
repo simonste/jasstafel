@@ -4,7 +4,6 @@ import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
-import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schlaeger_settings.g.dart';
 import 'package:pref/pref.dart';
@@ -29,9 +28,6 @@ class SchlaegerSettingsScreen extends StatefulWidget {
 class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    SchlaegerSettings settings = widget.boardData.settings;
-    final goalPointsSubTitle = subTitle(settings.goalPoints, false, context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.schlaeger)),
@@ -89,7 +85,6 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
           children: [
             PrefNumber(
               title: Text(context.l10n.goalPoints),
-              subtitle: Text(goalPointsSubTitle),
               pref: SchlaegerSettings.keys.goalPoints,
             ),
           ],

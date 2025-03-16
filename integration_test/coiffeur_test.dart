@@ -12,7 +12,7 @@ import 'overall_test.dart';
 
 // cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
 // cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen anzahl
-// cspell:ignore: beide haben konter
+// cspell:ignore: beide haben konter gerundet
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -483,5 +483,40 @@ void main() {
     await tester.delete('Ok');
 
     expect(find.text('0'), findsExactly(2));
+  });
+
+  testWidgets('settings subtitles', (tester) async {
+    await tester.launchApp();
+
+    await tester.tap(find.byKey(const Key('SettingsButton')));
+    await tester.pumpAndSettle();
+    expect(find.text('gerundet 26'), findsNothing);
+    await tester.tapInList('Punkte auf 10er Runden');
+    await tester.pumpAndSettle();
+    expect(find.text('gerundet 26'), findsOneWidget);
+
+    await tester.tapInList('Match-Punkte');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '157');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('gerundet 16'), findsOneWidget);
+
+    await tester.tapInList('Konter-Match-Strafe');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '50');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('gerundet 5'), findsOneWidget);
+
+    await tester.tapInList('Match-Prämie verwenden');
+    await tester.pumpAndSettle();
+
+    await tester.tapInList('Match-Prämie');
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), '120');
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+    expect(find.text('gerundet 12'), findsOneWidget);
   });
 }

@@ -81,6 +81,10 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
               title: Text(context.l10n.goalPoints),
               subtitle: Text(goalPointsSubTitle),
               pref: MolotowSettings.keys.goalPoints,
+              onChange: (value) {
+                settings.goalPoints = value!;
+                setState(() {});
+              },
             ),
           ],
         ),

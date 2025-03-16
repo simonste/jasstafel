@@ -58,11 +58,19 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
           title: Text(context.l10n.matchPoints),
           subtitle: Text(matchPointsSubTitle),
           pref: CoiffeurSettings.keys.match,
+          onChange: (value) {
+            settings.match = value!;
+            setState(() {});
+          },
         ),
         PrefNumber(
             title: Text(context.l10n.matchMalusVal),
             subtitle: Text(counterPointsSubTitle),
-            pref: CoiffeurSettings.keys.counterLoss),
+            pref: CoiffeurSettings.keys.counterLoss,
+            onChange: (value) {
+              settings.counterLoss = value!;
+              setState(() {});
+            }),
         PrefCheckbox(
           title: Text(context.l10n.matchBonus),
           subtitle: Text(
@@ -98,7 +106,11 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             PrefNumber(
                 title: Text(context.l10n.matchBonusVal),
                 subtitle: Text(bonusPointsSubTitle),
-                pref: CoiffeurSettings.keys.bonusValue),
+                pref: CoiffeurSettings.keys.bonusValue,
+                onChange: (value) {
+                  settings.bonusValue = value!;
+                  setState(() {});
+                }),
           ],
         ),
 
