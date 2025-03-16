@@ -56,7 +56,8 @@ class _SchlaegerButtonBarState extends State<SchlaegerButtonBar> {
       }),
       constraints:
           BoxConstraints(minWidth: buttonWidth, minHeight: buttonWidth),
-      fillColor: Theme.of(context).colorScheme.surface,
+      fillColor: Theme.of(context).colorScheme.primary,
+      selectedColor: Theme.of(context).colorScheme.onPrimary,
       children: buttons,
     );
   }
