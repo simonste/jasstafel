@@ -41,6 +41,7 @@ app.*.map.json
 
 # Generated dart files
 *.g.dart
+lib/l10n/app*.dart
 
 # Generated icons
 *ic_launcher*
