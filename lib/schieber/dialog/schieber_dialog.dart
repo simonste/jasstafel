@@ -160,7 +160,7 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: Text(text),
+              child: Text(text, textScaler: const TextScaler.linear(1.5)),
               onPressed: () {
                 final weis = (text == context.l10n.weis);
                 var ptsOther = (weis) ? 0 : pointsOtherTeam();
