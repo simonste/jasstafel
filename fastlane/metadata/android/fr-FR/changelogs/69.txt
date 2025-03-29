@@ -1,0 +1,4 @@
+Version 4.1.7
+
+- Coiffeur: option pour griser les tours entièrement joués.
+- Bugfixes

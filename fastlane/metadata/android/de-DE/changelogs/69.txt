@@ -1,0 +1,4 @@
+Version 4.1.7
+
+- Coiffeur: Option zum ausgrauen vollständig gespielter Runden.
+- div. Verbesserungen und Bugfixes

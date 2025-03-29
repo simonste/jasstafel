@@ -1,0 +1,4 @@
+Version 4.1.7
+
+- Coiffeur: Option to gray out completely played rounds.
+- Various improvements and bug fixes
