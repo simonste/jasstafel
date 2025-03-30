@@ -52,7 +52,8 @@ jobs:
           path: |
             build/app/outputs/bundle/release/app-release-signed.aab
             build/app/outputs/mapping/release/mapping.txt
-            build/app/intermediates/merged_native_libs/release/out/lib
+            build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+          if-no-files-found: "error"
 
   release-android:
     needs: [build-android, build-ios]
@@ -70,7 +71,7 @@ jobs:
           packageName: ch.simonste.jasstafel
           releaseFiles: outputs/bundle/release/app-release-signed.aab
           mappingFile: outputs/mapping/release/mapping.txt
-          debugSymbols: intermediates/merged_native_libs/release/out/lib
+          debugSymbols: intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
           track: beta
 
   build-ios:
