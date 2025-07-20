@@ -85,7 +85,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.3.0"
+          xcode-version: "16.2.0"
 
       - name: Get dependencies
         run: flutter/bin/flutter pub get
@@ -97,7 +97,7 @@ jobs:
         run: flutter/bin/flutter packages pub run build_runner build --delete-conflicting-outputs
 
       - name: Install the Apple certificate
-        uses: apple-actions/import-codesign-certs@master
+        uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.P12_BASE64 }}
           p12-password: ${{ secrets.P12_PASSWORD }}
