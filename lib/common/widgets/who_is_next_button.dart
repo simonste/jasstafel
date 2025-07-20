@@ -4,6 +4,20 @@ import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
+Widget getIcon(int players) {
+  var imgPath = switch (players) {
+    2 => "assets/actions/who_is_next_2.svg",
+    3 => "assets/actions/who_is_next_3.svg",
+    4 => "assets/actions/who_is_next_4.svg",
+    5 => "assets/actions/who_is_next_5.svg",
+    6 => "assets/actions/who_is_next_6.svg",
+    7 => "assets/actions/who_is_next_7.svg",
+    8 => "assets/actions/who_is_next_8.svg",
+    _ => "assets/actions/who_is_next_4.svg",
+  };
+  return SvgPicture.asset(imgPath, width: 24);
+}
+
 class WhoIsNextButton extends IconButton {
   WhoIsNextButton(BuildContext context, List<String> players, int rounds,
       WhoIsNext whoIsNext, Function saveFunction)
@@ -13,10 +27,7 @@ class WhoIsNextButton extends IconButton {
               dialogBuilder(context,
                   WhoIsNextData(players, rounds, whoIsNext, saveFunction));
             },
-            icon: SvgPicture.asset(
-              "assets/actions/who_is_next.svg",
-              width: 24,
-            ));
+            icon: getIcon(players.length));
 
   static List<String> splitAtUpperCaseLetters(String teamName) {
     List<String> players = [];
