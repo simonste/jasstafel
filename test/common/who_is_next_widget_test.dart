@@ -24,8 +24,11 @@ void main() {
   testWidgets('who is next', (WidgetTester tester) async {
     tester.portrait();
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4'], 0, WhoIsNext(), () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4'], 0, WhoIsNext(), () {}),
+      ),
+    );
     await tester.pumpWidget(widget);
 
     expectTextColor(tester, '1', Colors.white);
@@ -54,8 +57,9 @@ void main() {
     var whoIsNext = WhoIsNext();
     whoIsNext.whoBeginsOffset = 1;
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})),
+    );
     await tester.pumpWidget(widget);
 
     expectTextColor(tester, '1', Colors.white);
@@ -70,8 +74,9 @@ void main() {
     var whoIsNext = WhoIsNext();
     whoIsNext.whoBeginsOffset = 1;
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4'], 2, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(WhoIsNextData(['1', '2', '3', '4'], 2, whoIsNext, () {})),
+    );
     await tester.pumpWidget(widget);
 
     expectTextColor(tester, '1', Colors.white);
@@ -89,8 +94,9 @@ void main() {
     whoIsNext.whoBeginsOffset = 1;
     whoIsNext.swapPlayers = "[0, 3, 2, 1]"; // player 2&4 swapped
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(WhoIsNextData(['1', '2', '3', '4'], 0, whoIsNext, () {})),
+    );
     await tester.pumpWidget(widget);
 
     // offset highlights p2 but p2/p4 are swapped
@@ -109,8 +115,11 @@ void main() {
     whoIsNext.whoBeginsOffset = 5;
     whoIsNext.swapPlayers = "[0, 1, 5, 3, 4, 2]"; // player 3&6 swapped
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {}),
+      ),
+    );
     await tester.pumpWidget(widget);
 
     // offset highlights p6 but p3/p6 are swapped
@@ -128,8 +137,11 @@ void main() {
     var whoIsNext = WhoIsNext();
     whoIsNext.whoBeginsOffset = 2;
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {}),
+      ),
+    );
     await tester.pumpWidget(widget);
 
     // offset highlights p3
@@ -150,8 +162,11 @@ void main() {
     whoIsNext.whoBeginsOffset = 1;
     whoIsNext.swapPlayers = "[0, 4, 2, 3, 1, 5]"; // player 2&5 swapped
 
-    final widget = makeTestable(WhoIsNextWidget(
-        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {})));
+    final widget = makeTestable(
+      WhoIsNextWidget(
+        WhoIsNextData(['1', '2', '3', '4', '5', '6'], 0, whoIsNext, () {}),
+      ),
+    );
     await tester.pumpWidget(widget);
 
     // offset highlights p2 but p2/p5 are swapped

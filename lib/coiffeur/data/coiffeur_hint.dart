@@ -9,7 +9,7 @@ enum HintType {
   pointsNotLose,
   matchNotLose,
   pointsNotLoseOther,
-  counterMatch
+  counterMatch,
 }
 
 class Hint {
@@ -19,37 +19,37 @@ class Hint {
   final int p3;
 
   Hint.lost(this.teamName, {required int pts})
-      : type = HintType.lost,
-        p2 = pts,
-        p3 = 0;
+    : type = HintType.lost,
+      p2 = pts,
+      p3 = 0;
   Hint.winPoints(this.teamName, {required int pts})
-      : type = HintType.winPoints,
-        p2 = pts,
-        p3 = 0;
+    : type = HintType.winPoints,
+      p2 = pts,
+      p3 = 0;
   Hint.winWithMatch(this.teamName, {required int factor})
-      : type = HintType.winWithMatch,
-        p2 = factor,
-        p3 = 0;
+    : type = HintType.winWithMatch,
+      p2 = factor,
+      p3 = 0;
   Hint.winPointsSingle(this.teamName, {required int pts, required int factor})
-      : type = HintType.winPointsSingle,
-        p2 = factor,
-        p3 = pts;
+    : type = HintType.winPointsSingle,
+      p2 = factor,
+      p3 = pts;
   Hint.pointsNotLose(this.teamName, {required int pts})
-      : type = HintType.pointsNotLose,
-        p2 = pts,
-        p3 = 0;
+    : type = HintType.pointsNotLose,
+      p2 = pts,
+      p3 = 0;
   Hint.matchNotLose(this.teamName, {required int factor})
-      : type = HintType.matchNotLose,
-        p2 = factor,
-        p3 = 0;
+    : type = HintType.matchNotLose,
+      p2 = factor,
+      p3 = 0;
   Hint.pointsNotLoseOther(this.teamName, {required int pts})
-      : type = HintType.pointsNotLoseOther,
-        p2 = pts,
-        p3 = 0;
+    : type = HintType.pointsNotLoseOther,
+      p2 = pts,
+      p3 = 0;
   Hint.counterMatch(this.teamName)
-      : type = HintType.counterMatch,
-        p2 = 0,
-        p3 = 0;
+    : type = HintType.counterMatch,
+      p2 = 0,
+      p3 = 0;
 
   String getString(BuildContext context) {
     switch (type) {

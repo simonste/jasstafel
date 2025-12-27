@@ -30,7 +30,10 @@ class Schieber extends StatefulWidget {
 
 class _SchieberState extends State<Schieber> {
   var data = BoardData(
-      SchieberSettings(), SchieberScore(), SchieberSettingsKeys().data);
+    SchieberSettings(),
+    SchieberScore(),
+    SchieberSettingsKeys().data,
+  );
 
   void restoreData() async {
     data = await data.load() as BoardData<SchieberSettings, SchieberScore>;
@@ -49,8 +52,10 @@ class _SchieberState extends State<Schieber> {
     developer.log('build', name: 'jasstafel schieber');
 
     data.score.checkHill(context);
-    data.checkGameOver(context,
-        goalType: GoalType.values[data.settings.goalType]);
+    data.checkGameOver(
+      context,
+      goalType: GoalType.values[data.settings.goalType],
+    );
 
     var dialogs = SchieberTeamDialogs(_openDialog, _stringDialog, _onTap);
 
@@ -66,37 +71,50 @@ class _SchieberState extends State<Schieber> {
         }
 
         return GestureDetector(
-            onTap: () => _pointsDialog(
-                value: data.score.team[teamId].goalPoints,
-                apply: (int value) => setGoalPoints(value),
-                title: Text(context.l10n.goalPoints)),
-            child: Text(data.score.team[teamId].goalPoints.toString(),
-                textScaler: const TextScaler.linear(2),
-                key: Key("GoalPoints$teamId")));
+          onTap: () => _pointsDialog(
+            value: data.score.team[teamId].goalPoints,
+            apply: (int value) => setGoalPoints(value),
+            title: Text(context.l10n.goalPoints),
+          ),
+          child: Text(
+            data.score.team[teamId].goalPoints.toString(),
+            textScaler: const TextScaler.linear(2),
+            key: Key("GoalPoints$teamId"),
+          ),
+        );
       }
 
       if (data.settings.differentGoals) {
-        return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          RotatedBox(quarterTurns: 2, child: points(0)),
-          points(1)
-        ]);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RotatedBox(quarterTurns: 2, child: points(0)),
+            points(1),
+          ],
+        );
       }
       return points(0);
     }
 
     Widget goalRounds() {
       return GestureDetector(
-          onTap: () => _pointsDialog(
-              value: data.score.goalRounds,
-              apply: (int value) => data.score.goalRounds = value,
-              title: Text(context.l10n.rounds)),
-          child: Text("${data.score.noOfRounds()} / ${data.score.goalRounds}",
-              textScaler: const TextScaler.linear(2),
-              key: const Key("GoalRounds")));
+        onTap: () => _pointsDialog(
+          value: data.score.goalRounds,
+          apply: (int value) => data.score.goalRounds = value,
+          title: Text(context.l10n.rounds),
+        ),
+        child: Text(
+          "${data.score.noOfRounds()} / ${data.score.goalRounds}",
+          textScaler: const TextScaler.linear(2),
+          key: const Key("GoalRounds"),
+        ),
+      );
     }
 
-    var players = WhoIsNextButton.guessPlayerNames(
-        [data.score.team[0].name, data.score.team[1].name]);
+    var players = WhoIsNextButton.guessPlayerNames([
+      data.score.team[0].name,
+      data.score.team[1].name,
+    ]);
     if (data.settings.differentGoals) {
       // only 3 players
       for (var i = 0; i < 2; i++) {
@@ -109,8 +127,13 @@ class _SchieberState extends State<Schieber> {
     }
 
     List<Widget> actions = [
-      WhoIsNextButton(context, players, data.score.noOfRounds(),
-          data.common.whoIsNext, () => data.save()),
+      WhoIsNextButton(
+        context,
+        players,
+        data.score.noOfRounds(),
+        data.common.whoIsNext,
+        () => data.save(),
+      ),
       SchieberHistoryButton(context, data, () {
         setState(() {
           data.score.undo();
@@ -128,8 +151,11 @@ class _SchieberState extends State<Schieber> {
           });
         },
       ),
-      SettingsButton(SchieberSettingsScreen(data), context,
-          () => setState(() => data.settings.fromPrefService(context)))
+      SettingsButton(
+        SchieberSettingsScreen(data),
+        context,
+        () => setState(() => data.settings.fromPrefService(context)),
+      ),
     ];
     if (data.settings.backside) {
       actions.insert(0, BacksideButton(context, () => data.load()));
@@ -149,25 +175,30 @@ class _SchieberState extends State<Schieber> {
     }
 
     return Scaffold(
-        appBar: TitleBar(
-            board: Board.schieber,
-            context: context,
-            actions: actions,
-            priority: const [
-              SettingsButton<SchieberSettingsScreen>,
-              DeleteButton,
-              SchieberStatisticsButton
-            ]),
-        body: Stack(children: [
+      appBar: TitleBar(
+        board: Board.schieber,
+        context: context,
+        actions: actions,
+        priority: const [
+          SettingsButton<SchieberSettingsScreen>,
+          DeleteButton,
+          SchieberStatisticsButton,
+        ],
+      ),
+      body: Stack(
+        children: [
           Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SchieberTeam(0, data, dialogs),
-                SchieberTeam(1, data, dialogs),
-              ]),
-          Center(child: center)
-        ]));
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SchieberTeam(0, data, dialogs),
+              SchieberTeam(1, data, dialogs),
+            ],
+          ),
+          Center(child: center),
+        ],
+      ),
+    );
   }
 
   void _stringDialog(team) async {
@@ -181,8 +212,11 @@ class _SchieberState extends State<Schieber> {
     });
   }
 
-  void _pointsDialog(
-      {required int value, required Function apply, Widget? title}) async {
+  void _pointsDialog({
+    required int value,
+    required Function apply,
+    Widget? title,
+  }) async {
     var controller = TextEditingController();
     controller.text = "$value";
 
@@ -196,11 +230,12 @@ class _SchieberState extends State<Schieber> {
 
   void _openDialog(int teamId) async {
     final input = await schieberDialogBuilder(
-        context,
-        teamId,
-        data.settings.match,
-        data.settings.pointsPerRound,
-        data.score.team[teamId]);
+      context,
+      teamId,
+      data.settings.match,
+      data.settings.pointsPerRound,
+      data.score.team[teamId],
+    );
     if (input == null) {
       return; // empty name not allowed
     }

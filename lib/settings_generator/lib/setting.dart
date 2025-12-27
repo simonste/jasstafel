@@ -7,37 +7,43 @@ class Setting {
   final dynamic _defaultValue;
 
   Setting(name, this._prefName, this._defaultValue)
-      : _name = name.replaceRange(0, 1, name[0].toLowerCase()) {
+    : _name = name.replaceRange(0, 1, name[0].toLowerCase()) {
     if (!name[0].contains(RegExp(r'[A-Z]'))) {
       throw ArgumentError(
-          "setting $_name has to begin with an upper case letter");
+        "setting $_name has to begin with an upper case letter",
+      );
     }
   }
 
   Method getterMethod() {
-    return Method((b) => b
-      ..name = _name
-      ..body = Code("'$_prefName'")
-      ..type = MethodType.getter
-      ..lambda = true
-      ..returns = refer('String'));
+    return Method(
+      (b) => b
+        ..name = _name
+        ..body = Code("'$_prefName'")
+        ..type = MethodType.getter
+        ..lambda = true
+        ..returns = refer('String'),
+    );
   }
 
   String _assignment() {
     if (_defaultValue is String) {
       return "'$_defaultValue'";
     } else if (_defaultValue is YamlList) {
-      var defaultList =
-          (_defaultValue as YamlList).map((element) => "\"$element\"").toList();
+      var defaultList = (_defaultValue as YamlList)
+          .map((element) => "\"$element\"")
+          .toList();
       return "$defaultList";
     }
     return '$_defaultValue';
   }
 
   Field field() {
-    return Field((b) => b
-      ..name = _name
-      ..assignment = Code(_assignment()));
+    return Field(
+      (b) => b
+        ..name = _name
+        ..assignment = Code(_assignment()),
+    );
   }
 
   String defaults() {

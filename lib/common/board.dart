@@ -5,5 +5,5 @@ enum Board {
   pointBoard,
   differenzler,
   guggitaler,
-  schlaeger
+  schlaeger,
 }

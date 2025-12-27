@@ -20,48 +20,51 @@ class GuggitalerRound {
   }
 }
 
-Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
-    {required List<String> playerNames, required GuggitalerRow? row}) {
+Future<GuggitalerRound?> guggitalerDialogBuilder(
+  BuildContext context, {
+  required List<String> playerNames,
+  required GuggitalerRow? row,
+}) {
   return showDialog<GuggitalerRound>(
-      context: context,
-      builder: (BuildContext context) {
-        int factor = 1;
+    context: context,
+    builder: (BuildContext context) {
+      int factor = 1;
 
-        var round = GuggitalerRound();
+      var round = GuggitalerRound();
 
-        loadPlayer(int i) {
-          round.player = playerNames[i];
-          if (row != null) {
-            for (var r = 0; r < row.pts[i].length; r++) {
-              if (row.pts[i][r] != null) {
-                round.points[r] = row.pts[i][r]!.abs();
-                if (row.pts[i][r]! < 0) {
-                  factor = -1;
-                }
-              } else {
-                round.points[r] = null;
-              }
-            }
-          }
-        }
-
+      loadPlayer(int i) {
+        round.player = playerNames[i];
         if (row != null) {
-          for (var i = 0; i < playerNames.length; i++) {
-            if (row.sum(i) != 0) {
-              loadPlayer(i);
-              break;
+          for (var r = 0; r < row.pts[i].length; r++) {
+            if (row.pts[i][r] != null) {
+              round.points[r] = row.pts[i][r]!.abs();
+              if (row.pts[i][r]! < 0) {
+                factor = -1;
+              }
+            } else {
+              round.points[r] = null;
             }
           }
         }
+      }
 
-        final autoSizeGroupPlayer = AutoSizeGroup();
-        final autoSizeGroupCategory = AutoSizeGroup();
-        final screenSize = MediaQuery.of(context).size;
-        final landscape = screenSize.width > screenSize.height;
-        final playersPerRow = landscape ? 4 : 2;
+      if (row != null) {
+        for (var i = 0; i < playerNames.length; i++) {
+          if (row.sum(i) != 0) {
+            loadPlayer(i);
+            break;
+          }
+        }
+      }
 
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+      final autoSizeGroupPlayer = AutoSizeGroup();
+      final autoSizeGroupCategory = AutoSizeGroup();
+      final screenSize = MediaQuery.of(context).size;
+      final landscape = screenSize.width > screenSize.height;
+      final playersPerRow = landscape ? 4 : 2;
+
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
           List<Widget> rows = [];
 
           appendPlayer(String player) {
@@ -72,21 +75,26 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
             }
 
             var lr = (rows.last as Row);
-            lr.children.add(Expanded(
+            lr.children.add(
+              Expanded(
                 child: RadioListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: SizedBox(
-                        width: 500,
-                        height: 50,
-                        child: AutoSizeText(
-                          player,
-                          textAlign: TextAlign.left,
-                          group: autoSizeGroupPlayer,
-                        )),
-                    value: player,
-                    groupValue: round.player,
-                    onChanged: (String? v) => setState(
-                        () => loadPlayer(playerNames.indexOf(player))))));
+                  contentPadding: EdgeInsets.zero,
+                  title: SizedBox(
+                    width: 500,
+                    height: 50,
+                    child: AutoSizeText(
+                      player,
+                      textAlign: TextAlign.left,
+                      group: autoSizeGroupPlayer,
+                    ),
+                  ),
+                  value: player,
+                  groupValue: round.player,
+                  onChanged: (String? v) =>
+                      setState(() => loadPlayer(playerNames.indexOf(player))),
+                ),
+              ),
+            );
           }
 
           for (var player in playerNames) {
@@ -96,29 +104,35 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
           var players = SizedBox(child: Column(children: rows));
 
           final cols = Row(
-              children: List.generate(GuggitalerValues.length, (i) => i)
-                  .map((e) => Expanded(
-                          child: SizedBox(
-                        width: 1000,
-                        height: 30,
-                        child: AutoSizeText(
-                          GuggitalerValues.type(e, context),
-                          maxLines: 2,
-                          wrapWords: false,
-                          group: autoSizeGroupCategory,
-                        ),
-                      )))
-                  .toList());
+            children: List.generate(GuggitalerValues.length, (i) => i)
+                .map(
+                  (e) => Expanded(
+                    child: SizedBox(
+                      width: 1000,
+                      height: 30,
+                      child: AutoSizeText(
+                        GuggitalerValues.type(e, context),
+                        maxLines: 2,
+                        wrapWords: false,
+                        group: autoSizeGroupCategory,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          );
 
           slot(int i) {
             return Expanded(
-                child: NumberPicker(
-                    key: Key("picker_$i"),
-                    value: round.points[i] ?? 0,
-                    minValue: 0,
-                    maxValue: GuggitalerValues.maxPerRound(i),
-                    itemHeight: 30,
-                    onChanged: (v) => setState(() => round.points[i] = v)));
+              child: NumberPicker(
+                key: Key("picker_$i"),
+                value: round.points[i] ?? 0,
+                minValue: 0,
+                maxValue: GuggitalerValues.maxPerRound(i),
+                itemHeight: 30,
+                onChanged: (v) => setState(() => round.points[i] = v),
+              ),
+            );
           }
 
           List<Widget> slots = [];
@@ -127,41 +141,48 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
           }
 
           var title = SizedBox(
-              height: 32,
-              child: Row(children: [
+            height: 32,
+            child: Row(
+              children: [
                 Text(context.l10n.addRound),
                 const Expanded(child: SizedBox.expand()),
                 Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          setState(() => factor *= -1);
-                        },
-                        child: Text(
-                          "+/-",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: factor == 1
-                                  ? null
-                                  : Theme.of(context).colorScheme.secondary),
-                        ))),
-              ]));
+                  child: InkWell(
+                    onTap: () {
+                      setState(() => factor *= -1);
+                    },
+                    child: Text(
+                      "+/-",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: factor == 1
+                            ? null
+                            : Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
 
           return AlertDialog(
             title: title,
             content: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  players,
-                  const Divider(),
-                  cols,
-                  SizedBox(child: Row(children: slots)),
-                  const Divider(),
-                  SizedBox(
-                      key: const Key('summary'),
-                      child:
-                          Text(context.l10n.totalPoints(factor * round.sum())))
-                ]),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                players,
+                const Divider(),
+                cols,
+                SizedBox(child: Row(children: slots)),
+                const Divider(),
+                SizedBox(
+                  key: const Key('summary'),
+                  child: Text(context.l10n.totalPoints(factor * round.sum())),
+                ),
+              ],
+            ),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
@@ -178,7 +199,8 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
                 onPressed: () {
                   if (round.player.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(context.l10n.selectPlayer)));
+                      SnackBar(content: Text(context.l10n.selectPlayer)),
+                    );
                   } else {
                     round.points = round.points.map((e) {
                       return e != null ? factor * e : e;
@@ -186,9 +208,11 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(BuildContext context,
                     Navigator.of(context).pop(round);
                   }
                 },
-              )
+              ),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }

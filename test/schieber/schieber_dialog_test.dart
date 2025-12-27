@@ -7,21 +7,33 @@ import '../../integration_test/overall_test.dart';
 import '../helper/testapp.dart';
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog(
-      {required int matchPoints, int roundPoints = 157}) async {
+  Future<InputWrap> openDialog({
+    required int matchPoints,
+    int roundPoints = 157,
+  }) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            dialogInput.value = await schieberDialogBuilder(
-                context, 0, matchPoints, roundPoints, TeamData());
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: InkWell(
+                child: const Text('Foo'),
+                onTap: () async {
+                  dialogInput.value = await schieberDialogBuilder(
+                    context,
+                    0,
+                    matchPoints,
+                    roundPoints,
+                    TeamData(),
+                  );
+                },
+              ),
+            );
           },
         ),
-      );
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();
@@ -60,8 +72,11 @@ void main() {
   testWidgets('add weis', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(matchPoints: 257);
 
-    await tester
-        .addSchieberPoints(['key_4', 'key_0'], factor: '2x', weis: true);
+    await tester.addSchieberPoints(
+      ['key_4', 'key_0'],
+      factor: '2x',
+      weis: true,
+    );
 
     expect(dialogInput.value!.points1, 2 * 40);
     expect(dialogInput.value!.points2, 0);
@@ -77,8 +92,10 @@ void main() {
   });
 
   testWidgets('add match 514', (WidgetTester tester) async {
-    var dialogInput =
-        await tester.openDialog(matchPoints: 514, roundPoints: 314);
+    var dialogInput = await tester.openDialog(
+      matchPoints: 514,
+      roundPoints: 314,
+    );
 
     await tester.addSchieberPoints(['key_4', 'key_Match'], factor: '2x');
 
@@ -87,8 +104,10 @@ void main() {
   });
 
   testWidgets('add round 514', (WidgetTester tester) async {
-    var dialogInput =
-        await tester.openDialog(matchPoints: 514, roundPoints: 314);
+    var dialogInput = await tester.openDialog(
+      matchPoints: 514,
+      roundPoints: 314,
+    );
 
     await tester.addSchieberPoints(['key_4', 'key_8']);
 
@@ -97,8 +116,10 @@ void main() {
   });
 
   testWidgets('add match 260', (WidgetTester tester) async {
-    var dialogInput =
-        await tester.openDialog(matchPoints: 260, roundPoints: 160);
+    var dialogInput = await tester.openDialog(
+      matchPoints: 260,
+      roundPoints: 160,
+    );
 
     await tester.addSchieberPoints(['key_4', 'key_Match'], factor: '2x');
 
@@ -107,8 +128,10 @@ void main() {
   });
 
   testWidgets('add round 160', (WidgetTester tester) async {
-    var dialogInput =
-        await tester.openDialog(matchPoints: 260, roundPoints: 160);
+    var dialogInput = await tester.openDialog(
+      matchPoints: 260,
+      roundPoints: 160,
+    );
 
     await tester.addSchieberPoints(['key_4', 'key_8']);
 

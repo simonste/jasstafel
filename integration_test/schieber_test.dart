@@ -19,7 +19,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.schieber.index);
+      CommonSettings.keys.lastBoard,
+      Board.schieber.index,
+    );
   });
 
   testWidgets('change team name', (tester) async {
@@ -201,8 +203,10 @@ void main() {
     await tester.launchApp();
 
     await tester.addSchieberPoints(
-        ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_←', 'key_0'],
-        factor: '3x', weis: true);
+      ['add_0', 'key_2', 'key_∅', 'key_5', 'key_1', 'key_←', 'key_0'],
+      factor: '3x',
+      weis: true,
+    );
 
     expect(text(const Key('sum_0')), '150');
     expect(text(const Key('sum_1')), '0');
@@ -211,8 +215,11 @@ void main() {
   testWidgets('add weis explicit', (tester) async {
     await tester.launchApp();
 
-    await tester.addSchieberPoints(['add_1', 'key_3', 'key_0'],
-        factor: '2x', weis: true);
+    await tester.addSchieberPoints(
+      ['add_1', 'key_3', 'key_0'],
+      factor: '2x',
+      weis: true,
+    );
 
     expect(text(const Key('sum_0')), '0');
     expect(text(const Key('sum_1')), '60');
@@ -355,8 +362,12 @@ void main() {
     await tester.launchApp();
 
     await tester.addSchieberPoints(['add_0', 'key_Match'], factor: '7x');
-    await tester
-        .addSchieberPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.addSchieberPoints([
+      'add_0',
+      'key_1',
+      'key_3',
+      'key_5',
+    ], factor: '6x');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
@@ -386,8 +397,12 @@ void main() {
     await tester.launchApp();
 
     await tester.addSchieberPoints(['add_0', 'key_Match'], factor: '7x');
-    await tester
-        .addSchieberPoints(['add_0', 'key_1', 'key_3', 'key_5'], factor: '6x');
+    await tester.addSchieberPoints([
+      'add_0',
+      'key_1',
+      'key_3',
+      'key_5',
+    ], factor: '6x');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();

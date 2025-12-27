@@ -45,7 +45,7 @@ class _SchlaegerButtonBarState extends State<SchlaegerButtonBar> {
       Text("0", textScaler: textScaler),
       Text("1", textScaler: textScaler),
       Text("2", textScaler: textScaler),
-      Text("3", textScaler: textScaler)
+      Text("3", textScaler: textScaler),
     ];
 
     return ToggleButtons(
@@ -54,8 +54,10 @@ class _SchlaegerButtonBarState extends State<SchlaegerButtonBar> {
         select(index);
         setState(() {});
       }),
-      constraints:
-          BoxConstraints(minWidth: buttonWidth, minHeight: buttonWidth),
+      constraints: BoxConstraints(
+        minWidth: buttonWidth,
+        minHeight: buttonWidth,
+      ),
       fillColor: Theme.of(context).colorScheme.primary,
       selectedColor: Theme.of(context).colorScheme.onPrimary,
       children: buttons,

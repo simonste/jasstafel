@@ -6,7 +6,9 @@ import 'package:test/test.dart';
 void main() {
   List<List<int?>> setRow(int i, List<int?> row) {
     List<List<int?>> pts = List.generate(
-        Players.max, (i) => List.filled(GuggitalerValues.length, null));
+      Players.max,
+      (i) => List.filled(GuggitalerValues.length, null),
+    );
     for (var p = 0; p < row.length; p++) {
       pts[p][i] = row[p];
     }

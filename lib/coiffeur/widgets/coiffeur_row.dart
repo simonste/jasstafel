@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 
 class CoiffeurRow extends Expanded {
   CoiffeurRow(cells, {super.key, topBorder = false})
-      : super(child: _create(cells, topBorder));
+    : super(child: _create(cells, topBorder));
 
   static _create(cells, topBorder) {
     if (topBorder) {
       return Container(
         decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.white))),
+          border: Border(top: BorderSide(color: Colors.white)),
+        ),
         child: _row(cells),
       );
     } else {

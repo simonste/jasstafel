@@ -27,20 +27,22 @@ class GenerateSettings implements Builder {
       b.directives.addAll([
         Directive.import('package:flutter/widgets.dart'),
         Directive.import('package:pref/pref.dart'),
-        Directive.import('package:shared_preferences/shared_preferences.dart')
+        Directive.import('package:shared_preferences/shared_preferences.dart'),
       ]);
       b.body.addAll(settings.create());
     });
 
     final emitter = DartEmitter.scoped();
     await buildStep.writeAsString(
-        buildStep.inputId.changeExtension('.g.dart'),
-        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
-            .format('${library.accept(emitter)}'));
+      buildStep.inputId.changeExtension('.g.dart'),
+      DartFormatter(
+        languageVersion: DartFormatter.latestLanguageVersion,
+      ).format('${library.accept(emitter)}'),
+    );
   }
 
   @override
   final buildExtensions = const {
-    '.yaml': ['.g.dart']
+    '.yaml': ['.g.dart'],
   };
 }

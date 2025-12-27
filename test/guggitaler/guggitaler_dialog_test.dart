@@ -25,22 +25,33 @@ extension DialogHelper on WidgetTester {
     expect(getNumberPicker(key).value, scrollTo);
   }
 
-  Future<InputWrap> openDialog(
-      {required List<String> playerNames, GuggitalerRow? row}) async {
+  Future<InputWrap> openDialog({
+    required List<String> playerNames,
+    GuggitalerRow? row,
+  }) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Scaffold(
-          body: Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            dialogInput.value = await guggitalerDialogBuilder(context,
-                playerNames: playerNames, row: row);
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Scaffold(
+              body: Center(
+                child: InkWell(
+                  child: const Text('Foo'),
+                  onTap: () async {
+                    dialogInput.value = await guggitalerDialogBuilder(
+                      context,
+                      playerNames: playerNames,
+                      row: row,
+                    );
+                  },
+                ),
+              ),
+            );
           },
         ),
-      ));
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();
@@ -52,8 +63,9 @@ void main() {
   var playerNames = List.generate(Players.max, (i) => "P${i + 1}");
 
   testWidgets('Player 2 - 3 Tricks', (WidgetTester tester) async {
-    var dialogInput =
-        await tester.openDialog(playerNames: playerNames.sublist(0, 4));
+    var dialogInput = await tester.openDialog(
+      playerNames: playerNames.sublist(0, 4),
+    );
 
     await tester.tap(find.text('P2'));
     await tester.scrollNumberPicker(const Key('picker_0'), 3);
@@ -80,9 +92,7 @@ void main() {
   });
 
   testWidgets('Player 1 - all schellen', (WidgetTester tester) async {
-    var dialogInput = await tester.openDialog(
-      playerNames: playerNames,
-    );
+    var dialogInput = await tester.openDialog(playerNames: playerNames);
 
     expect(find.text('P1'), findsOneWidget);
     expect(find.text('P8'), findsOneWidget);
@@ -98,8 +108,9 @@ void main() {
     expect(dialogInput.value!.points, [null, -9, null, null, null]);
   });
 
-  testWidgets('Player 4 - tick, 2 schellen, 1 queen',
-      (WidgetTester tester) async {
+  testWidgets('Player 4 - tick, 2 schellen, 1 queen', (
+    WidgetTester tester,
+  ) async {
     var dialogInput = await tester.openDialog(
       playerNames: playerNames.sublist(0, 4),
     );
@@ -151,7 +162,9 @@ void main() {
     inputRow.pts[3][0] = 2; // P4, 2 tricks
 
     var dialogInput = await tester.openDialog(
-        playerNames: playerNames.sublist(0, 4), row: inputRow);
+      playerNames: playerNames.sublist(0, 4),
+      row: inputRow,
+    );
 
     getNumberPicker(const Key('picker_0')).value == 1;
     await tester.tap(find.text('P3'));

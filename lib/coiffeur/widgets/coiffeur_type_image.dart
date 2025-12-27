@@ -4,8 +4,10 @@ import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurTypeImage extends SvgPicture {
   CoiffeurTypeImage(context, name, {super.key, super.width})
-      : super.asset('assets/types/${assetName(context, name)}.svg',
-            semanticsLabel: name);
+    : super.asset(
+        'assets/types/${assetName(context, name)}.svg',
+        semanticsLabel: name,
+      );
 
   static String assetName(BuildContext context, String name) {
     /* spell-checker:disable */

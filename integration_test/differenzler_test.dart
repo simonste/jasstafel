@@ -22,7 +22,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.differenzler.index);
+      CommonSettings.keys.lastBoard,
+      Board.differenzler.index,
+    );
   });
 
   testWidgets('change name', (tester) async {
@@ -175,9 +177,11 @@ void main() {
     await tester.addRound({'pts_0': 46, 'pts_1': 30, 'pts_2': null});
 
     expect(
-        find.text(
-            'Spieler 2 hat gewonnen!\n\nSpieler 3 hat die Zielpunkte erreicht!'),
-        findsOneWidget);
+      find.text(
+        'Spieler 2 hat gewonnen!\n\nSpieler 3 hat die Zielpunkte erreicht!',
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
 
@@ -227,7 +231,9 @@ void main() {
     score.rows = List.filled(20, row);
 
     await preferences.setString(
-        DifferenzlerSettings.keys.data, jsonEncode(score.toJson()));
+      DifferenzlerSettings.keys.data,
+      jsonEncode(score.toJson()),
+    );
 
     await tester.launchApp();
 
@@ -236,6 +242,8 @@ void main() {
     await tester.addDifferenzlerGuessPoints('Spieler 1', 40);
     expect(find.byTooltip('Ansage von Spieler 1'), findsNothing);
     expect(
-        find.byTooltip('Ansage von Spieler 2').hitTestable(), findsOneWidget);
+      find.byTooltip('Ansage von Spieler 2').hitTestable(),
+      findsOneWidget,
+    );
   });
 }

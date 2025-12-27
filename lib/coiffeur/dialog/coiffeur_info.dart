@@ -26,13 +26,16 @@ class Winner {
 
 class CoiffeurInfo {
   CoiffeurInfo(this._settings, this._score)
-      : teams = _settings.threeTeams ? 3 : 2,
-        bonusPoints = roundedInt(
-            _settings.bonus ? _settings.bonusValue : 0, _settings.rounded),
-        match = roundedInt(_settings.match, _settings.rounded),
-        noMatch = roundedInt(
-            _settings.bonus ? _settings.match : roundPoints(_settings.match),
-            _settings.rounded) {
+    : teams = _settings.threeTeams ? 3 : 2,
+      bonusPoints = roundedInt(
+        _settings.bonus ? _settings.bonusValue : 0,
+        _settings.rounded,
+      ),
+      match = roundedInt(_settings.match, _settings.rounded),
+      noMatch = roundedInt(
+        _settings.bonus ? _settings.match : roundPoints(_settings.match),
+        _settings.rounded,
+      ) {
     for (var t = 0; t < teams; t++) {
       for (var i = 0; i < _settings.rows; i++) {
         final pts = _score.rows[i].pts[t];
@@ -45,8 +48,9 @@ class CoiffeurInfo {
       final factorSum = result[t].open.sum;
       result[t].max = result[t].pts + factorSum * match;
       result[t].max += result[t].open.length * bonusPoints;
-      final minusFactor =
-          _settings.bonus ? result[t].open.length : result[t].open.sum;
+      final minusFactor = _settings.bonus
+          ? result[t].open.length
+          : result[t].open.sum;
       result[t].min -=
           minusFactor * roundedInt(_settings.counterLoss, _settings.rounded);
     }
@@ -114,8 +118,9 @@ class CoiffeurInfo {
       final int maxPointsWithoutMatch = factors.sum * noMatch;
 
       for (int f in factors) {
-        final int noMatchDiff =
-            (_settings.bonus) ? _settings.bonusValue : ((match - noMatch) * f);
+        final int noMatchDiff = (_settings.bonus)
+            ? _settings.bonusValue
+            : ((match - noMatch) * f);
 
         // enough if everywhere else "noMatch" points?
         if (ptsDiff - noMatchDiff <= maxPointsWithoutMatch) {
@@ -169,9 +174,10 @@ class CoiffeurInfo {
       if (team.open.sum == 0) return hints;
 
       if (!canWin) {
-        int val = ((highestMin - team.pts - team.open.length * bonusPoints) /
-                team.open.sum)
-            .ceil();
+        int val =
+            ((highestMin - team.pts - team.open.length * bonusPoints) /
+                    team.open.sum)
+                .ceil();
         hints.add(Hint.lost(teamName, pts: val));
       } else if (canWinSelf && notWonYet) {
         final avgPtsWin = pointsToWin(team.pts, team.open.sum);
@@ -179,8 +185,13 @@ class CoiffeurInfo {
           if (avgPtsWin > noMatch) {
             hints.add(Hint.winWithMatch(teamName, factor: team.open[0]));
           } else {
-            hints.add(Hint.winPointsSingle(teamName,
-                factor: team.open[0], pts: avgPtsWin));
+            hints.add(
+              Hint.winPointsSingle(
+                teamName,
+                factor: team.open[0],
+                pts: avgPtsWin,
+              ),
+            );
           }
         } else {
           if (avgPtsWin > match && _settings.bonus) {
@@ -192,7 +203,8 @@ class CoiffeurInfo {
               int enough = pointsToWin(team.min, f);
               if (enough < noMatch) {
                 hints.add(
-                    Hint.winPointsSingle(teamName, factor: f, pts: enough));
+                  Hint.winPointsSingle(teamName, factor: f, pts: enough),
+                );
               } else if ((f * match + bonusPoints) >
                   (secondHighestMax - team.pts)) {
                 hints.add(Hint.winWithMatch(teamName, factor: f));
@@ -216,108 +228,133 @@ class CoiffeurInfo {
 
 class CoiffeurInfoButton extends IconButton {
   CoiffeurInfoButton(
-      BuildContext context, BoardData<CoiffeurSettings, CoiffeurScore> data)
-      : super(
-            onPressed: () {
-              dialogBuilder(context, CoiffeurInfo(data.settings, data.score),
-                  data.common.timestamps.elapsed(context));
-            },
-            icon: const Icon(Icons.info_outline),
-            key: const Key("InfoButton"));
+    BuildContext context,
+    BoardData<CoiffeurSettings, CoiffeurScore> data,
+  ) : super(
+        onPressed: () {
+          dialogBuilder(
+            context,
+            CoiffeurInfo(data.settings, data.score),
+            data.common.timestamps.elapsed(context),
+          );
+        },
+        icon: const Icon(Icons.info_outline),
+        key: const Key("InfoButton"),
+      );
 }
 
 enum RowType { title, bold, normal }
 
 Future<void> dialogBuilder(
-    BuildContext context, CoiffeurInfo info, String elapsed) {
+  BuildContext context,
+  CoiffeurInfo info,
+  String elapsed,
+) {
   return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            rowS(String title, List<String> str,
-                {RowType rowType = RowType.normal}) {
-              text(String string) {
-                return Expanded(
-                    child: Text(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          rowS(
+            String title,
+            List<String> str, {
+            RowType rowType = RowType.normal,
+          }) {
+            text(String string) {
+              return Expanded(
+                child: Text(
                   string,
                   textAlign: TextAlign.center,
-                  textScaler:
-                      TextScaler.linear((rowType == RowType.title) ? 1.3 : 1),
+                  textScaler: TextScaler.linear(
+                    (rowType == RowType.title) ? 1.3 : 1,
+                  ),
                   style: TextStyle(
-                      fontWeight: (rowType == RowType.normal)
-                          ? FontWeight.w100
-                          : FontWeight.w400),
-                ));
-              }
+                    fontWeight: (rowType == RowType.normal)
+                        ? FontWeight.w100
+                        : FontWeight.w400,
+                  ),
+                ),
+              );
+            }
 
-              if (info.teams == 2) {
-                return Row(children: [
-                  text(str[0]),
-                  text(title),
-                  text(str[1]),
-                ]);
-              } else {
-                return Row(children: [
+            if (info.teams == 2) {
+              return Row(children: [text(str[0]), text(title), text(str[1])]);
+            } else {
+              return Row(
+                children: [
                   text(title),
                   text(str[0]),
                   text(str[1]),
                   text(str[2]),
-                ]);
-              }
+                ],
+              );
             }
+          }
 
-            rowI(String title, List<int> pts,
-                {RowType rowType = RowType.normal}) {
-              return rowS(title, pts.map((e) => "$e").toList(),
-                  rowType: rowType);
-            }
+          rowI(
+            String title,
+            List<int> pts, {
+            RowType rowType = RowType.normal,
+          }) {
+            return rowS(title, pts.map((e) => "$e").toList(), rowType: rowType);
+          }
 
-            List<Widget> children = [
-              Text(elapsed,
-                  style: const TextStyle(fontWeight: FontWeight.w100)),
-              const Divider(),
-              rowS("", [info.teamName(0), info.teamName(1), info.teamName(2)],
-                  rowType: RowType.title),
-              const Divider(),
-              rowI("Pts",
-                  [info.result[0].pts, info.result[1].pts, info.result[2].pts],
-                  rowType: RowType.bold),
-              const Divider(),
-              rowI("Min",
-                  [info.result[0].min, info.result[1].min, info.result[2].min]),
-              rowI("Max",
-                  [info.result[0].max, info.result[1].max, info.result[2].max]),
-              const Divider()
-            ];
+          List<Widget> children = [
+            Text(elapsed, style: const TextStyle(fontWeight: FontWeight.w100)),
+            const Divider(),
+            rowS("", [
+              info.teamName(0),
+              info.teamName(1),
+              info.teamName(2),
+            ], rowType: RowType.title),
+            const Divider(),
+            rowI("Pts", [
+              info.result[0].pts,
+              info.result[1].pts,
+              info.result[2].pts,
+            ], rowType: RowType.bold),
+            const Divider(),
+            rowI("Min", [
+              info.result[0].min,
+              info.result[1].min,
+              info.result[2].min,
+            ]),
+            rowI("Max", [
+              info.result[0].max,
+              info.result[1].max,
+              info.result[2].max,
+            ]),
+            const Divider(),
+          ];
 
-            for (final hint in info.getHints()) {
-              children.add(Text(
+          for (final hint in info.getHints()) {
+            children.add(
+              Text(
                 hint.getString(context),
                 style: const TextStyle(fontWeight: FontWeight.w200),
-              ));
-            }
-
-            return AlertDialog(
-              title: Text(context.l10n.currentRound),
-              content: SingleChildScrollView(
-                  child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: children,
-              )),
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: Text(context.l10n.ok),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+              ),
             );
-          },
-        );
-      });
+          }
+
+          return AlertDialog(
+            title: Text(context.l10n.currentRound),
+            content: SingleChildScrollView(
+              child: Column(mainAxisSize: MainAxisSize.min, children: children),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: Text(context.l10n.ok),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
 }

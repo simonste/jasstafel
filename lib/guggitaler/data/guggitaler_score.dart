@@ -12,7 +12,9 @@ class GuggitalerRow {
   Map<String, dynamic> toJson() => _$GuggitalerRowToJson(this);
 
   List<List<int?>> pts = List.generate(
-      Players.max, (i) => List.filled(GuggitalerValues.length, null));
+    Players.max,
+    (i) => List.filled(GuggitalerValues.length, null),
+  );
 
   GuggitalerRow();
 

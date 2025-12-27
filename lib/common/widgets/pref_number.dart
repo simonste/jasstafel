@@ -3,12 +3,13 @@ import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class PrefNumber extends StatelessWidget {
-  const PrefNumber(
-      {this.title,
-      this.subtitle,
-      required this.pref,
-      super.key,
-      this.onChange});
+  const PrefNumber({
+    this.title,
+    this.subtitle,
+    required this.pref,
+    super.key,
+    this.onChange,
+  });
 
   final Widget? title;
   final Widget? subtitle;

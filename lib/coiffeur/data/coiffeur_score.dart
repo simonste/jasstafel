@@ -45,7 +45,7 @@ class RowSettings {
   List<CoiffeurPoints> pts = [
     CoiffeurPoints(),
     CoiffeurPoints(),
-    CoiffeurPoints()
+    CoiffeurPoints(),
   ];
 
   RowSettings(this.factor, this.type);

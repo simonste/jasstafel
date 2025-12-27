@@ -69,9 +69,9 @@ class BoardData<T, S extends Score> {
   }
 
   BoardData(this.settings, this.score, this.dataKey)
-      : profilesKey = "${dataKey}_profiles",
-        activeProfileKey = "${dataKey}_profile",
-        boardType = determineBoardType(S.toString()) {
+    : profilesKey = "${dataKey}_profiles",
+      activeProfileKey = "${dataKey}_profile",
+      boardType = determineBoardType(S.toString()) {
     _updateSettings();
   }
 
@@ -199,19 +199,17 @@ class BoardData<T, S extends Score> {
   void checkGameOver(BuildContext context, {required GoalType goalType}) {
     final winners = score.winner();
     if (winners.isNotEmpty && common.timestamps.justFinished()) {
-      Future.delayed(
-        Duration.zero,
-        () {
-          if (context.mounted) {
-            winnerDialog(
-                context: context,
-                winners: winners,
-                losers: score.loser(),
-                setWinnerFunction: score.setWinner,
-                goalType: goalType);
-          }
-        },
-      );
+      Future.delayed(Duration.zero, () {
+        if (context.mounted) {
+          winnerDialog(
+            context: context,
+            winners: winners,
+            losers: score.loser(),
+            setWinnerFunction: score.setWinner,
+            goalType: goalType,
+          );
+        }
+      });
     }
   }
 

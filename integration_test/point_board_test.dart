@@ -18,7 +18,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.pointBoard.index);
+      CommonSettings.keys.lastBoard,
+      Board.pointBoard.index,
+    );
   });
 
   testWidgets('change name', (tester) async {
@@ -81,10 +83,7 @@ void main() {
 
     expect(find.text('Spieler 3'), findsNothing);
 
-    await tester.addRound({
-      'pts_0': 77,
-      'pts_1': null,
-    });
+    await tester.addRound({'pts_0': 77, 'pts_1': null});
 
     expect(text(const Key('sum_0')), '77');
     expect(text(const Key('sum_1')), '80');
@@ -130,11 +129,7 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.addRound({
-      'pts_0': 70,
-      'pts_1': 70,
-      'pts_2': 17,
-    });
+    await tester.addRound({'pts_0': 70, 'pts_1': 70, 'pts_2': 17});
     await tester.addRound({
       'pts_0': 10,
       'pts_1': 29,
@@ -170,11 +165,7 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.addRound({
-      'pts_0': 70,
-      'pts_1': 70,
-      'pts_3': 17,
-    });
+    await tester.addRound({'pts_0': 70, 'pts_1': 70, 'pts_3': 17});
     await tester.addRound({
       'pts_0': 10,
       'pts_1': 29,
@@ -183,9 +174,11 @@ void main() {
     });
 
     expect(
-        find.text(
-            'Spieler 3 hat gewonnen!\n\nSpieler 2 hat die Zielpunkte erreicht!'),
-        findsOneWidget);
+      find.text(
+        'Spieler 3 hat gewonnen!\n\nSpieler 2 hat die Zielpunkte erreicht!',
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
 
@@ -216,10 +209,7 @@ void main() {
     await tester.pumpAndSettle();
 
     for (var i = 0; i < 3; i++) {
-      await tester.addRound({
-        'pts_0': 80,
-        'pts_1': null,
-      });
+      await tester.addRound({'pts_0': 80, 'pts_1': null});
     }
 
     expect(find.text('Spieler 1 hat gewonnen!'), findsOneWidget);
@@ -252,10 +242,7 @@ void main() {
     await tester.pumpAndSettle();
 
     for (var i = 0; i < 3; i++) {
-      await tester.addRound({
-        'pts_0': 80,
-        'pts_1': null,
-      });
+      await tester.addRound({'pts_0': 80, 'pts_1': null});
     }
 
     expect(find.text('Spieler 2 hat gewonnen!'), findsOneWidget);

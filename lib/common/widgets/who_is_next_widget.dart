@@ -50,47 +50,53 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
     List<DraggableGridItem> children = [];
     for (var i in keyList) {
       final key = Key("$i");
-      children.add(DraggableGridItem(
+      children.add(
+        DraggableGridItem(
           isDraggable: true,
           child: Card(
-              key: key,
-              color: Colors.black12,
-              child: InkWell(
-                  onLongPress: () => setState(() {
-                        swapMap
-                            .select(PlayerId(int.tryParse(key.toString()[3])!));
-                        widget.data.saveFunction();
-                      }),
-                  child: SizedBox(
-                      height: cardWidth,
-                      width: cardWidth,
-                      child: Center(child: map[i]))))));
+            key: key,
+            color: Colors.black12,
+            child: InkWell(
+              onLongPress: () => setState(() {
+                swapMap.select(PlayerId(int.tryParse(key.toString()[3])!));
+                widget.data.saveFunction();
+              }),
+              child: SizedBox(
+                height: cardWidth,
+                width: cardWidth,
+                child: Center(child: map[i]),
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     return SizedBox(
-        height: cardWidth * mainAxisCount,
-        width: cardWidth * crossAxisCount,
-        child: DraggableGridViewBuilder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
+      height: cardWidth * mainAxisCount,
+      width: cardWidth * crossAxisCount,
+      child: DraggableGridViewBuilder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+        ),
+        children: children,
+        isOnlyLongPress: false,
+        dragCompletion: (list, int beforeIndex, int afterIndex) {
+          final i1 = keyList[beforeIndex];
+          final i2 = keyList[afterIndex];
+          swapMap.swap(PlayerId(i1), PlayerId(i2));
+          widget.data.saveFunction();
+          setState(() {});
+        },
+        dragPlaceHolder: (List<DraggableGridItem> list, int index) {
+          return PlaceHolderWidget(
+            child: Card(
+              color: Colors.black12,
+              child: SizedBox(height: cardWidth, width: cardWidth),
             ),
-            children: children,
-            isOnlyLongPress: false,
-            dragCompletion: (list, int beforeIndex, int afterIndex) {
-              final i1 = keyList[beforeIndex];
-              final i2 = keyList[afterIndex];
-              swapMap.swap(PlayerId(i1), PlayerId(i2));
-              widget.data.saveFunction();
-              setState(() {});
-            },
-            dragPlaceHolder: (List<DraggableGridItem> list, int index) {
-              return PlaceHolderWidget(
-                  child: Card(
-                      color: Colors.black12,
-                      child: SizedBox(
-                        height: cardWidth,
-                        width: cardWidth,
-                      )));
-            }));
+          );
+        },
+      ),
+    );
   }
 }

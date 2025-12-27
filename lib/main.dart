@@ -24,20 +24,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final service = await PrefServiceShared.init(
-      defaults: CommonSettings.defaults
-        ..addAll(CoiffeurSettings.defaults)
-        ..addAll(SchieberSettings.defaults)
-        ..addAll(MolotowSettings.defaults)
-        ..addAll(PointBoardSettings.defaults)
-        ..addAll(DifferenzlerSettings.defaults)
-        ..addAll(GuggitalerSettings.defaults));
-
-  runApp(
-    PrefService(
-      service: service,
-      child: const MyApp(),
-    ),
+    defaults: CommonSettings.defaults
+      ..addAll(CoiffeurSettings.defaults)
+      ..addAll(SchieberSettings.defaults)
+      ..addAll(MolotowSettings.defaults)
+      ..addAll(PointBoardSettings.defaults)
+      ..addAll(DifferenzlerSettings.defaults)
+      ..addAll(GuggitalerSettings.defaults),
   );
+
+  runApp(PrefService(service: service, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -77,21 +73,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
       theme: ThemeData(
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: Colors.black,
-          canvasColor: Colors.grey.shade800, // drop down
-          dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade800),
-          colorScheme: ColorScheme.dark(
-            surface: Colors.grey.shade800, // progress bar
-            primary: Colors.blue.shade200, // buttons / progress bar
-            secondary: Colors.blue.shade800, // settings
-            tertiary: Colors.grey.shade800, // molotow round
-          )),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        canvasColor: Colors.grey.shade800, // drop down
+        dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade800),
+        colorScheme: ColorScheme.dark(
+          surface: Colors.grey.shade800, // progress bar
+          primary: Colors.blue.shade200, // buttons / progress bar
+          secondary: Colors.blue.shade800, // settings
+          tertiary: Colors.grey.shade800, // molotow round
+        ),
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       localeResolutionCallback: (locale, supportedLocales) {
-        var language =
-            getLanguage(settings.appLanguage, locale, supportedLocales);
+        var language = getLanguage(
+          settings.appLanguage,
+          locale,
+          supportedLocales,
+        );
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },

@@ -75,9 +75,7 @@ void main() {
 
     final info = CoiffeurInfo(settings, score);
 
-    expectHints(info, [
-      Hint.winPointsSingle('Team 2', factor: 2, pts: 150),
-    ]);
+    expectHints(info, [Hint.winPointsSingle('Team 2', factor: 2, pts: 150)]);
     expectNoWinner(info);
   });
 
@@ -182,9 +180,7 @@ void main() {
     final info = CoiffeurInfo(settings, score);
     expect(info.result[1].max, lessThan(info.result[0].min));
 
-    expectHints(info, [
-      Hint.lost('Team 2', pts: 285),
-    ]);
+    expectHints(info, [Hint.lost('Team 2', pts: 285)]);
     expectWinner(info, [0], [1]);
   });
 
@@ -269,9 +265,7 @@ void main() {
     expect(info.result[0].pts, 800);
     expect(info.result[1].pts, 500);
 
-    expectHints(info, [
-      Hint.pointsNotLose('Team 2', pts: 60),
-    ]);
+    expectHints(info, [Hint.pointsNotLose('Team 2', pts: 60)]);
     expectNoWinner(info);
   });
 
@@ -335,8 +329,10 @@ void main() {
     score.rows[2].pts[2].pts = 257;
 
     final info = CoiffeurInfo(settings, score);
-    expect(info.result[0].max,
-        lessThan(max(info.result[1].min, info.result[2].min)));
+    expect(
+      info.result[0].max,
+      lessThan(max(info.result[1].min, info.result[2].min)),
+    );
 
     expectHints(info, [
       Hint.lost('Team 1', pts: 258),
@@ -386,9 +382,7 @@ void main() {
 
     final info = CoiffeurInfo(settings, score);
     expect(info.result[0].max, lessThan(info.result[1].pts));
-    expectHints(info, [
-      Hint.lost('Team 1', pts: 258),
-    ]);
+    expectHints(info, [Hint.lost('Team 1', pts: 258)]);
     expectWinner(info, [1], [0]);
 
     settings.rounded = true;
@@ -396,9 +390,7 @@ void main() {
     final infoRounded = CoiffeurInfo(settings, score);
     expect(infoRounded.result[0].max, greaterThan(infoRounded.result[1].pts));
 
-    expectHints(infoRounded, [
-      Hint.winWithMatch('Team 1', factor: 2),
-    ]);
+    expectHints(infoRounded, [Hint.winWithMatch('Team 1', factor: 2)]);
     expectNoWinner(infoRounded);
   });
 
@@ -454,9 +446,7 @@ void main() {
     final info = CoiffeurInfo(settings, score);
     expect(info.result[0].pts + 16, lessThan(info.result[1].pts));
 
-    expectHints(info, [
-      Hint.winWithMatch('Team 1', factor: 1),
-    ]);
+    expectHints(info, [Hint.winWithMatch('Team 1', factor: 1)]);
     expectNoWinner(info);
   });
 
@@ -504,14 +494,20 @@ void main() {
     // can win
     expect(info.result[0].max, greaterThan(info.result[1].pts));
     // can not win without match
-    expect(info.result[0].pts + info.result[0].open.sum * 157,
-        lessThan(info.result[1].pts));
+    expect(
+      info.result[0].pts + info.result[0].open.sum * 157,
+      lessThan(info.result[1].pts),
+    );
     // can not win with one match
-    expect(info.result[0].pts + info.result[0].open.sum * 157 + 500,
-        lessThan(info.result[1].pts));
+    expect(
+      info.result[0].pts + info.result[0].open.sum * 157 + 500,
+      lessThan(info.result[1].pts),
+    );
     // can win with two matches
-    expect(info.result[0].pts + info.result[0].open.sum * 157 + 1000,
-        greaterThan(info.result[1].pts));
+    expect(
+      info.result[0].pts + info.result[0].open.sum * 157 + 1000,
+      greaterThan(info.result[1].pts),
+    );
 
     expectHints(info, [
       Hint.matchNotLose('Team 1', factor: 4),
@@ -552,9 +548,7 @@ void main() {
     // can win
     expect(info.result[0].max, greaterThan(info.result[1].pts));
 
-    expectHints(info, [
-      Hint.winPoints('Team 1', pts: 228),
-    ]);
+    expectHints(info, [Hint.winPoints('Team 1', pts: 228)]);
     expectNoWinner(info);
   });
 }

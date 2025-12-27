@@ -18,7 +18,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.guggitaler.index);
+      CommonSettings.keys.lastBoard,
+      Board.guggitaler.index,
+    );
   });
 
   testWidgets('change name', (tester) async {
@@ -59,7 +61,7 @@ void main() {
       'picker_1': 1,
       'picker_2': 2,
       'picker_3': 0,
-      'picker_4': 1
+      'picker_4': 1,
     });
 
     expect(text(const Key('sum_0')), '110');

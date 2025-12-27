@@ -29,8 +29,11 @@ class Molotow extends StatefulWidget {
 }
 
 class _MolotowState extends State<Molotow> {
-  var data =
-      BoardData(MolotowSettings(), MolotowScore(), MolotowSettingsKeys().data);
+  var data = BoardData(
+    MolotowSettings(),
+    MolotowScore(),
+    MolotowSettingsKeys().data,
+  );
   Timer? updateTimer;
 
   void restoreData() async {
@@ -48,8 +51,10 @@ class _MolotowState extends State<Molotow> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel molotow');
-    data.checkGameOver(context,
-        goalType: GoalType.values[data.settings.goalType]);
+    data.checkGameOver(
+      context,
+      goalType: GoalType.values[data.settings.goalType],
+    );
     if (updateTimer != null) {
       updateTimer!.cancel();
     }
@@ -77,11 +82,13 @@ class _MolotowState extends State<Molotow> {
           list.add('-');
         }
       });
-      return defaultRow(list,
-          rowNo: rowNo,
-          isRound: row.isRound,
-          context: context,
-          pointsFunction: _pointsDialog);
+      return defaultRow(
+        list,
+        rowNo: rowNo,
+        isRound: row.isRound,
+        context: context,
+        pointsFunction: _pointsDialog,
+      );
     }
 
     List<Widget> rows = [];
@@ -109,53 +116,58 @@ class _MolotowState extends State<Molotow> {
             data.common.whoIsNext,
             () => data.save(),
           ),
-          StatisticsButton(
-              context,
-              data.common.timestamps.elapsed(context),
-              [
-                context.l10n.handWeis,
-                context.l10n.tableWeis,
-                context.l10n.tricks
-              ],
-              stats),
+          StatisticsButton(context, data.common.timestamps.elapsed(context), [
+            context.l10n.handWeis,
+            context.l10n.tableWeis,
+            context.l10n.tricks,
+          ], stats),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(MolotowSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            MolotowSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
       body: BoardListWithFab(
         header: rowHeader(
-            playerNames: data.score.playerName,
-            players: data.settings.players,
-            headerFunction: _stringDialog,
-            context: context),
+          playerNames: data.score.playerName,
+          players: data.settings.players,
+          headerFunction: _stringDialog,
+          context: context,
+        ),
         rows: rows,
         footer: footer(),
         floatingActionButtons: [
           FloatingActionButton(
-              heroTag: "hand_weis",
-              onPressed: () => _weisDialog(hand: true),
-              tooltip: context.l10n.handWeis,
-              child: SizedBox(
-                  height: 40,
-                  child: SvgPicture.asset('assets/actions/hand_weis.svg'))),
+            heroTag: "hand_weis",
+            onPressed: () => _weisDialog(hand: true),
+            tooltip: context.l10n.handWeis,
+            child: SizedBox(
+              height: 40,
+              child: SvgPicture.asset('assets/actions/hand_weis.svg'),
+            ),
+          ),
           const SizedBox(width: 20),
           FloatingActionButton(
-              heroTag: "add_round",
-              onPressed: () => _pointsDialog(),
-              tooltip: context.l10n.addRound,
-              child: const Icon(Icons.add)),
+            heroTag: "add_round",
+            onPressed: () => _pointsDialog(),
+            tooltip: context.l10n.addRound,
+            child: const Icon(Icons.add),
+          ),
           const SizedBox(width: 20),
           FloatingActionButton(
-              heroTag: "table_weis",
-              onPressed: () => _weisDialog(hand: false),
-              tooltip: context.l10n.tableWeis,
-              child: SizedBox(
-                  height: 40,
-                  child: SvgPicture.asset('assets/actions/table_weis.svg'))),
+            heroTag: "table_weis",
+            onPressed: () => _weisDialog(hand: false),
+            tooltip: context.l10n.tableWeis,
+            child: SizedBox(
+              height: 40,
+              child: SvgPicture.asset('assets/actions/table_weis.svg'),
+            ),
+          ),
         ],
       ),
     );
@@ -164,8 +176,11 @@ class _MolotowState extends State<Molotow> {
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;
@@ -174,9 +189,11 @@ class _MolotowState extends State<Molotow> {
   }
 
   void _weisDialog({required bool hand}) async {
-    final input = await molotowWeisDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        hand: hand);
+    final input = await molotowWeisDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      hand: hand,
+    );
     if (input == null) return;
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());
@@ -196,13 +213,16 @@ class _MolotowState extends State<Molotow> {
   }
 
   void _pointsDialog({int? editRowNo}) async {
-    final previousPts =
-        (editRowNo != null) ? data.score.rows[editRowNo].pts : null;
-    final input = await playerPointsDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        pointsPerRound: data.settings.pointsPerRound,
-        rounded: data.settings.rounded,
-        previousPts: previousPts);
+    final previousPts = (editRowNo != null)
+        ? data.score.rows[editRowNo].pts
+        : null;
+    final input = await playerPointsDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      pointsPerRound: data.settings.pointsPerRound,
+      rounded: data.settings.rounded,
+      previousPts: previousPts,
+    );
     if (input == null) return;
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());

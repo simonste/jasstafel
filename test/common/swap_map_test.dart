@@ -53,8 +53,14 @@ void main() {
 
     expect(map2list(sm.get()), ['P1', 'P6', 'P2', 'P5', 'P3', 'P4']);
     expect(highlighted(sm.get()), null);
-    expect(map2list(sm.get(landscape: true)),
-        ['P1', 'P6', 'P5', 'P2', 'P3', 'P4']);
+    expect(map2list(sm.get(landscape: true)), [
+      'P1',
+      'P6',
+      'P5',
+      'P2',
+      'P3',
+      'P4',
+    ]);
   });
   test('default 7', () {
     var players = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
@@ -62,18 +68,41 @@ void main() {
 
     expect(map2list(sm.get()), ['P1', 'P7', 'P2', 'P6', 'P3', 'P5', 'P4']);
     expect(highlighted(sm.get()), null);
-    expect(map2list(sm.get(landscape: true)),
-        ['P1', 'P7', 'P6', 'P5', 'P2', 'P3', 'P4']);
+    expect(map2list(sm.get(landscape: true)), [
+      'P1',
+      'P7',
+      'P6',
+      'P5',
+      'P2',
+      'P3',
+      'P4',
+    ]);
   });
   test('default 8', () {
     var players = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
     var sm = SwapMap.simple(players);
 
-    expect(
-        map2list(sm.get()), ['P1', 'P8', 'P2', 'P7', 'P3', 'P6', 'P4', 'P5']);
+    expect(map2list(sm.get()), [
+      'P1',
+      'P8',
+      'P2',
+      'P7',
+      'P3',
+      'P6',
+      'P4',
+      'P5',
+    ]);
     expect(highlighted(sm.get()), null);
-    expect(map2list(sm.get(landscape: true)),
-        ['P1', 'P8', 'P7', 'P6', 'P2', 'P3', 'P4', 'P5']);
+    expect(map2list(sm.get(landscape: true)), [
+      'P1',
+      'P8',
+      'P7',
+      'P6',
+      'P2',
+      'P3',
+      'P4',
+      'P5',
+    ]);
   });
 
   test('swap one', () {
@@ -186,7 +215,11 @@ void main() {
 
   test('selected 6 players', () {
     var data = WhoIsNextData(
-        ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'], 0, WhoIsNext(), () {});
+      ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'],
+      0,
+      WhoIsNext(),
+      () {},
+    );
     var sm = SwapMap(data);
     sm.select(PlayerId(3));
     sm.swap(PlayerId(3), PlayerId(0));

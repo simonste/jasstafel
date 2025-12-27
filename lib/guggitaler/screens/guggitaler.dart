@@ -29,7 +29,10 @@ class Guggitaler extends StatefulWidget {
 
 class _GuggitalerState extends State<Guggitaler> {
   var data = BoardData(
-      GuggitalerSettings(), GuggitalerScore(), GuggitalerSettingsKeys().data);
+    GuggitalerSettings(),
+    GuggitalerScore(),
+    GuggitalerSettingsKeys().data,
+  );
   Timer? updateTimer;
 
   void restoreData() async {
@@ -76,8 +79,12 @@ class _GuggitalerState extends State<Guggitaler> {
           list.add('-');
         }
       }
-      return defaultRow(list,
-          rowNo: rowNo, context: context, pointsFunction: _guggitalerDialog);
+      return defaultRow(
+        list,
+        rowNo: rowNo,
+        context: context,
+        pointsFunction: _guggitalerDialog,
+      );
     }
 
     List<Widget> rows = [];
@@ -110,30 +117,39 @@ class _GuggitalerState extends State<Guggitaler> {
             data.common.whoIsNext,
             () => data.save(),
           ),
-          StatisticsButton(context, data.common.timestamps.elapsed(context),
-              colHeader, stats),
+          StatisticsButton(
+            context,
+            data.common.timestamps.elapsed(context),
+            colHeader,
+            stats,
+          ),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(GuggitalerSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            GuggitalerSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
       body: BoardListWithFab(
         header: rowHeader(
-            playerNames: data.score.playerName,
-            players: data.settings.players,
-            headerFunction: _stringDialog,
-            context: context),
+          playerNames: data.score.playerName,
+          players: data.settings.players,
+          headerFunction: _stringDialog,
+          context: context,
+        ),
         rows: rows,
         footer: footer(),
         floatingActionButtons: [
           FloatingActionButton(
-              heroTag: "add_round",
-              onPressed: () => _guggitalerDialog(),
-              tooltip: context.l10n.addRound,
-              child: const Icon(Icons.add))
+            heroTag: "add_round",
+            onPressed: () => _guggitalerDialog(),
+            tooltip: context.l10n.addRound,
+            child: const Icon(Icons.add),
+          ),
         ],
       ),
     );
@@ -142,8 +158,11 @@ class _GuggitalerState extends State<Guggitaler> {
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;
@@ -152,9 +171,11 @@ class _GuggitalerState extends State<Guggitaler> {
   }
 
   void _guggitalerDialog({int? editRowNo}) async {
-    final input = await guggitalerDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        row: (editRowNo != null) ? data.score.rows[editRowNo] : null);
+    final input = await guggitalerDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      row: (editRowNo != null) ? data.score.rows[editRowNo] : null,
+    );
     if (input == null) return;
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());

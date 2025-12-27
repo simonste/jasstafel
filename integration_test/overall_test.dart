@@ -107,8 +107,11 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> addCoiffeurPoints(String teamRow, int points,
-      {String? tapKey}) async {
+  Future<void> addCoiffeurPoints(
+    String teamRow,
+    int points, {
+    String? tapKey,
+  }) async {
     await tap(find.byKey(Key(teamRow)));
     await pumpAndSettle();
     await enterText(find.byType(TextField), '$points');
@@ -122,8 +125,11 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> addSchieberPoints(List<String> keys,
-      {String? factor, bool? weis}) async {
+  Future<void> addSchieberPoints(
+    List<String> keys, {
+    String? factor,
+    bool? weis,
+  }) async {
     for (final key in keys) {
       await tap(find.byKey(Key(key)));
       await pumpAndSettle();
@@ -143,8 +149,9 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
 
     var strokeWidgets = find.descendant(
-        of: find.byKey(Key('column$player')),
-        matching: find.byType(SchieberStrokes));
+      of: find.byKey(Key('column$player')),
+      matching: find.byType(SchieberStrokes),
+    );
 
     var totalStrokes = 0;
     for (var element in strokeWidgets.evaluate()) {
@@ -200,7 +207,9 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> addGuggitalerPoints(
-      String player, Map<String, int?> picker) async {
+    String player,
+    Map<String, int?> picker,
+  ) async {
     await tap(find.byTooltip('Runde eingeben'));
     await pump();
     await tap(find.text(player).last);
@@ -218,10 +227,12 @@ extension AppHelper on WidgetTester {
     await pump();
     for (var key in points.keys) {
       if (points[key] != null) {
-        await tap(find.descendant(
-          of: find.byKey(Key(key)),
-          matching: find.text("${points[key]}"),
-        ));
+        await tap(
+          find.descendant(
+            of: find.byKey(Key(key)),
+            matching: find.text("${points[key]}"),
+          ),
+        );
       }
       await pump();
     }

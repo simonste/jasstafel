@@ -22,7 +22,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.coiffeur.index);
+      CommonSettings.keys.lastBoard,
+      Board.coiffeur.index,
+    );
   });
 
   testWidgets('change type', (tester) async {

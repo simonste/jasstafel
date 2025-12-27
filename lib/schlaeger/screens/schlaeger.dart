@@ -26,7 +26,10 @@ class Schlaeger extends StatefulWidget {
 
 class _SchlaegerState extends State<Schlaeger> {
   var data = BoardData(
-      SchlaegerSettings(), SchlaegerScore(), SchlaegerSettingsKeys().data);
+    SchlaegerSettings(),
+    SchlaegerScore(),
+    SchlaegerSettingsKeys().data,
+  );
   Timer? updateTimer;
 
   void restoreData() async {
@@ -44,8 +47,10 @@ class _SchlaegerState extends State<Schlaeger> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel schlaeger');
-    data.checkGameOver(context,
-        goalType: GoalType.values[data.settings.goalType]);
+    data.checkGameOver(
+      context,
+      goalType: GoalType.values[data.settings.goalType],
+    );
     if (updateTimer != null) {
       updateTimer!.cancel();
     }
@@ -55,11 +60,17 @@ class _SchlaegerState extends State<Schlaeger> {
     for (int i = 0; i < 4; i++) {
       var player =
           (data.settings.players != 4 && data.settings.missingPlayer == i)
-              ? null
-              : playerCounter++;
-      playerWidgets.add(SchlaegerPlayer(
-          player, data, _stringDialog, _pointsDialog,
-          position: i));
+          ? null
+          : playerCounter++;
+      playerWidgets.add(
+        SchlaegerPlayer(
+          player,
+          data,
+          _stringDialog,
+          _pointsDialog,
+          position: i,
+        ),
+      );
     }
 
     return Scaffold(
@@ -78,42 +89,56 @@ class _SchlaegerState extends State<Schlaeger> {
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(SchlaegerSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            SchlaegerSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
-      body: Stack(children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
+      body: Stack(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
                 child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [playerWidgets[0], playerWidgets[1]])),
-            Expanded(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [playerWidgets[0], playerWidgets[1]],
+                ),
+              ),
+              Expanded(
                 child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [playerWidgets[2], playerWidgets[3]]))
-          ],
-        ),
-        Center(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [playerWidgets[2], playerWidgets[3]],
+                ),
+              ),
+            ],
+          ),
+          Center(
             child: FloatingActionButton(
-                heroTag: "add_round",
-                onPressed: () => _pointsDialog(),
-                tooltip: context.l10n.addRound,
-                child: const Icon(Icons.add))),
-      ]),
+              heroTag: "add_round",
+              onPressed: () => _pointsDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;
@@ -122,12 +147,15 @@ class _SchlaegerState extends State<Schlaeger> {
   }
 
   void _pointsDialog({int? editRowNo}) async {
-    final previousPts =
-        (editRowNo != null) ? data.score.rows[editRowNo].pts : null;
-    final input = await schlaegerDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        pointsPerRound: 3,
-        previousPts: previousPts);
+    final previousPts = (editRowNo != null)
+        ? data.score.rows[editRowNo].pts
+        : null;
+    final input = await schlaegerDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      pointsPerRound: 3,
+      previousPts: previousPts,
+    );
     if (input == null) return;
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());

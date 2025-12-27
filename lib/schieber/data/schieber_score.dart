@@ -229,12 +229,15 @@ class SchieberScore implements Score {
 
     List<int> ptsBuffer = [0, 0];
     for (var round in rounds) {
-      final bufferContainsRound = (ptsBuffer.sum > 0 &&
+      final bufferContainsRound =
+          (ptsBuffer.sum > 0 &&
           ((ptsBuffer.sum % _settings.match == 0) ||
               (ptsBuffer.sum % _settings.pointsPerRound) == 0));
-      final previousPointsLongAgo = (previousRound != null &&
+      final previousPointsLongAgo =
+          (previousRound != null &&
           round.time.difference(previousRound.time).inSeconds.abs() > 5);
-      final currentIsRound = (ptsBuffer.sum > 0 &&
+      final currentIsRound =
+          (ptsBuffer.sum > 0 &&
           ((round._total() % _settings.match == 0) ||
               (round._total() % _settings.pointsPerRound) == 0));
       final currentIsWeis = round.weis;
@@ -375,17 +378,15 @@ class SchieberScore implements Score {
         }
       }
 
-      Future.delayed(
-        Duration.zero,
-        () {
-          if (context.mounted) {
-            hillDialog(
-                context: context,
-                hillers: hillers,
-                setHillerFunction: setHiller);
-          }
-        },
-      );
+      Future.delayed(Duration.zero, () {
+        if (context.mounted) {
+          hillDialog(
+            context: context,
+            hillers: hillers,
+            setHillerFunction: setHiller,
+          );
+        }
+      });
     }
   }
 

@@ -27,7 +27,10 @@ class PointBoard extends StatefulWidget {
 
 class _PointBoardState extends State<PointBoard> {
   var data = BoardData(
-      PointBoardSettings(), PointBoardScore(), PointBoardSettingsKeys().data);
+    PointBoardSettings(),
+    PointBoardScore(),
+    PointBoardSettingsKeys().data,
+  );
   Timer? updateTimer;
 
   void restoreData() async {
@@ -45,8 +48,10 @@ class _PointBoardState extends State<PointBoard> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel point board');
-    data.checkGameOver(context,
-        goalType: GoalType.values[data.settings.goalType]);
+    data.checkGameOver(
+      context,
+      goalType: GoalType.values[data.settings.goalType],
+    );
     if (updateTimer != null) {
       updateTimer!.cancel();
     }
@@ -70,8 +75,12 @@ class _PointBoardState extends State<PointBoard> {
           list.add('-');
         }
       });
-      return defaultRow(list,
-          rowNo: rowNo, context: context, pointsFunction: _pointsDialog);
+      return defaultRow(
+        list,
+        rowNo: rowNo,
+        context: context,
+        pointsFunction: _pointsDialog,
+      );
     }
 
     List<Widget> rows = [];
@@ -95,24 +104,29 @@ class _PointBoardState extends State<PointBoard> {
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(PointBoardSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            PointBoardSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
       body: BoardListWithFab(
         header: rowHeader(
-            playerNames: data.score.playerName,
-            players: data.settings.players,
-            headerFunction: _stringDialog,
-            context: context),
+          playerNames: data.score.playerName,
+          players: data.settings.players,
+          headerFunction: _stringDialog,
+          context: context,
+        ),
         rows: rows,
         footer: footer(),
         floatingActionButtons: [
           FloatingActionButton(
-              heroTag: "add_round",
-              onPressed: () => _pointsDialog(),
-              tooltip: context.l10n.addRound,
-              child: const Icon(Icons.add))
+            heroTag: "add_round",
+            onPressed: () => _pointsDialog(),
+            tooltip: context.l10n.addRound,
+            child: const Icon(Icons.add),
+          ),
         ],
       ),
     );
@@ -121,8 +135,11 @@ class _PointBoardState extends State<PointBoard> {
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;
@@ -131,15 +148,18 @@ class _PointBoardState extends State<PointBoard> {
   }
 
   void _pointsDialog({int? editRowNo}) async {
-    final previousPts =
-        (editRowNo != null) ? data.score.rows[editRowNo].pts : null;
-    final input = await playerPointsDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        pointsPerRound: data.settings.enablePointsPerRound
-            ? data.settings.pointsPerRound
-            : null,
-        rounded: data.settings.rounded,
-        previousPts: previousPts);
+    final previousPts = (editRowNo != null)
+        ? data.score.rows[editRowNo].pts
+        : null;
+    final input = await playerPointsDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      pointsPerRound: data.settings.enablePointsPerRound
+          ? data.settings.pointsPerRound
+          : null,
+      rounded: data.settings.rounded,
+      previousPts: previousPts,
+    );
     if (input == null) return;
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());

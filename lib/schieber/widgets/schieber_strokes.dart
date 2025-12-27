@@ -8,8 +8,13 @@ class SchieberStrokes extends StatelessWidget {
   final bool shaded;
   final double widthFactor;
 
-  const SchieberStrokes(this.type, this.strokes,
-      {this.shaded = false, this.widthFactor = 0.01, super.key});
+  const SchieberStrokes(
+    this.type,
+    this.strokes, {
+    this.shaded = false,
+    this.widthFactor = 0.01,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

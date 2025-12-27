@@ -19,15 +19,22 @@ Widget getIcon(int players) {
 }
 
 class WhoIsNextButton extends IconButton {
-  WhoIsNextButton(BuildContext context, List<String> players, int rounds,
-      WhoIsNext whoIsNext, Function saveFunction)
-      : super(
-            key: const Key('whoIsNext'),
-            onPressed: () {
-              dialogBuilder(context,
-                  WhoIsNextData(players, rounds, whoIsNext, saveFunction));
-            },
-            icon: getIcon(players.length));
+  WhoIsNextButton(
+    BuildContext context,
+    List<String> players,
+    int rounds,
+    WhoIsNext whoIsNext,
+    Function saveFunction,
+  ) : super(
+        key: const Key('whoIsNext'),
+        onPressed: () {
+          dialogBuilder(
+            context,
+            WhoIsNextData(players, rounds, whoIsNext, saveFunction),
+          );
+        },
+        icon: getIcon(players.length),
+      );
 
   static List<String> splitAtUpperCaseLetters(String teamName) {
     List<String> players = [];
@@ -55,8 +62,9 @@ class WhoIsNextButton extends IconButton {
     }
     if (limit != null) {
       if (playerNames.length > limit) {
-        playerNames[limit - 1] =
-            teamName.substring(teamName.indexOf(playerNames[limit - 1]));
+        playerNames[limit - 1] = teamName.substring(
+          teamName.indexOf(playerNames[limit - 1]),
+        );
         playerNames = playerNames.sublist(0, limit);
       }
     }
@@ -92,7 +100,8 @@ class WhoIsNextButton extends IconButton {
         continue;
       }
       final names = splitTeamName(teamName, limit: playersPerTeam);
-      final validSplit = names.length == playersPerTeam &&
+      final validSplit =
+          names.length == playersPerTeam &&
           !teamName.toLowerCase().contains('team');
       for (var n = 0; n < playersPerTeam; n++) {
         if (validSplit) {
@@ -108,41 +117,42 @@ class WhoIsNextButton extends IconButton {
 
 Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
   return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(context.l10n.whoBegins),
-              content: Wrap(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(context.l10n.noOfRounds(whoIsNextData.rounds)),
-                      WhoIsNextWidget(whoIsNextData),
-                      Text(
-                        context.l10n.whoBeginsInfo,
-                        style: const TextStyle(fontWeight: FontWeight.w100),
-                        textScaler: const TextScaler.linear(0.8),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: Text(context.l10n.ok),
-                  onPressed: () {
-                    Navigator.of(context).pop(WhoIsNext());
-                  },
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text(context.l10n.whoBegins),
+            content: Wrap(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.l10n.noOfRounds(whoIsNextData.rounds)),
+                    WhoIsNextWidget(whoIsNextData),
+                    Text(
+                      context.l10n.whoBeginsInfo,
+                      style: const TextStyle(fontWeight: FontWeight.w100),
+                      textScaler: const TextScaler.linear(0.8),
+                    ),
+                  ],
                 ),
               ],
-            );
-          },
-        );
-      });
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: Text(context.l10n.ok),
+                onPressed: () {
+                  Navigator.of(context).pop(WhoIsNext());
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
 }

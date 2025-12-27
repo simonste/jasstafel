@@ -17,7 +17,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.schlaeger.index);
+      CommonSettings.keys.lastBoard,
+      Board.schlaeger.index,
+    );
   });
 
   testWidgets('change name', (tester) async {
@@ -61,11 +63,7 @@ void main() {
 
     expect(find.text('Spieler 4'), findsNothing);
 
-    await tester.addSchlaegerRound({
-      'pts_0': 2,
-      'pts_1': 1,
-      'pts_2': -1,
-    });
+    await tester.addSchlaegerRound({'pts_0': 2, 'pts_1': 1, 'pts_2': -1});
   });
 
   testWidgets('4 players', (tester) async {
@@ -81,11 +79,7 @@ void main() {
 
     expect(find.text('Spieler 4'), findsOneWidget);
 
-    await tester.addSchlaegerRound({
-      'pts_0': 1,
-      'pts_1': 1,
-      'pts_3': 1,
-    });
+    await tester.addSchlaegerRound({'pts_0': 1, 'pts_1': 1, 'pts_3': 1});
 
     expect(text(const Key('sum_0')), '1');
     expect(text(const Key('sum_1')), '1');
@@ -100,10 +94,18 @@ void main() {
 
     await tester.longPress(find.byKey(const Key('scores_1')));
 
-    await tester.tap(find.descendant(
-        of: find.byKey(const Key("pts_1")), matching: find.text("1")));
-    await tester.tap(find.descendant(
-        of: find.byKey(const Key("pts_0")), matching: find.text("2")));
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key("pts_1")),
+        matching: find.text("1"),
+      ),
+    );
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key("pts_0")),
+        matching: find.text("2"),
+      ),
+    );
 
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
@@ -126,16 +128,8 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.addSchlaegerRound({
-      'pts_0': 1,
-      'pts_1': -1,
-      'pts_2': 2,
-    });
-    await tester.addSchlaegerRound({
-      'pts_0': -1,
-      'pts_1': 0,
-      'pts_2': 2,
-    });
+    await tester.addSchlaegerRound({'pts_0': 1, 'pts_1': -1, 'pts_2': 2});
+    await tester.addSchlaegerRound({'pts_0': -1, 'pts_1': 0, 'pts_2': 2});
 
     expect(find.text('Spieler 3 hat die Zielpunkte erreicht!'), findsOneWidget);
     await tester.tap(find.text('Ok'));
@@ -163,11 +157,7 @@ void main() {
     await tester.pumpAndSettle();
 
     for (var i = 0; i < 3; i++) {
-      await tester.addSchlaegerRound({
-        'pts_0': 1,
-        'pts_1': 2,
-        'pts_2': -1,
-      });
+      await tester.addSchlaegerRound({'pts_0': 1, 'pts_1': 2, 'pts_2': -1});
     }
 
     expect(find.text('Spieler 2 hat gewonnen!'), findsOneWidget);

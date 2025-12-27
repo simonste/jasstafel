@@ -32,7 +32,10 @@ class Coiffeur extends StatefulWidget {
 
 class _CoiffeurState extends State<Coiffeur> {
   var data = BoardData(
-      CoiffeurSettings(), CoiffeurScore(), CoiffeurSettingsKeys().data);
+    CoiffeurSettings(),
+    CoiffeurScore(),
+    CoiffeurSettingsKeys().data,
+  );
   final typeNameGroup = AutoSizeGroup();
   final cellGroup = AutoSizeGroup();
   Timer? updateTimer;
@@ -69,24 +72,27 @@ class _CoiffeurState extends State<Coiffeur> {
         context: context,
         actions: [
           WhoIsNextButton(
-              context,
-              WhoIsNextButton.guessPlayerNames(data.score.teamName
-                  .sublist(0, data.settings.threeTeams ? 3 : 2)),
-              data.score.noOfRounds(),
-              data.common.whoIsNext,
-              () => data.save()),
+            context,
+            WhoIsNextButton.guessPlayerNames(
+              data.score.teamName.sublist(0, data.settings.threeTeams ? 3 : 2),
+            ),
+            data.score.noOfRounds(),
+            data.common.whoIsNext,
+            () => data.save(),
+          ),
           CoiffeurInfoButton(context, data),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(CoiffeurSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            CoiffeurSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
-      body: Column(
-        children: _createRows,
-      ),
+      body: Column(children: _createRows),
     );
   }
 
@@ -131,16 +137,20 @@ class _CoiffeurState extends State<Coiffeur> {
     if (data.settings.threeTeams) {
       cells.add(teamWidget(2));
     } else if (data.settings.thirdColumn) {
-      cells.add(CoiffeurCell(
-        key: const Key('elapsed'),
-        data.common.timestamps.elapsed(context),
-        maxLines: 2,
-        group: typeNameGroup,
-      ));
+      cells.add(
+        CoiffeurCell(
+          key: const Key('elapsed'),
+          data.common.timestamps.elapsed(context),
+          maxLines: 2,
+          group: typeNameGroup,
+        ),
+      );
 
       final updateInterval = 60000 / const Duration(minutes: 1).elapsed ~/ 2;
-      updateTimer =
-          Timer(Duration(milliseconds: updateInterval), () => setState(() {}));
+      updateTimer = Timer(
+        Duration(milliseconds: updateInterval),
+        () => setState(() {}),
+      );
     }
     return CoiffeurRow(cells);
   }
@@ -150,9 +160,15 @@ class _CoiffeurState extends State<Coiffeur> {
         data.settings.greyCompletedRows && data.score.diff(i) != null;
 
     Widget teamWidget(team, row) {
-      return CoiffeurPointsCell(data.score.points(row, team), onTap: () {
-        _pointsDialog(team, row);
-      }, key: Key("$team:$row"), group: cellGroup, grey: rowCompleted);
+      return CoiffeurPointsCell(
+        data.score.points(row, team),
+        onTap: () {
+          _pointsDialog(team, row);
+        },
+        key: Key("$team:$row"),
+        group: cellGroup,
+        grey: rowCompleted,
+      );
     }
 
     var cells = [
@@ -170,10 +186,16 @@ class _CoiffeurState extends State<Coiffeur> {
       cells.add(teamWidget(2, i));
     } else if (data.settings.thirdColumn) {
       final diff = data.score.diff(i);
-      final alignment =
-          ((diff ?? 0) > 0) ? Alignment.centerLeft : Alignment.centerRight;
-      cells.add(CoiffeurPointsCell.number(diff,
-          alignment: alignment, grey: rowCompleted));
+      final alignment = ((diff ?? 0) > 0)
+          ? Alignment.centerLeft
+          : Alignment.centerRight;
+      cells.add(
+        CoiffeurPointsCell.number(
+          diff,
+          alignment: alignment,
+          grey: rowCompleted,
+        ),
+      );
     }
 
     return CoiffeurRow(cells, topBorder: true);
@@ -228,41 +250,54 @@ class _CoiffeurState extends State<Coiffeur> {
     }
 
     var titleWidget = SizedBox(
-        height: 32,
-        child: Row(children: [
+      height: 32,
+      child: Row(
+        children: [
           Text(context.l10n.points),
           const Expanded(child: SizedBox.expand()),
           Expanded(
-              child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).pop(IntValue(null, scratch: true));
-                  },
-                  key: const Key('scratch'),
-                  child: SvgPicture.asset("assets/actions/scratch.svg"))),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pop(IntValue(null, scratch: true));
+              },
+              key: const Key('scratch'),
+              child: SvgPicture.asset("assets/actions/scratch.svg"),
+            ),
+          ),
           Expanded(
-              child: InkWell(
-                  onTap: () {
-                    controller.text = data.settings.match.toString();
-                  },
-                  key: const Key('match'),
-                  child: SvgPicture.asset("assets/actions/match.svg"))),
+            child: InkWell(
+              onTap: () {
+                controller.text = data.settings.match.toString();
+              },
+              key: const Key('match'),
+              child: SvgPicture.asset("assets/actions/match.svg"),
+            ),
+          ),
           Expanded(
-              child: InkWell(
-                  onTap: () {
-                    try {
-                      controller.text = (roundPoints(data.settings.match) -
+            child: InkWell(
+              onTap: () {
+                try {
+                  controller.text =
+                      (roundPoints(data.settings.match) -
                               int.parse(controller.text))
                           .toString();
-                    } on FormatException {
-                      controller.text = "${roundPoints(data.settings.match)}";
-                    }
-                  },
-                  key: const Key('157-x'),
-                  child: SvgPicture.asset("assets/actions/157-x.svg")))
-        ]));
+                } on FormatException {
+                  controller.text = "${roundPoints(data.settings.match)}";
+                }
+              },
+              key: const Key('157-x'),
+              child: SvgPicture.asset("assets/actions/157-x.svg"),
+            ),
+          ),
+        ],
+      ),
+    );
 
-    final input =
-        await pointsDialogBuilder(context, controller, title: titleWidget);
+    final input = await pointsDialogBuilder(
+      context,
+      controller,
+      title: titleWidget,
+    );
     if (input == null) return; // pressed anywhere outside dialog
     setState(() {
       data.common.timestamps.addPoints(data.score.totalPoints());

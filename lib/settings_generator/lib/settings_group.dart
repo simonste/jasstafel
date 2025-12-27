@@ -18,11 +18,13 @@ class SettingsGroup {
 
   Iterable<Spec> create() {
     var fields = [
-      Field((b) => b
-        ..name = 'keys'
-        ..static = true
-        ..type = refer('${_groupName}Keys')
-        ..assignment = Code('${_groupName}Keys()'))
+      Field(
+        (b) => b
+          ..name = 'keys'
+          ..static = true
+          ..type = refer('${_groupName}Keys')
+          ..assignment = Code('${_groupName}Keys()'),
+      ),
     ];
 
     for (Setting setting in _settings) {
@@ -61,51 +63,87 @@ class SettingsGroup {
     }
 
     var methods = [
-      Method.returnsVoid((b) => b
-        ..name = 'toPrefService'
-        ..requiredParameters.add(Parameter((b) => b
-          ..name = 'context'
-          ..type = refer('BuildContext')))
-        ..body = Code(toPref)),
-      Method.returnsVoid((b) => b
-        ..name = 'fromPrefService'
-        ..requiredParameters.add(Parameter((b) => b
-          ..name = 'context'
-          ..type = refer('BuildContext')))
-        ..body = Code(fromPref)),
-      Method.returnsVoid((b) => b
-        ..name = 'toPreferences'
-        ..requiredParameters.add(Parameter((b) => b
-          ..name = 'preferences'
-          ..type = refer('SharedPreferences')))
-        ..body = Code(toPreferences)),
-      Method.returnsVoid((b) => b
-        ..name = 'fromPreferences'
-        ..requiredParameters.add(Parameter((b) => b
-          ..name = 'preferences'
-          ..type = refer('SharedPreferences')))
-        ..body = Code(fromPreferences)),
-      Method((b) => b
-        ..name = 'toJson'
-        ..returns = refer('Map<String, dynamic>')
-        ..body = Code(toJson)),
-      Method.returnsVoid((b) => b
-        ..name = 'fromJson'
-        ..requiredParameters.add(Parameter((b) => b
-          ..name = 'json'
-          ..type = refer('Map<String, dynamic>')))
-        ..body = Code(fromJson)),
+      Method.returnsVoid(
+        (b) => b
+          ..name = 'toPrefService'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'context'
+                ..type = refer('BuildContext'),
+            ),
+          )
+          ..body = Code(toPref),
+      ),
+      Method.returnsVoid(
+        (b) => b
+          ..name = 'fromPrefService'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'context'
+                ..type = refer('BuildContext'),
+            ),
+          )
+          ..body = Code(fromPref),
+      ),
+      Method.returnsVoid(
+        (b) => b
+          ..name = 'toPreferences'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'preferences'
+                ..type = refer('SharedPreferences'),
+            ),
+          )
+          ..body = Code(toPreferences),
+      ),
+      Method.returnsVoid(
+        (b) => b
+          ..name = 'fromPreferences'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'preferences'
+                ..type = refer('SharedPreferences'),
+            ),
+          )
+          ..body = Code(fromPreferences),
+      ),
+      Method(
+        (b) => b
+          ..name = 'toJson'
+          ..returns = refer('Map<String, dynamic>')
+          ..body = Code(toJson),
+      ),
+      Method.returnsVoid(
+        (b) => b
+          ..name = 'fromJson'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'json'
+                ..type = refer('Map<String, dynamic>'),
+            ),
+          )
+          ..body = Code(fromJson),
+      ),
     ];
 
     String def = "";
     for (Setting setting in _settings) {
       def += setting.defaults();
     }
-    methods.add(Method((b) => b
-      ..type = MethodType.getter
-      ..name = 'defaults'
-      ..static = true
-      ..body = Code('return {$def};')));
+    methods.add(
+      Method(
+        (b) => b
+          ..type = MethodType.getter
+          ..name = 'defaults'
+          ..static = true
+          ..body = Code('return {$def};'),
+      ),
+    );
 
     var getters = <Method>[];
     for (Setting setting in _settings) {
@@ -113,13 +151,17 @@ class SettingsGroup {
     }
 
     return [
-      Class((b) => b
-        ..name = "${_groupName}Keys"
-        ..methods.addAll(getters)),
-      Class((b) => b
-        ..name = _groupName
-        ..fields.addAll(fields)
-        ..methods.addAll(methods))
+      Class(
+        (b) => b
+          ..name = "${_groupName}Keys"
+          ..methods.addAll(getters),
+      ),
+      Class(
+        (b) => b
+          ..name = _groupName
+          ..fields.addAll(fields)
+          ..methods.addAll(methods),
+      ),
     ];
   }
 }

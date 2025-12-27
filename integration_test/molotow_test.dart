@@ -22,7 +22,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.molotow.index);
+      CommonSettings.keys.lastBoard,
+      Board.molotow.index,
+    );
   });
 
   testWidgets('change name', (tester) async {
@@ -175,11 +177,7 @@ void main() {
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
 
-    await tester.addRound({
-      'pts_0': 70,
-      'pts_1': 70,
-      'pts_2': 17,
-    });
+    await tester.addRound({'pts_0': 70, 'pts_1': 70, 'pts_2': 17});
 
     await tester.tap(find.byTooltip('Tischweis'));
     await tester.pumpAndSettle();
@@ -189,9 +187,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-        find.text(
-            'Spieler 4 hat gewonnen!\n\nSpieler 2 hat die Zielpunkte erreicht!'),
-        findsOneWidget);
+      find.text(
+        'Spieler 4 hat gewonnen!\n\nSpieler 2 hat die Zielpunkte erreicht!',
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
 
@@ -244,7 +244,9 @@ void main() {
     score.rows = List.filled(20, MolotowRow([25, 50, 66, 16], isRound: true));
 
     await preferences.setString(
-        MolotowSettings.keys.data, jsonEncode(score.toJson()));
+      MolotowSettings.keys.data,
+      jsonEncode(score.toJson()),
+    );
 
     await tester.launchApp();
 

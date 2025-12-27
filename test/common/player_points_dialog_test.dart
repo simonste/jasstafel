@@ -14,28 +14,34 @@ String inputFieldText(Key key) {
 }
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog(
-      {required List<String> playerNames,
-      int? pointsPerRound = 157,
-      bool rounded = false,
-      List<int?>? previousPts}) async {
+  Future<InputWrap> openDialog({
+    required List<String> playerNames,
+    int? pointsPerRound = 157,
+    bool rounded = false,
+    List<int?>? previousPts,
+  }) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            dialogInput.value = await playerPointsDialogBuilder(
-              context,
-              playerNames: playerNames,
-              pointsPerRound: pointsPerRound,
-              previousPts: previousPts,
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: InkWell(
+                child: const Text('Foo'),
+                onTap: () async {
+                  dialogInput.value = await playerPointsDialogBuilder(
+                    context,
+                    playerNames: playerNames,
+                    pointsPerRound: pointsPerRound,
+                    previousPts: previousPts,
+                  );
+                },
+              ),
             );
           },
         ),
-      );
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();
@@ -72,10 +78,13 @@ void main() {
     expect(dialogInput.value, null);
   });
 
-  testWidgets('ok allowed without points per round',
-      (WidgetTester tester) async {
+  testWidgets('ok allowed without points per round', (
+    WidgetTester tester,
+  ) async {
     var dialogInput = await tester.openDialog(
-        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+      playerNames: playerNames.sublist(0, 4),
+      pointsPerRound: null,
+    );
 
     await tester.enterText(find.byKey(const Key('pts_1')), '12');
     await tester.pump();
@@ -84,10 +93,13 @@ void main() {
     expect(dialogInput.value, [null, 12, null, null]);
   });
 
-  testWidgets('ok not allowed without points per round when empty',
-      (WidgetTester tester) async {
+  testWidgets('ok not allowed without points per round when empty', (
+    WidgetTester tester,
+  ) async {
     var dialogInput = await tester.openDialog(
-        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+      playerNames: playerNames.sublist(0, 4),
+      pointsPerRound: null,
+    );
 
     await tester.tap(find.text('Ok'));
     await tester.pump();
@@ -208,7 +220,9 @@ void main() {
 
   testWidgets('no fix points per round', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(
-        playerNames: playerNames.sublist(0, 4), pointsPerRound: null);
+      playerNames: playerNames.sublist(0, 4),
+      pointsPerRound: null,
+    );
 
     await tester.enterText(find.byKey(const Key('pts_0')), '27');
     await tester.pump();

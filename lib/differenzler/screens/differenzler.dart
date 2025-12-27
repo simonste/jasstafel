@@ -27,8 +27,11 @@ class Differenzler extends StatefulWidget {
 }
 
 class _DifferenzlerState extends State<Differenzler> {
-  var data = BoardData(DifferenzlerSettings(), DifferenzlerScore(),
-      DifferenzlerSettingsKeys().data);
+  var data = BoardData(
+    DifferenzlerSettings(),
+    DifferenzlerScore(),
+    DifferenzlerSettingsKeys().data,
+  );
   Timer? updateTimer;
 
   final empty = '-';
@@ -49,8 +52,10 @@ class _DifferenzlerState extends State<Differenzler> {
   @override
   Widget build(BuildContext context) {
     developer.log('build', name: 'jasstafel differenzler');
-    data.checkGameOver(context,
-        goalType: GoalType.values[data.settings.goalType]);
+    data.checkGameOver(
+      context,
+      goalType: GoalType.values[data.settings.goalType],
+    );
     if (updateTimer != null) {
       updateTimer!.cancel();
     }
@@ -59,36 +64,50 @@ class _DifferenzlerState extends State<Differenzler> {
       data.score.rows.add(DifferenzlerRow());
     }
 
-    rowWidget(List<String> data,
-        {List<String> guess = const [],
-        List<String> pts = const [],
-        int? rowNo}) {
+    rowWidget(
+      List<String> data, {
+      List<String> guess = const [],
+      List<String> pts = const [],
+      int? rowNo,
+    }) {
       List<Widget> children = rowContainer(data[0]);
 
       for (var i = 1; i < data.length; i++) {
         final text = defaultCell(data[i]);
 
-        children.add(Expanded(
-            child: Row(children: [
+        children.add(
           Expanded(
-              child: Column(children: [
-            Text(key: Key('guess_${rowNo}_$i'), guess[i]),
-            pts[i] == empty
-                ? Text(pts[i])
-                : InkWell(
-                    onLongPress: () => _pointsDialog(editRowNo: rowNo!),
-                    child: Text(pts[i]),
-                  )
-          ])),
-          data[i] == empty
-              ? text
-              : InkWell(
-                  onLongPress: () => _pointsDialog(editRowNo: rowNo!),
-                  child: text),
-        ])));
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(key: Key('guess_${rowNo}_$i'), guess[i]),
+                      pts[i] == empty
+                          ? Text(pts[i])
+                          : InkWell(
+                              onLongPress: () =>
+                                  _pointsDialog(editRowNo: rowNo!),
+                              child: Text(pts[i]),
+                            ),
+                    ],
+                  ),
+                ),
+                data[i] == empty
+                    ? text
+                    : InkWell(
+                        onLongPress: () => _pointsDialog(editRowNo: rowNo!),
+                        child: text,
+                      ),
+              ],
+            ),
+          ),
+        );
       }
       return Container(
-          decoration: rowDecoration(context), child: Row(children: children));
+        decoration: rowDecoration(context),
+        child: Row(children: children),
+      );
     }
 
     footer() {
@@ -137,12 +156,16 @@ class _DifferenzlerState extends State<Differenzler> {
     List<Widget> enterGuessButtons = [const SizedBox(width: 20)];
     for (var p = 0; p < data.settings.players; p++) {
       if (data.score.rows.last.guesses[p] == null) {
-        enterGuessButtons.add(Expanded(
+        enterGuessButtons.add(
+          Expanded(
             child: FloatingActionButton(
-                heroTag: "add_guess_$p",
-                onPressed: () => _guessDialog(p),
-                tooltip: context.l10n.enterGuess(data.score.playerName[p]),
-                child: const Icon(Icons.question_mark))));
+              heroTag: "add_guess_$p",
+              onPressed: () => _guessDialog(p),
+              tooltip: context.l10n.enterGuess(data.score.playerName[p]),
+              child: const Icon(Icons.question_mark),
+            ),
+          ),
+        );
       } else {
         enterGuessButtons.add(const Expanded(child: SizedBox()));
       }
@@ -154,10 +177,12 @@ class _DifferenzlerState extends State<Differenzler> {
             right: 20,
             bottom: 50,
             child: FloatingActionButton(
-                heroTag: "add_round",
-                onPressed: () => _pointsDialog(),
-                tooltip: context.l10n.addRound,
-                child: const Icon(Icons.add)))
+              heroTag: "add_round",
+              onPressed: () => _pointsDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add),
+            ),
+          )
         : const SizedBox();
 
     List<List<String>> stats = [];
@@ -180,7 +205,7 @@ class _DifferenzlerState extends State<Differenzler> {
           '$gu',
           '$zeroGuessed',
           '$zeroDiff',
-          '$pts'
+          '$pts',
         ]);
         avgGuess += gu;
       } else {
@@ -200,50 +225,60 @@ class _DifferenzlerState extends State<Differenzler> {
             () => data.save(),
           ),
           StatisticsButton(
-              context,
-              data.common.timestamps.elapsed(context),
-              [
-                context.l10n.avgGuess,
-                context.l10n.zeroGuess,
-                context.l10n.zeroDiff,
-                context.l10n.avgPoints
-              ],
-              stats,
-              summary: data.score.rows.first.isPlayed()
-                  ? context.l10n.avgRoundGuess((avgGuess).round())
-                  : null),
+            context,
+            data.common.timestamps.elapsed(context),
+            [
+              context.l10n.avgGuess,
+              context.l10n.zeroGuess,
+              context.l10n.zeroDiff,
+              context.l10n.avgPoints,
+            ],
+            stats,
+            summary: data.score.rows.first.isPlayed()
+                ? context.l10n.avgRoundGuess((avgGuess).round())
+                : null,
+          ),
           DeleteButton(
             context,
             deleteFunction: () => setState(() => data.reset()),
           ),
-          SettingsButton(DifferenzlerSettingsScreen(data), context,
-              () => setState(() => data.settings.fromPrefService(context))),
+          SettingsButton(
+            DifferenzlerSettingsScreen(data),
+            context,
+            () => setState(() => data.settings.fromPrefService(context)),
+          ),
         ],
       ),
-      body: Stack(children: [
-        Column(children: [
-          rowHeader(
-              playerNames: data.score.playerName,
-              players: data.settings.players,
-              headerFunction: _stringDialog,
-              context: context),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(children: rows),
-            ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              rowHeader(
+                playerNames: data.score.playerName,
+                players: data.settings.players,
+                headerFunction: _stringDialog,
+                context: context,
+              ),
+              Expanded(
+                child: SingleChildScrollView(child: Column(children: rows)),
+              ),
+              footer(),
+            ],
           ),
-          footer()
-        ]),
-        addRoundButton,
-      ]),
+          addRoundButton,
+        ],
+      ),
     );
   }
 
   void _stringDialog(player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.playerName[player] = input;
@@ -265,12 +300,15 @@ class _DifferenzlerState extends State<Differenzler> {
   }
 
   void _pointsDialog({int? editRowNo}) async {
-    final previousPts =
-        (editRowNo != null) ? data.score.rows[editRowNo].pts : null;
-    final input = await playerPointsDialogBuilder(context,
-        playerNames: data.score.playerName.sublist(0, data.settings.players),
-        pointsPerRound: data.settings.pointsPerRound,
-        previousPts: previousPts);
+    final previousPts = (editRowNo != null)
+        ? data.score.rows[editRowNo].pts
+        : null;
+    final input = await playerPointsDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      pointsPerRound: data.settings.pointsPerRound,
+      previousPts: previousPts,
+    );
     if (input == null) return;
     setState(() {
       if (editRowNo == null) {

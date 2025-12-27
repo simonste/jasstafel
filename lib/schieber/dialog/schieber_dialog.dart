@@ -51,29 +51,34 @@ class PointsController extends TextEditingController {
   }
 }
 
-Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
-    int matchPts, int roundPts, TeamData teamData) {
+Future<Points?> schieberDialogBuilder(
+  BuildContext context,
+  int teamId,
+  int matchPts,
+  int roundPts,
+  TeamData teamData,
+) {
   int factor = 1;
   int sign = 1;
 
   return showDialog<Points>(
-      context: context,
-      builder: (BuildContext context) {
-        var ptsController = PointsController();
+    context: context,
+    builder: (BuildContext context) {
+      var ptsController = PointsController();
 
-        pointsTeam() {
-          return ptsController.getPoints() * factor * sign;
+      pointsTeam() {
+        return ptsController.getPoints() * factor * sign;
+      }
+
+      pointsOtherTeam() {
+        if (ptsController.getPoints() == matchPts || sign == -1) {
+          return 0;
         }
+        return (roundPts - ptsController.getPoints()) * factor;
+      }
 
-        pointsOtherTeam() {
-          if (ptsController.getPoints() == matchPts || sign == -1) {
-            return 0;
-          }
-          return (roundPts - ptsController.getPoints()) * factor;
-        }
-
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
           TableRow createRow(i) {
             Widget cell(n) {
               if (n == 10) {
@@ -84,43 +89,51 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
               final String number = isDeleteButton
                   ? "←"
                   : (n == 11)
-                      ? "0"
-                      : "$n";
+                  ? "0"
+                  : "$n";
 
               return InkWell(
-                  key: Key("key_$number"),
-                  onTap: () => setState(() {
-                        if (isDeleteButton) {
-                          ptsController.delete();
-                        } else {
-                          ptsController.add(number);
-                        }
-                      }),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                          height: 50,
-                          child: Center(
-                              child: Text(number,
-                                  textScaler: const TextScaler.linear(2.5))))
-                    ],
-                  ));
+                key: Key("key_$number"),
+                onTap: () => setState(() {
+                  if (isDeleteButton) {
+                    ptsController.delete();
+                  } else {
+                    ptsController.add(number);
+                  }
+                }),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          number,
+                          textScaler: const TextScaler.linear(2.5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return TableRow(
-                children: [cell(i * 3 + 1), cell(i * 3 + 2), cell(i * 3 + 3)]);
+              children: [cell(i * 3 + 1), cell(i * 3 + 2), cell(i * 3 + 3)],
+            );
           }
 
           Widget getPlusMinusButton() {
             return Expanded(
-                flex: 1,
-                child: InkWell(
-                  key: const Key("key_+/-"),
-                  child: Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(sign == 1 ? "+" : "-")),
-                  onTap: () => setState(() => sign *= -1),
-                ));
+              flex: 1,
+              child: InkWell(
+                key: const Key("key_+/-"),
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(sign == 1 ? "+" : "-"),
+                ),
+                onTap: () => setState(() => sign *= -1),
+              ),
+            );
           }
 
           Widget getTextField() {
@@ -173,41 +186,52 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
 
           Widget dialog() {
             return AlertDialog(
-              title: Row(children: [
-                SizedBox(
+              title: Row(
+                children: [
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6 - 50,
                     height: 50,
-                    child: AutoSizeText(context.l10n.pointsOf(teamData.name),
-                        maxLines: 2)),
-                Expanded(
+                    child: AutoSizeText(
+                      context.l10n.pointsOf(teamData.name),
+                      maxLines: 2,
+                    ),
+                  ),
+                  Expanded(
                     child: InkWell(
-                        key: const Key("flip"),
-                        onTap: () =>
-                            setState(() => teamData.flip = !teamData.flip),
-                        child: const Icon(Icons.screen_rotation_outlined)))
-              ]),
+                      key: const Key("flip"),
+                      onTap: () =>
+                          setState(() => teamData.flip = !teamData.flip),
+                      child: const Icon(Icons.screen_rotation_outlined),
+                    ),
+                  ),
+                ],
+              ),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(children: [
-                    getPlusMinusButton(),
-                    getTextField(),
-                    getButton("∅", 0),
-                    getButton(context.l10n.match, matchPts),
-                  ]),
+                  Row(
+                    children: [
+                      getPlusMinusButton(),
+                      getTextField(),
+                      getButton("∅", 0),
+                      getButton(context.l10n.match, matchPts),
+                    ],
+                  ),
                   SchieberButtonBar(
                     (int p) => setState(() => factor = p),
                     key: const Key("factor"),
                   ),
                   Text(getSummary()),
                   Container(height: 20),
-                  Table(children: [
-                    createRow(0),
-                    createRow(1),
-                    createRow(2),
-                    createRow(3),
-                  ])
+                  Table(
+                    children: [
+                      createRow(0),
+                      createRow(1),
+                      createRow(2),
+                      createRow(3),
+                    ],
+                  ),
                 ],
               ),
               actions: <Widget>[
@@ -222,6 +246,8 @@ Future<Points?> schieberDialogBuilder(BuildContext context, int teamId,
           } else {
             return dialog();
           }
-        });
-      });
+        },
+      );
+    },
+  );
 }

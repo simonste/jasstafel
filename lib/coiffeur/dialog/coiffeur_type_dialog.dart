@@ -47,16 +47,18 @@ String proposedType(BuildContext context, n) {
   return context.l10n.wunsch;
 }
 
-Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
-    {required String title,
-    required TextEditingController controller,
-    required int factor,
-    required bool customFactor}) {
+Future<CoiffeurType?> coiffeurTypeDialogBuilder(
+  BuildContext context, {
+  required String title,
+  required TextEditingController controller,
+  required int factor,
+  required bool customFactor,
+}) {
   return showDialog<CoiffeurType>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
           void finish() {
             try {
               Navigator.of(context).pop(CoiffeurType(factor, controller.text));
@@ -70,22 +72,23 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
               var type = proposedType(context, n);
               return InkWell(
                 onTap: () => controller.text = type,
-                child: Column(children: [
-                  CoiffeurTypeImage(context, type, width: 30),
-                  Text(
-                    type,
-                    textScaler: const TextScaler.linear(0.7),
-                  )
-                ]),
+                child: Column(
+                  children: [
+                    CoiffeurTypeImage(context, type, width: 30),
+                    Text(type, textScaler: const TextScaler.linear(0.7)),
+                  ],
+                ),
               );
             }
 
-            return TableRow(children: [
-              cell(i * 4),
-              cell(i * 4 + 1),
-              cell(i * 4 + 2),
-              cell(i * 4 + 3)
-            ]);
+            return TableRow(
+              children: [
+                cell(i * 4),
+                cell(i * 4 + 1),
+                cell(i * 4 + 2),
+                cell(i * 4 + 3),
+              ],
+            );
           }
 
           Widget getFactorWidget() {
@@ -103,10 +106,7 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
                 });
               },
               items: list.map((v) {
-                return DropdownMenuItem(
-                  value: v,
-                  child: Text(v.toString()),
-                );
+                return DropdownMenuItem(value: v, child: Text(v.toString()));
               }).toList(),
             );
           }
@@ -114,33 +114,40 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
           return AlertDialog(
             title: Text(title),
             content: SingleChildScrollView(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: TextField(
-                          decoration: InputDecoration(
-                              hintText: context.l10n.xTimes(factor)),
-                          keyboardType: TextInputType.text,
-                          controller: controller,
-                          onSubmitted: (value) => finish()),
-                    ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: context.l10n.xTimes(factor),
+                            ),
+                            keyboardType: TextInputType.text,
+                            controller: controller,
+                            onSubmitted: (value) => finish(),
+                          ),
+                        ),
+                      ),
+                      getFactorWidget(),
+                    ],
                   ),
-                  getFactorWidget()
-                ]),
-                Container(height: 20),
-                Table(children: [
-                  createRow(0),
-                  createRow(1),
-                  createRow(2),
-                  createRow(3),
-                ])
-              ],
-            )),
+                  Container(height: 20),
+                  Table(
+                    children: [
+                      createRow(0),
+                      createRow(1),
+                      createRow(2),
+                      createRow(3),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
@@ -153,6 +160,8 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(BuildContext context,
               ),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }

@@ -14,28 +14,34 @@ String inputFieldText(Key key) {
 }
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog(
-      {required List<String> playerNames,
-      int? pointsPerRound = 157,
-      bool rounded = false,
-      List<int?>? previousPts}) async {
+  Future<InputWrap> openDialog({
+    required List<String> playerNames,
+    int? pointsPerRound = 157,
+    bool rounded = false,
+    List<int?>? previousPts,
+  }) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            dialogInput.value = await schlaegerDialogBuilder(
-              context,
-              playerNames: playerNames,
-              pointsPerRound: 3,
-              previousPts: previousPts,
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: InkWell(
+                child: const Text('Foo'),
+                onTap: () async {
+                  dialogInput.value = await schlaegerDialogBuilder(
+                    context,
+                    playerNames: playerNames,
+                    pointsPerRound: 3,
+                    previousPts: previousPts,
+                  );
+                },
+              ),
             );
           },
         ),
-      );
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();
@@ -43,8 +49,9 @@ extension DialogHelper on WidgetTester {
   }
 
   Future<void> addSchlaegerPoints(String key, int points) async {
-    await tap(find.descendant(
-        of: find.byKey(Key(key)), matching: find.text("$points")));
+    await tap(
+      find.descendant(of: find.byKey(Key(key)), matching: find.text("$points")),
+    );
   }
 }
 
@@ -52,9 +59,7 @@ void main() {
   var playerNames = List.generate(SchlaegerPlayers.max, (i) => "P${i + 1}");
 
   testWidgets('cancel', (WidgetTester tester) async {
-    var dialogInput = await tester.openDialog(
-      playerNames: playerNames,
-    );
+    var dialogInput = await tester.openDialog(playerNames: playerNames);
 
     await tester.addSchlaegerPoints("pts_1", 1);
     await tester.pump();

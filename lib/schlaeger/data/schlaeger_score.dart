@@ -29,8 +29,10 @@ class SchlaegerScore implements Score {
   SchlaegerSettings _settings = SchlaegerSettings();
   void setSettings(settings) => _settings = settings;
 
-  var playerName =
-      List.generate(SchlaegerPlayers.max, (i) => "Spieler ${i + 1}");
+  var playerName = List.generate(
+    SchlaegerPlayers.max,
+    (i) => "Spieler ${i + 1}",
+  );
   var rows = <SchlaegerRound>[];
 
   SchlaegerScore();

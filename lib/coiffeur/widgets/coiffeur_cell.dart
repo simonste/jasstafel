@@ -29,17 +29,18 @@ class CoiffeurCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: _createChild(
-      text,
-      onTap,
-      maxLines,
-      leftBorder,
-      scratch,
-      highlight,
-      grey,
-      alignment,
-      group,
-    ));
+      child: _createChild(
+        text,
+        onTap,
+        maxLines,
+        leftBorder,
+        scratch,
+        highlight,
+        grey,
+        alignment,
+        group,
+      ),
+    );
   }
 
   static Widget _createChild(
@@ -54,16 +55,17 @@ class CoiffeurCell extends StatelessWidget {
     AutoSizeGroup? group,
   ) {
     final container = Container(
-        alignment: alignment,
-        decoration: decoration(leftBorder, highlight, scratch, grey),
-        padding: const EdgeInsets.all(10),
-        child: AutoSizeText(
-          name,
-          maxLines: maxLines,
-          style: const TextStyle(fontSize: 1000),
-          textAlign: TextAlign.center,
-          group: group,
-        ));
+      alignment: alignment,
+      decoration: decoration(leftBorder, highlight, scratch, grey),
+      padding: const EdgeInsets.all(10),
+      child: AutoSizeText(
+        name,
+        maxLines: maxLines,
+        style: const TextStyle(fontSize: 1000),
+        textAlign: TextAlign.center,
+        group: group,
+      ),
+    );
 
     if (onTap != null) {
       return InkWell(onTap: onTap, child: container);
@@ -78,14 +80,12 @@ class CoiffeurCell extends StatelessWidget {
     bool scratch,
     bool grey,
   ) {
-    final color =
-        highlight ? Colors.blue.shade600 : (grey ? Colors.grey.shade800 : null);
+    final color = highlight
+        ? Colors.blue.shade600
+        : (grey ? Colors.grey.shade800 : null);
 
     if (leftBorder) {
-      var border = const Border(
-          left: BorderSide(
-        color: Colors.white,
-      ));
+      var border = const Border(left: BorderSide(color: Colors.white));
 
       if (scratch) {
         return BoxDecoration(
@@ -98,33 +98,32 @@ class CoiffeurCell extends StatelessWidget {
         );
       }
 
-      return BoxDecoration(
-        border: border,
-        color: color,
-      );
+      return BoxDecoration(border: border, color: color);
     }
     return BoxDecoration(color: color);
   }
 }
 
 class CoiffeurPointsCell extends CoiffeurCell {
-  CoiffeurPointsCell(CoiffeurPoints pts,
-      {super.key,
-      super.onTap,
-      super.leftBorder,
-      AutoSizeGroup? group,
-      super.grey})
-      : super(_getString(pts), scratch: pts.scratched, group: group);
+  CoiffeurPointsCell(
+    CoiffeurPoints pts, {
+    super.key,
+    super.onTap,
+    super.leftBorder,
+    AutoSizeGroup? group,
+    super.grey,
+  }) : super(_getString(pts), scratch: pts.scratched, group: group);
 
-  CoiffeurPointsCell.number(int? pts,
-      {super.key,
-      super.onTap,
-      super.leftBorder,
-      super.highlight,
-      super.alignment,
-      super.group,
-      super.grey})
-      : super(_getNumberString(pts));
+  CoiffeurPointsCell.number(
+    int? pts, {
+    super.key,
+    super.onTap,
+    super.leftBorder,
+    super.highlight,
+    super.alignment,
+    super.group,
+    super.grey,
+  }) : super(_getNumberString(pts));
 
   static String _getNumberString(int? pts) {
     if (pts != null) {

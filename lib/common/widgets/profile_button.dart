@@ -22,9 +22,7 @@ class ProfileButton extends StatelessWidget {
       onTap: () => Navigator.of(context).push<void>(
         MaterialPageRoute(
           builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: pageTitle ?? title,
-            ),
+            appBar: AppBar(title: pageTitle ?? title),
             body: page,
           ),
         ),

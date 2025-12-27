@@ -40,14 +40,15 @@ class SwapMap {
   PlayerId? _selectedPlayer;
 
   SwapMap.simple(List<String> pl)
-      : _data = WhoIsNextData(pl, 0, WhoIsNext(), () {}),
-        _playOrder = List.generate(pl.length, (i) => PlayerId(i));
+    : _data = WhoIsNextData(pl, 0, WhoIsNext(), () {}),
+      _playOrder = List.generate(pl.length, (i) => PlayerId(i));
 
   SwapMap(this._data)
-      : _playOrder = List.generate(_data.players.length, (i) => PlayerId(i)) {
+    : _playOrder = List.generate(_data.players.length, (i) => PlayerId(i)) {
     try {
-      List<int> restoredPlayOrder =
-          json.decode(_data.whoIsNext.swapPlayers).cast<int>();
+      List<int> restoredPlayOrder = json
+          .decode(_data.whoIsNext.swapPlayers)
+          .cast<int>();
       if (restoredPlayOrder.length == _data.players.length) {
         _playOrder = restoredPlayOrder.map((e) => PlayerId(e)).toList();
       }
@@ -55,7 +56,8 @@ class SwapMap {
       // use default
     }
     if (_data.whoIsNext.whoBeginsOffset != null) {
-      final progress = (_data.rounds + _data.whoIsNext.whoBeginsOffset!) %
+      final progress =
+          (_data.rounds + _data.whoIsNext.whoBeginsOffset!) %
           _data.players.length;
       _selectedPlayer = _playOrder[progress];
     }
@@ -70,13 +72,16 @@ class SwapMap {
       final playerName = _data.players[arrangeId];
 
       map.putIfAbsent(
-          _playOrder[arrangeOrder[i]].id,
-          () => Text(playerName,
-              style: TextStyle(
-                  color: (_selectedPlayer != null &&
-                          arrangeId == _selectedPlayer!.id)
-                      ? Colors.blue
-                      : Colors.white)));
+        _playOrder[arrangeOrder[i]].id,
+        () => Text(
+          playerName,
+          style: TextStyle(
+            color: (_selectedPlayer != null && arrangeId == _selectedPlayer!.id)
+                ? Colors.blue
+                : Colors.white,
+          ),
+        ),
+      );
     }
     return map;
   }
@@ -104,8 +109,10 @@ class SwapMap {
       _data.whoIsNext.whoBeginsOffset = roundOffset;
     }
 
-    _data.whoIsNext.swapPlayers =
-        _playOrder.map((e) => e.id).toList().toString();
+    _data.whoIsNext.swapPlayers = _playOrder
+        .map((e) => e.id)
+        .toList()
+        .toString();
     _data.saveFunction();
   }
 

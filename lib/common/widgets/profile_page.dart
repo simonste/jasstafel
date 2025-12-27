@@ -49,8 +49,9 @@ class ProfilePage extends StatefulWidget {
   }
 
   void renameProfile(String oldName, String newName) {
-    var newMap = profiles
-        .map((key, value) => MapEntry((key == oldName) ? newName : key, value));
+    var newMap = profiles.map(
+      (key, value) => MapEntry((key == oldName) ? newName : key, value),
+    );
     profiles.clear();
     profiles.addAll(newMap);
     if (oldName == boardData.profiles.active) {
@@ -87,8 +88,11 @@ class ProfilePageState<T> extends State<ProfilePage> {
     var controller = TextEditingController();
     controller.text = value.toString();
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.profileName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.profileName,
+    );
     if (input != null) {
       if (value.isEmpty) {
         copyProfile(widget.boardData.profiles.active, input);
@@ -124,8 +128,9 @@ class ProfilePageState<T> extends State<ProfilePage> {
         if (key == widget.boardData.profiles.active) {
           return InkWell(
             child: Tooltip(
-                message: context.l10n.copyProfile,
-                child: const Icon(Icons.copy)),
+              message: context.l10n.copyProfile,
+              child: const Icon(Icons.copy),
+            ),
             onTap: () {
               showProfileNameDialog("");
             },
@@ -133,8 +138,9 @@ class ProfilePageState<T> extends State<ProfilePage> {
         } else {
           return InkWell(
             child: Tooltip(
-                message: context.l10n.deleteProfile,
-                child: const Icon(Icons.delete)),
+              message: context.l10n.deleteProfile,
+              child: const Icon(Icons.delete),
+            ),
             onTap: () async {
               var result = await confirmDelete(context, key);
               if (result != null && result) {
@@ -146,19 +152,21 @@ class ProfilePageState<T> extends State<ProfilePage> {
         }
       }
 
-      widgets.add(ProfileRadio(
-        name: key,
-        selected: widget.boardData.profiles.active,
-        onSelect: () {
-          widget.boardData.profiles.active = key;
-          widget.loadProfile(key);
-          setState(() {});
-        },
-        trailing: actionIcon(),
-        onLongPress: () {
-          showProfileNameDialog(key);
-        },
-      ));
+      widgets.add(
+        ProfileRadio(
+          name: key,
+          selected: widget.boardData.profiles.active,
+          onSelect: () {
+            widget.boardData.profiles.active = key;
+            widget.loadProfile(key);
+            setState(() {});
+          },
+          trailing: actionIcon(),
+          onLongPress: () {
+            showProfileNameDialog(key);
+          },
+        ),
+      );
     });
 
     return ListView(children: widgets);
@@ -167,56 +175,60 @@ class ProfilePageState<T> extends State<ProfilePage> {
 
 Future<bool?> confirmDelete(BuildContext context, String name) {
   return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            textButton(String text, bool delete) {
-              return TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: Text(text),
-                  onPressed: () {
-                    Navigator.of(context).pop(delete);
-                  });
-            }
-
-            return AlertDialog(
-              title: Text(context.l10n.deleteProfile),
-              content: Text(context.l10n.deleteProfileName(name)),
-              actions: [
-                textButton(context.l10n.cancel, false),
-                textButton(context.l10n.ok, true)
-              ],
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          textButton(String text, bool delete) {
+            return TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text(text),
+              onPressed: () {
+                Navigator.of(context).pop(delete);
+              },
             );
-          },
-        );
-      });
+          }
+
+          return AlertDialog(
+            title: Text(context.l10n.deleteProfile),
+            content: Text(context.l10n.deleteProfileName(name)),
+            actions: [
+              textButton(context.l10n.cancel, false),
+              textButton(context.l10n.ok, true),
+            ],
+          );
+        },
+      );
+    },
+  );
 }
 
 Future<void> profileNameAlreadyExists(BuildContext context) {
   return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            textButton(String text) {
-              return TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: Text(text),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  });
-            }
-
-            return AlertDialog(
-              title: Text(context.l10n.addProfileFail),
-              actions: [textButton(context.l10n.ok)],
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          textButton(String text) {
+            return TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text(text),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             );
-          },
-        );
-      });
+          }
+
+          return AlertDialog(
+            title: Text(context.l10n.addProfileFail),
+            actions: [textButton(context.l10n.ok)],
+          );
+        },
+      );
+    },
+  );
 }

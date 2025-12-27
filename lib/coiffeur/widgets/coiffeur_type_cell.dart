@@ -40,25 +40,22 @@ class CoiffeurTypeCell extends StatelessWidget {
           child: CoiffeurTypeImage(context, name, width: 6 * unit),
         ),
         Positioned(
-            left: 7 * unit,
-            top: 0,
-            bottom: 0,
-            right: 0,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: AutoSizeText(
-                name,
-                wrapWords: false,
-                maxLines: 2,
-                style: const TextStyle(fontSize: 1000),
-                group: group,
-              ),
-            )),
-        Positioned(
-          right: unit,
-          top: unit,
-          child: Text("$factor"),
+          left: 7 * unit,
+          top: 0,
+          bottom: 0,
+          right: 0,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: AutoSizeText(
+              name,
+              wrapWords: false,
+              maxLines: 2,
+              style: const TextStyle(fontSize: 1000),
+              group: group,
+            ),
+          ),
         ),
+        Positioned(right: unit, top: unit, child: Text("$factor")),
       ],
     );
 
@@ -82,11 +79,13 @@ class CoiffeurTypeCell extends StatelessWidget {
         ? context.l10n.xRound(row + 1)
         : context.l10n.xTimes(row + 1);
 
-    final input = await coiffeurTypeDialogBuilder(context,
-        title: title,
-        controller: controller,
-        factor: data.score.rows[row].factor,
-        customFactor: data.settings.customFactor);
+    final input = await coiffeurTypeDialogBuilder(
+      context,
+      title: title,
+      controller: controller,
+      factor: data.score.rows[row].factor,
+      customFactor: data.settings.customFactor,
+    );
     if (input == null || input.factor == 0 || input.type.isEmpty) {
       return; // empty name not allowed
     }

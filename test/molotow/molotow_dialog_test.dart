@@ -8,21 +8,31 @@ import '../helper/testapp.dart';
 // cspell: ignore: abbrechen
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog(
-      {required List<String> playerNames, hand = false}) async {
+  Future<InputWrap> openDialog({
+    required List<String> playerNames,
+    hand = false,
+  }) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            dialogInput.value = await molotowWeisDialogBuilder(context,
-                playerNames: playerNames, hand: hand);
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: InkWell(
+                child: const Text('Foo'),
+                onTap: () async {
+                  dialogInput.value = await molotowWeisDialogBuilder(
+                    context,
+                    playerNames: playerNames,
+                    hand: hand,
+                  );
+                },
+              ),
+            );
           },
         ),
-      );
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();

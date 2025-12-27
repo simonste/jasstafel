@@ -8,21 +8,28 @@ extension DialogHelper on WidgetTester {
   Future<InputWrap> openDialog({required bool customFactor}) async {
     var dialogInput = InputWrap();
     await pumpWidget(
-        JasstafelTestApp(child: Builder(builder: (BuildContext context) {
-      return Center(
-        child: InkWell(
-          child: const Text('Foo'),
-          onTap: () async {
-            var controller = TextEditingController(text: "Rosen");
-            dialogInput.value = await coiffeurTypeDialogBuilder(context,
-                title: "title",
-                controller: controller,
-                factor: 3,
-                customFactor: customFactor);
+      JasstafelTestApp(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: InkWell(
+                child: const Text('Foo'),
+                onTap: () async {
+                  var controller = TextEditingController(text: "Rosen");
+                  dialogInput.value = await coiffeurTypeDialogBuilder(
+                    context,
+                    title: "title",
+                    controller: controller,
+                    factor: 3,
+                    customFactor: customFactor,
+                  );
+                },
+              ),
+            );
           },
         ),
-      );
-    })));
+      ),
+    );
 
     await tap(find.text('Foo'));
     await pump();

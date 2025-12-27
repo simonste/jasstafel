@@ -13,21 +13,26 @@ import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'dart:developer' as developer;
 
 class BacksideButton extends IconButton {
-  BacksideButton(BuildContext context, Function callback,
-      {super.key = const Key("backside")})
-      : super(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (context) {
-                    return const SchieberBackside();
-                  },
-                ),
-              ).then((value) {
-                callback();
-              });
-            },
-            icon: const Icon(Icons.flip));
+  BacksideButton(
+    BuildContext context,
+    Function callback, {
+    super.key = const Key("backside"),
+  }) : super(
+         onPressed: () {
+           Navigator.of(context)
+               .push(
+                 MaterialPageRoute<void>(
+                   builder: (context) {
+                     return const SchieberBackside();
+                   },
+                 ),
+               )
+               .then((value) {
+                 callback();
+               });
+         },
+         icon: const Icon(Icons.flip),
+       );
 }
 
 class SchieberBackside extends StatefulWidget {
@@ -39,7 +44,10 @@ class SchieberBackside extends StatefulWidget {
 
 class _SchieberBacksideState extends State<SchieberBackside> {
   var data = BoardData(
-      SchieberSettings(), SchieberScore(), SchieberSettingsKeys().data);
+    SchieberSettings(),
+    SchieberScore(),
+    SchieberSettingsKeys().data,
+  );
 
   void restoreData() async {
     data = await data.load() as BoardData<SchieberSettings, SchieberScore>;
@@ -59,7 +67,10 @@ class _SchieberBacksideState extends State<SchieberBackside> {
 
     if (data.score.backside[data.settings.backsideColumns - 1].name.isEmpty ||
         (data.settings.backsideColumns < 6 &&
-            data.score.backside[data.settings.backsideColumns].name
+            data
+                .score
+                .backside[data.settings.backsideColumns]
+                .name
                 .isNotEmpty)) {
       setDefaultPlayerNames(context);
     }
@@ -85,14 +96,17 @@ class _SchieberBacksideState extends State<SchieberBackside> {
       for (var i = 0; i < columns; i++) {
         final decoration = i != 0
             ? const BoxDecoration(
-                border: Border(left: BorderSide(color: Colors.white)))
+                border: Border(left: BorderSide(color: Colors.white)),
+              )
             : const BoxDecoration();
-        columnWidgets.add(Expanded(
-          child: Container(
-            decoration: decoration,
-            child: const SizedBox.expand(),
+        columnWidgets.add(
+          Expanded(
+            child: Container(
+              decoration: decoration,
+              child: const SizedBox.expand(),
+            ),
           ),
-        ));
+        );
       }
       return Row(children: columnWidgets);
     }
@@ -108,86 +122,103 @@ class _SchieberBacksideState extends State<SchieberBackside> {
             : max(totalStrokes - row * strokesPerRow, 0);
 
         return GestureDetector(
-            key: Key("add$i:$row"),
-            onTap: () => {
-                  setState(() {
-                    data.score.backside[i].strokes++;
-                    data.save();
-                  })
-                },
-            onPanEnd: (details) => {
-                  setState(() {
-                    if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
-                      data.score.backside[i].strokes--;
-                    } else {
-                      data.score.backside[i].strokes++;
-                    }
-                    data.save();
-                  })
-                },
-            child: SizedBox(
-                height: strokeHeight,
-                width: MediaQuery.of(context).size.width / columns,
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: padding),
-                    child: SchieberStrokes(
-                      StrokeType.I,
-                      strokes,
-                      widthFactor: strokeWidthFactor,
-                    ))));
+          key: Key("add$i:$row"),
+          onTap: () => {
+            setState(() {
+              data.score.backside[i].strokes++;
+              data.save();
+            }),
+          },
+          onPanEnd: (details) => {
+            setState(() {
+              if (details.velocity.pixelsPerSecond.dy.abs() > 200) {
+                data.score.backside[i].strokes--;
+              } else {
+                data.score.backside[i].strokes++;
+              }
+              data.save();
+            }),
+          },
+          child: SizedBox(
+            height: strokeHeight,
+            width: MediaQuery.of(context).size.width / columns,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: padding),
+              child: SchieberStrokes(
+                StrokeType.I,
+                strokes,
+                widthFactor: strokeWidthFactor,
+              ),
+            ),
+          ),
+        );
       }
 
       for (var j = 0; j < noOfRows; j++) {
         rows.add(strokeRow(j));
       }
-      columnWidgets.add(Expanded(
+      columnWidgets.add(
+        Expanded(
           child: Column(
-              key: Key('column$i'),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: rows)));
+            key: Key('column$i'),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rows,
+          ),
+        ),
+      );
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(context.l10n.backsideTitle),
-          actions: [
-            DeleteButton(
-              context,
-              deleteFunction: () => setState(() {
-                data.score.resetBackside();
-                data.save();
-              }),
-              resetHint: context.l10n.resetConfirmStrokes,
-            )
-          ],
-        ),
-        body: Column(children: [
+      appBar: AppBar(
+        title: Text(context.l10n.backsideTitle),
+        actions: [
+          DeleteButton(
+            context,
+            deleteFunction: () => setState(() {
+              data.score.resetBackside();
+              data.save();
+            }),
+            resetHint: context.l10n.resetConfirmStrokes,
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
           rowHeader(
-              playerNames: data.score.backside.map((e) => e.name).toList(),
-              players: data.settings.backsideColumns,
-              headerFunction: _stringDialog,
-              context: context,
-              hideRoundColumn: true),
+            playerNames: data.score.backside.map((e) => e.name).toList(),
+            players: data.settings.backsideColumns,
+            headerFunction: _stringDialog,
+            context: context,
+            hideRoundColumn: true,
+          ),
           Expanded(
-              child: Stack(
-            children: [
-              background(),
-              SingleChildScrollView(
-                child: Row(
+            child: Stack(
+              children: [
+                background(),
+                SingleChildScrollView(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: columnWidgets),
-              ),
-            ],
-          )),
-        ]));
+                    children: columnWidgets,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _stringDialog(player) async {
-    var controller =
-        TextEditingController(text: data.score.backside[player].name);
+    var controller = TextEditingController(
+      text: data.score.backside[player].name,
+    );
 
-    final input = await stringDialogBuilder(context, controller,
-        title: context.l10n.playerName);
+    final input = await stringDialogBuilder(
+      context,
+      controller,
+      title: context.l10n.playerName,
+    );
     if (input == null) return; // empty name not allowed
     setState(() {
       data.score.backside[player].name = input;
@@ -200,8 +231,10 @@ class _SchieberBacksideState extends State<SchieberBackside> {
       data.score.backside[0].name = data.score.team[0].name;
       data.score.backside[1].name = data.score.team[1].name;
     } else if (data.settings.backsideColumns == 4) {
-      var players = WhoIsNextButton.guessPlayerNames(
-          [data.score.team[0].name, data.score.team[1].name]);
+      var players = WhoIsNextButton.guessPlayerNames([
+        data.score.team[0].name,
+        data.score.team[1].name,
+      ]);
       data.score.backside[0].name = players[0];
       data.score.backside[1].name = players[2];
       data.score.backside[2].name = players[1];

@@ -16,7 +16,9 @@ bool driverTest = false;
 
 extension AppHelper on WidgetTester {
   Future<void> prepare(
-      IntegrationTestWidgetsFlutterBinding? binding, String board) async {
+    IntegrationTestWidgetsFlutterBinding? binding,
+    String board,
+  ) async {
     await launchApp();
     await binding?.convertFlutterSurfaceToImage();
     await pumpAndSettle();
@@ -28,7 +30,9 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> takeScreenshot(
-      IntegrationTestWidgetsFlutterBinding? binding, name) async {
+    IntegrationTestWidgetsFlutterBinding? binding,
+    name,
+  ) async {
     if (Platform.isAndroid) {
       await pumpAndSettle();
     }
@@ -53,7 +57,9 @@ void main() {
     await preferences.clear();
     await preferences.setString(CommonSettings.keys.appLanguage, 'de');
     await preferences.setInt(
-        CommonSettings.keys.lastBoard, Board.schieber.index);
+      CommonSettings.keys.lastBoard,
+      Board.schieber.index,
+    );
   });
 
   testWidgets('schieber #1', (tester) async {
@@ -188,12 +194,7 @@ void main() {
     await tester.addDifferenzlerGuessPoints('Paul', 0);
     await tester.addDifferenzlerGuessPoints('Ringo', 70);
     await tester.addDifferenzlerGuessPoints('George', 66);
-    await tester.addRound({
-      'pts_0': 0,
-      'pts_1': 0,
-      'pts_2': 99,
-      'pts_3': null,
-    });
+    await tester.addRound({'pts_0': 0, 'pts_1': 0, 'pts_2': 99, 'pts_3': null});
 
     await tester.addDifferenzlerGuessPoints('John', 33);
     await tester.addDifferenzlerGuessPoints('Paul', 33);

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 
-Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
-    {required List<String> playerNames,
-    required int? pointsPerRound,
-    bool rounded = false,
-    List<int?>? previousPts,
-    Widget? title}) {
+Future<List<int?>?> playerPointsDialogBuilder(
+  BuildContext context, {
+  required List<String> playerNames,
+  required int? pointsPerRound,
+  bool rounded = false,
+  List<int?>? previousPts,
+  Widget? title,
+}) {
   if (previousPts != null && title == null) {
     title = Text(context.l10n.roundEdit);
   }
@@ -32,10 +34,10 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
   }
 
   return showDialog<List<int?>?>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
           int total = 0;
           List<int?> points = [];
           int noOfEmpty = 0;
@@ -74,55 +76,62 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
             var elements = <Widget>[
               Expanded(child: Text(playerNames[i])),
               SizedBox(
-                  width: 60,
-                  child: Focus(
-                    child: TextField(
-                      key: Key("pts_$i"),
-                      decoration:
-                          InputDecoration(hintText: context.l10n.points),
-                      autofocus: true,
-                      focusNode: focusNodes[i],
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      controller: controllers[i],
-                      onChanged: (value) => setState(() {}),
-                      onSubmitted: (v) => FocusScope.of(context).requestFocus(
-                          focusNodes[(i + 1) % playerNames.length]),
-                    ),
-                    onFocusChange: (value) => {
-                      if (value && noOfEmpty == 1)
-                        setState(() {
-                          fillRemaining();
-                        })
-                    },
-                  ))
+                width: 60,
+                child: Focus(
+                  child: TextField(
+                    key: Key("pts_$i"),
+                    decoration: InputDecoration(hintText: context.l10n.points),
+                    autofocus: true,
+                    focusNode: focusNodes[i],
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    controller: controllers[i],
+                    onChanged: (value) => setState(() {}),
+                    onSubmitted: (v) => FocusScope.of(
+                      context,
+                    ).requestFocus(focusNodes[(i + 1) % playerNames.length]),
+                  ),
+                  onFocusChange: (value) => {
+                    if (value && noOfEmpty == 1)
+                      setState(() {
+                        fillRemaining();
+                      }),
+                  },
+                ),
+              ),
             ];
             if (rounded) {
-              elements.add(SizedBox(
-                width: 20,
-                child: Text(
-                  "${roundedInt(points[i] ?? 0, rounded)}",
-                  textAlign: TextAlign.right,
+              elements.add(
+                SizedBox(
+                  width: 20,
+                  child: Text(
+                    "${roundedInt(points[i] ?? 0, rounded)}",
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              ));
+              );
             }
             columns.add(SizedBox(child: Row(children: elements)));
           }
 
           if (previousTotal == pointsPerRound) {
             columns.add(const Divider());
-            columns.add(SizedBox(
+            columns.add(
+              SizedBox(
                 key: const Key('remainingPoints'),
-                child:
-                    Text(context.l10n.remainingPoints(total, remainingPts))));
+                child: Text(context.l10n.remainingPoints(total, remainingPts)),
+              ),
+            );
           }
           return AlertDialog(
             title: title,
             content: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: columns)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: columns,
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
@@ -140,11 +149,13 @@ Future<List<int?>?> playerPointsDialogBuilder(BuildContext context,
                   if (noOfEmpty == 0 ||
                       previousPts != null ||
                       (pointsPerRound == null && noOfEmpty != points.length))
-                    {Navigator.of(context).pop(points)}
+                    {Navigator.of(context).pop(points)},
                 },
               ),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }
