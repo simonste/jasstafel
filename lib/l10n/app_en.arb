@@ -159,6 +159,7 @@
   "avgRoundGuess": "On average {averageGuess} points were predicted per round.",
   "hideGuess": "Hide predictions",
   "addRound": "Enter round",
+  "addDominoRound": "Enter domino round",
   "handWeis": "Hand weis",
   "tableWeis": "Table weis",
   "fremdWeis": "Foreign weis (2x)",
@@ -205,5 +206,9 @@
   "missingP1": "upper left",
   "missingP2": "upper right",
   "missingP3": "lower left",
-  "missingP4": "lower right"
+  "missingP4": "lower right",
+  "domino": "Domino",
+  "domino3player": "Domino points 3 players",
+  "domino4player": "Domino points 4 players",
+  "dominoPointsInfo": "Points of the first {noOfPlayers} players separated by commas"
 }

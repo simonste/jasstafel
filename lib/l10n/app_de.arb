@@ -421,6 +421,7 @@
   },
   "hideGuess": "Ansagen verstecken",
   "addRound": "Runde eingeben",
+  "addDominoRound": "Domino Runde eingeben",
   "handWeis": "Handweis",
   "tableWeis": "Tischweis",
   "fremdWeis": "Fremdweis (2x)",
@@ -513,5 +514,16 @@
   "missingP1": "Oben Links",
   "missingP2": "Oben Rechts",
   "missingP3": "Unten Links",
-  "missingP4": "Unten Rechts"
+  "missingP4": "Unten Rechts",
+  "domino": "Domino",
+  "domino3player": "Dominopunkte 3 Spieler",
+  "domino4player": "Dominopunkte 4 Spieler",
+  "dominoPointsInfo": "Punkte der ersten {noOfPlayers} Spieler getrennt durch Kommas",
+  "@dominoPointsInfo": {
+    "placeholders": {
+      "noOfPlayers": {
+        "type": "int"
+      }
+    }
+  }
 }

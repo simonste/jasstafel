@@ -132,6 +132,7 @@
   "zeroDiff": "Diff.=0",
   "avgRoundGuess": "Une moyenne de {averageGuess} points annoncés par tour.",
   "addRound": "Entrer le tour",
+  "addDominoRound": "Entrer le tour de domino",
   "handWeis": "Annonce de la main",
   "tableWeis": "Annonce de la table",
   "fremdWeis": "Annonce étrangère (2x)",
@@ -198,5 +199,9 @@
   "missingP1": "haut gauche",
   "missingP2": "haut droite",
   "missingP3": "bas gauche",
-  "missingP4": "bas droite"
+  "missingP4": "bas droite",
+  "domino": "Domino",
+  "domino3player": "Points domino 3 joueurs",
+  "domino4player": "Points domino 4 joueurs",
+  "dominoPointsInfo": "Points des {noOfPlayers} premiers joueurs séparés par des virgules"
 }

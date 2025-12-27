@@ -22,6 +22,19 @@ class GuggitalerSettingsScreen extends StatefulWidget {
 class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    String? dominoValidator(String? value, int players) {
+      if (value == null || value.split(',').length != players) {
+        return context.l10n.dominoPointsInfo(players);
+      }
+      for (var part in value.split(',')) {
+        final parsed = int.tryParse(part.trim());
+        if (parsed == null || parsed % 5 != 0) {
+          return context.l10n.dominoPointsInfo(players);
+        }
+      }
+      return null;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.guggitaler)),
@@ -41,6 +54,26 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
             min: Players.min,
             max: Players.max,
             trailing: (num v) => Text('$v'),
+          ),
+          PrefCheckbox(
+            title: Text(context.l10n.domino),
+            pref: GuggitalerSettings.keys.domino,
+          ),
+          PrefDisabler(
+            reversed: true,
+            pref: GuggitalerSettings.keys.domino,
+            children: [
+              PrefText(
+                label: context.l10n.domino3player,
+                pref: GuggitalerSettings.keys.domino3,
+                validator: (value) => dominoValidator(value, 3),
+              ),
+              PrefText(
+                label: context.l10n.domino4player,
+                pref: GuggitalerSettings.keys.domino4,
+                validator: (value) => dominoValidator(value, 4),
+              ),
+            ],
           ),
           PrefTitle(title: Text(context.l10n.commonSettings)),
           PrefCheckbox(

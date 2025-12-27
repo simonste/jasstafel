@@ -16,6 +16,9 @@ class GuggitalerRow {
     (i) => List.filled(GuggitalerValues.length, null),
   );
 
+  @JsonKey(defaultValue: [null, null, null, null, null, null, null, null])
+  List<int?> domino = List.filled(Players.max, null);
+
   GuggitalerRow();
 
   int sum(int player) {
@@ -23,6 +26,7 @@ class GuggitalerRow {
     for (var i = 0; i < GuggitalerValues.length; i++) {
       sum += (pts[player][i] ?? 0) * GuggitalerValues.points(i);
     }
+    sum += (domino[player] ?? 0);
     return sum;
   }
 
@@ -35,6 +39,9 @@ class GuggitalerRow {
       if (a.abs() == GuggitalerValues.maxPerRound(i)) {
         return true;
       }
+    }
+    if (domino.any((element) => element != null)) {
+      return true;
     }
     return false;
   }

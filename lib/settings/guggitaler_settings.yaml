@@ -2,6 +2,15 @@ GuggitalerSettings:
   Players:
     store: "guggitaler_players"
     default: 4
+  Domino:
+    store: "guggitaler_domino"
+    default: true
+  Domino3:
+    store: "guggitaler_domino_3"
+    default: "150,100,70"
+  Domino4:
+    store: "guggitaler_domino_4"
+    default: "150,100,55,0"
   Data:
     store: "guggitaler"
     default: "{}"

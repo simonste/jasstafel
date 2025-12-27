@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/statistics_dialog.dart';
@@ -16,6 +17,7 @@ import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_values.dart';
 import 'package:jasstafel/guggitaler/dialog/guggitaler_dialog.dart';
+import 'package:jasstafel/guggitaler/dialog/guggitaler_domino_dialog.dart';
 import 'package:jasstafel/guggitaler/screens/guggitaler_settings_screen.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'dart:developer' as developer;
@@ -71,6 +73,7 @@ class _GuggitalerState extends State<Guggitaler> {
         roundNo++;
         list[0] = '$roundNo';
       }
+      bool domino = row.domino.any((element) => element != null);
       for (int player = 0; player < data.settings.players; player++) {
         int pts = row.sum(player);
         if (pts != 0) {
@@ -79,11 +82,12 @@ class _GuggitalerState extends State<Guggitaler> {
           list.add('-');
         }
       }
+
       return defaultRow(
         list,
         rowNo: rowNo,
         context: context,
-        pointsFunction: _guggitalerDialog,
+        pointsFunction: domino ? _guggitalerDominoDialog : _guggitalerDialog,
       );
     }
 
@@ -104,6 +108,30 @@ class _GuggitalerState extends State<Guggitaler> {
       }
       stats.add(cols);
     }
+
+    List<Widget> floatingActionButtons = [];
+    if (data.settings.domino) {
+      floatingActionButtons.add(
+        FloatingActionButton(
+          heroTag: "add_domino",
+          onPressed: () => _guggitalerDominoDialog(),
+          tooltip: context.l10n.addDominoRound,
+          child: SizedBox(
+            height: 40,
+            child: SvgPicture.asset('assets/actions/domino.svg'),
+          ),
+        ),
+      );
+      floatingActionButtons.add(const SizedBox(width: 20));
+    }
+    floatingActionButtons.add(
+      FloatingActionButton(
+        heroTag: "add_round",
+        onPressed: () => _guggitalerDialog(),
+        tooltip: context.l10n.addRound,
+        child: const Icon(Icons.add),
+      ),
+    );
 
     return Scaffold(
       appBar: TitleBar(
@@ -143,14 +171,7 @@ class _GuggitalerState extends State<Guggitaler> {
         ),
         rows: rows,
         footer: footer(),
-        floatingActionButtons: [
-          FloatingActionButton(
-            heroTag: "add_round",
-            onPressed: () => _guggitalerDialog(),
-            tooltip: context.l10n.addRound,
-            child: const Icon(Icons.add),
-          ),
-        ],
+        floatingActionButtons: floatingActionButtons,
       ),
     );
   }
@@ -190,6 +211,35 @@ class _GuggitalerState extends State<Guggitaler> {
         row++;
       }
       data.score.rows[row].pts[p] = input.points;
+      data.save();
+    });
+  }
+
+  void _guggitalerDominoDialog({int? editRowNo}) async {
+    final previousPts = (editRowNo != null)
+        ? data.score.rows[editRowNo].domino
+        : null;
+    final input = await guggitalerDominoDialogBuilder(
+      context,
+      playerNames: data.score.playerName.sublist(0, data.settings.players),
+      previousPts: previousPts,
+      dominoPoints: data.settings.players == 3
+          ? data.settings.domino3
+          : data.settings.domino4,
+    );
+    if (input == null) return;
+    setState(() {
+      data.common.timestamps.addPoints(data.score.totalPoints());
+      if (editRowNo == null) {
+        data.score.rows.add(GuggitalerRow());
+        for (var i = 0; i < data.settings.players; i++) {
+          data.score.rows.last.domino[i] = input[i];
+        }
+      } else {
+        for (var i = 0; i < data.settings.players; i++) {
+          data.score.rows[editRowNo].domino[i] = input[i];
+        }
+      }
       data.save();
     });
   }
