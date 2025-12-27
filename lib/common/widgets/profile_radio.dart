@@ -36,11 +36,13 @@ class ProfileRadioState<T> extends State<ProfileRadio> {
     return ListTile(
       title: Text(widget.name),
       trailing: widget.trailing,
-      leading: Radio<String>(
-        key: Key("${widget.name}_Radio"),
-        value: widget.name,
+      leading: RadioGroup<String>(
         groupValue: widget.selected,
         onChanged: (String? val) => _onChange(),
+        child: Radio<String>(
+          key: Key("${widget.name}_Radio"),
+          value: widget.name,
+        ),
       ),
       onTap: () => _onChange(),
       onLongPress: () {

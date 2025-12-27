@@ -77,21 +77,23 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(
             var lr = (rows.last as Row);
             lr.children.add(
               Expanded(
-                child: RadioListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: SizedBox(
-                    width: 500,
-                    height: 50,
-                    child: AutoSizeText(
-                      player,
-                      textAlign: TextAlign.left,
-                      group: autoSizeGroupPlayer,
-                    ),
-                  ),
-                  value: player,
+                child: RadioGroup<String>(
                   groupValue: round.player,
                   onChanged: (String? v) =>
                       setState(() => loadPlayer(playerNames.indexOf(player))),
+                  child: RadioListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: SizedBox(
+                      width: 500,
+                      height: 50,
+                      child: AutoSizeText(
+                        player,
+                        textAlign: TextAlign.left,
+                        group: autoSizeGroupPlayer,
+                      ),
+                    ),
+                    value: player,
+                  ),
                 ),
               ),
             );

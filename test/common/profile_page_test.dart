@@ -13,7 +13,9 @@ bool radioSelected(Key key) {
   var radioFinder = find.byKey(key);
   expect(radioFinder, findsOneWidget);
   var radio = radioFinder.evaluate().single.widget as Radio<String>;
-  return (radio.value == radio.groupValue);
+  var context = radioFinder.evaluate().single;
+  var radioGroup = context.findAncestorWidgetOfExactType<RadioGroup<String>>();
+  return (radio.value == radioGroup?.groupValue);
 }
 
 void main() {

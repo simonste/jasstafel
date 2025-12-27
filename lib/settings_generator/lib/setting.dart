@@ -30,7 +30,7 @@ class Setting {
     if (_defaultValue is String) {
       return "'$_defaultValue'";
     } else if (_defaultValue is YamlList) {
-      var defaultList = (_defaultValue as YamlList)
+      var defaultList = (_defaultValue)
           .map((element) => "\"$element\"")
           .toList();
       return "$defaultList";

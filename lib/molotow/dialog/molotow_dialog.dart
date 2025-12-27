@@ -22,17 +22,17 @@ Future<MolotowWeis?> molotowWeisDialogBuilder(
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           var players = Expanded(
-            child: Column(
-              children: playerNames
-                  .map(
-                    (element) => RadioListTile(
-                      title: Text(element),
-                      value: element,
-                      groupValue: player,
-                      onChanged: (String? v) => setState(() => player = v),
-                    ),
-                  )
-                  .toList(),
+            child: RadioGroup<String>(
+              groupValue: player,
+              onChanged: (String? v) => setState(() => player = v),
+              child: Column(
+                children: playerNames
+                    .map(
+                      (element) =>
+                          RadioListTile(title: Text(element), value: element),
+                    )
+                    .toList(),
+              ),
             ),
           );
 
