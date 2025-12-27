@@ -70,9 +70,9 @@ jobs:
     strategy:
       matrix:
         device:
-          - "iPhone 15 Pro Max Simulator"
-          - "iPhone SE"
-          - "iPad Pro (12.9-inch)"
+          - "iPhone 16 Pro Max"
+          - "iPhone SE (3rd generation)"
+          - "iPad Pro 13-inch (M4)"
     runs-on: macos-latest
     steps:
       - name: Check out repository code
@@ -83,13 +83,14 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.2.0"
+          xcode-version: "26.1.1"
 
       - name: "List all simulators"
         run: "xcrun xctrace list devices"
       - name: "Start Simulator"
         run: |
-          UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
+          UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }} (" | awk '{gsub(/[()]/,""); print $NF}')
+          echo "Starting simulator with UDID: ${UDID}"
           xcrun simctl boot "${UDID:?No Simulator with this name found}"
 
       - name: Get dependencies
