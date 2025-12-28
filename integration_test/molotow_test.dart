@@ -241,7 +241,7 @@ void main() {
   testWidgets('scrollable', (tester) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var score = MolotowScore();
-    score.rows = List.filled(20, MolotowRow([25, 50, 66, 16], isRound: true));
+    score.rows = List.filled(24, MolotowRow([25, 50, 66, 16], isRound: true));
 
     await preferences.setString(
       MolotowSettings.keys.data,

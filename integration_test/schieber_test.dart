@@ -12,7 +12,10 @@ import 'overall_test.dart';
 // cspell:ignore: aktuelle runde stiche rückseite verwenden spielername ändern
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  
+  // Increase timeout for iOS tests
+  binding.testTextInput.register();
 
   setUp(() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -178,7 +181,7 @@ void main() {
     expect(find.text('314'), findsOneWidget);
     expect(find.text('514'), findsOneWidget);
     await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.pump();
   });
 
   testWidgets('add negative points', (tester) async {

@@ -32,18 +32,43 @@ String? cellText(Key key) {
 extension AppHelper on WidgetTester {
   Future<void> launchApp() async {
     app.main();
-    // pump and wait for Title bar to assure app is launched
-    await pumpAndSettle();
+
+    // Add timeout to prevent infinite waiting
+    const maxWaitTime = Duration(seconds: 60);
+    const checkInterval = Duration(milliseconds: 500);
+    final startTime = DateTime.now();
+
+    // Initial pump to start the app
+    await pump();
+
+    // Wait for TitleBar with shorter intervals and proper error handling
     while (find.byType(TitleBar).evaluate().isEmpty) {
-      await Future.delayed(const Duration(seconds: 1));
-      await pumpAndSettle();
+      if (DateTime.now().difference(startTime) > maxWaitTime) {
+        // Try to provide diagnostic info
+        final allWidgets = find.byType(Widget).evaluate();
+        throw TestFailure(
+          'App failed to launch within $maxWaitTime. '
+          'TitleBar widget was not found. '
+          'Found ${allWidgets.length} widgets in tree.',
+        );
+      }
+      await Future.delayed(checkInterval);
+      await pump();
     }
+
+    // Final settle to ensure UI is stable
+    await pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> switchBoard({required String to}) async {
     await tap(find.byType(DropdownButton<Board>));
     await pumpAndSettle();
-    await tap(find.text(to).last);
+    final finder = find.text(to);
+    while (finder.evaluate().isEmpty) {
+      await pump();
+    }
+    await scrollTo(finder);
+    await tap(finder.last);
     await pumpAndSettle();
   }
 

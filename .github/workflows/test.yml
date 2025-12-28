@@ -51,8 +51,8 @@ jobs:
           api-level: 29
           arch: x86_64
           disable-animations: true
-          disk-size: 6000M
-          heap-size: 600M
+          disk-size: 4096M
+          heap-size: 512M
           profile: ${{ matrix.device }}
           script: |
             flutter/bin/flutter test integration_test
