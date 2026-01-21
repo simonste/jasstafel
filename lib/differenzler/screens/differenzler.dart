@@ -249,24 +249,26 @@ class _DifferenzlerState extends State<Differenzler> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              rowHeader(
-                playerNames: data.score.playerName,
-                players: data.settings.players,
-                headerFunction: _stringDialog,
-                context: context,
-              ),
-              Expanded(
-                child: SingleChildScrollView(child: Column(children: rows)),
-              ),
-              footer(),
-            ],
-          ),
-          addRoundButton,
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                rowHeader(
+                  playerNames: data.score.playerName,
+                  players: data.settings.players,
+                  headerFunction: _stringDialog,
+                  context: context,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(child: Column(children: rows)),
+                ),
+                footer(),
+              ],
+            ),
+            addRoundButton,
+          ],
+        ),
       ),
     );
   }

@@ -111,23 +111,25 @@ class _PointBoardState extends State<PointBoard> {
           ),
         ],
       ),
-      body: BoardListWithFab(
-        header: rowHeader(
-          playerNames: data.score.playerName,
-          players: data.settings.players,
-          headerFunction: _stringDialog,
-          context: context,
-        ),
-        rows: rows,
-        footer: footer(),
-        floatingActionButtons: [
-          FloatingActionButton(
-            heroTag: "add_round",
-            onPressed: () => _pointsDialog(),
-            tooltip: context.l10n.addRound,
-            child: const Icon(Icons.add),
+      body: SafeArea(
+        child: BoardListWithFab(
+          header: rowHeader(
+            playerNames: data.score.playerName,
+            players: data.settings.players,
+            headerFunction: _stringDialog,
+            context: context,
           ),
-        ],
+          rows: rows,
+          footer: footer(),
+          floatingActionButtons: [
+            FloatingActionButton(
+              heroTag: "add_round",
+              onPressed: () => _pointsDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
   }

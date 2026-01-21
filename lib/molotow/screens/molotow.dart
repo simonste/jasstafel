@@ -132,43 +132,45 @@ class _MolotowState extends State<Molotow> {
           ),
         ],
       ),
-      body: BoardListWithFab(
-        header: rowHeader(
-          playerNames: data.score.playerName,
-          players: data.settings.players,
-          headerFunction: _stringDialog,
-          context: context,
+      body: SafeArea(
+        child: BoardListWithFab(
+          header: rowHeader(
+            playerNames: data.score.playerName,
+            players: data.settings.players,
+            headerFunction: _stringDialog,
+            context: context,
+          ),
+          rows: rows,
+          footer: footer(),
+          floatingActionButtons: [
+            FloatingActionButton(
+              heroTag: "hand_weis",
+              onPressed: () => _weisDialog(hand: true),
+              tooltip: context.l10n.handWeis,
+              child: SizedBox(
+                height: 40,
+                child: SvgPicture.asset('assets/actions/hand_weis.svg'),
+              ),
+            ),
+            const SizedBox(width: 20),
+            FloatingActionButton(
+              heroTag: "add_round",
+              onPressed: () => _pointsDialog(),
+              tooltip: context.l10n.addRound,
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(width: 20),
+            FloatingActionButton(
+              heroTag: "table_weis",
+              onPressed: () => _weisDialog(hand: false),
+              tooltip: context.l10n.tableWeis,
+              child: SizedBox(
+                height: 40,
+                child: SvgPicture.asset('assets/actions/table_weis.svg'),
+              ),
+            ),
+          ],
         ),
-        rows: rows,
-        footer: footer(),
-        floatingActionButtons: [
-          FloatingActionButton(
-            heroTag: "hand_weis",
-            onPressed: () => _weisDialog(hand: true),
-            tooltip: context.l10n.handWeis,
-            child: SizedBox(
-              height: 40,
-              child: SvgPicture.asset('assets/actions/hand_weis.svg'),
-            ),
-          ),
-          const SizedBox(width: 20),
-          FloatingActionButton(
-            heroTag: "add_round",
-            onPressed: () => _pointsDialog(),
-            tooltip: context.l10n.addRound,
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(width: 20),
-          FloatingActionButton(
-            heroTag: "table_weis",
-            onPressed: () => _weisDialog(hand: false),
-            tooltip: context.l10n.tableWeis,
-            child: SizedBox(
-              height: 40,
-              child: SvgPicture.asset('assets/actions/table_weis.svg'),
-            ),
-          ),
-        ],
       ),
     );
   }

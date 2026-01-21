@@ -162,16 +162,18 @@ class _GuggitalerState extends State<Guggitaler> {
           ),
         ],
       ),
-      body: BoardListWithFab(
-        header: rowHeader(
-          playerNames: data.score.playerName,
-          players: data.settings.players,
-          headerFunction: _stringDialog,
-          context: context,
+      body: SafeArea(
+        child: BoardListWithFab(
+          header: rowHeader(
+            playerNames: data.score.playerName,
+            players: data.settings.players,
+            headerFunction: _stringDialog,
+            context: context,
+          ),
+          rows: rows,
+          footer: footer(),
+          floatingActionButtons: floatingActionButtons,
         ),
-        rows: rows,
-        footer: footer(),
-        floatingActionButtons: floatingActionButtons,
       ),
     );
   }

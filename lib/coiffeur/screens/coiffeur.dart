@@ -92,7 +92,7 @@ class _CoiffeurState extends State<Coiffeur> {
           ),
         ],
       ),
-      body: Column(children: _createRows),
+      body: SafeArea(child: Column(children: _createRows)),
     );
   }
 

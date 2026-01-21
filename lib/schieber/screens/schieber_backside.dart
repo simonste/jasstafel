@@ -182,29 +182,31 @@ class _SchieberBacksideState extends State<SchieberBackside> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          rowHeader(
-            playerNames: data.score.backside.map((e) => e.name).toList(),
-            players: data.settings.backsideColumns,
-            headerFunction: _stringDialog,
-            context: context,
-            hideRoundColumn: true,
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                background(),
-                SingleChildScrollView(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: columnWidgets,
-                  ),
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            rowHeader(
+              playerNames: data.score.backside.map((e) => e.name).toList(),
+              players: data.settings.backsideColumns,
+              headerFunction: _stringDialog,
+              context: context,
+              hideRoundColumn: true,
             ),
-          ),
-        ],
+            Expanded(
+              child: Stack(
+                children: [
+                  background(),
+                  SingleChildScrollView(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: columnWidgets,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

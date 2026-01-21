@@ -185,18 +185,20 @@ class _SchieberState extends State<Schieber> {
           SchieberStatisticsButton,
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SchieberTeam(0, data, dialogs),
-              SchieberTeam(1, data, dialogs),
-            ],
-          ),
-          Center(child: center),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SchieberTeam(0, data, dialogs),
+                SchieberTeam(1, data, dialogs),
+              ],
+            ),
+            Center(child: center),
+          ],
+        ),
       ),
     );
   }

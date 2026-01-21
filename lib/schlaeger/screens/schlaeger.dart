@@ -96,37 +96,39 @@ class _SchlaegerState extends State<Schlaeger> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [playerWidgets[0], playerWidgets[1]],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [playerWidgets[0], playerWidgets[1]],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [playerWidgets[2], playerWidgets[3]],
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [playerWidgets[2], playerWidgets[3]],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Center(
-            child: FloatingActionButton(
-              heroTag: "add_round",
-              onPressed: () => _pointsDialog(),
-              tooltip: context.l10n.addRound,
-              child: const Icon(Icons.add),
+              ],
             ),
-          ),
-        ],
+            Center(
+              child: FloatingActionButton(
+                heroTag: "add_round",
+                onPressed: () => _pointsDialog(),
+                tooltip: context.l10n.addRound,
+                child: const Icon(Icons.add),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
