@@ -1,0 +1,3 @@
+Version 4.2.1
+
+- fix: empêche la barre de navigation Android de recouvrir l'application.

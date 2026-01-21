@@ -1,0 +1,3 @@
+Version 4.2.1
+
+- fix: Prevents the Android navigation bar from overlapping the app.
