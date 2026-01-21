@@ -23,6 +23,9 @@ Generate translations:
 Generate some required source files:
 `dart run build_runner build`
 
+Generate icons:
+`dart run flutter_launcher_icons`
+
 Run tests:
 `flutter test`
 `flutter test -d linux integration_test/`
