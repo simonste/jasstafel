@@ -17,6 +17,16 @@ Jasstafel is an app to write points in the swiss card game Jass.
 
 ## Getting Started
 
+The first time you might need to generate a first version of the icons:
+
+```shell
+mkdir -p android/app/src/main/res/mipmap-{hdpi,mdpi,xhdpi,xxhdpi,xxxhdpi}
+
+for d in android/app/src/main/res/mipmap-*; do
+  convert -size 1x1 xc:transparent PNG32:"$d/ic_launcher.png"
+done
+```
+
 Generate translations:
 `flutter gen-l10n`
 
