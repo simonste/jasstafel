@@ -21,7 +21,7 @@ Generate translations:
 `flutter gen-l10n`
 
 Generate some required source files:
-`flutter packages pub run build_runner build`
+`dart run build_runner build`
 
 Run tests:
 `flutter test`
