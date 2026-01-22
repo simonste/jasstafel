@@ -77,7 +77,7 @@ List<Widget> shrinkActions({
   required List<Type> priority,
 }) {
   final screenWidth = MediaQuery.of(context).size.width;
-  const iconWidth = 40;
+  const iconWidth = 48;
   const boardTitleWidth = 113 + 16 + 16;
   final maxActions = ((screenWidth - boardTitleWidth) / iconWidth).floor();
 

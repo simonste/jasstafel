@@ -20,6 +20,7 @@ Future<String?> stringDialogBuilder(
 
       return AlertDialog(
         title: titleWidget,
+        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
         content: TextField(
           decoration: InputDecoration(hintText: title ?? context.l10n.teamName),
           autofocus: true,

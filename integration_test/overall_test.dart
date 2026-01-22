@@ -108,7 +108,7 @@ extension AppHelper on WidgetTester {
 
   Future<void> scroll(Offset offset) async {
     await drag(find.byType(SingleChildScrollView), offset);
-    await pumpAndSettle();
+    await pumpAndSettle(const Duration(milliseconds: 600));
   }
 
   Future<void> tapInList(String text) async {
