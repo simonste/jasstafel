@@ -72,12 +72,12 @@ if [ ! -f "AuthKey.p8" ]; then
     exit
 fi
 
-base64 -i ios_distribution.p12 | xsel
-read -p 'P12_BASE64 copied to clipboard ...'
+base64 -i ios_distribution.p12 > tmp.txt
+read -p 'P12_BASE64 saved to tmp.txt ...'
 
-base64 -i jasstafel_distribution.mobileprovision | xsel
-read -p 'BUILD_PROVISION_PROFILE_BASE64 copied to clipboard ...'
+base64 -i jasstafel_distribution.mobileprovision > tmp.txt
+read -p 'BUILD_PROVISION_PROFILE_BASE64 saved to tmp.txt ...'
 
-base64 -i AuthKey.p8 | xsel
-read -p 'APPSTORE_API_PRIVATE_KEY_BASE64 copied to clipboard ...'
+base64 -i AuthKey.p8 > tmp.txt
+read -p 'APPSTORE_API_PRIVATE_KEY_BASE64 saved to tmp.txt ...'
 
