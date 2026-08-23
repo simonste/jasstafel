@@ -242,6 +242,7 @@ class _CoiffeurState extends State<Coiffeur> {
 
   void _pointsDialog(team, row) async {
     var controller = TextEditingController();
+    final actionIconColor = Theme.of(context).colorScheme.onSurface;
     if (data.score.rows[row].pts[team].pts == null ||
         data.score.rows[row].pts[team].scratched) {
       controller.text = "";
@@ -261,7 +262,10 @@ class _CoiffeurState extends State<Coiffeur> {
                 Navigator.of(context).pop(IntValue(null, scratch: true));
               },
               key: const Key('scratch'),
-              child: SvgPicture.asset("assets/actions/scratch.svg"),
+              child: SvgPicture.asset(
+                "assets/actions/scratch.svg",
+                colorFilter: ColorFilter.mode(actionIconColor, BlendMode.srcIn),
+              ),
             ),
           ),
           Expanded(
@@ -270,7 +274,10 @@ class _CoiffeurState extends State<Coiffeur> {
                 controller.text = data.settings.match.toString();
               },
               key: const Key('match'),
-              child: SvgPicture.asset("assets/actions/match.svg"),
+              child: SvgPicture.asset(
+                "assets/actions/match.svg",
+                colorFilter: ColorFilter.mode(actionIconColor, BlendMode.srcIn),
+              ),
             ),
           ),
           Expanded(
@@ -286,7 +293,10 @@ class _CoiffeurState extends State<Coiffeur> {
                 }
               },
               key: const Key('157-x'),
-              child: SvgPicture.asset("assets/actions/157-x.svg"),
+              child: SvgPicture.asset(
+                "assets/actions/157-x.svg",
+                colorFilter: ColorFilter.mode(actionIconColor, BlendMode.srcIn),
+              ),
             ),
           ),
         ],

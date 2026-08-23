@@ -269,9 +269,11 @@ Future<void> dialogBuilder(
                     (rowType == RowType.title) ? 1.3 : 1,
                   ),
                   style: TextStyle(
-                    fontWeight: (rowType == RowType.normal)
-                        ? FontWeight.w100
-                        : FontWeight.w400,
+                    fontWeight: context.fontWeight(
+                      (rowType == RowType.normal)
+                          ? FontWeight.w100
+                          : FontWeight.w400,
+                    ),
                   ),
                 ),
               );
@@ -300,7 +302,10 @@ Future<void> dialogBuilder(
           }
 
           List<Widget> children = [
-            Text(elapsed, style: const TextStyle(fontWeight: FontWeight.w100)),
+            Text(
+              elapsed,
+              style: TextStyle(fontWeight: context.fontWeight(FontWeight.w100)),
+            ),
             const Divider(),
             rowS("", [
               info.teamName(0),
@@ -331,7 +336,9 @@ Future<void> dialogBuilder(
             children.add(
               Text(
                 hint.getString(context),
-                style: const TextStyle(fontWeight: FontWeight.w200),
+                style: TextStyle(
+                  fontWeight: context.fontWeight(FontWeight.w200),
+                ),
               ),
             );
           }

@@ -11,3 +11,6 @@ CommonSettings:
   ScreenOrientation:
     store: "orientation"
     default: 0
+  ThemeMode:
+    store: "themeMode"
+    default: 2

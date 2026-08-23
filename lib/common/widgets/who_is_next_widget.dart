@@ -47,6 +47,10 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
     final map = swapMap.get(landscape: landscape);
     final List<int> keyList = map.keys.toList();
 
+    final cardColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey.shade800
+        : Colors.grey.shade200;
+
     List<DraggableGridItem> children = [];
     for (var i in keyList) {
       final key = Key("$i");
@@ -55,7 +59,7 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
           isDraggable: true,
           child: Card(
             key: key,
-            color: Colors.black12,
+            color: cardColor,
             child: InkWell(
               onLongPress: () => setState(() {
                 swapMap.select(PlayerId(int.tryParse(key.toString()[3])!));
@@ -91,7 +95,7 @@ class _WhoIsNextWidget extends State<WhoIsNextWidget> {
         dragPlaceHolder: (List<DraggableGridItem> list, int index) {
           return PlaceHolderWidget(
             child: Card(
-              color: Colors.black12,
+              color: cardColor,
               child: SizedBox(height: cardWidth, width: cardWidth),
             ),
           );

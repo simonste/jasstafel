@@ -34,9 +34,9 @@ Future<void> dialogBuilder(
             RowType rowType = RowType.normal,
             bool delete = false,
           }) {
-            var fontWeight = rowType == RowType.bold
-                ? FontWeight.w400
-                : FontWeight.w100;
+            var fontWeight = context.fontWeight(
+              rowType == RowType.bold ? FontWeight.w400 : FontWeight.w100,
+            );
             var space = delete
                 ? SizedBox(
                     width: 50,

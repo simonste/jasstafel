@@ -13,7 +13,7 @@ void main() {
     String? selected;
     map.forEach((key, value) {
       Text text = value as Text;
-      if ((text.style as TextStyle).color != Colors.white) {
+      if (text.style != null && (text.style as TextStyle).color == Colors.blue) {
         selected = text.data;
       }
     });

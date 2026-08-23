@@ -132,7 +132,9 @@ Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
                     WhoIsNextWidget(whoIsNextData),
                     Text(
                       context.l10n.whoBeginsInfo,
-                      style: const TextStyle(fontWeight: FontWeight.w100),
+                      style: TextStyle(
+                        fontWeight: context.fontWeight(FontWeight.w100),
+                      ),
                       textScaler: const TextScaler.linear(0.8),
                     ),
                   ],

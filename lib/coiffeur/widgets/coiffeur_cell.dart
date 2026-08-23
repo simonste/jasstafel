@@ -30,6 +30,7 @@ class CoiffeurCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: _createChild(
+        context,
         text,
         onTap,
         maxLines,
@@ -44,6 +45,7 @@ class CoiffeurCell extends StatelessWidget {
   }
 
   static Widget _createChild(
+    BuildContext context,
     String name,
     onTap,
     int maxLines,
@@ -54,14 +56,17 @@ class CoiffeurCell extends StatelessWidget {
     Alignment alignment,
     AutoSizeGroup? group,
   ) {
+    final textColor = highlight
+        ? Theme.of(context).colorScheme.onPrimary
+        : null;
     final container = Container(
       alignment: alignment,
-      decoration: decoration(leftBorder, highlight, scratch, grey),
+      decoration: decoration(context, leftBorder, highlight, scratch, grey),
       padding: const EdgeInsets.all(10),
       child: AutoSizeText(
         name,
         maxLines: maxLines,
-        style: const TextStyle(fontSize: 1000),
+        style: TextStyle(fontSize: 1000, color: textColor),
         textAlign: TextAlign.center,
         group: group,
       ),
@@ -75,17 +80,19 @@ class CoiffeurCell extends StatelessWidget {
   }
 
   static BoxDecoration decoration(
+    BuildContext context,
     bool leftBorder,
     bool highlight,
     bool scratch,
     bool grey,
   ) {
     final color = highlight
-        ? Colors.blue.shade600
-        : (grey ? Colors.grey.shade800 : null);
+        ? Theme.of(context).colorScheme.primary
+        : (grey ? Theme.of(context).colorScheme.tertiary : null);
+    final borderColor = Theme.of(context).colorScheme.onSurface;
 
     if (leftBorder) {
-      var border = const Border(left: BorderSide(color: Colors.white));
+      var border = Border(left: BorderSide(color: borderColor));
 
       if (scratch) {
         return BoxDecoration(

@@ -52,10 +52,12 @@ class SchlaegerPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = Theme.of(context).colorScheme.onSurface;
+
     decoration() {
       if (position % 2 == 0) {
-        return const BoxDecoration(
-          border: Border(right: BorderSide(color: Colors.white)),
+        return BoxDecoration(
+          border: Border(right: BorderSide(color: borderColor)),
         );
       }
       return const BoxDecoration();

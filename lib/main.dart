@@ -70,18 +70,51 @@ class MyApp extends StatelessWidget {
     }
     SystemChrome.setPreferredOrientations(po);
 
+    final themeMode = ThemeMode.values[settings.themeMode];
+
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
+      themeMode: themeMode,
       theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.white,
+        canvasColor: Colors.grey.shade200, // drop down
+        dialogTheme: DialogThemeData(backgroundColor: Colors.grey.shade200),
+        dividerColor: Colors.grey.shade400,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        colorScheme: ColorScheme.light(
+          surface: Colors.grey.shade200, // progress bar
+          primary: Colors.blue.shade800, // buttons / progress bar
+          secondary: Colors.blue.shade400, // settings
+          tertiary: Colors.grey.shade200, // molotow round
+          onSurface: Colors.black87,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+        ),
+      ),
+      darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
         canvasColor: Colors.grey.shade800, // drop down
         dialogTheme: DialogThemeData(backgroundColor: Colors.grey.shade800),
+        dividerColor: Colors.grey.shade600,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey.shade900,
+          foregroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
         colorScheme: ColorScheme.dark(
           surface: Colors.grey.shade800, // progress bar
           primary: Colors.blue.shade200, // buttons / progress bar
           secondary: Colors.blue.shade800, // settings
           tertiary: Colors.grey.shade800, // molotow round
+          onSurface: Colors.white,
+          onPrimary: Colors.black,
+          onSecondary: Colors.white,
         ),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

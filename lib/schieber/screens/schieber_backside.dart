@@ -90,13 +90,14 @@ class _SchieberBacksideState extends State<SchieberBackside> {
     }
     final minRows = (screen.height / strokeHeight).floor() - 2;
     final noOfRows = max(minRows, (mostStrokes / strokesPerRow).ceil());
+    final borderColor = Theme.of(context).colorScheme.onSurface;
 
     background() {
       List<Widget> columnWidgets = [];
       for (var i = 0; i < columns; i++) {
         final decoration = i != 0
-            ? const BoxDecoration(
-                border: Border(left: BorderSide(color: Colors.white)),
+            ? BoxDecoration(
+                border: Border(left: BorderSide(color: borderColor)),
               )
             : const BoxDecoration();
         columnWidgets.add(

@@ -90,6 +90,17 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
             ],
             cancel: Text(context.l10n.cancel),
           ),
+          PrefChoice<int>(
+            title: Text(context.l10n.theme),
+            pref: CommonSettings.keys.themeMode,
+            items: [
+              DropdownMenuItem(value: 0, child: Text(context.l10n.system)),
+              DropdownMenuItem(value: 1, child: Text(context.l10n.light)),
+              DropdownMenuItem(value: 2, child: Text(context.l10n.dark)),
+            ],
+            onChange: (value) => Restart.restartApp(),
+            cancel: Text(context.l10n.cancel),
+          ),
           PrefChoice<String>(
             title: Text(context.l10n.language),
             pref: CommonSettings.keys.appLanguage,

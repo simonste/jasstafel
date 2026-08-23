@@ -30,6 +30,7 @@ class BoardTitle extends Theme {
           child: DropdownButton<Board>(
             isExpanded: true,
             value: board,
+            dropdownColor: Theme.of(context).appBarTheme.backgroundColor,
             items: <DropdownMenuItem<Board>>[
               DropdownMenuItem(
                 value: Board.schieber,
@@ -116,6 +117,7 @@ List<Widget> shrinkActions({
     actions.insert(
       actions.length,
       PopupMenuButton(
+        color: Theme.of(context).appBarTheme.backgroundColor,
         itemBuilder: (BuildContext context) {
           // unwrap icon buttons to be able to call Navigator.pop (close drop down)
           List<PopupMenuItem> popupItems = [];
@@ -124,7 +126,10 @@ List<Widget> shrinkActions({
               PopupMenuItem(
                 key: element.key,
                 value: index,
-                child: element.icon,
+                child: IconTheme.merge(
+                  data: const IconThemeData(color: Colors.white),
+                  child: element.icon,
+                ),
               ),
             );
           });

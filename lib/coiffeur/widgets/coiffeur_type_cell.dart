@@ -61,7 +61,7 @@ class CoiffeurTypeCell extends StatelessWidget {
 
     return Expanded(
       child: Container(
-        decoration: CoiffeurCell.decoration(false, false, false, grey),
+        decoration: CoiffeurCell.decoration(context, false, false, false, grey),
         child: InkWell(
           onLongPress: () {
             _coiffeurTypeDialog(context);

@@ -52,7 +52,9 @@ Future<void> confirmDialog({
               children: [
                 Text(
                   subtitle,
-                  style: const TextStyle(fontWeight: FontWeight.w100),
+                  style: TextStyle(
+                    fontWeight: context.fontWeight(FontWeight.w100),
+                  ),
                   textScaler: const TextScaler.linear(0.8),
                 ),
               ],

@@ -440,6 +440,10 @@
   "sensor": "Sensor",
   "portrait": "Hochformat",
   "landscape": "Querformat",
+  "theme": "Design",
+  "system": "System",
+  "light": "Hell",
+  "dark": "Dunkel",
   "undoBarText": "{points} Punkte für {teamName}",
   "@undoBarText": {
     "placeholders": {

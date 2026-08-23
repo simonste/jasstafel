@@ -19,8 +19,11 @@ class SchieberStrokes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strokeWidth = MediaQuery.of(context).size.width * widthFactor;
+    final color = shaded
+        ? Colors.grey.shade700
+        : Theme.of(context).colorScheme.onSurface;
     final paint = Paint()
-      ..color = shaded ? Colors.grey.shade700 : Colors.white
+      ..color = color
       ..strokeWidth = strokeWidth;
 
     switch (type) {

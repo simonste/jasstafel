@@ -70,16 +70,14 @@ class SwapMap {
     for (var i = 0; i < _data.players.length; i++) {
       final arrangeId = _playOrder[arrangeOrder[i]].id;
       final playerName = _data.players[arrangeId];
+      final isSelected =
+          _selectedPlayer != null && arrangeId == _selectedPlayer!.id;
 
       map.putIfAbsent(
         _playOrder[arrangeOrder[i]].id,
         () => Text(
           playerName,
-          style: TextStyle(
-            color: (_selectedPlayer != null && arrangeId == _selectedPlayer!.id)
-                ? Colors.blue
-                : Colors.white,
-          ),
+          style: isSelected ? const TextStyle(color: Colors.blue) : null,
         ),
       );
     }
