@@ -96,7 +96,7 @@ Future<CoiffeurType?> coiffeurTypeDialogBuilder(
               return Container();
             }
 
-            var list = List<int>.generate(13, (i) => i + 1);
+            var list = List<int>.generate(20, (i) => i + 1);
             return DropdownButton<int>(
               key: const Key("dropdownFactor"),
               value: factor,
