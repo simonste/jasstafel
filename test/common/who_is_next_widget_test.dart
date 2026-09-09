@@ -17,8 +17,14 @@ extension WhoIsNextTestHelper on WidgetTester {
 
 void main() {
   void expectTextColor(WidgetTester tester, String player, Color color) {
-    var textWidget = tester.firstWidget(find.text(player)) as Text;
-    expect((textWidget.style as TextStyle).color, color);
+    final playerFinder = find.text(player);
+    final textWidget = tester.widget<Text>(playerFinder);
+    final element = tester.element(playerFinder);
+    final textStyle = DefaultTextStyle.of(element).style;
+    final expectedColor = color == Colors.white
+        ? Theme.of(element).textTheme.bodyMedium!.color
+        : color;
+    expect(textStyle.merge(textWidget.style).color, expectedColor);
   }
 
   testWidgets('who is next', (WidgetTester tester) async {

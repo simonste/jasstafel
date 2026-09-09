@@ -148,7 +148,7 @@ Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
                 ),
                 child: Text(context.l10n.ok),
                 onPressed: () {
-                  Navigator.of(context).pop(WhoIsNext());
+                  Navigator.of(context).pop();
                 },
               ),
             ],
