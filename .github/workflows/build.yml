@@ -85,7 +85,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "26.1.1"
+          xcode-version: "26.6"
 
       - name: Get dependencies
         run: flutter/bin/flutter pub get
