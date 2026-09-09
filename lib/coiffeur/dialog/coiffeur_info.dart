@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_hint.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
@@ -250,7 +251,7 @@ Future<void> dialogBuilder(
   CoiffeurInfo info,
   String elapsed,
 ) {
-  return showDialog<void>(
+  return showSafeDialog<void>(
     context: context,
     builder: (context) {
       return StatefulBuilder(

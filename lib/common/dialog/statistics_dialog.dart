@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class StatisticsButton extends IconButton {
@@ -28,7 +29,7 @@ Future<void> dialogBuilder(
   List<List<String>> data,
   String? summary,
 ) {
-  return showDialog<void>(
+  return showSafeDialog<void>(
     context: context,
     builder: (context) {
       return StatefulBuilder(

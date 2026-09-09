@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
@@ -23,7 +24,7 @@ Future<void> dialogBuilder(
   Function undoLast,
 ) {
   var rounds = data.score.getHistory();
-  return showDialog<void>(
+  return showSafeDialog<void>(
     context: context,
     builder: (context) {
       return StatefulBuilder(

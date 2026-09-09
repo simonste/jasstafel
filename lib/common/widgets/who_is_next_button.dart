@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/data/common_data.dart';
+import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 
@@ -116,7 +117,7 @@ class WhoIsNextButton extends IconButton {
 }
 
 Future<void> dialogBuilder(BuildContext context, WhoIsNextData whoIsNextData) {
-  return showDialog<void>(
+  return showSafeDialog<void>(
     context: context,
     builder: (context) {
       return StatefulBuilder(

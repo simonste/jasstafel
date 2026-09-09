@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class DialogAction {
@@ -14,7 +15,7 @@ Future<void> confirmDialog({
   required String subtitle,
   required List<DialogAction> actions,
 }) {
-  return showDialog<void>(
+  return showSafeDialog<void>(
     context: context,
     builder: (context) {
       return StatefulBuilder(
