@@ -1,0 +1,4 @@
+Version 4.3.0
+
+- Light Mode
+- Hairdresser factor up to 20

@@ -1,0 +1,4 @@
+Version 4.3.0
+
+- Thème clair
+- Facteur coiffeur jusqu'à 20
