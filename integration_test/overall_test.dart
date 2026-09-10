@@ -107,8 +107,11 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> scroll(Offset offset) async {
-    await drag(find.byType(SingleChildScrollView), offset);
-    await pumpAndSettle(const Duration(milliseconds: 600));
+    final scrollableFinder = find.byType(Scrollable).last;
+    expect(scrollableFinder, findsWidgets);
+
+    await drag(scrollableFinder, offset);
+    await pumpAndSettle(const Duration(seconds: 1));
   }
 
   Future<void> tapInList(String text) async {
