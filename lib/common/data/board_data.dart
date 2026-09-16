@@ -47,20 +47,20 @@ class BoardData<T, S extends Score> {
   final Board boardType;
   bool supportsVibration = false;
 
-  static Board determineBoardType(String string) {
-    if (string == "SchieberScore") {
+  static Board determineBoardType(Score score) {
+    if (score is SchieberScore) {
       return Board.schieber;
-    } else if (string == "CoiffeurScore") {
+    } else if (score is CoiffeurScore) {
       return Board.coiffeur;
-    } else if (string == "MolotowScore") {
+    } else if (score is MolotowScore) {
       return Board.molotow;
-    } else if (string == "PointBoardScore") {
+    } else if (score is PointBoardScore) {
       return Board.pointBoard;
-    } else if (string == "DifferenzlerScore") {
+    } else if (score is DifferenzlerScore) {
       return Board.differenzler;
-    } else if (string == "GuggitalerScore") {
+    } else if (score is GuggitalerScore) {
       return Board.guggitaler;
-    } else if (string == "SchlaegerScore") {
+    } else if (score is SchlaegerScore) {
       return Board.schlaeger;
     } else {
       assert(false);
@@ -71,7 +71,7 @@ class BoardData<T, S extends Score> {
   BoardData(this.settings, this.score, this.dataKey)
     : profilesKey = "${dataKey}_profiles",
       activeProfileKey = "${dataKey}_profile",
-      boardType = determineBoardType(S.toString()) {
+      boardType = determineBoardType(score) {
     _updateSettings();
   }
 
