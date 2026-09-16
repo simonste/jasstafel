@@ -4,8 +4,8 @@
     {
       "label": "Generate Settings",
       "type": "shell",
-      "command": "flutter",
-      "args": ["packages", "pub", "run", "build_runner", "build"],
+      "command": "dart",
+      "args": ["run", "build_runner", "build"],
       "problemMatcher": []
     },
     {
@@ -17,9 +17,9 @@
     },
     {
       "label": "Generate Icons",
-      "type": "flutter",
-      "command": "flutter",
-      "args": ["pub", "run", "flutter_launcher_icons"],
+      "type": "shell",
+      "command": "dart",
+      "args": ["run", "flutter_launcher_icons"],
       "problemMatcher": []
     },
     {
