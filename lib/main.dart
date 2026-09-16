@@ -20,8 +20,15 @@ import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
 
+const _systemUiOverlayStyle = SystemUiOverlayStyle(
+  statusBarIconBrightness: Brightness.light,
+  statusBarBrightness: Brightness.dark,
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(_systemUiOverlayStyle);
 
   final service = await PrefServiceShared.init(
     defaults: CommonSettings.defaults
@@ -89,6 +96,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.white),
+          systemOverlayStyle: _systemUiOverlayStyle,
         ),
         colorScheme: ColorScheme.light(
           surface: Colors.grey.shade200, // progress bar
@@ -110,6 +118,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.grey.shade900,
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
+          systemOverlayStyle: _systemUiOverlayStyle,
         ),
         colorScheme: ColorScheme.dark(
           surface: Colors.grey.shade800, // progress bar
