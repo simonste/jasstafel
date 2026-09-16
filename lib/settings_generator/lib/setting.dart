@@ -6,7 +6,7 @@ class Setting {
   final String _prefName;
   final dynamic _defaultValue;
 
-  Setting(name, this._prefName, this._defaultValue)
+  Setting(String name, this._prefName, this._defaultValue)
     : _name = name.replaceRange(0, 1, name[0].toLowerCase()) {
     if (!name[0].contains(RegExp(r'[A-Z]'))) {
       throw ArgumentError(

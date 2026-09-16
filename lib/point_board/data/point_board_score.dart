@@ -26,7 +26,7 @@ class PointBoardScore implements Score {
   factory PointBoardScore.fromJson(Map<String, dynamic> json) =>
       _$PointBoardScoreFromJson(json);
   PointBoardSettings _settings = PointBoardSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(PointBoardSettings settings) => _settings = settings;
 
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <PointBoardRow>[];

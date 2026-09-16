@@ -212,7 +212,7 @@ class _SchieberBacksideState extends State<SchieberBackside> {
     );
   }
 
-  void _stringDialog(player) async {
+  void _stringDialog(int player) async {
     var controller = TextEditingController(
       text: data.score.backside[player].name,
     );

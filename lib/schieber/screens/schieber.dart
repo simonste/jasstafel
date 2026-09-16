@@ -203,7 +203,7 @@ class _SchieberState extends State<Schieber> {
     );
   }
 
-  void _stringDialog(team) async {
+  void _stringDialog(int team) async {
     var controller = TextEditingController(text: data.score.team[team].name);
 
     final input = await stringDialogBuilder(context, controller);

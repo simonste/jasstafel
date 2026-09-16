@@ -141,6 +141,7 @@ class SettingsGroup {
           ..type = MethodType.getter
           ..name = 'defaults'
           ..static = true
+          ..returns = refer('Map<String, Object>')
           ..body = Code('return {$def};'),
       ),
     );

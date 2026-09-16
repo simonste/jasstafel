@@ -273,7 +273,7 @@ class _DifferenzlerState extends State<Differenzler> {
     );
   }
 
-  void _stringDialog(player) async {
+  void _stringDialog(int player) async {
     var controller = TextEditingController(text: data.score.playerName[player]);
 
     final input = await stringDialogBuilder(

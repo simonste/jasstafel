@@ -22,13 +22,13 @@ class JasstafelTestApp extends MaterialApp {
       );
 }
 
-Widget makeTestable(widget) {
+Widget makeTestable(Widget widget) {
   return JasstafelTestApp(
     child: Flex(direction: Axis.horizontal, children: [widget]),
   );
 }
 
-Widget makeTestableExpanded(widget) {
+Widget makeTestableExpanded(Widget widget) {
   return makeTestable(Expanded(child: widget));
 }
 

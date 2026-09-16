@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jasstafel/common/localization.dart';
 
 class CoiffeurTypeImage extends SvgPicture {
-  CoiffeurTypeImage(context, name, {super.key, super.width})
+  CoiffeurTypeImage(BuildContext context, String name, {super.key, super.width})
     : super.asset(
         'assets/types/${assetName(context, name)}.svg',
         semanticsLabel: name,

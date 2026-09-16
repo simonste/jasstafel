@@ -27,7 +27,7 @@ class MolotowScore implements Score {
   factory MolotowScore.fromJson(Map<String, dynamic> json) =>
       _$MolotowScoreFromJson(json);
   MolotowSettings _settings = MolotowSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(MolotowSettings settings) => _settings = settings;
 
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <MolotowRow>[];

@@ -22,7 +22,7 @@ BoxDecoration rowDecoration(BuildContext context) {
   );
 }
 
-rowHeader({
+Widget rowHeader({
   required List<String> playerNames,
   required int players,
   required Function headerFunction,
@@ -55,7 +55,7 @@ rowHeader({
   );
 }
 
-rowFooter(List<String> data, {required BuildContext context}) {
+Container rowFooter(List<String> data, {required BuildContext context}) {
   List<Widget> children = rowContainer(data[0]);
   for (var i = 1; i < data.length; i++) {
     children.add(
@@ -71,7 +71,7 @@ rowFooter(List<String> data, {required BuildContext context}) {
   );
 }
 
-defaultRow(
+Container defaultRow(
   List<String> data, {
   int? rowNo,
   isRound = true,

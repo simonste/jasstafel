@@ -229,7 +229,7 @@ class _CoiffeurState extends State<Coiffeur> {
     return CoiffeurRow(cells, topBorder: true);
   }
 
-  void _stringDialog(team) async {
+  void _stringDialog(int team) async {
     var controller = TextEditingController(text: data.score.teamName[team]);
 
     final input = await stringDialogBuilder(context, controller);
@@ -240,7 +240,7 @@ class _CoiffeurState extends State<Coiffeur> {
     });
   }
 
-  void _pointsDialog(team, row) async {
+  void _pointsDialog(int team, int row) async {
     var controller = TextEditingController();
     final actionIconColor = Theme.of(context).colorScheme.onSurface;
     if (data.score.rows[row].pts[team].pts == null ||

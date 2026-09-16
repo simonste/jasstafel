@@ -26,10 +26,10 @@ class CoiffeurRow extends StatelessWidget {
     }
   }
 
-  static Widget _row(cells) {
+  static Widget _row(List<Widget> cells) {
     return Row(
-      children: cells,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: cells,
     );
   }
 }

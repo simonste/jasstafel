@@ -63,7 +63,7 @@ class DifferenzlerScore implements Score {
   factory DifferenzlerScore.fromJson(Map<String, dynamic> json) =>
       _$DifferenzlerScoreFromJson(json);
   DifferenzlerSettings _settings = DifferenzlerSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(DifferenzlerSettings settings) => _settings = settings;
 
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <DifferenzlerRow>[];

@@ -117,9 +117,9 @@ class CoiffeurPointsCell extends CoiffeurCell {
     super.key,
     super.onTap,
     super.leftBorder,
-    AutoSizeGroup? group,
+    super.group,
     super.grey,
-  }) : super(_getString(pts), scratch: pts.scratched, group: group);
+  }) : super(_getString(pts), scratch: pts.scratched);
 
   CoiffeurPointsCell.number(
     int? pts, {

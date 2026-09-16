@@ -14,7 +14,7 @@ NumberPicker getNumberPicker(Key key) {
 }
 
 extension DialogHelper on WidgetTester {
-  scrollNumberPicker(Key key, int scrollTo) async {
+  Future<void> scrollNumberPicker(Key key, int scrollTo) async {
     final picker = getNumberPicker(key);
     final center = getCenter(find.byKey(key));
     final offsetY = (picker.value - scrollTo) * picker.itemHeight;

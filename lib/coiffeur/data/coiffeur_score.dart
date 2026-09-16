@@ -64,7 +64,7 @@ class CoiffeurScore implements Score {
   factory CoiffeurScore.fromJson(Map<String, dynamic> json) =>
       _$CoiffeurScoreFromJson(json);
   CoiffeurSettings _settings = CoiffeurSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(CoiffeurSettings settings) => _settings = settings;
 
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
@@ -97,7 +97,7 @@ class CoiffeurScore implements Score {
     return total(0) + total(1);
   }
 
-  int total(team) {
+  int total(int team) {
     assert(team < 3);
     int sum = 0;
     for (var i = 0; i < _settings.rows; i++) {
@@ -116,7 +116,7 @@ class CoiffeurScore implements Score {
     return sum;
   }
 
-  int? diff(i) {
+  int? diff(int i) {
     if (!rows[i].pts[0].empty() && !rows[i].pts[1].empty()) {
       return _rowDiff(rows[i]);
     }

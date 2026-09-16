@@ -39,7 +39,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Locale getLanguage(appLanguage, locale, supportedLocales) {
+  Locale getLanguage(
+    String? appLanguage,
+    Locale? locale,
+    Iterable<Locale> supportedLocales,
+  ) {
     if (appLanguage != null) {
       return Locale(appLanguage);
     }

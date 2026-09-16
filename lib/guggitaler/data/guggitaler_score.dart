@@ -54,7 +54,7 @@ class GuggitalerScore implements Score {
   factory GuggitalerScore.fromJson(Map<String, dynamic> json) =>
       _$GuggitalerScoreFromJson(json);
   GuggitalerSettings _settings = GuggitalerSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(GuggitalerSettings settings) => _settings = settings;
 
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <GuggitalerRow>[];

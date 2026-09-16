@@ -164,7 +164,7 @@ class SchieberScore implements Score {
   factory SchieberScore.fromJson(Map<String, dynamic> json) =>
       _$SchieberScoreFromJson(json);
   SchieberSettings _settings = SchieberSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(SchieberSettings settings) => _settings = settings;
 
   var team = [TeamData("Team 1"), TeamData("Team 2")];
   int goalRounds = 8;
@@ -208,7 +208,7 @@ class SchieberScore implements Score {
     }
   }
 
-  void add(pts1, pts2, {weis = false}) {
+  void add(int pts1, int pts2, {bool weis = false}) {
     rounds.add(SchieberRound([pts1, pts2], weis: weis));
     team[0].add(pts1);
     team[1].add(pts2);

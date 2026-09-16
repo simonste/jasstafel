@@ -78,25 +78,27 @@ class BoardData<T, S extends Score> {
   void _updateSettings() {
     switch (boardType) {
       case Board.schieber:
-        (score as SchieberScore).setSettings(settings);
+        (score as SchieberScore).setSettings(settings as SchieberSettings);
         break;
       case Board.coiffeur:
-        (score as CoiffeurScore).setSettings(settings);
+        (score as CoiffeurScore).setSettings(settings as CoiffeurSettings);
         break;
       case Board.molotow:
-        (score as MolotowScore).setSettings(settings);
+        (score as MolotowScore).setSettings(settings as MolotowSettings);
         break;
       case Board.pointBoard:
-        (score as PointBoardScore).setSettings(settings);
+        (score as PointBoardScore).setSettings(settings as PointBoardSettings);
         break;
       case Board.differenzler:
-        (score as DifferenzlerScore).setSettings(settings);
+        (score as DifferenzlerScore).setSettings(
+          settings as DifferenzlerSettings,
+        );
         break;
       case Board.guggitaler:
-        (score as GuggitalerScore).setSettings(settings);
+        (score as GuggitalerScore).setSettings(settings as GuggitalerSettings);
         break;
       case Board.schlaeger:
-        (score as SchlaegerScore).setSettings(settings);
+        (score as SchlaegerScore).setSettings(settings as SchlaegerSettings);
         break;
     }
   }

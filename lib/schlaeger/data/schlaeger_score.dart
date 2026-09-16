@@ -27,7 +27,7 @@ class SchlaegerScore implements Score {
   factory SchlaegerScore.fromJson(Map<String, dynamic> json) =>
       _$SchlaegerScoreFromJson(json);
   SchlaegerSettings _settings = SchlaegerSettings();
-  void setSettings(settings) => _settings = settings;
+  void setSettings(SchlaegerSettings settings) => _settings = settings;
 
   var playerName = List.generate(
     SchlaegerPlayers.max,
