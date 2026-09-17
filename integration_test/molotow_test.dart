@@ -241,7 +241,7 @@ void main() {
   testWidgets('scrollable', (tester) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var score = MolotowScore();
-    score.rows = List.filled(24, MolotowRow([25, 50, 66, 16], isRound: true));
+    score.rows = List.filled(80, MolotowRow([25, 50, 66, 16], isRound: true));
 
     await preferences.setString(
       MolotowSettings.keys.data,
@@ -250,17 +250,40 @@ void main() {
 
     await tester.launchApp();
 
-    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
-    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
+    final handweis = find.byTooltip('Handweis');
+    final tischweis = find.byTooltip('Tischweis');
 
-    await tester.scroll(const Offset(0, -300));
+    expect(handweis.hitTestable(), findsOneWidget);
+    expect(tischweis.hitTestable(), findsOneWidget);
 
-    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
-    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, lessThan(500));
+    final initialY = tester.getCenter(handweis).dy;
 
-    await tester.scroll(const Offset(0, 300));
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
+    final scrollable = find.byType(Scrollable).last;
+    expect(scrollable, findsWidgets, reason: 'No Scrollable widget found');
+    final position = tester.state<ScrollableState>(scrollable).position;
+    expect(
+      position.maxScrollExtent,
+      greaterThan(300),
+      reason: 'the board must be taller than the viewport to be scrollable',
+    );
+
+    await tester.drag(scrollable, const Offset(0, -300));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(position.pixels, greaterThan(0), reason: 'drag did not scroll');
+    expect(handweis.hitTestable(), findsOneWidget);
+    expect(tischweis.hitTestable(), findsOneWidget);
+    final afterScrollY = tester.getCenter(handweis).dy;
+    expect(afterScrollY, lessThan(initialY), reason: 'fab did not move up');
+
+    await tester.drag(scrollable, const Offset(0, 300));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    final backToInitialY = tester.getCenter(handweis).dy;
+    expect(
+      backToInitialY,
+      greaterThan(afterScrollY),
+      reason: 'fab did not move back down',
+    );
   });
 }

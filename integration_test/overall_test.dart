@@ -217,7 +217,7 @@ extension AppHelper on WidgetTester {
   Future<void> addDifferenzlerGuessPoints(String playerName, int guess) async {
     await scrollTo(find.byTooltip('Ansage von $playerName'));
     await tap(find.byTooltip('Ansage von $playerName'));
-    await pump();
+    await pumpAndSettle();
     await enterText(find.byType(TextField), '$guess');
     await pump();
     await tap(find.text('Ok'));

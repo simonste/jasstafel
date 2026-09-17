@@ -228,7 +228,7 @@ void main() {
     var row = DifferenzlerRow();
     row.guesses = [33, 28, 88, 0];
     row.pts = [20, 40, 85, 12];
-    score.rows = List.filled(20, row);
+    score.rows = List.filled(50, row);
 
     await preferences.setString(
       DifferenzlerSettings.keys.data,
