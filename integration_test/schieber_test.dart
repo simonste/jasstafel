@@ -13,7 +13,7 @@ import 'overall_test.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  
+
   // Increase timeout for iOS tests
   binding.testTextInput.register();
 
