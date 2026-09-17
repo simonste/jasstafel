@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
-import 'package:pref/pref.dart';
 
 class ProfileButton extends StatelessWidget {
   const ProfileButton({
@@ -18,7 +17,10 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PrefChevron(
+    return ListTile(
+      title: title,
+      subtitle: subtitle,
+      trailing: const Icon(Icons.chevron_right),
       onTap: () => Navigator.of(context).push<void>(
         MaterialPageRoute(
           builder: (context) => Scaffold(
@@ -27,8 +29,6 @@ class ProfileButton extends StatelessWidget {
           ),
         ),
       ),
-      title: title,
-      subtitle: subtitle,
     );
   }
 }

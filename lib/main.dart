@@ -1,46 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
+import 'package:jasstafel/differenzler/screens/differenzler.dart';
 import 'package:jasstafel/guggitaler/screens/guggitaler.dart';
 import 'package:jasstafel/molotow/screens/molotow.dart';
 import 'package:jasstafel/point_board/screens/point_board.dart';
-import 'package:jasstafel/differenzler/screens/differenzler.dart';
 import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/schlaeger/screens/schlaeger.dart';
-import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
-import 'package:jasstafel/settings/differenzler_settings.g.dart';
-import 'package:jasstafel/settings/guggitaler_settings.g.dart';
-import 'package:jasstafel/settings/molotow_settings.g.dart';
-import 'package:jasstafel/settings/point_board_settings.g.dart';
-import 'package:jasstafel/settings/schieber_settings.g.dart';
-import 'package:pref/pref.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
 
 const _systemUiOverlayStyle = SystemUiOverlayStyle(
   statusBarIconBrightness: Brightness.light,
   statusBarBrightness: Brightness.dark,
 );
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(_systemUiOverlayStyle);
 
-  final service = await PrefServiceShared.init(
-    defaults: CommonSettings.defaults
-      ..addAll(CoiffeurSettings.defaults)
-      ..addAll(SchieberSettings.defaults)
-      ..addAll(MolotowSettings.defaults)
-      ..addAll(PointBoardSettings.defaults)
-      ..addAll(DifferenzlerSettings.defaults)
-      ..addAll(GuggitalerSettings.defaults),
-  );
+  final preferences = await SharedPreferences.getInstance();
 
-  runApp(PrefService(service: service, child: const MyApp()));
+  runApp(SettingsProvider(preferences: preferences, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -69,7 +56,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var settings = CommonSettings();
-    settings.fromPrefService(context);
+    settings.fromPreferences(SettingsProvider.of(context));
     final lastBoard = Board.values[settings.lastBoard].name;
     WakelockPlus.toggle(enable: settings.keepScreenOn);
 

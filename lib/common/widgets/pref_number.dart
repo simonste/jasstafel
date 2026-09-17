@@ -1,34 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 
+/// A ListTile that displays a number and allows editing it via a dialog.
+///
+/// This is a replacement for the PrefNumber widget from the pref package.
+/// Unlike the original, this widget requires the parent to manage the value and
+/// saving to SharedPreferences.
+///
+/// Parameters:
+/// - title: The title to display
+/// - subtitle: Optional subtitle
+/// - value: The current value
+/// - onChanged: Callback when the value changes (parent should save to preferences)
 class PrefNumber extends StatelessWidget {
   const PrefNumber({
     this.title,
     this.subtitle,
-    required this.pref,
+    required this.value,
     super.key,
-    this.onChange,
+    this.onChanged,
   });
 
   final Widget? title;
   final Widget? subtitle;
-  final String pref;
-  final ValueChanged<int?>? onChange;
+  final int value;
+  final ValueChanged<int>? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return PrefCustom<int>(
+    return ListTile(
       title: title,
       subtitle: subtitle,
-      pref: pref,
-      onTap: _tap,
-      onChange: onChange,
+      trailing: Text('$value'),
+      onTap: () => _showEditDialog(context),
     );
   }
 
-  Future<int?> _tap(BuildContext context, int? value) async {
-    var controller = TextEditingController(text: value.toString());
+  Future<void> _showEditDialog(BuildContext context) async {
+    final controller = TextEditingController(text: value.toString());
 
     final result = await showDialog<bool>(
       context: context,
@@ -38,6 +47,7 @@ class PrefNumber extends StatelessWidget {
           child: TextField(
             controller: controller,
             keyboardType: const TextInputType.numberWithOptions(signed: false),
+            autofocus: true,
           ),
         ),
         actions: <Widget>[
@@ -54,6 +64,11 @@ class PrefNumber extends StatelessWidget {
       ),
     );
 
-    return result == true ? int.parse(controller.text).abs() : value;
+    if (result == true) {
+      final newValue = int.tryParse(controller.text)?.abs() ?? value;
+      if (onChanged != null) {
+        onChanged!(newValue);
+      }
+    }
   }
 }

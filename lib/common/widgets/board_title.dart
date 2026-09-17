@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
-import 'package:pref/pref.dart';
 
 class TitleBar extends AppBar {
   TitleBar({
@@ -62,9 +62,8 @@ class BoardTitle extends Theme {
               ),
             ],
             onChanged: (value) {
-              PrefService.of(
-                context,
-              ).set(CommonSettings.keys.lastBoard, value!.index);
+              final preferences = SettingsProvider.of(context);
+              preferences.setInt(CommonSettings.keys.lastBoard, value!.index);
               Navigator.of(context).restorablePushReplacementNamed(value.name);
             },
           ),
@@ -82,7 +81,8 @@ List<Widget> shrinkActions({
   const boardTitleWidth = 113 + 16 + 16;
   final maxActions = ((screenWidth - boardTitleWidth) / iconWidth).floor();
 
-  if (PrefService.of(context).get("additionalTestButtons") ?? false) {
+  final preferences = SettingsProvider.of(context);
+  if (preferences.getBool("additionalTestButtons") ?? false) {
     // for debug / test: add additional buttons
     for (var i = actions.length; i <= maxActions; ++i) {
       actions.insert(
