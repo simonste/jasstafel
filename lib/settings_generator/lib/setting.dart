@@ -50,14 +50,6 @@ class Setting {
     return "'$_prefName': ${_assignment()},";
   }
 
-  String toPref() {
-    return "pref.set('$_prefName', $_name);";
-  }
-
-  String fromPref() {
-    return "$_name = pref.get('$_prefName') ?? $_name;";
-  }
-
   String toPreferences() {
     if (_defaultValue is bool) {
       return "preferences.setBool('$_prefName', $_name);";

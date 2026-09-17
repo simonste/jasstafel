@@ -31,16 +31,6 @@ class SettingsGroup {
       fields.add(setting.field());
     }
 
-    var toPref = "var pref = PrefService.of(context);\n";
-    for (Setting setting in _settings) {
-      toPref += setting.toPref();
-    }
-
-    var fromPref = "var pref = PrefService.of(context);\n";
-    for (Setting setting in _settings) {
-      fromPref += setting.fromPref();
-    }
-
     var toPreferences = "";
     for (Setting setting in _settings) {
       toPreferences += setting.toPreferences();
@@ -63,30 +53,6 @@ class SettingsGroup {
     }
 
     var methods = [
-      Method.returnsVoid(
-        (b) => b
-          ..name = 'toPrefService'
-          ..requiredParameters.add(
-            Parameter(
-              (b) => b
-                ..name = 'context'
-                ..type = refer('BuildContext'),
-            ),
-          )
-          ..body = Code(toPref),
-      ),
-      Method.returnsVoid(
-        (b) => b
-          ..name = 'fromPrefService'
-          ..requiredParameters.add(
-            Parameter(
-              (b) => b
-                ..name = 'context'
-                ..type = refer('BuildContext'),
-            ),
-          )
-          ..body = Code(fromPref),
-      ),
       Method.returnsVoid(
         (b) => b
           ..name = 'toPreferences'
