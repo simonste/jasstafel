@@ -8,6 +8,7 @@ on:
 jobs:
   test-android:
     if: ${{ !contains(github.ref, 'ios') }}
+    timeout-minutes: 60
     strategy:
       matrix:
         device:
@@ -67,6 +68,7 @@ jobs:
 
   test-ios:
     if: ${{ !contains(github.ref, 'android') }}
+    timeout-minutes: 60
     strategy:
       matrix:
         device:
