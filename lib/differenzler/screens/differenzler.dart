@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -245,7 +246,7 @@ class _DifferenzlerState extends State<Differenzler> {
           SettingsButton(
             DifferenzlerSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPrefService(context)),
+            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
           ),
         ],
       ),

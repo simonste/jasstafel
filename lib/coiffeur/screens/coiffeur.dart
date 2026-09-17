@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -88,7 +89,7 @@ class _CoiffeurState extends State<Coiffeur> {
           SettingsButton(
             CoiffeurSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPrefService(context)),
+            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
           ),
         ],
       ),

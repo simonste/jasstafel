@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -107,7 +108,9 @@ class _PointBoardState extends State<PointBoard> {
           SettingsButton(
             PointBoardSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPrefService(context)),
+            () => setState(() {
+              data.settings.fromPreferences(SettingsProvider.of(context));
+            }),
           ),
         ],
       ),

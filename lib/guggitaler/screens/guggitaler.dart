@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -158,7 +159,7 @@ class _GuggitalerState extends State<Guggitaler> {
           SettingsButton(
             GuggitalerSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPrefService(context)),
+            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -128,7 +129,7 @@ class _MolotowState extends State<Molotow> {
           SettingsButton(
             MolotowSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPrefService(context)),
+            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
           ),
         ],
       ),

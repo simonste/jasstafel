@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
@@ -154,7 +155,7 @@ class _SchieberState extends State<Schieber> {
       SettingsButton(
         SchieberSettingsScreen(data),
         context,
-        () => setState(() => data.settings.fromPrefService(context)),
+        () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
       ),
     ];
     if (data.settings.backside) {
