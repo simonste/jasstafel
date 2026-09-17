@@ -26,7 +26,6 @@ class _BoardListWithFabState extends State<BoardListWithFab> {
 
   @override
   Widget build(BuildContext context) {
-    final screen = MediaQuery.of(context).size;
     return Stack(
       children: [
         Column(
@@ -57,7 +56,8 @@ class _BoardListWithFabState extends State<BoardListWithFab> {
           duration: const Duration(milliseconds: 500),
           curve: Curves.fastOutSlowIn,
           right: 20,
-          bottom: _fabAtBottom ? 50 : screen.height - 160,
+          top: _fabAtBottom ? null : 50,
+          bottom: _fabAtBottom ? 50 : null,
           child: Row(children: widget.floatingActionButtons),
         ),
       ],
