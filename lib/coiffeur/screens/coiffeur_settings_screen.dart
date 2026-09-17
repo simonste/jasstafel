@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/setting_utils.dart';
@@ -8,9 +9,9 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
-import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class CoiffeurSettingsScreen extends StatefulWidget {
   final BoardData boardData;
@@ -24,7 +25,8 @@ class CoiffeurSettingsScreen extends StatefulWidget {
 class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    CoiffeurSettings settings = widget.boardData.settings;
+    final settings = widget.boardData.settings as CoiffeurSettings;
+    final commonSettings = CommonSettings();
     final matchPointsSubTitle = subTitle(
       settings.match,
       settings.rounded,
@@ -41,56 +43,73 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
       context,
     );
 
-    final currentMatchPoints = PrefService.of(
-      context,
-    ).get(CoiffeurSettings.keys.match);
+    final preferences = SettingsProvider.of(context);
+    // captured before any edit below changes it
+    final currentMatchPoints = settings.match;
+    commonSettings.fromPreferences(preferences);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.coiffeur)),
       ),
-      body: PrefPage(
+      body: ListView(
         children: [
-          PrefTitle(title: Text(context.l10n.profiles)),
+          sectionTitle(context, context.l10n.profiles),
           ProfileButton(
             pageTitle: Text(context.l10n.selectProfile),
             title: Text(widget.boardData.profiles.active),
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
-          PrefTitle(title: Text(context.l10n.countingType)),
-          PrefCheckbox(
-            title: Text(context.l10n.denominator10),
-            pref: CoiffeurSettings.keys.rounded,
-            onChange: (value) {
-              settings.rounded = value;
-              setState(() {});
+          const Divider(),
+
+          sectionTitle(context, context.l10n.countingType),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.denominator10,
+            value: settings.rounded,
+            onChanged: (value) {
+              setState(() {
+                settings.rounded = value!;
+                settings.toPreferences(preferences);
+              });
             },
           ),
           PrefNumber(
             title: Text(context.l10n.matchPoints),
             subtitle: Text(matchPointsSubTitle),
-            pref: CoiffeurSettings.keys.match,
-            onChange: (value) {
-              settings.match = value!;
-              setState(() {});
+            value: settings.match,
+            onChanged: (value) {
+              setState(() {
+                settings.match = value;
+                settings.toPreferences(preferences);
+              });
             },
           ),
           PrefNumber(
             title: Text(context.l10n.matchMalusVal),
             subtitle: Text(counterPointsSubTitle),
-            pref: CoiffeurSettings.keys.counterLoss,
-            onChange: (value) {
-              settings.counterLoss = value!;
-              setState(() {});
+            value: settings.counterLoss,
+            onChanged: (value) {
+              setState(() {
+                settings.counterLoss = value;
+                settings.toPreferences(preferences);
+              });
             },
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.matchBonus),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.matchBonus,
             subtitle: Text(
               context.l10n.matchBonusInfo(roundPoints(currentMatchPoints)),
             ),
-            pref: CoiffeurSettings.keys.bonus,
-            onChange: (value) async {
+            value: settings.bonus,
+            onChanged: (value) async {
+              if (value == null) return;
+              setState(() {
+                settings.bonus = value;
+                settings.toPreferences(preferences);
+              });
+
               final proposedMatchPoints = value
                   ? roundPoints(currentMatchPoints)
                   : matchPoints(currentMatchPoints);
@@ -106,99 +125,156 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                   DialogAction(
                     text: context.l10n.ok,
                     action: () {
-                      final pref = PrefService.of(context);
-                      final key = CoiffeurSettings.keys.match;
-                      pref.set(key, proposedMatchPoints);
-                      settings.match = proposedMatchPoints;
+                      setState(() {
+                        settings.match = proposedMatchPoints;
+                        settings.toPreferences(preferences);
+                      });
                     },
                   ),
                 ],
               );
             },
           ),
-          PrefHider(
-            pref: CoiffeurSettings.keys.bonus,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.matchBonusVal),
-                subtitle: Text(bonusPointsSubTitle),
-                pref: CoiffeurSettings.keys.bonusValue,
-                onChange: (value) {
-                  settings.bonusValue = value!;
-                  setState(() {});
-                },
-              ),
-            ],
-          ),
+          // Show bonusValue only if bonus is enabled
+          if (settings.bonus)
+            PrefNumber(
+              title: Text(context.l10n.matchBonusVal),
+              subtitle: Text(bonusPointsSubTitle),
+              value: settings.bonusValue,
+              onChanged: (value) {
+                setState(() {
+                  settings.bonusValue = value;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          const Divider(),
 
-          //
-          PrefTitle(title: Text(context.l10n.settings)),
-          PrefCheckbox(
-            title: Text(context.l10n.threeTeams),
-            pref: CoiffeurSettings.keys.threeTeams,
+          sectionTitle(context, context.l10n.settings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.threeTeams,
+            value: settings.threeTeams,
+            onChanged: (value) {
+              setState(() {
+                settings.threeTeams = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefDisabler(
-            pref: CoiffeurSettings.keys.threeTeams,
-            children: [
-              PrefCheckbox(
-                title: Text(context.l10n.thirdColumn),
-                pref: CoiffeurSettings.keys.thirdColumn,
-              ),
-            ],
+          // thirdColumn has no effect with three teams, which already use it
+          buildCheckboxTile(
+            context,
+            title: context.l10n.thirdColumn,
+            value: settings.thirdColumn,
+            onChanged: !settings.threeTeams
+                ? (bool? value) {
+                    setState(() {
+                      settings.thirdColumn = value!;
+                      settings.toPreferences(preferences);
+                    });
+                  }
+                : null,
           ),
-          PrefSlider(
-            title: Text(context.l10n.rounds),
-            pref: CoiffeurSettings.keys.rows,
+          buildSliderTile(
+            context,
+            title: context.l10n.rounds,
+            value: settings.rows,
             min: 6,
             max: 13,
-            trailing: (num v) => Text(context.l10n.noOfRounds(v as int)),
+            onChanged: (value) {
+              setState(() {
+                settings.rows = value;
+                settings.toPreferences(preferences);
+              });
+            },
+            displayValue: (v) => Text(context.l10n.noOfRounds(v)),
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.setFactorManually),
-            pref: CoiffeurSettings.keys.customFactor,
+          buildCheckboxTile(
+            context,
+            title: context.l10n.setFactorManually,
+            value: settings.customFactor,
+            onChanged: (value) {
+              setState(() {
+                settings.customFactor = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.completedRows),
-            pref: CoiffeurSettings.keys.greyCompletedRows,
+          buildCheckboxTile(
+            context,
+            title: context.l10n.completedRows,
+            value: settings.greyCompletedRows,
+            onChanged: (value) {
+              setState(() {
+                settings.greyCompletedRows = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
+          const Divider(),
 
-          //
-          PrefTitle(title: Text(context.l10n.commonSettings)),
-          PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn),
-            pref: CommonSettings.keys.keepScreenOn,
+          sectionTitle(context, context.l10n.commonSettings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.keepScreenOn,
+            value: commonSettings.keepScreenOn,
+            onChanged: (value) {
+              setState(() {
+                commonSettings.keepScreenOn = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefChoice<int>(
-            title: Text(context.l10n.screenOrientation),
-            pref: CommonSettings.keys.screenOrientation,
+          buildDropdownTile(
+            context,
+            title: context.l10n.screenOrientation,
+            value: commonSettings.screenOrientation,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.sensor)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.portrait)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.landscape)),
             ],
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.screenOrientation = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefChoice<int>(
-            title: Text(context.l10n.theme),
-            pref: CommonSettings.keys.themeMode,
+          buildDropdownTile(
+            context,
+            title: context.l10n.theme,
+            value: commonSettings.themeMode,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.system)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.light)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.dark)),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.themeMode = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
-          PrefChoice<String>(
-            title: Text(context.l10n.language),
-            pref: CommonSettings.keys.appLanguage,
+          buildDropdownTile(
+            context,
+            title: context.l10n.language,
+            value: commonSettings.appLanguage,
             items: const [
               DropdownMenuItem(value: 'de', child: Text('Deutsch')),
               DropdownMenuItem(value: 'en', child: Text('English')),
-              DropdownMenuItem(value: 'fr', child: Text('Français')),
+              DropdownMenuItem(value: 'fr', child: Text('Fran\u00e7ais')),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.appLanguage = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
         ],
       ),

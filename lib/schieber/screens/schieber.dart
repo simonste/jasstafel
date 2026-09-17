@@ -155,7 +155,9 @@ class _SchieberState extends State<Schieber> {
       SettingsButton(
         SchieberSettingsScreen(data),
         context,
-        () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
+        () => setState(
+          () => data.settings.fromPreferences(SettingsProvider.of(context)),
+        ),
       ),
     ];
     if (data.settings.backside) {

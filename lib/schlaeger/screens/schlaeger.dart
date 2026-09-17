@@ -93,7 +93,9 @@ class _SchlaegerState extends State<Schlaeger> {
           SettingsButton(
             SchlaegerSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
+            () => setState(
+              () => data.settings.fromPreferences(SettingsProvider.of(context)),
+            ),
           ),
         ],
       ),

@@ -159,7 +159,9 @@ class _GuggitalerState extends State<Guggitaler> {
           SettingsButton(
             GuggitalerSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
+            () => setState(
+              () => data.settings.fromPreferences(SettingsProvider.of(context)),
+            ),
           ),
         ],
       ),

@@ -5,11 +5,12 @@ import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
+import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
-import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class SchieberSettingsScreen extends StatefulWidget {
   final BoardData boardData;
@@ -23,30 +24,34 @@ class SchieberSettingsScreen extends StatefulWidget {
 class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    SchieberSettings settings = widget.boardData.settings;
-    final currentMatchPoints = PrefService.of(
-      context,
-    ).get(SchieberSettings.keys.match);
-    final currentPointsPerRound = PrefService.of(
-      context,
-    ).get(SchieberSettings.keys.pointsPerRound);
+    final settings = widget.boardData.settings as SchieberSettings;
+    final commonSettings = CommonSettings();
+    final preferences = SettingsProvider.of(context);
+
+    // captured before any edit below changes them
+    final currentMatchPoints = settings.match;
+    final currentPointsPerRound = settings.pointsPerRound;
+    commonSettings.fromPreferences(preferences);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.schieber)),
       ),
-      body: PrefPage(
+      body: ListView(
         children: [
-          PrefTitle(title: Text(context.l10n.profiles)),
+          sectionTitle(context, context.l10n.profiles),
           ProfileButton(
             pageTitle: Text(context.l10n.selectProfile),
             title: Text(widget.boardData.profiles.active),
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
-          PrefTitle(title: Text(context.l10n.countingType)),
-          PrefDropdown(
-            title: Text(context.l10n.goalType),
-            pref: SchieberSettings.keys.goalType,
+          const Divider(),
+
+          sectionTitle(context, context.l10n.countingType),
+          buildDropdownTile(
+            context,
+            title: context.l10n.goalType,
+            value: settings.goalType,
             items: [
               DropdownMenuItem(
                 value: GoalType.noGoal.index,
@@ -61,23 +66,37 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 child: Text(context.l10n.rounds),
               ),
             ],
+            onChanged: (value) {
+              setState(() {
+                settings.goalType = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefDisablerGeneric(
-            pref: SchieberSettings.keys.goalType,
-            reversed: true,
-            nullValue: GoalType.points.index,
-            children: [
-              PrefCheckbox(
-                title: Text(context.l10n.differentGoals),
-                pref: SchieberSettings.keys.differentGoals,
-              ),
-            ],
+          // Enable differentGoals only if goalType is points
+          buildCheckboxTile(
+            context,
+            title: context.l10n.differentGoals,
+            value: settings.differentGoals,
+            onChanged: settings.goalType == GoalType.points.index
+                ? (value) {
+                    setState(() {
+                      settings.differentGoals = value!;
+                      settings.toPreferences(preferences);
+                    });
+                  }
+                : null,
           ),
           PrefNumber(
             title: Text(context.l10n.matchPoints),
-            pref: SchieberSettings.keys.match,
-            onChange: (value) async {
-              final proposedPointsPerRound = roundPoints(value!);
+            value: settings.match,
+            onChanged: (value) async {
+              setState(() {
+                settings.match = value;
+                settings.toPreferences(preferences);
+              });
+
+              final proposedPointsPerRound = roundPoints(value);
               if (currentPointsPerRound == proposedPointsPerRound) return;
 
               confirmDialog(
@@ -90,10 +109,10 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                   DialogAction(
                     text: context.l10n.ok,
                     action: () {
-                      final pref = PrefService.of(context);
-                      final key = SchieberSettings.keys.pointsPerRound;
-                      pref.set(key, proposedPointsPerRound);
-                      settings.pointsPerRound = proposedPointsPerRound;
+                      setState(() {
+                        settings.pointsPerRound = proposedPointsPerRound;
+                        settings.toPreferences(preferences);
+                      });
                     },
                   ),
                 ],
@@ -102,9 +121,14 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
           ),
           PrefNumber(
             title: Text(context.l10n.pointsPerRound),
-            pref: SchieberSettings.keys.pointsPerRound,
-            onChange: (value) async {
-              final proposedMatchPoints = matchPoints(value!);
+            value: settings.pointsPerRound,
+            onChanged: (value) async {
+              setState(() {
+                settings.pointsPerRound = value;
+                settings.toPreferences(preferences);
+              });
+
+              final proposedMatchPoints = matchPoints(value);
               if (currentMatchPoints == proposedMatchPoints) return;
 
               confirmDialog(
@@ -115,83 +139,142 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                   DialogAction(
                     text: context.l10n.ok,
                     action: () {
-                      final pref = PrefService.of(context);
-                      final key = SchieberSettings.keys.match;
-                      pref.set(key, proposedMatchPoints);
-                      settings.match = proposedMatchPoints;
+                      setState(() {
+                        settings.match = proposedMatchPoints;
+                        settings.toPreferences(preferences);
+                      });
                     },
                   ),
                 ],
               );
             },
           ),
-          PrefTitle(title: Text(context.l10n.settings)),
-          PrefCheckbox(
-            title: Text(context.l10n.allowTouch),
-            pref: SchieberSettings.keys.touchScreen,
+          const Divider(),
+
+          sectionTitle(context, context.l10n.settings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.allowTouch,
+            value: settings.touchScreen,
+            onChanged: (value) {
+              setState(() {
+                settings.touchScreen = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefDisabler(
-            reversed: true,
-            pref: SchieberSettings.keys.touchScreen,
-            children: [
-              PrefCheckbox(
-                disabled: !widget.boardData.supportsVibration,
-                title: Text(context.l10n.vibrateOnTouch),
-                pref: SchieberSettings.keys.vibrate,
-              ),
-            ],
+          // Show vibrate only if touchScreen is enabled
+          buildCheckboxTile(
+            context,
+            title: context.l10n.vibrateOnTouch,
+            value: settings.vibrate,
+            onChanged:
+                settings.touchScreen && widget.boardData.supportsVibration
+                ? (value) {
+                    setState(() {
+                      settings.vibrate = value!;
+                      settings.toPreferences(preferences);
+                    });
+                  }
+                : null,
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.backsideSetting),
-            pref: SchieberSettings.keys.backside,
+          buildCheckboxTile(
+            context,
+            title: context.l10n.backsideSetting,
+            value: settings.backside,
+            onChanged: (value) {
+              setState(() {
+                settings.backside = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefDisabler(
-            reversed: true,
-            pref: SchieberSettings.keys.backside,
-            children: [
-              PrefSlider(
-                title: Text(context.l10n.backsideColumns),
-                pref: SchieberSettings.keys.backsideColumns,
-                min: 2,
-                max: 6,
-                trailing: (num v) => Text("$v"),
-              ),
-            ],
+          // Enable backsideColumns only if backside is enabled
+          buildSliderTile(
+            context,
+            title: context.l10n.backsideColumns,
+            value: settings.backsideColumns,
+            min: 2,
+            max: 6,
+            onChanged: settings.backside
+                ? (value) {
+                    setState(() {
+                      settings.backsideColumns = value;
+                      settings.toPreferences(preferences);
+                    });
+                  }
+                : null,
+            displayValue: (v) => Text('$v'),
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.bigScore),
-            pref: SchieberSettings.keys.bigScore,
+          buildCheckboxTile(
+            context,
+            title: context.l10n.bigScore,
+            value: settings.bigScore,
+            onChanged: (value) {
+              setState(() {
+                settings.bigScore = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.drawZ),
-            pref: SchieberSettings.keys.drawZ,
+          buildCheckboxTile(
+            context,
+            title: context.l10n.drawZ,
+            value: settings.drawZ,
+            onChanged: (value) {
+              setState(() {
+                settings.drawZ = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefTitle(title: Text(context.l10n.commonSettings)),
-          PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn),
-            pref: CommonSettings.keys.keepScreenOn,
+          const Divider(),
+
+          sectionTitle(context, context.l10n.commonSettings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.keepScreenOn,
+            value: commonSettings.keepScreenOn,
+            onChanged: (value) {
+              setState(() {
+                commonSettings.keepScreenOn = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefChoice<int>(
-            title: Text(context.l10n.theme),
-            pref: CommonSettings.keys.themeMode,
+          buildDropdownTile(
+            context,
+            title: context.l10n.theme,
+            value: commonSettings.themeMode,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.system)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.light)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.dark)),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.themeMode = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
-          PrefChoice<String>(
-            title: Text(context.l10n.language),
-            pref: CommonSettings.keys.appLanguage,
+          buildDropdownTile(
+            context,
+            title: context.l10n.language,
+            value: commonSettings.appLanguage,
             items: const [
               DropdownMenuItem(value: 'de', child: Text('Deutsch')),
               DropdownMenuItem(value: 'en', child: Text('English')),
-              DropdownMenuItem(value: 'fr', child: Text('Français')),
+              DropdownMenuItem(value: 'fr', child: Text('Fran\u00e7ais')),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.appLanguage = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
         ],
       ),

@@ -89,7 +89,9 @@ class _CoiffeurState extends State<Coiffeur> {
           SettingsButton(
             CoiffeurSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
+            () => setState(
+              () => data.settings.fromPreferences(SettingsProvider.of(context)),
+            ),
           ),
         ],
       ),

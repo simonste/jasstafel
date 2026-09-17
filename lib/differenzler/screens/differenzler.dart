@@ -246,7 +246,9 @@ class _DifferenzlerState extends State<Differenzler> {
           SettingsButton(
             DifferenzlerSettingsScreen(data),
             context,
-            () => setState(() => data.settings.fromPreferences(SettingsProvider.of(context))),
+            () => setState(
+              () => data.settings.fromPreferences(SettingsProvider.of(context)),
+            ),
           ),
         ],
       ),

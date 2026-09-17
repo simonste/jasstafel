@@ -11,7 +11,8 @@ import 'package:jasstafel/common/localization.dart';
 /// - title: The title to display
 /// - subtitle: Optional subtitle
 /// - value: The current value
-/// - onChanged: Callback when the value changes (parent should save to preferences)
+/// - onChanged: Callback when the value changes (parent should save to
+///   preferences). Null disables the row, as it does for the other tiles.
 class PrefNumber extends StatelessWidget {
   const PrefNumber({
     this.title,
@@ -28,11 +29,18 @@ class PrefNumber extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = onChanged != null;
     return ListTile(
+      enabled: enabled,
       title: title,
       subtitle: subtitle,
-      trailing: Text('$value'),
-      onTap: () => _showEditDialog(context),
+      trailing: Text(
+        '$value',
+        style: enabled
+            ? null
+            : TextStyle(color: Theme.of(context).disabledColor),
+      ),
+      onTap: enabled ? () => _showEditDialog(context) : null,
     );
   }
 
@@ -66,9 +74,7 @@ class PrefNumber extends StatelessWidget {
 
     if (result == true) {
       final newValue = int.tryParse(controller.text)?.abs() ?? value;
-      if (onChanged != null) {
-        onChanged!(newValue);
-      }
+      onChanged?.call(newValue);
     }
   }
 }

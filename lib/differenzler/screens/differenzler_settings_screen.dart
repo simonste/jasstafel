@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -6,9 +7,9 @@ import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
-import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class DifferenzlerSettingsScreen extends StatefulWidget {
   final BoardData boardData;
@@ -24,44 +25,68 @@ class _DifferenzlerSettingsScreenState
     extends State<DifferenzlerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    DifferenzlerSettings settings = widget.boardData.settings;
+    final settings = widget.boardData.settings as DifferenzlerSettings;
+    final commonSettings = CommonSettings();
+    final preferences = SettingsProvider.of(context);
+    commonSettings.fromPreferences(preferences);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.differenzler)),
       ),
-      body: PrefPage(
+      body: ListView(
         children: [
-          PrefTitle(title: Text(context.l10n.profiles)),
+          sectionTitle(context, context.l10n.profiles),
           ProfileButton(
             pageTitle: Text(context.l10n.selectProfile),
             title: Text(widget.boardData.profiles.active),
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
-          PrefTitle(title: Text(context.l10n.countingType)),
+          const Divider(),
+
+          sectionTitle(context, context.l10n.countingType),
           PrefNumber(
             title: Text(context.l10n.pointsPerRound),
-            pref: DifferenzlerSettings.keys.pointsPerRound,
-          ),
-          PrefTitle(title: Text(context.l10n.settings)),
-          PrefSlider(
-            title: Text(context.l10n.diffPlayers),
-            pref: DifferenzlerSettings.keys.players,
-            min: Players.min,
-            max: Players.max,
-            trailing: (num v) => Text('$v'),
-          ),
-          PrefCheckbox(
-            title: Text(context.l10n.hideGuess),
-            pref: DifferenzlerSettings.keys.hideGuess,
-            onChange: (value) {
-              settings.hideGuess = value;
-              setState(() {});
+            value: settings.pointsPerRound,
+            onChanged: (value) {
+              setState(() {
+                settings.pointsPerRound = value;
+                settings.toPreferences(preferences);
+              });
             },
           ),
-          PrefDropdown(
-            title: Text(context.l10n.goalType),
-            pref: DifferenzlerSettings.keys.goalType,
+          const Divider(),
+
+          sectionTitle(context, context.l10n.settings),
+          buildSliderTile(
+            context,
+            title: context.l10n.diffPlayers,
+            value: settings.players,
+            min: Players.min,
+            max: Players.max,
+            onChanged: (value) {
+              setState(() {
+                settings.players = value;
+                settings.toPreferences(preferences);
+              });
+            },
+            displayValue: (v) => Text('$v'),
+          ),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.hideGuess,
+            value: settings.hideGuess,
+            onChanged: (value) {
+              setState(() {
+                settings.hideGuess = value!;
+                settings.toPreferences(preferences);
+              });
+            },
+          ),
+          buildDropdownTile(
+            context,
+            title: context.l10n.goalType,
+            value: settings.goalType,
             items: [
               DropdownMenuItem(
                 value: GoalType.noGoal.index,
@@ -76,66 +101,100 @@ class _DifferenzlerSettingsScreenState
                 child: Text(context.l10n.rounds),
               ),
             ],
-            onChange: (value) => {},
+            onChanged: (value) {
+              setState(() {
+                settings.goalType = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefHiderGeneric(
-            pref: DifferenzlerSettings.keys.goalType,
-            nullValue: GoalType.points.index,
-            reversed: true,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.goalPoints),
-                pref: DifferenzlerSettings.keys.goalPoints,
-              ),
-            ],
+          // Show goalPoints only if goalType is points
+          if (settings.goalType == GoalType.points.index)
+            PrefNumber(
+              title: Text(context.l10n.goalPoints),
+              value: settings.goalPoints,
+              onChanged: (value) {
+                setState(() {
+                  settings.goalPoints = value;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          // Show goalRounds only if goalType is rounds
+          if (settings.goalType == GoalType.rounds.index)
+            PrefNumber(
+              title: Text(context.l10n.rounds),
+              value: settings.goalRounds,
+              onChanged: (value) {
+                setState(() {
+                  settings.goalRounds = value;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          const Divider(),
+
+          sectionTitle(context, context.l10n.commonSettings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.keepScreenOn,
+            value: commonSettings.keepScreenOn,
+            onChanged: (value) {
+              setState(() {
+                commonSettings.keepScreenOn = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefHiderGeneric(
-            pref: DifferenzlerSettings.keys.goalType,
-            nullValue: GoalType.rounds.index,
-            reversed: true,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.rounds),
-                pref: DifferenzlerSettings.keys.goalRounds,
-              ),
-            ],
-          ),
-          PrefTitle(title: Text(context.l10n.commonSettings)),
-          PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn),
-            pref: CommonSettings.keys.keepScreenOn,
-          ),
-          PrefChoice<int>(
-            title: Text(context.l10n.screenOrientation),
-            pref: CommonSettings.keys.screenOrientation,
+          buildDropdownTile(
+            context,
+            title: context.l10n.screenOrientation,
+            value: commonSettings.screenOrientation,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.sensor)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.portrait)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.landscape)),
             ],
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.screenOrientation = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefChoice<int>(
-            title: Text(context.l10n.theme),
-            pref: CommonSettings.keys.themeMode,
+          buildDropdownTile(
+            context,
+            title: context.l10n.theme,
+            value: commonSettings.themeMode,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.system)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.light)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.dark)),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.themeMode = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
-          PrefChoice<String>(
-            title: Text(context.l10n.language),
-            pref: CommonSettings.keys.appLanguage,
+          buildDropdownTile(
+            context,
+            title: context.l10n.language,
+            value: commonSettings.appLanguage,
             items: const [
               DropdownMenuItem(value: 'de', child: Text('Deutsch')),
               DropdownMenuItem(value: 'en', child: Text('English')),
-              DropdownMenuItem(value: 'fr', child: Text('Français')),
+              DropdownMenuItem(value: 'fr', child: Text('Fran\u00e7ais')),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.appLanguage = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
@@ -7,9 +8,9 @@ import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
-import 'package:pref/pref.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class PointBoardSettingsScreen extends StatefulWidget {
   final BoardData boardData;
@@ -24,60 +25,91 @@ class PointBoardSettingsScreen extends StatefulWidget {
 class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    PointBoardSettings settings = widget.boardData.settings;
+    final settings = widget.boardData.settings as PointBoardSettings;
+    final commonSettings = CommonSettings();
     final goalPointsSubTitle = subTitle(
       settings.goalPoints,
       settings.rounded,
       context,
     );
 
+    final preferences = SettingsProvider.of(context);
+    commonSettings.fromPreferences(preferences);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.settingsTitle(context.l10n.pointBoard)),
       ),
-      body: PrefPage(
+      body: ListView(
         children: [
-          PrefTitle(title: Text(context.l10n.profiles)),
+          // Profiles section
+          sectionTitle(context, context.l10n.profiles),
           ProfileButton(
             pageTitle: Text(context.l10n.selectProfile),
             title: Text(widget.boardData.profiles.active),
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
-          PrefTitle(title: Text(context.l10n.countingType)),
-          PrefCheckbox(
-            title: Text(context.l10n.denominator10),
-            pref: PointBoardSettings.keys.rounded,
-            onChange: (value) {
-              settings.rounded = value;
-              setState(() {});
+          const Divider(),
+
+          // Counting Type section
+          sectionTitle(context, context.l10n.countingType),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.denominator10,
+            value: settings.rounded,
+            onChanged: (value) {
+              setState(() {
+                settings.rounded = value!;
+                settings.toPreferences(preferences);
+              });
             },
           ),
-          PrefCheckbox(
-            title: Text(context.l10n.enablePpr),
-            pref: PointBoardSettings.keys.enablePointsPerRound,
-            onChange: (value) => {},
+          buildCheckboxTile(
+            context,
+            title: context.l10n.enablePpr,
+            value: settings.enablePointsPerRound,
+            onChanged: (value) {
+              setState(() {
+                settings.enablePointsPerRound = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefDisabler(
-            pref: PointBoardSettings.keys.enablePointsPerRound,
-            reversed: true,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.pointsPerRound),
-                pref: PointBoardSettings.keys.pointsPerRound,
-              ),
-            ],
+          // Only enable pointsPerRound if enablePointsPerRound is set
+          PrefNumber(
+            title: Text(context.l10n.pointsPerRound),
+            value: settings.pointsPerRound,
+            onChanged: settings.enablePointsPerRound
+                ? (value) {
+                    setState(() {
+                      settings.pointsPerRound = value;
+                      settings.toPreferences(preferences);
+                    });
+                  }
+                : null,
           ),
-          PrefTitle(title: Text(context.l10n.settings)),
-          PrefSlider(
-            title: Text(context.l10n.diffPlayers),
-            pref: PointBoardSettings.keys.players,
+          const Divider(),
+
+          // Settings section
+          sectionTitle(context, context.l10n.settings),
+          buildSliderTile(
+            context,
+            title: context.l10n.diffPlayers,
+            value: settings.players,
             min: Players.min,
             max: Players.max,
-            trailing: (num v) => Text('$v'),
+            onChanged: (value) {
+              setState(() {
+                settings.players = value;
+                settings.toPreferences(preferences);
+              });
+            },
+            displayValue: (v) => Text('$v'),
           ),
-          PrefDropdown(
-            title: Text(context.l10n.goalType),
-            pref: PointBoardSettings.keys.goalType,
+          buildDropdownTile(
+            context,
+            title: context.l10n.goalType,
+            value: settings.goalType,
             items: [
               DropdownMenuItem(
                 value: GoalType.noGoal.index,
@@ -92,83 +124,115 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
                 child: Text(context.l10n.rounds),
               ),
             ],
-            onChange: (value) => {},
+            onChanged: (value) {
+              setState(() {
+                settings.goalType = value!;
+                settings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefHiderGeneric(
-            pref: PointBoardSettings.keys.goalType,
-            nullValue: GoalType.points.index,
-            reversed: true,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.goalPoints),
-                subtitle: Text(goalPointsSubTitle),
-                pref: PointBoardSettings.keys.goalPoints,
-                onChange: (value) {
-                  settings.goalPoints = value!;
-                  setState(() {});
-                },
-              ),
-            ],
+          // Show goalPoints only if goalType is points
+          if (settings.goalType == GoalType.points.index)
+            PrefNumber(
+              title: Text(context.l10n.goalPoints),
+              subtitle: Text(goalPointsSubTitle),
+              value: settings.goalPoints,
+              onChanged: (value) {
+                setState(() {
+                  settings.goalPoints = value;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          // Show goalRounds only if goalType is rounds
+          if (settings.goalType == GoalType.rounds.index)
+            PrefNumber(
+              title: Text(context.l10n.rounds),
+              value: settings.goalRounds,
+              onChanged: (value) {
+                setState(() {
+                  settings.goalRounds = value;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          // Show goalMax only if goalType is NOT noGoal
+          if (settings.goalType != GoalType.noGoal.index)
+            buildCheckboxTile(
+              context,
+              title: context.l10n.positiveGoal,
+              value: settings.goalMax,
+              onChanged: (value) {
+                setState(() {
+                  settings.goalMax = value!;
+                  settings.toPreferences(preferences);
+                });
+              },
+            ),
+          const Divider(),
+
+          // Common Settings section
+          sectionTitle(context, context.l10n.commonSettings),
+          buildCheckboxTile(
+            context,
+            title: context.l10n.keepScreenOn,
+            value: commonSettings.keepScreenOn,
+            onChanged: (value) {
+              setState(() {
+                commonSettings.keepScreenOn = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefHiderGeneric(
-            pref: PointBoardSettings.keys.goalType,
-            nullValue: GoalType.rounds.index,
-            reversed: true,
-            children: [
-              PrefNumber(
-                title: Text(context.l10n.rounds),
-                pref: PointBoardSettings.keys.goalRounds,
-              ),
-            ],
-          ),
-          PrefHiderGeneric(
-            pref: PointBoardSettings.keys.goalType,
-            nullValue: GoalType.noGoal.index,
-            reversed: false,
-            children: [
-              PrefCheckbox(
-                title: Text(context.l10n.positiveGoal),
-                pref: PointBoardSettings.keys.goalMax,
-                onChange: (value) => settings.goalMax = value,
-              ),
-            ],
-          ),
-          PrefTitle(title: Text(context.l10n.commonSettings)),
-          PrefCheckbox(
-            title: Text(context.l10n.keepScreenOn),
-            pref: CommonSettings.keys.keepScreenOn,
-          ),
-          PrefChoice<int>(
-            title: Text(context.l10n.screenOrientation),
-            pref: CommonSettings.keys.screenOrientation,
+          buildDropdownTile(
+            context,
+            title: context.l10n.screenOrientation,
+            value: commonSettings.screenOrientation,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.sensor)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.portrait)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.landscape)),
             ],
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.screenOrientation = value!;
+                commonSettings.toPreferences(preferences);
+              });
+            },
           ),
-          PrefChoice<int>(
-            title: Text(context.l10n.theme),
-            pref: CommonSettings.keys.themeMode,
+          buildDropdownTile(
+            context,
+            title: context.l10n.theme,
+            value: commonSettings.themeMode,
             items: [
               DropdownMenuItem(value: 0, child: Text(context.l10n.system)),
               DropdownMenuItem(value: 1, child: Text(context.l10n.light)),
               DropdownMenuItem(value: 2, child: Text(context.l10n.dark)),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.themeMode = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
-          PrefChoice<String>(
-            title: Text(context.l10n.language),
-            pref: CommonSettings.keys.appLanguage,
+          buildDropdownTile(
+            context,
+            title: context.l10n.language,
+            value: commonSettings.appLanguage,
             items: const [
               DropdownMenuItem(value: 'de', child: Text('Deutsch')),
               DropdownMenuItem(value: 'en', child: Text('English')),
-              DropdownMenuItem(value: 'fr', child: Text('Français')),
+              DropdownMenuItem(value: 'fr', child: Text('Fran\u00e7ais')),
             ],
-            onChange: (value) => Restart.restartApp(),
-            cancel: Text(context.l10n.cancel),
+            onChanged: (value) {
+              setState(() {
+                commonSettings.appLanguage = value!;
+                commonSettings.toPreferences(preferences);
+              });
+              Restart.restartApp();
+            },
           ),
         ],
       ),
