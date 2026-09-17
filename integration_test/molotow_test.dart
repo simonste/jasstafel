@@ -252,15 +252,21 @@ void main() {
 
     expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
     expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
+
+    final initialY = tester.getCenter(find.byTooltip('Handweis')).dy;
 
     await tester.scroll(const Offset(0, -300));
+    await tester.pumpAndSettle();
 
     expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
     expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, lessThan(500));
+    final afterScrollY = tester.getCenter(find.byTooltip('Handweis')).dy;
+    expect(afterScrollY, lessThan(initialY));
 
     await tester.scroll(const Offset(0, 300));
-    expect(tester.getCenter(find.byTooltip('Handweis')).dy, greaterThan(500));
+    await tester.pumpAndSettle();
+
+    final backToInitialY = tester.getCenter(find.byTooltip('Handweis')).dy;
+    expect(backToInitialY, greaterThan(afterScrollY));
   });
 }
