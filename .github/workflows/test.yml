@@ -56,7 +56,7 @@ jobs:
           heap-size: 512M
           profile: ${{ matrix.device }}
           script: |
-            adb shell content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0
+            /usr/local/lib/android/sdk/platform-tools/adb shell content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0
             ${{ github.workspace }}/flutter/bin/flutter test integration_test --timeout 30m -d emulator-5554
             sed -i -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
             timeout 30m ${{ github.workspace }}/flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart -d emulator-5554
