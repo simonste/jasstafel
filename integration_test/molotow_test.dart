@@ -250,23 +250,31 @@ void main() {
 
     await tester.launchApp();
 
-    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
-    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
+    final handweis = find.byTooltip('Handweis');
+    final tischweis = find.byTooltip('Tischweis');
 
-    final initialY = tester.getCenter(find.byTooltip('Handweis')).dy;
+    expect(handweis.hitTestable(), findsOneWidget);
+    expect(tischweis.hitTestable(), findsOneWidget);
 
-    await tester.scroll(const Offset(0, -300));
-    await tester.pumpAndSettle();
+    final initialY = tester.getCenter(handweis).dy;
 
-    expect(find.byTooltip('Handweis').hitTestable(), findsOneWidget);
-    expect(find.byTooltip('Tischweis').hitTestable(), findsOneWidget);
-    final afterScrollY = tester.getCenter(find.byTooltip('Handweis')).dy;
+    final scrollable = find.byType(Scrollable).last;
+    expect(scrollable, findsWidgets, reason: 'No Scrollable widget found');
+
+    await tester.drag(scrollable, const Offset(0, -300));
+    await tester.pump();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(handweis.hitTestable(), findsOneWidget);
+    expect(tischweis.hitTestable(), findsOneWidget);
+    final afterScrollY = tester.getCenter(handweis).dy;
     expect(afterScrollY, lessThan(initialY));
 
-    await tester.scroll(const Offset(0, 300));
-    await tester.pumpAndSettle();
+    await tester.drag(scrollable, const Offset(0, 300));
+    await tester.pump();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    final backToInitialY = tester.getCenter(find.byTooltip('Handweis')).dy;
+    final backToInitialY = tester.getCenter(handweis).dy;
     expect(backToInitialY, greaterThan(afterScrollY));
   });
 }
