@@ -4,4 +4,13 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <!-- The CI emulator only has a software Vulkan implementation
+             (swiftshader), on which Impeller's Vulkan backend can wedge before
+             the first frame. Force the GLES backend for debug/integration test
+             builds only; release builds keep the default. -->
+        <meta-data
+            android:name="io.flutter.embedding.android.ImpellerBackend"
+            android:value="opengles" />
+    </application>
 </manifest>
