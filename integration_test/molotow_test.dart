@@ -268,7 +268,7 @@ void main() {
     );
 
     await tester.drag(scrollable, const Offset(0, -300));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
 
     expect(position.pixels, greaterThan(0), reason: 'drag did not scroll');
     expect(handweis.hitTestable(), findsOneWidget);
@@ -277,7 +277,7 @@ void main() {
     expect(afterScrollY, lessThan(initialY), reason: 'fab did not move up');
 
     await tester.drag(scrollable, const Offset(0, 300));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
 
     final backToInitialY = tester.getCenter(handweis).dy;
     expect(

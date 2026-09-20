@@ -35,7 +35,7 @@ extension AppHelper on WidgetTester {
 
     // Add timeout to prevent infinite waiting
     const maxWaitTime = Duration(seconds: 60);
-    const checkInterval = Duration(milliseconds: 500);
+    const checkInterval = Duration(milliseconds: 100);
     final startTime = DateTime.now();
 
     // Initial pump to start the app
@@ -56,8 +56,8 @@ extension AppHelper on WidgetTester {
       await pump();
     }
 
-    // Final settle to ensure UI is stable
-    await pumpAndSettle(const Duration(seconds: 5));
+    // Final settle to ensure UI is stable.
+    await pumpAndSettle();
   }
 
   Future<void> switchBoard({required String to}) async {
@@ -111,7 +111,7 @@ extension AppHelper on WidgetTester {
     expect(scrollableFinder, findsWidgets);
 
     await drag(scrollableFinder, offset);
-    await pumpAndSettle(const Duration(seconds: 1));
+    await pumpAndSettle();
   }
 
   Future<void> tapInList(String text) async {
