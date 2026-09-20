@@ -6,7 +6,7 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "flutter/": true,
+    ".fvm/": true,
     ".dart_tool/": true
   },
   "debug.openDebug": "openOnDebugBreak",

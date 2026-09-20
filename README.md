@@ -17,6 +17,10 @@ Jasstafel is an app to write points in the swiss card game Jass.
 
 ## Getting Started
 
+The Flutter version is pinned in [`.fvmrc`](.fvmrc). Either use that version of
+Flutter directly, or let [fvm](https://fvm.app) manage it:
+`fvm install` (then prefix the commands below with `fvm`, e.g. `fvm flutter test`)
+
 Generate translations:
 `flutter gen-l10n`
 
