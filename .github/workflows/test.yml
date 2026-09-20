@@ -8,7 +8,9 @@ on:
 jobs:
   test-android:
     if: ${{ !contains(github.ref, 'ios') }}
+    timeout-minutes: 60
     strategy:
+      fail-fast: false
       matrix:
         device:
           - "pixel_6"
@@ -48,16 +50,17 @@ jobs:
       - name: Integration test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 35
+          target: google_apis
           arch: x86_64
           disable-animations: true
           disk-size: 4096M
           heap-size: 512M
           profile: ${{ matrix.device }}
           script: |
-            flutter/bin/flutter test integration_test
+            flutter/bin/flutter test integration_test --reporter expanded --timeout 30m -d emulator-5554
             sed -i -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
-            flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
+            flutter/bin/flutter drive --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart -d emulator-5554
 
       - name: screenshot artifact
         uses: actions/upload-artifact@v4
@@ -67,7 +70,9 @@ jobs:
 
   test-ios:
     if: ${{ !contains(github.ref, 'android') }}
+    timeout-minutes: 60
     strategy:
+      fail-fast: false
       matrix:
         device:
           - "iPhone 17 Pro Max"
