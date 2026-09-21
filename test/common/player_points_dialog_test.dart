@@ -5,8 +5,6 @@ import 'package:jasstafel/common/utils.dart';
 
 import '../helper/testapp.dart';
 
-// cspell: ignore: abbrechen
-
 String inputFieldText(Key key) {
   return (find.byKey(key).evaluate().single.widget as TextField)
       .controller!

@@ -124,7 +124,7 @@
   "roundTitle": "Tour {roundNumber}",
   "roundEditX": "Modifier le tour {roundNumber}",
   "roundEdit": "Modifier le tour",
-  "totalGuessed": "Éstimation: {totalGuess}",
+  "totalGuessed": "Estimation: {totalGuess}",
   "playerNo": "Joueur {no}",
   "avgGuess": "Ø annonce ",
   "avgPoints": "Points Ø ",

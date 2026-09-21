@@ -7,10 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: spielername runde handweis tischweis zurück punkte
-// cspell:ignore: kein ziel zielpunkte anzahl erreicht gewonnen stiche rosen
-// cspell:ignore: ober könig letzter eingeben
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

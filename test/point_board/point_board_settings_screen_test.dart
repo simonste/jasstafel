@@ -7,8 +7,6 @@ import 'package:jasstafel/settings/point_board_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Zielpunkte anzahl besser desto mehr punkte runde
-
 void main() {
   Future<void> pump(WidgetTester tester, PointBoardSettings settings) =>
       pumpSettingsScreen(

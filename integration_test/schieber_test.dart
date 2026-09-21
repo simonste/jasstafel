@@ -7,10 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: zurück punkte verschiedene zielpunkte kopieren profil sieg
-// cspell:ignore: teamname hilfslinien anzeigen bergpreis gewonnen anzahl alles
-// cspell:ignore: aktuelle runde stiche rückseite verwenden spielername ändern
-
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

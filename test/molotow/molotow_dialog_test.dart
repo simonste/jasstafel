@@ -5,8 +5,6 @@ import 'package:jasstafel/molotow/dialog/molotow_dialog.dart';
 
 import '../helper/testapp.dart';
 
-// cspell: ignore: abbrechen
-
 extension DialogHelper on WidgetTester {
   Future<InputWrap<MolotowWeis>> openDialog({
     required List<String> playerNames,

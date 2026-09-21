@@ -7,8 +7,6 @@ import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 import '../helper/testapp.dart';
 
-// cspell:ignore: profil kopieren löschen
-
 bool radioSelected(Key key) {
   var radioFinder = find.byKey(key);
   expect(radioFinder, findsOneWidget);

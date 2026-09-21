@@ -6,8 +6,6 @@ import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Dominopunkte Spieler
-
 void main() {
   Future<void> pump(WidgetTester tester, GuggitalerSettings settings) =>
       pumpSettingsScreen(

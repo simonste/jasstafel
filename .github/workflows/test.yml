@@ -24,6 +24,8 @@ jobs:
         run: flutter gen-l10n
       - name: Generate sources
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - name: Generate spelling dictionary
+        run: dart run tool/gen_cspell_dict.dart
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .

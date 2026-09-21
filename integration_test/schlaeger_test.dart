@@ -7,8 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: zurück ziel zielpunkte anzahl erreicht gewonnen unten rechts links
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

@@ -10,10 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: zurück zählt fach auswertungsspalte eigene multiplikatoren
-// cspell:ignore: punkte verwenden prämie ändern abbrechen gewonnen anzahl
-// cspell:ignore: beide haben konter gerundet
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

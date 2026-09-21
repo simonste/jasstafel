@@ -10,8 +10,6 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jasstafel/main.dart' as app;
 
-// cspell:ignore: zurück runde eingeben spielername ansage
-
 final actionsMenu = find.byKey(const Key('actionsMenu'));
 final actionsMenuItems = find.byWidgetPredicate(
   (widget) => widget is PopupMenuItem,

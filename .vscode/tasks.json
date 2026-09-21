@@ -5,27 +5,49 @@
       "label": "Generate Settings",
       "type": "shell",
       "command": "dart",
-      "args": ["run", "build_runner", "build"],
+      "args": [
+        "run",
+        "build_runner",
+        "build"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Generate Localization",
       "type": "flutter",
       "command": "flutter",
-      "args": ["gen-l10n"],
+      "args": [
+        "gen-l10n"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate cspell Dictionary",
+      "type": "shell",
+      "command": "dart",
+      "args": [
+        "run",
+        "tool/gen_cspell_dict.dart"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Generate Icons",
       "type": "shell",
       "command": "dart",
-      "args": ["run", "flutter_launcher_icons"],
+      "args": [
+        "run",
+        "flutter_launcher_icons"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Start Android emulator",
       "command": "emulator",
-      "args": ["-avd", "Pixel_6_API_Sv2"],
+      "args": [
+        "-avd",
+        "Pixel_6_API_Sv2"
+      ],
       "options": {
         "cwd": "${env:HOME}/Android/Sdk/tools/"
       },

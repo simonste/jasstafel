@@ -11,9 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: spielername runde eingeben ansage punkte ansagen verstecken
-// cspell:ignore: kein ziel zielpunkte anzahl erreicht gewonnen zurück
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

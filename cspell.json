@@ -5,40 +5,14 @@
     "autofocus",
     "cupertino",
     "deutsch",
-    "differenzler",
-    "ecken",
-    "eicheln",
-    "emmental",
     "français",
     "fvmrc",
-    "guggitaler",
-    "gusti",
-    "herz",
-    "jass",
-    "jasstafel",
-    "kreuz",
     "malus",
-    "mery",
-    "misere",
-    "molotow",
-    "obenabe",
-    "onde",
     "ondenufe",
     "pubspec",
-    "punktetafel",
-    "rosen",
-    "runden",
-    "schaufel",
-    "schellen",
-    "schieber",
-    "schilten",
     "schlaeger",
     "sublist",
-    "tannenbaum",
-    "undenufe",
-    "wakelock",
-    "weis",
-    "wunsch"
+    "wakelock"
   ],
   "ignoreRegExpList": [
     "import '[.a-z0-9/:]+.dart"
@@ -63,5 +37,15 @@
     "fastlane/",
     "screenshots/",
     "*.png"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "l10n",
+      "path": "./.cspell/l10n-words.txt",
+      "noSuggest": true
+    }
+  ],
+  "dictionaries": [
+    "l10n"
   ]
 }

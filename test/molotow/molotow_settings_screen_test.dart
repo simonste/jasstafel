@@ -7,8 +7,6 @@ import 'package:jasstafel/settings/molotow_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Zielpunkte anzahl
-
 void main() {
   Future<void> pump(WidgetTester tester, MolotowSettings settings) =>
       pumpSettingsScreen(

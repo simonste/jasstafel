@@ -8,8 +8,6 @@ import 'package:jasstafel/settings/schieber_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Zielpunkte Spalten Rückseite Punkteingabe verschiedene punkte
-
 void main() {
   Future<void> pump(WidgetTester tester, SchieberSettings settings) =>
       pumpSettingsScreen(

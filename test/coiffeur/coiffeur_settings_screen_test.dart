@@ -7,8 +7,6 @@ import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Auswertungsspalte Prämie verwenden
-
 void main() {
   Future<void> pump(WidgetTester tester, CoiffeurSettings settings) =>
       pumpSettingsScreen(

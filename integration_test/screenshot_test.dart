@@ -9,9 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: auswertungsspalte runde handweis tischweis hilfslinien
-// cspell:ignore: anzeigen rückseite verwenden punkte zurück anzahl
-
 bool driverTest = false;
 
 extension AppHelper on WidgetTester {

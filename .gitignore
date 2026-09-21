@@ -43,6 +43,9 @@ app.*.map.json
 *.g.dart
 lib/l10n/app*.dart
 
+# Generated cspell dictionary
+.cspell/l10n-words.txt
+
 # Generated icons
 *ic_launcher*
 *Icon*.png

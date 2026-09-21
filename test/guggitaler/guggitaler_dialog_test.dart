@@ -7,8 +7,6 @@ import 'package:numberpicker/numberpicker.dart';
 
 import '../helper/testapp.dart';
 
-// cspell: ignore: abbrechen wähle zuerst einen
-
 NumberPicker getNumberPicker(Key key) {
   return find.byKey(key).evaluate().single.widget as NumberPicker;
 }

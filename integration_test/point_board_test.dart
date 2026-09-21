@@ -7,9 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'overall_test.dart';
 
-// cspell:ignore: spielername runde zurück punkte kein ziel zielpunkte
-// cspell:ignore: anzahl erreicht mehr desto besser gewonnen
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

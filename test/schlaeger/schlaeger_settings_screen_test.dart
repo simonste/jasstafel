@@ -7,8 +7,6 @@ import 'package:jasstafel/settings/schlaeger_settings.g.dart';
 
 import '../helper/settings_screen.dart';
 
-// cspell:ignore Zielpunkte anzahl feld leeres
-
 void main() {
   Future<void> pump(WidgetTester tester, SchlaegerSettings settings) =>
       pumpSettingsScreen(
