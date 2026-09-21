@@ -6,6 +6,30 @@ on:
 
 # cspell:disable
 jobs:
+  static-analysis:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Generate translations
+        run: flutter gen-l10n
+      - name: Generate sources
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze
+        run: flutter analyze
+
   test-android:
     if: ${{ !contains(github.ref, 'ios') }}
     timeout-minutes: 60
