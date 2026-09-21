@@ -29,6 +29,10 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
       - name: Analyze
         run: flutter analyze
+      - name: Spell check
+        uses: streetsidesoftware/cspell-action@v9
+        with:
+          incremental_files_only: false
 
   test-android:
     if: ${{ !contains(github.ref, 'ios') }}
