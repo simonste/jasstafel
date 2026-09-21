@@ -38,8 +38,7 @@ class _DifferenzlerState extends State<Differenzler> {
   final empty = '-';
 
   void restoreData() async {
-    data =
-        await data.load() as BoardData<DifferenzlerSettings, DifferenzlerScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

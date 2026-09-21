@@ -50,7 +50,7 @@ class _SchieberBacksideState extends State<SchieberBackside> {
   );
 
   void restoreData() async {
-    data = await data.load() as BoardData<SchieberSettings, SchieberScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

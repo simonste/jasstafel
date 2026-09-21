@@ -8,11 +8,11 @@ import '../helper/testapp.dart';
 // cspell: ignore: abbrechen
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog({
+  Future<InputWrap<MolotowWeis>> openDialog({
     required List<String> playerNames,
     hand = false,
   }) async {
-    var dialogInput = InputWrap();
+    var dialogInput = InputWrap<MolotowWeis>();
     await pumpWidget(
       JasstafelTestApp(
         child: Builder(

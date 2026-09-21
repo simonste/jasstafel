@@ -7,13 +7,14 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class PointBoardSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<PointBoardSettings, PointBoardScore> boardData;
 
   const PointBoardSettingsScreen(this.boardData, {super.key});
 
@@ -25,7 +26,7 @@ class PointBoardSettingsScreen extends StatefulWidget {
 class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as PointBoardSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final goalPointsSubTitle = subTitle(
       settings.goalPoints,

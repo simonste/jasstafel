@@ -117,10 +117,11 @@ List<Widget> shrinkActions({
     actions.insert(
       actions.length,
       PopupMenuButton(
+        key: const Key('actionsMenu'),
         color: Theme.of(context).appBarTheme.backgroundColor,
         itemBuilder: (BuildContext context) {
           // unwrap icon buttons to be able to call Navigator.pop (close drop down)
-          List<PopupMenuItem> popupItems = [];
+          List<PopupMenuItem<int>> popupItems = [];
           iconButtons.asMap().forEach((index, element) {
             popupItems.add(
               PopupMenuItem(

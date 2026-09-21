@@ -7,13 +7,14 @@ import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/setting_utils.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class MolotowSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<MolotowSettings, MolotowScore> boardData;
 
   const MolotowSettingsScreen(this.boardData, {super.key});
 
@@ -24,7 +25,7 @@ class MolotowSettingsScreen extends StatefulWidget {
 class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as MolotowSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final goalPointsSubTitle = subTitle(
       settings.goalPoints,

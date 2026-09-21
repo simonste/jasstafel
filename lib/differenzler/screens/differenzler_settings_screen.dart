@@ -6,13 +6,14 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class DifferenzlerSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<DifferenzlerSettings, DifferenzlerScore> boardData;
 
   const DifferenzlerSettingsScreen(this.boardData, {super.key});
 
@@ -25,7 +26,7 @@ class _DifferenzlerSettingsScreenState
     extends State<DifferenzlerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as DifferenzlerSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final preferences = SettingsProvider.of(context);
     commonSettings.fromPreferences(preferences);

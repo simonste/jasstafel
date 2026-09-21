@@ -29,6 +29,10 @@ linter:
 # https://dart.dev/guides/language/analysis-options
 
 analyzer:
+  language:
+    # BoardData<T, S> used raw makes `settings` dynamic, which silently opts
+    # whole settings screens out of type checking
+    strict-raw-types: true
   exclude:
     - flutter/
     - build/**

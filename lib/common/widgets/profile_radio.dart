@@ -24,7 +24,7 @@ class ProfileRadio extends StatefulWidget {
   ProfileRadioState createState() => ProfileRadioState();
 }
 
-class ProfileRadioState<T> extends State<ProfileRadio> {
+class ProfileRadioState extends State<ProfileRadio> {
   void _onChange() {
     if (widget.onSelect != null) {
       widget.onSelect!();

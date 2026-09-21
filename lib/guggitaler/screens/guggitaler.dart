@@ -39,7 +39,7 @@ class _GuggitalerState extends State<Guggitaler> {
   Timer? updateTimer;
 
   void restoreData() async {
-    data = await data.load() as BoardData<GuggitalerSettings, GuggitalerScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

@@ -35,7 +35,7 @@ class _PointBoardState extends State<PointBoard> {
   Timer? updateTimer;
 
   void restoreData() async {
-    data = await data.load() as BoardData<PointBoardSettings, PointBoardScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

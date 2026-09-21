@@ -38,7 +38,7 @@ class _MolotowState extends State<Molotow> {
   Timer? updateTimer;
 
   void restoreData() async {
-    data = await data.load() as BoardData<MolotowSettings, MolotowScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

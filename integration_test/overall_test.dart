@@ -12,6 +12,11 @@ import 'package:jasstafel/main.dart' as app;
 
 // cspell:ignore: zurück runde eingeben spielername ansage
 
+final actionsMenu = find.byKey(const Key('actionsMenu'));
+final actionsMenuItems = find.byWidgetPredicate(
+  (widget) => widget is PopupMenuItem,
+);
+
 String? text(Key key, {int? elementNo}) {
   var elements = find.byKey(key).evaluate();
   Text textWidget;
@@ -75,7 +80,7 @@ extension AppHelper on WidgetTester {
   Future<void> delete(String buttonText) async {
     final settingFinder = find.byKey(const Key('delete'));
     if (!any(settingFinder)) {
-      await tap(find.byType(PopupMenuButton));
+      await tap(actionsMenu);
       await pumpAndSettle();
     }
     await tap(settingFinder);
@@ -123,7 +128,7 @@ extension AppHelper on WidgetTester {
   Future<void> tapSetting(List<String> settings) async {
     final settingFinder = find.byKey(const Key('SettingsButton'));
     if (!any(settingFinder)) {
-      await tap(find.byType(PopupMenuButton));
+      await tap(actionsMenu);
       await pumpAndSettle();
     }
     await tap(settingFinder);

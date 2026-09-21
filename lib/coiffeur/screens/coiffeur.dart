@@ -42,7 +42,7 @@ class _CoiffeurState extends State<Coiffeur> {
   Timer? updateTimer;
 
   void restoreData() async {
-    data = await data.load() as BoardData<CoiffeurSettings, CoiffeurScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

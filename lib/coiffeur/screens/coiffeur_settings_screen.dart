@@ -7,6 +7,7 @@ import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
+import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -14,7 +15,7 @@ import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class CoiffeurSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<CoiffeurSettings, CoiffeurScore> boardData;
 
   const CoiffeurSettingsScreen(this.boardData, {super.key});
 
@@ -25,7 +26,7 @@ class CoiffeurSettingsScreen extends StatefulWidget {
 class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as CoiffeurSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final matchPointsSubTitle = subTitle(
       settings.match,

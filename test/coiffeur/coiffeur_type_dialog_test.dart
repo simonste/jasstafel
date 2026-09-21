@@ -5,8 +5,10 @@ import 'package:jasstafel/coiffeur/dialog/coiffeur_type_dialog.dart';
 import '../helper/testapp.dart';
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog({required bool customFactor}) async {
-    var dialogInput = InputWrap();
+  Future<InputWrap<CoiffeurType>> openDialog({
+    required bool customFactor,
+  }) async {
+    var dialogInput = InputWrap<CoiffeurType>();
     await pumpWidget(
       JasstafelTestApp(
         child: Builder(

@@ -19,7 +19,7 @@ Map<String, dynamic> decodeProfile(String encoded) {
 }
 
 class ProfilePage extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<dynamic, Score> boardData;
   final Function updateParent;
   final Map<String, String> profiles = {};
 
@@ -83,7 +83,7 @@ class ProfilePage extends StatefulWidget {
   ProfilePageState createState() => ProfilePageState();
 }
 
-class ProfilePageState<T> extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   void showProfileNameDialog(String value) async {
     var controller = TextEditingController();
     controller.text = value.toString();

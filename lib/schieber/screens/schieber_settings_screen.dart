@@ -7,13 +7,14 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class SchieberSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<SchieberSettings, SchieberScore> boardData;
 
   const SchieberSettingsScreen(this.boardData, {super.key});
 
@@ -24,7 +25,7 @@ class SchieberSettingsScreen extends StatefulWidget {
 class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as SchieberSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final preferences = SettingsProvider.of(context);
 

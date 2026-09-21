@@ -6,6 +6,7 @@ import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/schlaeger/data/schlaeger_score.dart';
 import 'package:jasstafel/settings/schlaeger_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
@@ -17,7 +18,7 @@ class SchlaegerPlayers {
 }
 
 class SchlaegerSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<SchlaegerSettings, SchlaegerScore> boardData;
 
   const SchlaegerSettingsScreen(this.boardData, {super.key});
 
@@ -29,7 +30,7 @@ class SchlaegerSettingsScreen extends StatefulWidget {
 class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as SchlaegerSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final preferences = SettingsProvider.of(context);
     commonSettings.fromPreferences(preferences);

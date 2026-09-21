@@ -25,11 +25,11 @@ extension DialogHelper on WidgetTester {
     expect(getNumberPicker(key).value, scrollTo);
   }
 
-  Future<InputWrap> openDialog({
+  Future<InputWrap<GuggitalerRound>> openDialog({
     required List<String> playerNames,
     GuggitalerRow? row,
   }) async {
-    var dialogInput = InputWrap();
+    var dialogInput = InputWrap<GuggitalerRound>();
     await pumpWidget(
       JasstafelTestApp(
         child: Builder(

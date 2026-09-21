@@ -6,7 +6,7 @@ import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 import '../helper/testapp.dart';
 
 extension WhoIsNextTestHelper on WidgetTester {
-  void expectOrder(List order) {
+  void expectOrder(List<String> order) {
     var textWidgets = find.byType(Text);
     for (var i = 0; i < order.length; i++) {
       var text = textWidgets.at(i).evaluate().single.widget as Text;

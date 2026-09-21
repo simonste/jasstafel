@@ -518,10 +518,10 @@ void main() {
     await tester.launchApp();
 
     expect(find.byKey(const Key('additionalTestButton5')), findsOneWidget);
-    expect(find.byType(PopupMenuButton), findsOneWidget);
+    expect(actionsMenu, findsOneWidget);
     expect(find.byKey(const Key('backside')), findsNothing);
 
-    await tester.tap(find.byType(PopupMenuButton));
+    await tester.tap(actionsMenu);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SettingsButton')));
     await tester.pumpAndSettle();
@@ -532,10 +532,9 @@ void main() {
 
     expect(find.byKey(const Key('backside')), findsOneWidget);
 
-    await tester.tap(find.byType(PopupMenuButton));
+    await tester.tap(actionsMenu);
     await tester.pumpAndSettle();
-    Finder popupMenuItemFinder = find.byType(PopupMenuItem).first;
-    await tester.tap(popupMenuItemFinder);
+    await tester.tap(actionsMenuItems.first);
     await tester.pumpAndSettle();
     await tester.tapInList('Rückseite verwenden');
     await tester.pumpAndSettle();

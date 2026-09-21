@@ -114,7 +114,7 @@ class SwapMap {
     _data.saveFunction();
   }
 
-  static List _arrangeOrder(int players, bool landscape) {
+  static List<int> _arrangeOrder(int players, bool landscape) {
     switch (players) {
       case 3:
         return [0, 2, 1];

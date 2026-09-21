@@ -5,13 +5,14 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class GuggitalerSettingsScreen extends StatefulWidget {
-  final BoardData boardData;
+  final BoardData<GuggitalerSettings, GuggitalerScore> boardData;
 
   const GuggitalerSettingsScreen(this.boardData, {super.key});
 
@@ -23,7 +24,7 @@ class GuggitalerSettingsScreen extends StatefulWidget {
 class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final settings = widget.boardData.settings as GuggitalerSettings;
+    final settings = widget.boardData.settings;
     final commonSettings = CommonSettings();
     final preferences = SettingsProvider.of(context);
     commonSettings.fromPreferences(preferences);

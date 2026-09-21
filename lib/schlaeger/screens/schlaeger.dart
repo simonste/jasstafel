@@ -34,7 +34,7 @@ class _SchlaegerState extends State<Schlaeger> {
   Timer? updateTimer;
 
   void restoreData() async {
-    data = await data.load() as BoardData<SchlaegerSettings, SchlaegerScore>;
+    data = await data.load();
     setState(() {}); // trigger widget update
   }
 

@@ -103,7 +103,7 @@ class BoardData<T, S extends Score> {
     }
   }
 
-  Future<BoardData> load() async {
+  Future<BoardData<T, S>> load() async {
     final preferences = await SharedPreferences.getInstance();
 
     try {

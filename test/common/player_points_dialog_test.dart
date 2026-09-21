@@ -14,13 +14,13 @@ String inputFieldText(Key key) {
 }
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog({
+  Future<InputWrap<List<int?>>> openDialog({
     required List<String> playerNames,
     int? pointsPerRound = 157,
     bool rounded = false,
     List<int?>? previousPts,
   }) async {
-    var dialogInput = InputWrap();
+    var dialogInput = InputWrap<List<int?>>();
     await pumpWidget(
       JasstafelTestApp(
         child: Builder(

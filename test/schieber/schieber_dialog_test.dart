@@ -7,11 +7,11 @@ import '../../integration_test/overall_test.dart';
 import '../helper/testapp.dart';
 
 extension DialogHelper on WidgetTester {
-  Future<InputWrap> openDialog({
+  Future<InputWrap<Points>> openDialog({
     required int matchPoints,
     int roundPoints = 157,
   }) async {
-    var dialogInput = InputWrap();
+    var dialogInput = InputWrap<Points>();
     await pumpWidget(
       JasstafelTestApp(
         child: Builder(

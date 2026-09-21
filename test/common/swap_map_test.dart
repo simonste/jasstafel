@@ -5,11 +5,11 @@ import 'package:jasstafel/common/widgets/who_is_next_widget.dart';
 import 'package:test/test.dart';
 
 void main() {
-  List map2list(Map map) {
+  List<String?> map2list(Map<dynamic, Widget> map) {
     return map.values.map((e) => (e as Text).data).toList();
   }
 
-  String? highlighted(Map map) {
+  String? highlighted(Map<dynamic, Widget> map) {
     String? selected;
     map.forEach((key, value) {
       Text text = value as Text;
