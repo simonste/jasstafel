@@ -46,11 +46,9 @@ void main() {
   testWidgets('only 2 players', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 2);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.text('Spieler 3'), findsNothing);
     await tester.addGuggitalerPoints("Spieler 1", {

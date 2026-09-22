@@ -75,11 +75,9 @@ void main() {
   testWidgets('only 2 players', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 2);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.text('Spieler 3'), findsNothing);
 
@@ -148,8 +146,7 @@ void main() {
   testWidgets('goal points', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 3);
     await tester.tapInList('kein Ziel');
     await tester.pumpAndSettle();
@@ -160,8 +157,7 @@ void main() {
     await tester.enterText(find.byType(TextField), '50');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addDifferenzlerGuessPoints('Spieler 1', 66);
     await tester.addDifferenzlerGuessPoints('Spieler 2', 20);
@@ -190,8 +186,7 @@ void main() {
   testWidgets('goal rounds', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 2);
     await tester.tapInList('kein Ziel');
     await tester.pumpAndSettle();
@@ -202,8 +197,7 @@ void main() {
     await tester.enterText(find.byType(TextField), '3');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     for (var i = 0; i < 3; i++) {
       await tester.addDifferenzlerGuessPoints('Spieler 1', 66 + 2 * i);

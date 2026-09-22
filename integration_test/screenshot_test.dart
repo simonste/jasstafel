@@ -203,16 +203,14 @@ void main() {
   testWidgets('punktetafel #1', (tester) async {
     await tester.prepare(binding, "Punktetafel");
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 6);
     await tester.tapInList('Punkte pro Runde');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '9');
     await tester.tap(find.text('Ok'));
     await tester.pump();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addRound({
       'pts_0': 1,

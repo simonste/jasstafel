@@ -120,11 +120,9 @@ void main() {
   testWidgets('change no of rounds', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Runden", 6);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.byKey(const Key('1:3')), findsOneWidget);
     expect(find.byKey(const Key('2:3')), findsNothing);
@@ -155,8 +153,7 @@ void main() {
   testWidgets('match bonus', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
@@ -165,8 +162,7 @@ void main() {
     await tester.tapInList('Match-Prämie verwenden');
     await tester.tapInList('Auswertungsspalte');
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('1:3', 56);
     await tester.addCoiffeurPoints('0:3', 0, tapKey: 'match');
@@ -192,34 +188,29 @@ void main() {
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), '257');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     expect(find.text('Match-Punkte auf 157 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), 'MATCH');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
     await tester.tap(find.text('Abbrechen'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), '157');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 257 ändern?'), findsNothing);
@@ -228,8 +219,7 @@ void main() {
     expect(find.text('Match-Punkte auf 257 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), '257');
@@ -244,8 +234,7 @@ void main() {
     expect(cellText(const Key('sum_0')), '${8 * 88}');
     expect(cellText(const Key('sum_1')), '${8 * 257}');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
@@ -253,15 +242,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('1:7')), 'MATCH');
     expect(cellText(const Key('sum_0')), '${8 * 88}');
     expect(cellText(const Key('sum_1')), '${8 * 157 + 500}');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbrechen'));
@@ -272,8 +259,7 @@ void main() {
     await tester.enterText(find.byType(TextField), '207');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('1:7')), '207');
     expect(cellText(const Key('sum_0')), '${8 * 88}');
@@ -283,15 +269,13 @@ void main() {
   testWidgets('toggle bonus 2 decks', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('0:5', 157);
     await tester.addCoiffeurPoints('1:6', 0, tapKey: "match");
@@ -299,28 +283,24 @@ void main() {
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), '514');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pumpAndSettle();
     expect(find.text('Match-Punkte auf 314 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), 'MATCH');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Prämie verwenden');
     await tester.pump();
     expect(find.text('Match-Punkte auf 514 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('0:5')), '157');
     expect(cellText(const Key('1:6')), '514');
@@ -329,15 +309,13 @@ void main() {
   testWidgets('add points 2 decks', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('0:5', 50, tapKey: '157-x');
 
@@ -356,14 +334,12 @@ void main() {
     expect(cellText(const Key('sum_1')), '${7 * 66}');
     expect(cellText(const Key('sum_2')), '${9 * 77}');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('3 Teams');
     await tester.pump();
     await tester.tapInList('Auswertungsspalte');
     await tester.slideTo("Anzahl Runden", 10);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(cellText(const Key('sum_0')), '0');
     expect(cellText(const Key('sum_1')), '${7 * 66}');
@@ -402,12 +378,10 @@ void main() {
     }
 
     await tester.launchApp();
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Auswertungsspalte');
     await tester.slideTo("Anzahl Runden", 6);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('0:0', 140);
     final t1 = minPlayed();
@@ -451,8 +425,7 @@ void main() {
   testWidgets('counter ', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Konter-Match-Strafe');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '-500');
@@ -460,8 +433,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.slideTo("Anzahl Runden", 6);
     await tester.pump();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('0:0', 0, tapKey: "scratch");
     await tester.addCoiffeurPoints('0:1', 140);
@@ -486,8 +458,7 @@ void main() {
   testWidgets('settings subtitles', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     expect(find.text('gerundet 26'), findsNothing);
     await tester.tapInList('Punkte auf 10er Runden');
     await tester.pumpAndSettle();
@@ -516,5 +487,6 @@ void main() {
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
     expect(find.text('gerundet 12'), findsOneWidget);
+    await tester.closeSettings();
   });
 }

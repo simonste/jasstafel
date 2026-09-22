@@ -137,8 +137,7 @@ void main() {
   testWidgets('add round 514', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Match-Punkte');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '514');
@@ -147,8 +146,7 @@ void main() {
     expect(find.text('Punkte pro Runde auf 314 ändern?'), findsOneWidget);
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addSchieberPoints(['add_0', 'key_4', 'key_3'], factor: '3x');
 
@@ -159,8 +157,7 @@ void main() {
   testWidgets('change points per round', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Punkte pro Runde');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '160');
@@ -176,8 +173,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('314'), findsOneWidget);
     expect(find.text('514'), findsOneWidget);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pump();
+    await tester.closeSettings();
   });
 
   testWidgets('add negative points', (tester) async {
@@ -233,8 +229,7 @@ void main() {
   testWidgets('profile', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tap(find.text('Standard'));
     await tester.pumpAndSettle();
 
@@ -247,8 +242,7 @@ void main() {
     await tester.tap(find.text('2nd Profile'));
     await tester.pump();
 
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
     await tester.tapInList('Hilfslinien (Z) anzeigen');
     await tester.scrollUpTo(find.text('verschiedene Zielpunkte'));
     await tester.tapInList('verschiedene Zielpunkte');
@@ -264,16 +258,14 @@ void main() {
     expect(text(const Key('sum_0')), '20');
     expect(text(const Key('sum_1')), '100');
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tap(find.text('2nd Profile'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Standard'));
     await tester.pump();
     await tester.tap(find.byTooltip('Zurück'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.text('2500'), findsNWidgets(1));
     expect(text(const Key('sum_0')), '0');
@@ -324,14 +316,12 @@ void main() {
   testWidgets('check winner rounds', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Zielpunkte');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.tap(find.text('0 / 8'));
     await tester.pumpAndSettle();
@@ -519,12 +509,10 @@ void main() {
 
     await tester.tap(actionsMenu);
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tapInList('Rückseite verwenden');
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.byKey(const Key('backside')), findsOneWidget);
 

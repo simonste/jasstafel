@@ -123,7 +123,7 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> tapSetting(List<String> settings) async {
+  Future<void> openSettings() async {
     final settingFinder = find.byKey(const Key('SettingsButton'));
     if (!any(settingFinder)) {
       await tap(actionsMenu);
@@ -131,11 +131,19 @@ extension AppHelper on WidgetTester {
     }
     await tap(settingFinder);
     await pumpAndSettle();
+  }
+
+  Future<void> closeSettings() async {
+    await tap(find.byTooltip('Zurück'));
+    await pumpAndSettle();
+  }
+
+  Future<void> tapSetting(List<String> settings) async {
+    await openSettings();
     for (String setting in settings) {
       await tapInList(setting);
     }
-    await tap(find.byTooltip('Zurück'));
-    await pumpAndSettle();
+    await closeSettings();
   }
 
   Future<void> addCoiffeurPoints(

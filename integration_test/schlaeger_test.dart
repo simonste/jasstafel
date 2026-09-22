@@ -50,14 +50,12 @@ void main() {
 
     expect(find.text('Spieler 4'), findsNothing);
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tap(find.text('Unten Rechts').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Unten Links'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.text('Spieler 4'), findsNothing);
 
@@ -69,11 +67,9 @@ void main() {
 
     expect(find.text('Spieler 4'), findsNothing);
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.slideTo("Anzahl Spieler", 4);
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     expect(find.text('Spieler 4'), findsOneWidget);
 
@@ -116,15 +112,13 @@ void main() {
   testWidgets('goal points', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tap(find.text('Zielpunkte').last);
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '4');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     await tester.addSchlaegerRound({'pts_0': 1, 'pts_1': -1, 'pts_2': 2});
     await tester.addSchlaegerRound({'pts_0': -1, 'pts_1': 0, 'pts_2': 2});
@@ -140,8 +134,7 @@ void main() {
   testWidgets('goal rounds', (tester) async {
     await tester.launchApp();
 
-    await tester.tap(find.byKey(const Key('SettingsButton')));
-    await tester.pumpAndSettle();
+    await tester.openSettings();
     await tester.tap(find.text('Zielpunkte').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Anzahl Runden').first);
@@ -151,8 +144,7 @@ void main() {
     await tester.enterText(find.byType(TextField), '3');
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Zurück'));
-    await tester.pumpAndSettle();
+    await tester.closeSettings();
 
     for (var i = 0; i < 3; i++) {
       await tester.addSchlaegerRound({'pts_0': 1, 'pts_1': 2, 'pts_2': -1});
