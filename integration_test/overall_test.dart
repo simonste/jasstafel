@@ -146,6 +146,20 @@ extension AppHelper on WidgetTester {
     await closeSettings();
   }
 
+  Future<void> selectSetting(String title, String value) async {
+    await scrollTo(find.text(title));
+    final row = find.ancestor(
+      of: find.text(title),
+      matching: find.byType(ListTile),
+    );
+    await tap(
+      find.descendant(of: row, matching: find.byType(DropdownButton<int>)),
+    );
+    await pumpAndSettle();
+    await tap(find.text(value).last);
+    await pumpAndSettle();
+  }
+
   Future<void> addCoiffeurPoints(
     String teamRow,
     int points, {
