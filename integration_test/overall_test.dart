@@ -61,18 +61,54 @@ extension AppHelper on WidgetTester {
 
     // Final settle to ensure UI is stable.
     await pumpAndSettle();
+    await settleViewSize();
+  }
+
+  /// Boards ask for a preferred orientation while they build. On a device
+  /// whose current orientation is not among them (a tablet in landscape
+  /// showing a portrait only board) Android answers with a smaller window,
+  /// and that resize only arrives a few frames later.
+  Future<void> settleViewSize() async {
+    const stableFor = Duration(milliseconds: 500);
+    const maxWaitTime = Duration(seconds: 10);
+    final startTime = DateTime.now();
+
+    var size = view.physicalSize;
+    var lastChange = DateTime.now();
+    while (DateTime.now().difference(lastChange) < stableFor) {
+      if (DateTime.now().difference(startTime) > maxWaitTime) {
+        throw TestFailure('View size did not settle within $maxWaitTime.');
+      }
+      await pump(const Duration(milliseconds: 50));
+      if (view.physicalSize != size) {
+        size = view.physicalSize;
+        lastChange = DateTime.now();
+      }
+    }
+    await pumpAndSettle();
   }
 
   Future<void> switchBoard({required String to}) async {
-    await tap(find.byType(DropdownButton<Board>));
-    await pumpAndSettle();
-    final finder = find.text(to);
-    while (finder.evaluate().isEmpty) {
-      await pump();
+    final dropdown = find.byType(DropdownButton<Board>);
+    // The button renders the selected item, so a single item means the menu
+    // is closed. Tapping it can be lost to a resize (see settleViewSize), in
+    // which case the menu never opens, hence the retries.
+    final menuItems = find.byType(DropdownMenuItem<Board>);
+    const maxAttempts = 10;
+    var attempts = 0;
+    while (menuItems.evaluate().length <= 1) {
+      if (attempts++ == maxAttempts) {
+        throw TestFailure('Board menu did not open after $maxAttempts taps.');
+      }
+      await tap(dropdown);
+      await pumpAndSettle();
     }
+
+    final finder = find.text(to);
     await scrollTo(finder);
     await tap(finder.last);
     await pumpAndSettle();
+    await settleViewSize();
   }
 
   Future<void> delete(String buttonText) async {
