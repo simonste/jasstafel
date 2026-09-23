@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
@@ -28,6 +30,27 @@ Future<void> main() async {
   final preferences = await SharedPreferences.getInstance();
 
   runApp(SettingsProvider(preferences: preferences, child: const MyApp()));
+}
+
+/// Clamps the keyboard insets to zero.
+///
+/// iOS derives them from the keyboard frame relative to the view and reports
+/// them negative while the keyboard animates, which trips the
+/// `padding.isNonNegative` assertion in Dialog.
+Widget clampViewInsets(BuildContext context, Widget? child) {
+  final data = MediaQuery.of(context);
+  final insets = data.viewInsets;
+  return MediaQuery(
+    data: data.copyWith(
+      viewInsets: EdgeInsets.fromLTRB(
+        max(0.0, insets.left),
+        max(0.0, insets.top),
+        max(0.0, insets.right),
+        max(0.0, insets.bottom),
+      ),
+    ),
+    child: child!,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,6 +94,7 @@ class MyApp extends StatelessWidget {
     final themeMode = ThemeMode.values[settings.themeMode];
 
     return MaterialApp(
+      builder: clampViewInsets,
       onGenerateTitle: (context) => context.l10n.appName,
       themeMode: themeMode,
       theme: ThemeData(
