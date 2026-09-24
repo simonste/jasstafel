@@ -76,8 +76,54 @@ MediaQueryData quarterTurn(MediaQueryData data) {
   );
 }
 
-class MyApp extends StatelessWidget {
+/// Reports which board the app shows.
+///
+/// The preferences are read once when the app starts and boards are switched
+/// by replacing the route, so while the app runs the route is what tells them
+/// apart.
+class BoardObserver extends NavigatorObserver {
+  BoardObserver(this.onBoard);
+
+  final ValueChanged<String> onBoard;
+
+  void report(Route<dynamic>? route) {
+    final name = route?.settings.name;
+    if (name != null && Board.values.any((board) => board.name == name)) {
+      onBoard(name);
+    }
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) =>
+      report(route);
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
+      report(newRoute);
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
+      report(previousRoute);
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  /// The board on screen, seeded in [build] from the preferences.
+  String? board;
+
+  late final observer = BoardObserver((name) {
+    if (name == board) return;
+    // The route is replaced while the navigator builds.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => board = name);
+    });
+  });
 
   Locale getLanguage(
     String? appLanguage,
@@ -104,11 +150,14 @@ class MyApp extends StatelessWidget {
     var settings = CommonSettings();
     settings.fromPreferences(SettingsProvider.of(context));
     final lastBoard = Board.values[settings.lastBoard].name;
+    // The navigator opens on lastBoard, so seeding the board here leaves the
+    // observer nothing to report until one is switched.
+    board ??= lastBoard;
     WakelockPlus.toggle(enable: settings.keepScreenOn);
 
     // The schieber board is drawn for a portrait screen, the others follow the
     // setting.
-    final wanted = lastBoard == Board.schieber.name
+    final wanted = board == Board.schieber.name
         ? Orientation.portrait
         : switch (settings.screenOrientation) {
             1 => Orientation.portrait,
@@ -187,6 +236,7 @@ class MyApp extends StatelessWidget {
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },
+      navigatorObservers: [observer],
       routes: {
         Board.schieber.name: (context) => const Schieber(),
         Board.coiffeur.name: (context) => const Coiffeur(),

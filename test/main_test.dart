@@ -91,6 +91,20 @@ void main() {
     expect(tester.boardSize(), const Size(800, 1280));
   });
 
+  testWidgets('the app turns back when the board is switched', (tester) async {
+    tester.setScreenSize(const Size(1280, 800));
+
+    await tester.pumpApp({});
+    expect(tester.boardSize(), const Size(800, 1280));
+
+    await tester.tap(find.byType(DropdownButton<Board>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Coiffeur').last);
+    await tester.pumpAndSettle();
+
+    expect(tester.boardSize(), const Size(1280, 800));
+  });
+
   testWidgets('the app turns when the screen is turned while it runs', (
     tester,
   ) async {
