@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:jasstafel/main.dart';
+import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Answers the calls [WakelockPlus] makes while the app builds.
@@ -114,6 +115,27 @@ void main() {
     expect(tester.boardSize(), const Size(800, 1280));
 
     tester.view.physicalSize = const Size(1280, 800);
+    await tester.pumpAndSettle();
+
+    expect(tester.boardSize(), const Size(800, 1280));
+  });
+
+  testWidgets('a setting takes effect when the settings screen closes', (
+    tester,
+  ) async {
+    tester.setScreenSize(const Size(1280, 800));
+
+    await tester.pumpApp({'flutter.lastBoard': Board.coiffeur.index});
+    expect(tester.boardSize(), const Size(1280, 800));
+
+    // the settings screen is a page pushed on top of the board
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    navigator.push(MaterialPageRoute<void>(builder: (_) => const SizedBox()));
+    await tester.pumpAndSettle();
+
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setInt(CommonSettings.keys.screenOrientation, 1);
+    navigator.pop();
     await tester.pumpAndSettle();
 
     expect(tester.boardSize(), const Size(800, 1280));

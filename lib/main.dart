@@ -76,21 +76,27 @@ MediaQueryData quarterTurn(MediaQueryData data) {
   );
 }
 
-/// Reports which board the app shows.
+/// Reports which board the app shows, and when a page on top of it closes.
 ///
 /// The preferences are read once when the app starts and boards are switched
 /// by replacing the route, so while the app runs the route is what tells them
-/// apart.
+/// apart. The page that closes is the settings screen, which may have changed
+/// what the app reads there.
 class BoardObserver extends NavigatorObserver {
-  BoardObserver(this.onBoard);
+  BoardObserver({required this.onBoard, required this.onReturn});
 
   final ValueChanged<String> onBoard;
+  final VoidCallback onReturn;
+
+  String? boardName(Route<dynamic>? route) {
+    final name = route?.settings.name;
+    final isBoard = Board.values.any((board) => board.name == name);
+    return isBoard ? name : null;
+  }
 
   void report(Route<dynamic>? route) {
-    final name = route?.settings.name;
-    if (name != null && Board.values.any((board) => board.name == name)) {
-      onBoard(name);
-    }
+    final name = boardName(route);
+    if (name != null) onBoard(name);
   }
 
   @override
@@ -102,8 +108,10 @@ class BoardObserver extends NavigatorObserver {
       report(newRoute);
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      report(previousRoute);
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    // Dialogs are popup routes and leave the settings alone.
+    if (route is PageRoute && boardName(previousRoute) != null) onReturn();
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -117,13 +125,20 @@ class _MyAppState extends State<MyApp> {
   /// The board on screen, seeded in [build] from the preferences.
   String? board;
 
-  late final observer = BoardObserver((name) {
-    if (name == board) return;
-    // The route is replaced while the navigator builds.
+  late final observer = BoardObserver(
+    onBoard: (name) {
+      if (name != board) refresh(() => board = name);
+    },
+    // build reads the preferences again, there is nothing else to change.
+    onReturn: () => refresh(() {}),
+  );
+
+  /// Rebuilds after the frame, routes come and go while the navigator builds.
+  void refresh(VoidCallback change) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) setState(() => board = name);
+      if (mounted) setState(change);
     });
-  });
+  }
 
   Locale getLanguage(
     String? appLanguage,
