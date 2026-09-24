@@ -84,12 +84,8 @@ Future<MolotowWeis?> molotowWeisDialogBuilder(
 
           return AlertDialog(
             title: title,
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(children: [players, weis]),
-              ],
+            content: SingleChildScrollView(
+              child: Row(children: [players, weis]),
             ),
             actions: <Widget>[
               TextButton(

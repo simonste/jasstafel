@@ -78,6 +78,34 @@ void main() {
     expect(dialogInput.value!.points, 150);
   });
 
+  testWidgets('a short screen scrolls', (WidgetTester tester) async {
+    // a dialog opened while the keyboard of the previous one is on its way
+    // out has this little room left
+    tester.view.physicalSize = const Size(463, 800);
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+    addTearDown(tester.view.reset);
+
+    var dialogInput = await tester.openDialog(
+      playerNames: playerNames,
+      hand: true,
+    );
+    expect(find.text('P1'), findsOneWidget);
+
+    await tester.drag(
+      find.byType(SingleChildScrollView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('P8'));
+    await tester.pump();
+    await tester.tap(find.text('200'));
+    await tester.pump();
+
+    expect(dialogInput.value!.player, "P8");
+    expect(dialogInput.value!.points, 200);
+  });
+
   testWidgets('check cancel', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(
       playerNames: playerNames,
