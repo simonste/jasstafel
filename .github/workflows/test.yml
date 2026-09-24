@@ -135,7 +135,9 @@ jobs:
             exit 1
           fi
           echo "Starting simulator with UDID: ${UDID}"
+          echo "SIMULATOR_UDID=${UDID}" >> "${GITHUB_ENV}"
           xcrun simctl boot "${UDID}"
+          xcrun simctl bootstatus "${UDID}"
 
       - name: Get dependencies
         run: flutter pub get
@@ -149,12 +151,17 @@ jobs:
       - name: Test
         run: flutter test
       - name: Integration test
-        run: flutter test integration_test
+        timeout-minutes: 45
+        run: |
+          flutter test integration_test --reporter expanded --timeout 45m \
+            -d "${SIMULATOR_UDID}"
 
       - name: Take screenshots
+        timeout-minutes: 20
         run: |
           sed -i '' -e 's/driverTest = false/driverTest = true/g' integration_test/screenshot_test.dart
-          flutter drive --no-enable-impeller --driver=screenshot_test/driver.dart --target=integration_test/screenshot_test.dart
+          flutter drive --no-enable-impeller --driver=screenshot_test/driver.dart \
+            --target=integration_test/screenshot_test.dart -d "${SIMULATOR_UDID}"
       - name: Screenshot artifact
         uses: actions/upload-artifact@v7
         with:
