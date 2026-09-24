@@ -37,19 +37,42 @@ Future<void> main() async {
 /// iOS derives them from the keyboard frame relative to the view and reports
 /// them negative while the keyboard animates, which trips the
 /// `padding.isNonNegative` assertion in Dialog.
-Widget clampViewInsets(BuildContext context, Widget? child) {
-  final data = MediaQuery.of(context);
+MediaQueryData clampViewInsets(MediaQueryData data) {
   final insets = data.viewInsets;
-  return MediaQuery(
-    data: data.copyWith(
-      viewInsets: EdgeInsets.fromLTRB(
-        max(0.0, insets.left),
-        max(0.0, insets.top),
-        max(0.0, insets.right),
-        max(0.0, insets.bottom),
-      ),
+  return data.copyWith(
+    viewInsets: EdgeInsets.fromLTRB(
+      max(0.0, insets.left),
+      max(0.0, insets.top),
+      max(0.0, insets.right),
+      max(0.0, insets.bottom),
     ),
-    child: child!,
+  );
+}
+
+/// Turns a [MediaQueryData] a quarter turn clockwise, to go with a
+/// [RotatedBox] of one quarter turn around the app.
+///
+/// The app then sees the screen as the board wants to be held: its width and
+/// height swap, and every edge moves one step, the top of the screen becoming
+/// the left of the app. Insets have to travel along, or the status bar would
+/// keep a strip free on the wrong side and dialogs would open under the
+/// keyboard.
+///
+/// The app turns itself rather than asking android for an orientation,
+/// because android is free to turn that request down. A tablet answers it
+/// with a portrait window in the middle of the landscape screen, leaving the
+/// board a fraction of it, and phones can behave the same way. Turning it
+/// here looks the same as a locked orientation: the board stays with the
+/// device, whichever way it is held.
+MediaQueryData quarterTurn(MediaQueryData data) {
+  EdgeInsets turn(EdgeInsets i) =>
+      EdgeInsets.fromLTRB(i.top, i.right, i.bottom, i.left);
+  return data.copyWith(
+    size: data.size.flipped,
+    padding: turn(data.padding),
+    viewPadding: turn(data.viewPadding),
+    viewInsets: turn(data.viewInsets),
+    systemGestureInsets: turn(data.systemGestureInsets),
   );
 }
 
@@ -83,18 +106,30 @@ class MyApp extends StatelessWidget {
     final lastBoard = Board.values[settings.lastBoard].name;
     WakelockPlus.toggle(enable: settings.keepScreenOn);
 
-    List<DeviceOrientation> po = [];
-    if (settings.screenOrientation == 1 || lastBoard == Board.schieber.name) {
-      po = [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown];
-    } else if (settings.screenOrientation == 2) {
-      po = [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight];
-    }
-    SystemChrome.setPreferredOrientations(po);
+    // The schieber board is drawn for a portrait screen, the others follow the
+    // setting.
+    final wanted = lastBoard == Board.schieber.name
+        ? Orientation.portrait
+        : switch (settings.screenOrientation) {
+            1 => Orientation.portrait,
+            2 => Orientation.landscape,
+            _ => null,
+          };
 
     final themeMode = ThemeMode.values[settings.themeMode];
 
     return MaterialApp(
-      builder: clampViewInsets,
+      builder: (context, child) {
+        var data = clampViewInsets(MediaQuery.of(context));
+        final turn = wanted != null && data.orientation != wanted;
+        return RotatedBox(
+          quarterTurns: turn ? 1 : 0,
+          child: MediaQuery(
+            data: turn ? quarterTurn(data) : data,
+            child: child!,
+          ),
+        );
+      },
       onGenerateTitle: (context) => context.l10n.appName,
       themeMode: themeMode,
       theme: ThemeData(
