@@ -19,6 +19,20 @@ class SchieberTeamDialogs {
   SchieberTeamDialogs(this.addPoints, this.editTeamName, this.onTap);
 }
 
+double nameHeight(BuildContext context, String name) {
+  final style = DefaultTextStyle.of(context).style;
+  final painter = TextPainter(
+    text: TextSpan(
+      text: name,
+      style: style.copyWith(fontSize: (style.fontSize ?? 14) * 2),
+    ),
+    maxLines: 1,
+    textScaler: TextScaler.noScaling,
+    textDirection: Directionality.of(context),
+  )..layout();
+  return painter.height;
+}
+
 class SchieberTeam extends StatelessWidget {
   final BoardData<SchieberSettings, SchieberScore> data;
   final int teamId;
@@ -28,22 +42,23 @@ class SchieberTeam extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (teamId == 0) {
-      return Expanded(
-        child: RotatedBox(quarterTurns: 2, child: _team(teamId, data, context)),
-      );
-    } else {
-      return Expanded(child: _team(teamId, data, context));
-    }
+    final team = LayoutBuilder(
+      builder: (context, constraints) =>
+          _team(teamId, data, context, constraints.biggest),
+    );
+    return Expanded(
+      child: teamId == 0 ? RotatedBox(quarterTurns: 2, child: team) : team,
+    );
   }
 
   Widget _team(
     int teamId,
     BoardData<SchieberSettings, SchieberScore> data,
     BuildContext context,
+    Size size,
   ) {
-    final height = MediaQuery.of(context).size.height / 2;
-    final width = MediaQuery.of(context).size.width;
+    final height = size.height;
+    final width = size.width;
 
     final teamData = data.score.team[teamId];
     final pts = teamData.sum();
@@ -60,19 +75,27 @@ class SchieberTeam extends StatelessWidget {
     }
 
     final hMargin = width * 0.05;
-    final strokeHeight = height * 0.2;
+    // The name is written across the top, so the strokes need more room above
+    // them than below, and on a short team more than a share of the height.
+    final topMargin = max(
+      height * 0.12,
+      height * 0.01 + nameHeight(context, teamData.name),
+    );
+    final bottomMargin = height * 0.04;
+    final gap = (height - topMargin - bottomMargin) / 11;
+    final strokeHeight = gap * 3;
     final strokesWidth = width * 0.5;
     final numberWidth = width * 0.2;
 
-    final top1 = height * 0.1;
-    final top2 = top1 + (top1 + strokeHeight);
-    final top3 = top2 + (top1 + strokeHeight);
+    final top1 = topMargin;
+    final top2 = top1 + strokeHeight + gap;
+    final top3 = top2 + strokeHeight + gap;
 
     final teamName = Positioned(
       top: height * 0.01,
       left: width * 0.01,
       child: SizedBox(
-        width: MediaQuery.sizeOf(context).width * 0.8,
+        width: width * 0.8,
         child: GestureDetector(
           onTap: () => dialogs.editTeamName(teamId),
           child: AutoSizeText(
@@ -110,7 +133,15 @@ class SchieberTeam extends StatelessWidget {
         return Row(
           children: [
             Expanded(
-              child: BackgroundZ(Size(hMargin, top1 + strokeHeight / 2)),
+              child: BackgroundZ(
+                size,
+                EdgeInsets.fromLTRB(
+                  hMargin,
+                  top1 + strokeHeight / 2,
+                  hMargin,
+                  bottomMargin + strokeHeight / 2,
+                ),
+              ),
             ),
           ],
         );
@@ -146,13 +177,13 @@ class SchieberTeam extends StatelessWidget {
     strokes50() {
       if (data.settings.drawZ) {
         var dx = width - 2 * hMargin;
-        var dy = height - 2 * top1 - strokeHeight;
+        var dy = top3 - top1;
         var angle = -atan2(dy, dx) / 2 / pi;
 
         return Positioned(
           width: strokesWidth,
           height: strokeHeight,
-          top: top2 * 1.1,
+          top: (top1 + top3) / 2,
           left: hMargin * 4.0,
           child: RotationTransition(
             turns: AlwaysStoppedAnimation(angle),
@@ -236,7 +267,7 @@ class SchieberTeam extends StatelessWidget {
 
     final addButton = Positioned(
       height: strokeHeight,
-      top: 2 * (top1 + strokeHeight),
+      top: top2 + strokeHeight,
       right: hMargin,
       width: width * 0.2,
       child: GestureDetector(

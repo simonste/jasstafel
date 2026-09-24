@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BackgroundZPainter extends CustomPainter {
-  final Size widgetSize;
-  final Size margin;
+  final Size team;
+  final EdgeInsets margin;
 
-  BackgroundZPainter(this.widgetSize, this.margin);
+  BackgroundZPainter(this.team, this.margin);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -12,10 +12,10 @@ class BackgroundZPainter extends CustomPainter {
       ..color = Colors.red
       ..strokeWidth = 2;
 
-    final left = margin.width;
-    final right = widgetSize.width - margin.width;
-    final top = margin.height;
-    final bottom = widgetSize.height / 2 - margin.height;
+    final left = margin.left;
+    final right = team.width - margin.right;
+    final top = margin.top;
+    final bottom = team.height - margin.bottom;
 
     canvas.drawLine(Offset(left, top), Offset(right, top), paint);
     canvas.drawLine(Offset(left, bottom), Offset(right, top), paint);
@@ -29,13 +29,13 @@ class BackgroundZPainter extends CustomPainter {
 }
 
 class BackgroundZ extends StatelessWidget {
-  final Size margin;
+  final Size team;
+  final EdgeInsets margin;
 
-  const BackgroundZ(this.margin, {super.key});
+  const BackgroundZ(this.team, this.margin, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return CustomPaint(painter: BackgroundZPainter(size, margin));
+    return CustomPaint(painter: BackgroundZPainter(team, margin));
   }
 }
