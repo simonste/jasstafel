@@ -11,7 +11,6 @@ import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class CoiffeurSettingsScreen extends StatefulWidget {
@@ -257,7 +256,6 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -274,7 +272,6 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],

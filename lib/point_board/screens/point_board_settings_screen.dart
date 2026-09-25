@@ -10,7 +10,6 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class PointBoardSettingsScreen extends StatefulWidget {
@@ -215,7 +214,6 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -232,7 +230,6 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],

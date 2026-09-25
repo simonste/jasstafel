@@ -194,6 +194,7 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       },
+      locale: Locale(settings.appLanguage),
       onGenerateTitle: (context) => context.l10n.appName,
       themeMode: themeMode,
       theme: ThemeData(

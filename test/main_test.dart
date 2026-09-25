@@ -141,6 +141,29 @@ void main() {
     expect(tester.boardSize(), const Size(800, 1280));
   });
 
+  testWidgets('the language takes effect when the settings screen closes', (
+    tester,
+  ) async {
+    tester.setScreenSize(const Size(411, 914));
+
+    await tester.pumpApp({'flutter.appLanguage': 'de'});
+    String language() => Localizations.localeOf(
+      tester.element(find.byType(Scaffold).first),
+    ).languageCode;
+    expect(language(), 'de');
+
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    navigator.push(MaterialPageRoute<void>(builder: (_) => const SizedBox()));
+    await tester.pumpAndSettle();
+
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(CommonSettings.keys.appLanguage, 'en');
+    navigator.pop();
+    await tester.pumpAndSettle();
+
+    expect(language(), 'en');
+  });
+
   testWidgets('a board follows the screen it fits on', (tester) async {
     tester.setScreenSize(const Size(1280, 800));
 

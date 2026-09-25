@@ -8,7 +8,6 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class GuggitalerSettingsScreen extends StatefulWidget {
@@ -155,7 +154,6 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -172,7 +170,6 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],

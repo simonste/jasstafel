@@ -10,7 +10,6 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class SchieberSettingsScreen extends StatefulWidget {
@@ -257,7 +256,6 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -274,7 +272,6 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],

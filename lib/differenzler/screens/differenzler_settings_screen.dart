@@ -9,7 +9,6 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class DifferenzlerSettingsScreen extends StatefulWidget {
@@ -177,7 +176,6 @@ class _DifferenzlerSettingsScreenState
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -194,7 +192,6 @@ class _DifferenzlerSettingsScreenState
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],

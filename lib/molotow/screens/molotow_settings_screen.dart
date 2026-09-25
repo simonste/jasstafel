@@ -10,7 +10,6 @@ import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 
 class MolotowSettingsScreen extends StatefulWidget {
@@ -183,7 +182,6 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
                 commonSettings.themeMode = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
           buildDropdownTile(
@@ -200,7 +198,6 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
                 commonSettings.appLanguage = value!;
                 commonSettings.toPreferences(preferences);
               });
-              Restart.restartApp();
             },
           ),
         ],
