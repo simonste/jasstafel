@@ -88,6 +88,20 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
+  Future<void> waitKeyboardGone() async {
+    const maxWaitTime = Duration(seconds: 10);
+    final startTime = DateTime.now();
+
+    await pump(const Duration(milliseconds: 100));
+    while (view.viewInsets.bottom > 0) {
+      if (DateTime.now().difference(startTime) > maxWaitTime) {
+        throw TestFailure('The keyboard was still there after $maxWaitTime.');
+      }
+      await pump(const Duration(milliseconds: 50));
+    }
+    await pumpAndSettle();
+  }
+
   Future<void> switchBoard({required String to}) async {
     final dropdown = find.byType(DropdownButton<Board>);
     // The button renders the selected item, so a single item means the menu
@@ -212,6 +226,7 @@ extension AppHelper on WidgetTester {
       await tap(find.text('Ok'));
     }
     await pumpAndSettle();
+    await waitKeyboardGone();
   }
 
   Future<void> addSchieberPoints(
@@ -257,6 +272,7 @@ extension AppHelper on WidgetTester {
     await pump();
     await tap(find.text('Ok'));
     await pumpAndSettle();
+    await waitKeyboardGone();
   }
 
   Future<void> addRound(Map<String, int?> points) async {
@@ -273,6 +289,7 @@ extension AppHelper on WidgetTester {
     }
     await tap(find.text('Ok'));
     await pumpAndSettle();
+    await waitKeyboardGone();
   }
 
   Future<void> addDifferenzlerGuessPoints(String playerName, int guess) async {
@@ -283,6 +300,7 @@ extension AppHelper on WidgetTester {
     await pump();
     await tap(find.text('Ok'));
     await pumpAndSettle();
+    await waitKeyboardGone();
   }
 
   Future<void> scrollNumberPicker(String key, int value) async {
