@@ -153,8 +153,34 @@ jobs:
       - name: Integration test
         timeout-minutes: 45
         run: |
-          flutter test integration_test --reporter expanded --timeout 45m \
-            -d "${SIMULATOR_UDID}"
+          # One file at a time, each with its own watchdog: a hang has eaten
+          # the whole step before now, without saying which file it was in.
+          # Job control puts every test in its own process group, so a hung
+          # one is killed along with the build it started, and macos has no
+          # timeout(1) to do any of this for us.
+          #
+          # The watchdog covers the xcode build as well as the tests, which
+          # together have taken six and a half minutes for one file. The
+          # timeout below is per test, where the slowest is under a minute.
+          set -m
+          failed=""
+          for file in integration_test/*_test.dart; do
+            echo "::group::${file}"
+            flutter test "${file}" --reporter expanded --timeout 5m \
+              -d "${SIMULATOR_UDID}" &
+            test_pid=$!
+            ( sleep 900; kill -9 -"${test_pid}" 2>/dev/null ) &
+            watchdog_pid=$!
+            disown "${watchdog_pid}" 2>/dev/null || true
+            wait "${test_pid}" || failed="${failed} ${file}"
+            kill "${watchdog_pid}" 2>/dev/null || true
+            echo "::endgroup::"
+          done
+          # outside the groups, where a collapsed log still shows it
+          if [ -n "${failed}" ]; then
+            echo "::error::failed or hung:${failed}"
+            exit 1
+          fi
 
       - name: Take screenshots
         timeout-minutes: 20
