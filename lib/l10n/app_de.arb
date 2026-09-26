@@ -215,6 +215,8 @@
   "denominator10": "Punkte auf 10er Runden",
   "roundingNone": "Nicht runden",
   "roundingRound": "Runden",
+  "roundingCeil": "Aufrunden",
+  "roundingFloor": "Abrunden",
   "threeTeams": "3 Teams",
   "thirdColumn": "Auswertungsspalte",
   "setFactorManually": "Eigene Multiplikatoren verwenden",

@@ -96,6 +96,64 @@ void main() {
     expect(text(const Key('sum_0')), '1');
   });
 
+  testWidgets('rounded up and down', (tester) async {
+    await tester.launchApp();
+
+    await tester.addRound({
+      'pts_0': 14,
+      'pts_1': 23,
+      'pts_2': 26,
+      'pts_3': null,
+    });
+    await tester.addRound({
+      'pts_0': 41,
+      'pts_1': 41,
+      'pts_2': 41,
+      'pts_3': null,
+    });
+
+    expect(text(const Key('sum_0')), '${14 + 41}');
+    expect(text(const Key('sum_1')), '${23 + 41}');
+    expect(text(const Key('sum_2')), '${26 + 41}');
+    expect(text(const Key('sum_3')), '${94 + 34}');
+
+    await tester.openSettings();
+    await tester.selectSetting<RoundingMode>(
+      'Punkte auf 10er Runden',
+      'Runden',
+    );
+    await tester.closeSettings();
+
+    expect(text(const Key('sum_0')), '${1 + 4}');
+    expect(text(const Key('sum_1')), '${2 + 4}');
+    expect(text(const Key('sum_2')), '${3 + 4}');
+    expect(text(const Key('sum_3')), '${9 + 3}');
+
+    await tester.openSettings();
+    await tester.selectSetting<RoundingMode>(
+      'Punkte auf 10er Runden',
+      'Aufrunden',
+    );
+    await tester.closeSettings();
+
+    expect(text(const Key('sum_0')), '${2 + 5}');
+    expect(text(const Key('sum_1')), '${3 + 5}');
+    expect(text(const Key('sum_2')), '${3 + 5}');
+    expect(text(const Key('sum_3')), '${10 + 4}');
+
+    await tester.openSettings();
+    await tester.selectSetting<RoundingMode>(
+      'Punkte auf 10er Runden',
+      'Abrunden',
+    );
+    await tester.closeSettings();
+
+    expect(text(const Key('sum_0')), '${1 + 4}');
+    expect(text(const Key('sum_1')), '${2 + 4}');
+    expect(text(const Key('sum_2')), '${2 + 4}');
+    expect(text(const Key('sum_3')), '${9 + 3}');
+  });
+
   testWidgets('only 2 players', (tester) async {
     await tester.launchApp();
 

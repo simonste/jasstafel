@@ -15,7 +15,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'coiffeur_rounded': true,
       'molotow_rounded': false,
-      'point_board_rounded': 1,
+      'point_board_rounded': 3,
     });
     final preferences = await SharedPreferences.getInstance();
 
@@ -23,7 +23,7 @@ void main() {
 
     expect(preferences.get('coiffeur_rounded'), RoundingMode.round.index);
     expect(preferences.get('molotow_rounded'), RoundingMode.none.index);
-    expect(preferences.get('point_board_rounded'), RoundingMode.round.index);
+    expect(preferences.get('point_board_rounded'), RoundingMode.floor.index);
   });
 
   test('loading twice keeps the migrated setting', () async {
