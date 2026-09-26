@@ -64,13 +64,12 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
           const Divider(),
 
           sectionTitle(context, context.l10n.countingType),
-          buildCheckboxTile(
+          buildRoundingTile(
             context,
-            title: context.l10n.denominator10,
-            value: settings.rounded,
+            value: settings.roundingMode,
             onChanged: (value) {
               setState(() {
-                settings.rounded = value!;
+                settings.roundingMode = value;
                 settings.toPreferences(preferences);
               });
             },

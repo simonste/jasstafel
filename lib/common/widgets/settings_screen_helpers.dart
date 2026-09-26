@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/utils.dart';
 
 /// Builds a section title widget for settings screens.
 Widget sectionTitle(BuildContext context, String text) {
@@ -98,6 +100,21 @@ Widget buildDropdownTile<T>(
       underline: Container(),
     ),
     dense: true,
+  );
+}
+
+/// Builds the tile to choose how points are rounded to tens.
+Widget buildRoundingTile(
+  BuildContext context, {
+  required RoundingMode value,
+  required ValueChanged<RoundingMode> onChanged,
+}) {
+  return buildCheckboxTile(
+    context,
+    title: context.l10n.denominator10,
+    value: value != RoundingMode.none,
+    onChanged: (rounded) =>
+        onChanged(rounded! ? RoundingMode.round : RoundingMode.none),
   );
 }
 
