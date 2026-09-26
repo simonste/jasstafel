@@ -90,6 +90,8 @@ class _PointBoardState extends State<PointBoard> {
     }
 
     return Scaffold(
+      // the keyboard only shows for a dialog, which makes room for itself
+      resizeToAvoidBottomInset: false,
       appBar: TitleBar(
         board: Board.pointBoard,
         context: context,
@@ -115,6 +117,8 @@ class _PointBoardState extends State<PointBoard> {
         ],
       ),
       body: SafeArea(
+        // keep the padding the keyboard covers, or the list shifts under it
+        maintainBottomViewPadding: true,
         child: BoardListWithFab(
           header: rowHeader(
             playerNames: data.score.playerName,

@@ -32,11 +32,17 @@ Future<void> main() async {
   runApp(SettingsProvider(preferences: preferences, child: const MyApp()));
 }
 
-/// Clamps the keyboard insets to zero.
+/// The most of the screen height a keyboard is taken to cover. A phone held
+/// in landscape, where a keyboard covers the most, stays around two thirds.
+const maxKeyboardShare = 0.75;
+
+/// Keeps the keyboard insets to what a keyboard can cover.
 ///
-/// iOS derives them from the keyboard frame relative to the view and reports
-/// them negative while the keyboard animates, which trips the
-/// `padding.isNonNegative` assertion in Dialog.
+/// iOS derives them from the keyboard frame relative to the view, and while
+/// the keyboard animates it reports them negative, which trips the
+/// `padding.isNonNegative` assertion in Dialog, or for a frame as covering
+/// all but a strip of the screen, which leaves a dialog too little room for
+/// its buttons.
 MediaQueryData clampViewInsets(MediaQueryData data) {
   final insets = data.viewInsets;
   return data.copyWith(
@@ -44,7 +50,7 @@ MediaQueryData clampViewInsets(MediaQueryData data) {
       max(0.0, insets.left),
       max(0.0, insets.top),
       max(0.0, insets.right),
-      max(0.0, insets.bottom),
+      insets.bottom.clamp(0.0, data.size.height * maxKeyboardShare),
     ),
   );
 }

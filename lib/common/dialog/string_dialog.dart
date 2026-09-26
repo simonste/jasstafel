@@ -19,6 +19,7 @@ Future<String?> stringDialogBuilder(
       }
 
       return AlertDialog(
+        scrollable: true,
         title: titleWidget,
         contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
         content: TextField(

@@ -170,6 +170,8 @@ class _SchieberBacksideState extends State<SchieberBackside> {
     }
 
     return Scaffold(
+      // the keyboard only shows for a dialog, which makes room for itself
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(context.l10n.backsideTitle),
         actions: [
@@ -184,6 +186,8 @@ class _SchieberBacksideState extends State<SchieberBackside> {
         ],
       ),
       body: SafeArea(
+        // keep the padding the keyboard covers, or the list shifts under it
+        maintainBottomViewPadding: true,
         child: Column(
           children: [
             rowHeader(

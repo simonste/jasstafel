@@ -106,6 +106,8 @@ class _MolotowState extends State<Molotow> {
     }
 
     return Scaffold(
+      // the keyboard only shows for a dialog, which makes room for itself
+      resizeToAvoidBottomInset: false,
       appBar: TitleBar(
         board: Board.molotow,
         context: context,
@@ -136,6 +138,8 @@ class _MolotowState extends State<Molotow> {
         ],
       ),
       body: SafeArea(
+        // keep the padding the keyboard covers, or the list shifts under it
+        maintainBottomViewPadding: true,
         child: BoardListWithFab(
           header: rowHeader(
             playerNames: data.score.playerName,

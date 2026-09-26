@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/main.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
+import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Answers the calls [WakelockPlus] makes while the app builds.
@@ -80,6 +84,63 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Spielername'), findsOneWidget);
+  });
+
+  testWidgets('the board and the name dialog take a keyboard hiding them', (
+    tester,
+  ) async {
+    tester.setScreenSize(const Size(1032, 1376));
+    await tester.pumpApp({
+      'flutter.lastBoard': Board.differenzler.index,
+      'flutter.appLanguage': 'de',
+    });
+
+    await tester.tap(find.text('Spieler 1'));
+    await tester.pumpAndSettle();
+
+    // what the iPad simulator reported for a frame while the keyboard came up
+    tester.view.viewInsets = const FakeViewPadding(bottom: 1300);
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Spielername'), findsWidgets);
+  });
+
+  testWidgets('the board stays scrolled to the end while the keyboard shows', (
+    tester,
+  ) async {
+    tester.setScreenSize(const Size(1280, 800));
+    tester.view.padding = const FakeViewPadding(bottom: 32);
+    addTearDown(tester.view.resetPadding);
+    final row = DifferenzlerRow()
+      ..guesses = [33, 28, 88, 0]
+      ..pts = [20, 40, 85, 12];
+    await tester.pumpApp({
+      'flutter.lastBoard': Board.differenzler.index,
+      'flutter.appLanguage': 'de',
+      'flutter.${DifferenzlerSettings.keys.data}': jsonEncode(
+        (DifferenzlerScore()..rows = List.filled(50, row)).toJson(),
+      ),
+    });
+    final guess = find.byTooltip('Ansage von Spieler 2');
+    await tester.scrollUntilVisible(
+      guess,
+      100,
+      scrollable: find.byType(Scrollable).last,
+    );
+    final end = tester.getCenter(guess);
+
+    // the keyboard covers the navigation bar and takes its padding away
+    tester.view.padding = FakeViewPadding.zero;
+    tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pumpAndSettle();
+    tester.view.padding = const FakeViewPadding(bottom: 32);
+    tester.view.resetViewInsets();
+    await tester.pumpAndSettle();
+
+    expect(tester.getCenter(guess), end);
   });
 
   testWidgets('the schieber board turns on a screen held in landscape', (
@@ -201,6 +262,54 @@ void main() {
     });
 
     expect(tester.boardSize(), const Size(1280, 800));
+  });
+
+  testWidgets('a dialog keeps room for its buttons when the keyboard '
+      'insets cover nearly the whole screen', (tester) async {
+    tester.setScreenSize(const Size(1032, 1376));
+    // what the iPad simulator reported for a frame while the keyboard came up
+    tester.view.viewInsets = const FakeViewPadding(bottom: 1300);
+    addTearDown(tester.view.resetViewInsets);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: clampViewInsets(MediaQuery.of(context)),
+          child: child!,
+        ),
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Punkte'),
+                content: const SingleChildScrollView(child: TextField()),
+                actions: [
+                  TextButton(onPressed: () {}, child: const Text('Abbrechen')),
+                  TextButton(onPressed: () {}, child: const Text('Ok')),
+                ],
+              ),
+            ),
+            child: const Text('open'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+  });
+
+  test('the keyboard insets a keyboard can cover stay as they are', () {
+    // a phone held in landscape
+    const data = MediaQueryData(
+      size: Size(844, 390),
+      viewInsets: EdgeInsets.only(bottom: 250),
+    );
+
+    expect(clampViewInsets(data).viewInsets, data.viewInsets);
   });
 
   // The app is turned clockwise, so its top is painted along the right of the

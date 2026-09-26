@@ -135,6 +135,8 @@ class _GuggitalerState extends State<Guggitaler> {
     );
 
     return Scaffold(
+      // the keyboard only shows for a dialog, which makes room for itself
+      resizeToAvoidBottomInset: false,
       appBar: TitleBar(
         board: Board.guggitaler,
         context: context,
@@ -166,6 +168,8 @@ class _GuggitalerState extends State<Guggitaler> {
         ],
       ),
       body: SafeArea(
+        // keep the padding the keyboard covers, or the list shifts under it
+        maintainBottomViewPadding: true,
         child: BoardListWithFab(
           header: rowHeader(
             playerNames: data.score.playerName,

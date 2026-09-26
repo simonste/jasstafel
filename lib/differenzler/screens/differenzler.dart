@@ -213,6 +213,8 @@ class _DifferenzlerState extends State<Differenzler> {
       }
     }
     return Scaffold(
+      // the keyboard only shows for a dialog, which makes room for itself
+      resizeToAvoidBottomInset: false,
       appBar: TitleBar(
         board: Board.differenzler,
         context: context,
@@ -252,6 +254,8 @@ class _DifferenzlerState extends State<Differenzler> {
         ],
       ),
       body: SafeArea(
+        // keep the padding the keyboard covers, or the list shifts under it
+        maintainBottomViewPadding: true,
         child: Stack(
           children: [
             Column(

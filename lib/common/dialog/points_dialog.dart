@@ -27,6 +27,7 @@ Future<IntValue?> pointsDialogBuilder(
       }
 
       return AlertDialog(
+        scrollable: true,
         title: title,
         content: TextField(
           decoration: InputDecoration(hintText: context.l10n.points),
