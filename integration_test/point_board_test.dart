@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +52,12 @@ void main() {
   testWidgets('rounded', (tester) async {
     await tester.launchApp();
 
-    await tester.tapSetting(['Punkte auf 10er Runden']);
+    await tester.openSettings();
+    await tester.selectSetting<RoundingMode>(
+      'Punkte auf 10er Runden',
+      'Runden',
+    );
+    await tester.closeSettings();
 
     await tester.addRound({
       'pts_0': 14,

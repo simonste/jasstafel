@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
@@ -100,7 +101,13 @@ void main() {
   testWidgets('rounded points', (tester) async {
     await tester.launchApp();
 
-    await tester.tapSetting(['Punkte auf 10er Runden', 'Auswertungsspalte']);
+    await tester.openSettings();
+    await tester.selectSetting<RoundingMode>(
+      'Punkte auf 10er Runden',
+      'Runden',
+    );
+    await tester.tapInList('Auswertungsspalte');
+    await tester.closeSettings();
 
     await tester.addCoiffeurPoints('1:3', 60);
     await tester.addCoiffeurPoints('0:8', 80, tapKey: '157-x');
