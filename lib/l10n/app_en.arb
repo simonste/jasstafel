@@ -166,6 +166,8 @@
   "denominator10": "Round to multiples of 10",
   "roundingNone": "Don't round",
   "roundingRound": "Round",
+  "roundingCeil": "Round up",
+  "roundingFloor": "Round down",
   "noOfRounds": "{count, plural, one{1 Round} other{{count} Rounds}}",
   "@noOfRounds": {
     "placeholders": {

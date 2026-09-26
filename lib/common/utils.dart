@@ -1,6 +1,6 @@
 enum GoalType { noGoal, points, rounds }
 
-enum RoundingMode { none, round }
+enum RoundingMode { none, round, ceil, floor }
 
 int matchPoints(int pointsPerRound) {
   if (pointsPerRound % 157 == 0) {
@@ -27,6 +27,11 @@ int roundedInt(int value, RoundingMode mode) {
       return value;
     case RoundingMode.round:
       return (value * 0.1).round();
+    // negative points round like positive
+    case RoundingMode.ceil:
+      return value.sign * (value.abs() * 0.1).ceil();
+    case RoundingMode.floor:
+      return value.sign * (value.abs() * 0.1).floor();
   }
 }
 

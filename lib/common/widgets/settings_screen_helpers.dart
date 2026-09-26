@@ -112,6 +112,8 @@ Widget buildRoundingTile(
   final labels = {
     RoundingMode.none: context.l10n.roundingNone,
     RoundingMode.round: context.l10n.roundingRound,
+    RoundingMode.ceil: context.l10n.roundingCeil,
+    RoundingMode.floor: context.l10n.roundingFloor,
   };
   return buildDropdownTile<RoundingMode>(
     context,

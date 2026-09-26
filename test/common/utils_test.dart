@@ -31,5 +31,12 @@ void main() {
     expect(roundedInt(25, RoundingMode.round), 3);
     expect(roundedInt(48, RoundingMode.round), 5);
     expect(roundedInt(13, RoundingMode.round), 1);
+    expect(roundedInt(41, RoundingMode.ceil), 5);
+    expect(roundedInt(40, RoundingMode.ceil), 4);
+    expect(roundedInt(49, RoundingMode.floor), 4);
+    expect(roundedInt(-25, RoundingMode.none), -25);
+    expect(roundedInt(-25, RoundingMode.round), -3);
+    expect(roundedInt(-25, RoundingMode.ceil), -3);
+    expect(roundedInt(-25, RoundingMode.floor), -2);
   });
 }

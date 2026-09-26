@@ -139,6 +139,8 @@
   "denominator10": "Points à 10 le tour",
   "roundingNone": "Ne pas arrondir",
   "roundingRound": "Arrondir",
+  "roundingCeil": "Arrondir vers le haut",
+  "roundingFloor": "Arrondir vers le bas",
   "roundProgress": "{count, plural, one{{roundNumber}/1 tour} other{{roundNumber}/{count} tours}}",
   "remainingPoints": "Total: {total} , exceptionnel: {remaining}",
   "screenOrientation": "Faire pivoter l'écran",
