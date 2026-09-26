@@ -14,11 +14,15 @@ NumberPicker getNumberPicker(Key key) {
 extension DialogHelper on WidgetTester {
   Future<void> scrollNumberPicker(Key key, int scrollTo) async {
     final picker = getNumberPicker(key);
-    final center = getCenter(find.byKey(key));
-    final offsetY = (picker.value - scrollTo) * picker.itemHeight;
-    final TestGesture testGesture = await startGesture(center);
-    await testGesture.moveBy(Offset(0.0, offsetY));
-    await pump();
+    final step = (picker.value - scrollTo).sign * picker.itemHeight / 4;
+    final TestGesture testGesture = await startGesture(
+      getCenter(find.byKey(key)),
+    );
+    // In small steps, as a finger does.
+    for (var i = 0; i < 100 && getNumberPicker(key).value != scrollTo; i++) {
+      await testGesture.moveBy(Offset(0.0, step));
+      await pump();
+    }
 
     expect(getNumberPicker(key).value, scrollTo);
   }
@@ -122,6 +126,31 @@ void main() {
 
     expect(dialogInput.value!.player, "P4");
     expect(dialogInput.value!.points, [1, 2, 1, null, null]);
+  });
+
+  testWidgets('a phone held in landscape scrolls', (tester) async {
+    tester.view.physicalSize = const Size(915, 412);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    var dialogInput = await tester.openDialog(
+      playerNames: playerNames.sublist(0, 4),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('P3'));
+    await tester.scrollNumberPicker(const Key('picker_0'), 2);
+    await tester.drag(
+      find.byType(SingleChildScrollView),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(dialogInput.value!.player, "P3");
+    expect(dialogInput.value!.points, [2, null, null, null, null]);
   });
 
   testWidgets('cancel', (WidgetTester tester) async {

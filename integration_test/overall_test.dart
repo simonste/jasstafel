@@ -304,13 +304,17 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> scrollNumberPicker(String key, int value) async {
-    final picker =
+    NumberPicker picker() =>
         find.byKey(Key(key)).evaluate().single.widget as NumberPicker;
-    final center = getCenter(find.byKey(Key(key)));
-    final offsetY = (picker.value - value) * picker.itemHeight;
-    final TestGesture testGesture = await startGesture(center);
-    await testGesture.moveBy(Offset(0.0, offsetY));
-    await pump();
+    final step = (picker().value - value).sign * picker().itemHeight / 4;
+    final TestGesture testGesture = await startGesture(
+      getCenter(find.byKey(Key(key))),
+    );
+    // In small steps, as a finger does.
+    for (var i = 0; i < 100 && picker().value != value; i++) {
+      await testGesture.moveBy(Offset(0.0, step));
+      await pump();
+    }
   }
 
   Future<void> addGuggitalerPoints(
@@ -318,7 +322,7 @@ extension AppHelper on WidgetTester {
     Map<String, int?> picker,
   ) async {
     await tap(find.byTooltip('Runde eingeben'));
-    await pump();
+    await pumpAndSettle();
     await tap(find.text(player).last);
     for (var key in picker.keys) {
       if (picker[key] != null) {
@@ -331,7 +335,7 @@ extension AppHelper on WidgetTester {
 
   Future<void> addSchlaegerRound(Map<String, int?> points) async {
     await tap(find.byTooltip('Runde eingeben'));
-    await pump();
+    await pumpAndSettle();
     for (var key in points.keys) {
       if (points[key] != null) {
         await tap(

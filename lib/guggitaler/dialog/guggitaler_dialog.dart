@@ -170,20 +170,22 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(
 
           return AlertDialog(
             title: title,
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                players,
-                const Divider(),
-                cols,
-                SizedBox(child: Row(children: slots)),
-                const Divider(),
-                SizedBox(
-                  key: const Key('summary'),
-                  child: Text(context.l10n.totalPoints(factor * round.sum())),
-                ),
-              ],
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  players,
+                  const Divider(),
+                  cols,
+                  SizedBox(child: Row(children: slots)),
+                  const Divider(),
+                  SizedBox(
+                    key: const Key('summary'),
+                    child: Text(context.l10n.totalPoints(factor * round.sum())),
+                  ),
+                ],
+              ),
             ),
             actions: <Widget>[
               TextButton(
