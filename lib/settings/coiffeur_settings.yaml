@@ -10,7 +10,7 @@ CoiffeurSettings:
     default: 257
   Rounded:
     store: "coiffeur_rounded"
-    default: false
+    default: 0
   ThirdColumn:
     store: "coiffeur_third_column"
     default: false

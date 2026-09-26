@@ -7,7 +7,7 @@ MolotowSettings:
     default: 157
   Rounded:
     store: "molotow_rounded"
-    default: false
+    default: 0
   GoalType:
     store: "molotow_goal_type"
     default: 0

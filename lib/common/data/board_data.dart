@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
@@ -105,6 +106,8 @@ class BoardData<T, S extends Score> {
 
   Future<BoardData<T, S>> load() async {
     final preferences = await SharedPreferences.getInstance();
+
+    await migrateRoundedPreferences(preferences);
 
     try {
       var hasVibrator = await Vibration.hasVibrator();
@@ -225,6 +228,7 @@ class BoardData<T, S extends Score> {
     if (json.containsKey(dataKey)) {
       // restore profile
       final preferences = await SharedPreferences.getInstance();
+      migrateRoundedJson(json);
       switch (boardType) {
         case Board.schieber:
           var schieberSettings = settings as SchieberSettings;

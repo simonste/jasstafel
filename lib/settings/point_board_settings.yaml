@@ -10,7 +10,7 @@ PointBoardSettings:
     default: 157
   Rounded:
     store: "point_board_rounded"
-    default: false
+    default: 0
   GoalType:
     store: "point_board_goal_type"
     default: 0
