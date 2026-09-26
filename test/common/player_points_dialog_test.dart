@@ -15,7 +15,7 @@ extension DialogHelper on WidgetTester {
   Future<InputWrap<List<int?>>> openDialog({
     required List<String> playerNames,
     int? pointsPerRound = 157,
-    bool rounded = false,
+    RoundingMode roundingMode = RoundingMode.none,
     List<int?>? previousPts,
   }) async {
     var dialogInput = InputWrap<List<int?>>();
@@ -31,6 +31,7 @@ extension DialogHelper on WidgetTester {
                     context,
                     playerNames: playerNames,
                     pointsPerRound: pointsPerRound,
+                    roundingMode: roundingMode,
                     previousPts: previousPts,
                   );
                 },

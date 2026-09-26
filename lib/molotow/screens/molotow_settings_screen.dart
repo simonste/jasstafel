@@ -5,6 +5,7 @@ import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
 import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/setting_utils.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
@@ -28,7 +29,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
     final commonSettings = CommonSettings();
     final goalPointsSubTitle = subTitle(
       settings.goalPoints,
-      settings.rounded,
+      settings.roundingMode,
       context,
     );
 

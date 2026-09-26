@@ -1,4 +1,5 @@
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -108,7 +109,7 @@ class PointBoardScore implements Score {
   int total(int player) {
     var p = 0;
     for (final row in rows) {
-      p += roundedInt(row.pts[player] ?? 0, _settings.rounded);
+      p += roundedInt(row.pts[player] ?? 0, _settings.roundingMode);
     }
     return p;
   }

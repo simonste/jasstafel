@@ -1,3 +1,5 @@
+import 'package:jasstafel/common/rounding.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:test/test.dart';
@@ -54,7 +56,7 @@ void main() {
   test('rounded', () {
     var score = CoiffeurScore();
     var settings = CoiffeurSettings();
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     score.setSettings(settings);
 
     score.rows[0].pts[1].pts = 57;
@@ -94,7 +96,7 @@ void main() {
     settings.match = 157;
     settings.bonus = true;
     settings.bonusValue = 300;
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     score.setSettings(settings);
 
     score.rows[0].pts[0].pts = 60;

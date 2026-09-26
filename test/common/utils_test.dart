@@ -25,11 +25,11 @@ void main() {
   });
 
   test('roundedInt', () {
-    expect(roundedInt(25, false), 25);
-    expect(roundedInt(48, false), 48);
-    expect(roundedInt(13, false), 13);
-    expect(roundedInt(25, true), 3);
-    expect(roundedInt(48, true), 5);
-    expect(roundedInt(13, true), 1);
+    expect(roundedInt(25, RoundingMode.none), 25);
+    expect(roundedInt(48, RoundingMode.none), 48);
+    expect(roundedInt(13, RoundingMode.none), 13);
+    expect(roundedInt(25, RoundingMode.round), 3);
+    expect(roundedInt(48, RoundingMode.round), 5);
+    expect(roundedInt(13, RoundingMode.round), 1);
   });
 }

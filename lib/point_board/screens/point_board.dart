@@ -8,6 +8,7 @@ import 'package:jasstafel/common/dialog/player_points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_list_with_fab.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
@@ -71,7 +72,7 @@ class _PointBoardState extends State<PointBoard> {
       list[0] = '${rowNo + 1}';
       row.pts.sublist(0, data.settings.players).forEach((pts) {
         if (pts != null) {
-          list.add('${roundedInt(pts, data.settings.rounded)}');
+          list.add('${roundedInt(pts, data.settings.roundingMode)}');
         } else {
           list.add('-');
         }
@@ -166,7 +167,7 @@ class _PointBoardState extends State<PointBoard> {
       pointsPerRound: data.settings.enablePointsPerRound
           ? data.settings.pointsPerRound
           : null,
-      rounded: data.settings.rounded,
+      roundingMode: data.settings.roundingMode,
       previousPts: previousPts,
     );
     if (input == null) return;

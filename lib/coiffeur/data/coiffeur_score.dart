@@ -1,5 +1,6 @@
 import 'package:jasstafel/coiffeur/dialog/coiffeur_info.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -150,7 +151,7 @@ class CoiffeurScore implements Score {
   int _bonus() {
     if (_settings.bonus) {
       final bonus = _settings.bonusValue;
-      return roundedInt(bonus, _settings.rounded);
+      return roundedInt(bonus, _settings.roundingMode);
     }
     return 0;
   }
@@ -163,8 +164,8 @@ class CoiffeurScore implements Score {
     if (pts.match) {
       pts.pts = _settings.match;
     }
-    if (pts.pts != null && _settings.rounded) {
-      return roundedInt(pts.pts!, _settings.rounded);
+    if (pts.pts != null && _settings.roundingMode != RoundingMode.none) {
+      return roundedInt(pts.pts!, _settings.roundingMode);
     }
     return pts.pts;
   }

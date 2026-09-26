@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:jasstafel/common/rounding.dart';
+import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_hint.dart';
 import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/coiffeur/dialog/coiffeur_info.dart';
@@ -385,7 +387,7 @@ void main() {
     expectHints(info, [Hint.lost('Team 1', pts: 258)]);
     expectWinner(info, [1], [0]);
 
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     score.setSettings(settings);
     final infoRounded = CoiffeurInfo(settings, score);
     expect(infoRounded.result[0].max, greaterThan(infoRounded.result[1].pts));
@@ -395,7 +397,7 @@ void main() {
   });
 
   test('two teams rounded win with counter match', () {
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     settings.rows = 2;
     score.setSettings(settings);
 
@@ -415,7 +417,7 @@ void main() {
   });
 
   test('two teams rounded lost when counter 0', () {
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     settings.counterLoss = 0;
     settings.rows = 2;
     score.setSettings(settings);
@@ -433,7 +435,7 @@ void main() {
   });
 
   test('two teams rounded bonus win with match', () {
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     settings.bonus = true;
     settings.match = 157;
     settings.rows = 2;
@@ -451,7 +453,7 @@ void main() {
   });
 
   test('two teams bonus win with match 2', () {
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     settings.bonus = true;
     settings.bonusValue = 100;
     settings.match = 157;

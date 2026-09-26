@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/settings/point_board_settings.g.dart';
 import 'package:jasstafel/common/utils.dart';
@@ -27,7 +28,7 @@ void main() {
   test('count points rounded', () {
     var score = PointBoardScore();
     var settings = PointBoardSettings();
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     score.setSettings(settings);
 
     score.rows.add(PointBoardRow([]));

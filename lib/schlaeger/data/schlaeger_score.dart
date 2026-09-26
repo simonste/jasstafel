@@ -95,7 +95,7 @@ class SchlaegerScore implements Score {
   int total(int player) {
     var p = 0;
     for (final row in rows) {
-      p += roundedInt(row.pts[player] ?? 0, false);
+      p += roundedInt(row.pts[player] ?? 0, RoundingMode.none);
     }
     return p;
   }

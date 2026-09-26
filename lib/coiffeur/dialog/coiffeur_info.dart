@@ -6,6 +6,7 @@ import 'package:jasstafel/coiffeur/data/coiffeur_score.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/safe_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:collection/collection.dart';
@@ -30,12 +31,12 @@ class CoiffeurInfo {
     : teams = _settings.threeTeams ? 3 : 2,
       bonusPoints = roundedInt(
         _settings.bonus ? _settings.bonusValue : 0,
-        _settings.rounded,
+        _settings.roundingMode,
       ),
-      match = roundedInt(_settings.match, _settings.rounded),
+      match = roundedInt(_settings.match, _settings.roundingMode),
       noMatch = roundedInt(
         _settings.bonus ? _settings.match : roundPoints(_settings.match),
-        _settings.rounded,
+        _settings.roundingMode,
       ) {
     for (var t = 0; t < teams; t++) {
       for (var i = 0; i < _settings.rows; i++) {
@@ -53,7 +54,8 @@ class CoiffeurInfo {
           ? result[t].open.length
           : result[t].open.sum;
       result[t].min -=
-          minusFactor * roundedInt(_settings.counterLoss, _settings.rounded);
+          minusFactor *
+          roundedInt(_settings.counterLoss, _settings.roundingMode);
     }
   }
 

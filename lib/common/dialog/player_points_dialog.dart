@@ -6,7 +6,7 @@ Future<List<int?>?> playerPointsDialogBuilder(
   BuildContext context, {
   required List<String> playerNames,
   required int? pointsPerRound,
-  bool rounded = false,
+  RoundingMode roundingMode = RoundingMode.none,
   List<int?>? previousPts,
   Widget? title,
 }) {
@@ -100,12 +100,12 @@ Future<List<int?>?> playerPointsDialogBuilder(
                 ),
               ),
             ];
-            if (rounded) {
+            if (roundingMode != RoundingMode.none) {
               elements.add(
                 SizedBox(
                   width: 20,
                   child: Text(
-                    "${roundedInt(points[i] ?? 0, rounded)}",
+                    "${roundedInt(points[i] ?? 0, roundingMode)}",
                     textAlign: TextAlign.right,
                   ),
                 ),

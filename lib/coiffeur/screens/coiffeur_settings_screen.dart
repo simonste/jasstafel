@@ -3,6 +3,7 @@ import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
 import 'package:jasstafel/common/setting_utils.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -29,17 +30,17 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
     final commonSettings = CommonSettings();
     final matchPointsSubTitle = subTitle(
       settings.match,
-      settings.rounded,
+      settings.roundingMode,
       context,
     );
     final bonusPointsSubTitle = subTitle(
       settings.bonusValue,
-      settings.rounded,
+      settings.roundingMode,
       context,
     );
     final counterPointsSubTitle = subTitle(
       settings.counterLoss,
-      settings.rounded,
+      settings.roundingMode,
       context,
     );
 

@@ -1,3 +1,4 @@
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/common/utils.dart';
@@ -27,7 +28,7 @@ void main() {
   test('count points rounded', () {
     var score = MolotowScore();
     var settings = MolotowSettings();
-    settings.rounded = true;
+    settings.roundingMode = RoundingMode.round;
     score.setSettings(settings);
 
     score.rows.add(MolotowRow([], isRound: false));

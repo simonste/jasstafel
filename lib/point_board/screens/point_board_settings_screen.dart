@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -29,7 +30,7 @@ class _PointBoardSettingsScreenState extends State<PointBoardSettingsScreen> {
     final commonSettings = CommonSettings();
     final goalPointsSubTitle = subTitle(
       settings.goalPoints,
-      settings.rounded,
+      settings.roundingMode,
       context,
     );
 
