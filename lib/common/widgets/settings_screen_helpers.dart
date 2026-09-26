@@ -103,18 +103,25 @@ Widget buildDropdownTile<T>(
   );
 }
 
-/// Builds the tile to choose how points are rounded to tens.
+/// Builds the dropdown tile to choose how points are rounded to tens.
 Widget buildRoundingTile(
   BuildContext context, {
   required RoundingMode value,
   required ValueChanged<RoundingMode> onChanged,
 }) {
-  return buildCheckboxTile(
+  final labels = {
+    RoundingMode.none: context.l10n.roundingNone,
+    RoundingMode.round: context.l10n.roundingRound,
+  };
+  return buildDropdownTile<RoundingMode>(
     context,
     title: context.l10n.denominator10,
-    value: value != RoundingMode.none,
-    onChanged: (rounded) =>
-        onChanged(rounded! ? RoundingMode.round : RoundingMode.none),
+    value: value,
+    items: [
+      for (final mode in RoundingMode.values)
+        DropdownMenuItem(value: mode, child: Text(labels[mode]!)),
+    ],
+    onChanged: (mode) => onChanged(mode!),
   );
 }
 

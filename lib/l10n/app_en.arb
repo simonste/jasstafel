@@ -164,6 +164,8 @@
   "tableWeis": "Table weis",
   "fremdWeis": "Foreign weis (2x)",
   "denominator10": "Round to multiples of 10",
+  "roundingNone": "Don't round",
+  "roundingRound": "Round",
   "noOfRounds": "{count, plural, one{1 Round} other{{count} Rounds}}",
   "@noOfRounds": {
     "placeholders": {

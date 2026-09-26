@@ -42,7 +42,7 @@ void main() {
     expect(appBarColor(tester), Colors.grey.shade900);
 
     await tester.openSettings();
-    await tester.selectSetting('Design', 'Hell');
+    await tester.selectSetting<int>('Design', 'Hell');
     await tester.closeSettings();
 
     final preferences = await SharedPreferences.getInstance();
@@ -64,7 +64,7 @@ void main() {
     await tester.launchApp();
 
     await tester.openSettings();
-    await tester.selectSetting('Design', 'System');
+    await tester.selectSetting<int>('Design', 'System');
     await tester.closeSettings();
 
     expect(appThemeMode(), ThemeMode.system);

@@ -137,6 +137,8 @@
   "tableWeis": "Annonce de la table",
   "fremdWeis": "Annonce étrangère (2x)",
   "denominator10": "Points à 10 le tour",
+  "roundingNone": "Ne pas arrondir",
+  "roundingRound": "Arrondir",
   "roundProgress": "{count, plural, one{{roundNumber}/1 tour} other{{roundNumber}/{count} tours}}",
   "remainingPoints": "Total: {total} , exceptionnel: {remaining}",
   "screenOrientation": "Faire pivoter l'écran",

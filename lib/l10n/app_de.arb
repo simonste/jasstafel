@@ -213,6 +213,8 @@
     }
   },
   "denominator10": "Punkte auf 10er Runden",
+  "roundingNone": "Nicht runden",
+  "roundingRound": "Runden",
   "threeTeams": "3 Teams",
   "thirdColumn": "Auswertungsspalte",
   "setFactorManually": "Eigene Multiplikatoren verwenden",
