@@ -1,0 +1,3 @@
+Version 4.3.1
+
+- Les points peuvent désormais être toujours arrondis vers le haut ou vers le bas, pas seulement arrondis mathématiquement

@@ -1,0 +1,3 @@
+Version 4.3.1
+
+- Points can now be always rounded up or down, not only rounded mathematically
