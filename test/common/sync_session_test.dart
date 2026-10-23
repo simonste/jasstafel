@@ -39,6 +39,7 @@ class FakeTransport implements SyncTransport {
   final _messages = StreamController<SyncMessage>.broadcast();
 
   String? hostingName;
+  String? name;
   final clients = <String>{};
   String? connectedHost;
   bool scanning = false;
@@ -73,6 +74,8 @@ class FakeTransport implements SyncTransport {
   Future<bool> scanNeedsLocation() async => false;
   @override
   Future<void> openLocationSettings() async {}
+  @override
+  Future<String?> deviceName() async => name;
   @override
   Stream<String> get peerJoined => _peerJoined.stream;
   @override
@@ -239,6 +242,26 @@ void main() {
       async.flushMicrotasks();
     }
   }
+
+  test('a session goes by the host\'s Bluetooth name', () {
+    run((async) {
+      host.transport.name = 'Galaxy XCover 4s';
+      start(async);
+      expect(host.session.status.value.sessionName, 'Galaxy XCover 4s');
+      expect(a.session.status.value.sessionName, 'Galaxy XCover 4s');
+    });
+  });
+
+  test('a host without a Bluetooth name gets a code', () {
+    run((async) {
+      host.transport.name = ' ';
+      start(async);
+      expect(
+        host.session.status.value.sessionName,
+        matches(RegExp(r'^Jasstafel [A-Z2-9]{2}$')),
+      );
+    });
+  });
 
   test('a joining client gets the host\'s board', () {
     run((async) {

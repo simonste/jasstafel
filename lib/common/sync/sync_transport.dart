@@ -34,6 +34,10 @@ abstract class SyncTransport {
   Future<bool> scanNeedsLocation();
   Future<void> openLocationSettings();
 
+  /// The name the device goes by in Bluetooth, or null where it isn't
+  /// known.
+  Future<String?> deviceName();
+
   /// Advertises a session named [name] and takes clients.
   Future<void> startHosting(String name);
   Future<void> stopHosting();
@@ -83,6 +87,8 @@ class UnsupportedSyncTransport implements SyncTransport {
   Future<bool> scanNeedsLocation() async => false;
   @override
   Future<void> openLocationSettings() async {}
+  @override
+  Future<String?> deviceName() async => null;
   @override
   Future<void> startHosting(String name) async {}
   @override

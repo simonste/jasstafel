@@ -312,6 +312,19 @@ class BleSyncTransport implements SyncTransport {
   Future<void> openLocationSettings() =>
       _platform.invokeMethod('openLocationSettings');
 
+  /// Only Android tells apps the Bluetooth name, iOS answers "iPhone".
+  @override
+  Future<String?> deviceName() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return null;
+    try {
+      return await _platform.invokeMethod<String>('deviceName');
+    } on PlatformException {
+      return null;
+    } on MissingPluginException {
+      return null;
+    }
+  }
+
   @override
   Future<void> startHosting(String name) async {
     final characteristic = GATTCharacteristic.mutable(
