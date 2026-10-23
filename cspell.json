@@ -2,6 +2,7 @@
   "version": "0.2",
   "language": "en",
   "words": [
+    "acks",
     "autofocus",
     "cupertino",
     "deutsch",
@@ -15,6 +16,7 @@
     "rssi",
     "schlaeger",
     "sublist",
+    "unacked",
     "wakelock"
   ],
   "ignoreRegExpList": [
