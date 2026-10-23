@@ -1,9 +1,16 @@
 package ch.simonste.jasstafel
 
+import android.content.Context
+import android.content.Intent
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import androidx.core.location.LocationManagerCompat
 import androidx.core.view.WindowCompat
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,5 +21,37 @@ class MainActivity: FlutterActivity() {
             WindowCompat.setDecorFitsSystemWindows(window, false)
         }
         super.onCreate(savedInstanceState)
+    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "jasstafel/platform")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    // During a sync session, Back on the board moves the app
+                    // to the background like Android 12+ does, rather than
+                    // finishing it. A finished activity would leave the
+                    // session's Bluetooth link open without the app to serve
+                    // it.
+                    "moveTaskToBack" -> {
+                        moveTaskToBack(true)
+                        result.success(null)
+                    }
+                    // Up to Android 11 a Bluetooth scan finds nothing while the
+                    // location is turned off, the sync dialog asks to turn it on.
+                    "scanNeedsLocation" -> {
+                        val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                        result.success(
+                            Build.VERSION.SDK_INT < Build.VERSION_CODES.S &&
+                                !LocationManagerCompat.isLocationEnabled(manager)
+                        )
+                    }
+                    "openLocationSettings" -> {
+                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
     }
 }
