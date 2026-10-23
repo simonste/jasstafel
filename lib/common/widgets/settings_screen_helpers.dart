@@ -30,7 +30,6 @@ Widget buildCheckboxTile(
     subtitle: subtitle,
     value: value,
     onChanged: onChanged,
-    dense: true,
   );
 }
 
@@ -99,7 +98,6 @@ Widget buildDropdownTile<T>(
       onChanged: onChanged,
       underline: Container(),
     ),
-    dense: true,
   );
 }
 
