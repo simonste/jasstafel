@@ -56,6 +56,7 @@ class SettingsGroup {
       Method.returnsVoid(
         (b) => b
           ..name = 'toPreferences'
+          ..annotations.add(refer('override'))
           ..requiredParameters.add(
             Parameter(
               (b) => b
@@ -68,6 +69,7 @@ class SettingsGroup {
       Method.returnsVoid(
         (b) => b
           ..name = 'fromPreferences'
+          ..annotations.add(refer('override'))
           ..requiredParameters.add(
             Parameter(
               (b) => b
@@ -80,12 +82,14 @@ class SettingsGroup {
       Method(
         (b) => b
           ..name = 'toJson'
+          ..annotations.add(refer('override'))
           ..returns = refer('Map<String, dynamic>')
           ..body = Code(toJson),
       ),
       Method.returnsVoid(
         (b) => b
           ..name = 'fromJson'
+          ..annotations.add(refer('override'))
           ..requiredParameters.add(
             Parameter(
               (b) => b
@@ -126,6 +130,7 @@ class SettingsGroup {
       Class(
         (b) => b
           ..name = _groupName
+          ..implements.add(refer('BoardSettings'))
           ..fields.addAll(fields)
           ..methods.addAll(methods),
       ),
