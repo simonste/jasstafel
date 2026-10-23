@@ -16,6 +16,7 @@
     "rssi",
     "schlaeger",
     "sublist",
+    "unacked",
     "wakelock"
   ],
   "ignoreRegExpList": [
