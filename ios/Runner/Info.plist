@@ -51,5 +51,7 @@
 		<true />
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false />
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>Bluetooth is used to synchronize the score board with nearby devices.</string>
 	</dict>
 </plist>
