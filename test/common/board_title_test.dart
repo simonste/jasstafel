@@ -151,6 +151,27 @@ void main() {
     expect(find.byKey(const Key('actionsMenu')), findsNothing);
   });
 
+  testWidgets('a menu entry keeps the tooltip of its button', (tester) async {
+    await pump(
+      tester,
+      widthDp: 260,
+      actions: () => [
+        IconButton(
+          key: const Key('labelled'),
+          tooltip: 'Label',
+          icon: const Icon(Icons.android),
+          onPressed: () {},
+        ),
+        ...others(2),
+      ],
+    );
+
+    await tester.tap(find.byKey(const Key('actionsMenu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('labelled')), findsOneWidget);
+    expect(find.byTooltip('Label'), findsOneWidget);
+  });
+
   testWidgets('a kept action stays in the bar whatever the width', (
     tester,
   ) async {
