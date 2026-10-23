@@ -144,14 +144,19 @@ List<Widget> shrinkActions({
           // unwrap icon buttons to be able to call Navigator.pop (close drop down)
           List<PopupMenuItem<int>> popupItems = [];
           iconButtons.asMap().forEach((index, element) {
+            final icon = IconTheme.merge(
+              data: const IconThemeData(color: Colors.white),
+              child: element.icon,
+            );
+            // keep the tooltip, it labels the entry for screen readers
+            final tooltip = element.tooltip;
             popupItems.add(
               PopupMenuItem(
                 key: element.key,
                 value: index,
-                child: IconTheme.merge(
-                  data: const IconThemeData(color: Colors.white),
-                  child: element.icon,
-                ),
+                child: tooltip == null
+                    ? icon
+                    : Tooltip(message: tooltip, child: icon),
               ),
             );
           });
