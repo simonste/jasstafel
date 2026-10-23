@@ -6,6 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/testapp.dart';
 
+/// An action that belongs in the menu.
+class MenuButton extends IconButton {
+  const MenuButton({super.key = const Key('menu')})
+    : super(icon: const Icon(Icons.android), onPressed: _nothing);
+  static void _nothing() {}
+}
+
+/// An action that stays in the bar.
+class KeptButton extends IconButton {
+  const KeptButton({super.key = const Key('kept')})
+    : super(icon: const Icon(Icons.android), onPressed: _nothing);
+  static void _nothing() {}
+}
+
 void main() {
   testWidgets('actions that do not fit move into the actionsMenu', (
     tester,
@@ -56,5 +70,100 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tapped, 'one');
+  });
+
+  /// Pumps [actions] into a bar [widthDp] wide with the given placement.
+  Future<void> pump(
+    WidgetTester tester, {
+    required double widthDp,
+    required List<Widget> Function() actions,
+    List<Type> inMenu = const [],
+    List<Type> keep = const [],
+  }) async {
+    tester.view.physicalSize = Size(widthDp * 4, 2560);
+    tester.view.devicePixelRatio = 4;
+    addTearDown(tester.view.reset);
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    await tester.pumpWidget(
+      SettingsProvider(
+        preferences: preferences,
+        child: JasstafelTestApp(
+          child: Builder(
+            builder: (context) => Row(
+              children: shrinkActions(
+                actions: actions(),
+                context: context,
+                priority: const [],
+                inMenu: inMenu,
+                keep: keep,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> others(int count) => [
+    for (var i = 0; i < count; i++)
+      IconButton(
+        key: Key('other$i'),
+        icon: const Icon(Icons.android),
+        onPressed: () {},
+      ),
+  ];
+
+  // The title takes 145 dp, a button 48: 260 dp fit two buttons, 360 four.
+
+  testWidgets('an action for the menu goes there with the overflow', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      widthDp: 260,
+      actions: () => [const MenuButton(), ...others(2)],
+      inMenu: const [MenuButton],
+    );
+
+    expect(find.byKey(const Key('other1')), findsOneWidget);
+    expect(find.byKey(const Key('menu')), findsNothing);
+    expect(find.byKey(const Key('other0')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('actionsMenu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('menu')), findsOneWidget);
+    expect(find.byKey(const Key('other0')), findsOneWidget);
+  });
+
+  testWidgets('a lone menu entry takes the menu\'s slot instead', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      widthDp: 360,
+      actions: () => [const MenuButton(), ...others(1)],
+      inMenu: const [MenuButton],
+    );
+
+    expect(find.byKey(const Key('menu')), findsOneWidget);
+    expect(find.byKey(const Key('other0')), findsOneWidget);
+    expect(find.byKey(const Key('actionsMenu')), findsNothing);
+  });
+
+  testWidgets('a kept action stays in the bar whatever the width', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      widthDp: 260,
+      actions: () => [const KeptButton(), ...others(2)],
+      keep: const [KeptButton],
+    );
+
+    expect(find.byKey(const Key('kept')), findsOneWidget);
+    expect(find.byKey(const Key('actionsMenu')), findsOneWidget);
+    expect(find.byKey(const Key('other0')), findsNothing);
+    expect(find.byKey(const Key('other1')), findsNothing);
   });
 }
