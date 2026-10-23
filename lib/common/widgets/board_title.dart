@@ -71,10 +71,19 @@ class BoardTitle extends Theme {
       );
 }
 
+/// Fits [actions] into the bar, moving those that don't fit into a menu.
+///
+/// [priority] lists the types to move first, then the leftmost actions go.
+/// Actions of the types in [inMenu] go into the menu whatever the width, as
+/// most players never need them; actions of the types in [keep] stay in the
+/// bar whatever the width. A menu that would hold a single entry is a detour,
+/// that entry takes the menu's slot instead.
 List<Widget> shrinkActions({
   required List<Widget> actions,
   required BuildContext context,
   required List<Type> priority,
+  List<Type> inMenu = const [],
+  List<Type> keep = const [],
 }) {
   final screenWidth = MediaQuery.of(context).size.width;
   const iconWidth = 48;
@@ -96,11 +105,17 @@ List<Widget> shrinkActions({
     }
   }
 
+  final menuFirst = actions
+      .where((action) => inMenu.contains(action.runtimeType))
+      .toList();
+  actions.removeWhere((action) => inMenu.contains(action.runtimeType));
+  bool movable(Widget action) => !keep.contains(action.runtimeType);
+
   var priorityCopy = [...priority];
-  if (actions.length > maxActions) {
+  if (actions.length > maxActions || menuFirst.isNotEmpty) {
     List<IconButton> iconButtons = [];
 
-    while ((actions.length + 1) > maxActions) {
+    while ((actions.length + 1) > maxActions && actions.any(movable)) {
       Widget? action;
       if (priorityCopy.isNotEmpty) {
         action = actions.firstWhere(
@@ -110,9 +125,15 @@ List<Widget> shrinkActions({
         priorityCopy.removeAt(0);
       } else {
         // remove leftmost
-        action = actions.removeAt(0);
+        action = actions.firstWhere(movable);
+        actions.remove(action);
       }
       iconButtons.add(action as IconButton);
+    }
+    iconButtons.addAll(menuFirst.cast<IconButton>());
+    if (iconButtons.length == 1) {
+      actions.add(iconButtons.single);
+      return actions;
     }
     actions.insert(
       actions.length,
