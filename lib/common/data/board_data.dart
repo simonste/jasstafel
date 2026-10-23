@@ -15,6 +15,7 @@ import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/point_board/data/point_board_score.dart';
 import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/schlaeger/data/schlaeger_score.dart';
+import 'package:jasstafel/settings/board_settings.dart';
 import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
@@ -37,7 +38,7 @@ abstract class Score {
   List<String> loser(); // not empty if fewest points win
 }
 
-class BoardData<T, S extends Score> {
+class BoardData<T extends BoardSettings, S extends Score> {
   final String dataKey;
   final String activeProfileKey;
   final String profilesKey;
@@ -47,6 +48,14 @@ class BoardData<T, S extends Score> {
   ProfileData profiles = ProfileData("Standard", []);
   final Board boardType;
   bool supportsVibration = false;
+
+  /// Broadcasts the serialized board state to synced devices, if a sync
+  /// session is active. Wired up by the sync service while a board is visible.
+  static void Function(BoardData<BoardSettings, Score> data, String json)?
+  onSaveBroadcast;
+
+  /// Called once a board is loaded, for the sync service to share it.
+  static void Function(BoardData<BoardSettings, Score> data)? onLoaded;
 
   static Board determineBoardType(Score score) {
     if (score is SchieberScore) {
@@ -154,18 +163,21 @@ class BoardData<T, S extends Score> {
     profiles.list = preferences.getStringList(profilesKey) ?? ["Standard:{}"];
 
     final str = preferences.getString(dataKey) ?? "{}";
-    if (str.length <= 2) {
-      return this;
+    if (str.length > 2) {
+      fromJson(jsonDecode(str));
     }
-    Map<String, dynamic> json = jsonDecode(str);
-    fromJson(json);
+    onLoaded?.call(this);
     return this;
   }
 
-  void save() async {
+  void save({bool broadcast = true}) async {
     var json = score.toJson();
     json['common'] = common.toJson();
     final str = jsonEncode(json);
+    // Before awaiting anything, to share it before reacting to others.
+    if (broadcast) {
+      onSaveBroadcast?.call(this, str);
+    }
     switch (boardType) {
       case Board.schieber:
         (settings as SchieberSettings).data = str;
@@ -193,6 +205,120 @@ class BoardData<T, S extends Score> {
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(dataKey, str);
+  }
+
+  /// The current score and shared state serialized as JSON, matching the
+  /// format persisted by [save] and consumed by [applyRemote].
+  String currentJson() {
+    var json = score.toJson();
+    json['common'] = common.toJson();
+    return jsonEncode(json);
+  }
+
+  /// The settings of [board] that only change how it looks or behaves on a
+  /// device, so they stay local when the board is shared. Marked `local` in
+  /// the settings YAML.
+  static Set<String> localSettingsOf(Board board) => switch (board) {
+    Board.schieber => SchieberSettings.local,
+    Board.coiffeur => CoiffeurSettings.local,
+    Board.molotow => MolotowSettings.local,
+    Board.pointBoard => PointBoardSettings.local,
+    Board.differenzler => DifferenzlerSettings.local,
+    Board.guggitaler => GuggitalerSettings.local,
+    Board.schlaeger => SchlaegerSettings.local,
+  };
+
+  /// The settings synced devices share, such as the goal and the players,
+  /// keyed like the preferences.
+  Map<String, dynamic> sharedSettings() {
+    final local = localSettingsOf(boardType);
+    final json = settings.toJson();
+    json.remove(dataKey);
+    json.removeWhere((key, _) => local.contains(key));
+    return json;
+  }
+
+  /// The preferences key [board] stores its score under.
+  static String dataKeyOf(Board board) => switch (board) {
+    Board.schieber => SchieberSettingsKeys().data,
+    Board.coiffeur => CoiffeurSettingsKeys().data,
+    Board.molotow => MolotowSettingsKeys().data,
+    Board.pointBoard => PointBoardSettingsKeys().data,
+    Board.differenzler => DifferenzlerSettingsKeys().data,
+    Board.guggitaler => GuggitalerSettingsKeys().data,
+    Board.schlaeger => SchlaegerSettingsKeys().data,
+  };
+
+  /// The settings of [board] with their defaults, keyed like the preferences.
+  static Map<String, Object> defaultSettings(Board board) => switch (board) {
+    Board.schieber => SchieberSettings.defaults,
+    Board.coiffeur => CoiffeurSettings.defaults,
+    Board.molotow => MolotowSettings.defaults,
+    Board.pointBoard => PointBoardSettings.defaults,
+    Board.differenzler => DifferenzlerSettings.defaults,
+    Board.guggitaler => GuggitalerSettings.defaults,
+    Board.schlaeger => SchlaegerSettings.defaults,
+  };
+
+  /// The entries of [shared] that are settings of [board] another device may
+  /// set: known keys with values of the right type, neither the score nor a
+  /// local setting. Anything else came from a broken or foreign device.
+  static Map<String, Object> acceptedSettings(
+    Board board,
+    Map<String, dynamic> shared,
+  ) {
+    final defaults = defaultSettings(board);
+    final dataKey = dataKeyOf(board);
+    final local = localSettingsOf(board);
+    return {
+      for (final MapEntry(:key, :value) in shared.entries)
+        if (value != null &&
+            defaults[key]?.runtimeType == value.runtimeType &&
+            key != dataKey &&
+            !local.contains(key))
+          key: value as Object,
+    };
+  }
+
+  /// Stores the [shared] settings received for [board] while it isn't open,
+  /// for it to load them.
+  static Future<void> storeSharedSettings(
+    Board board,
+    Map<String, dynamic> shared,
+  ) async {
+    final preferences = await SharedPreferences.getInstance();
+    for (final MapEntry(:key, :value) in acceptedSettings(
+      board,
+      shared,
+    ).entries) {
+      switch (value) {
+        case bool value:
+          await preferences.setBool(key, value);
+        case int value:
+          await preferences.setInt(key, value);
+        case double value:
+          await preferences.setDouble(key, value);
+        case String value:
+          await preferences.setString(key, value);
+      }
+    }
+  }
+
+  /// Applies board state and [shared] settings received from a synced device
+  /// and persists them locally without re-broadcasting them (which would loop
+  /// back to the sender).
+  void applyRemote(String jsonStr, Map<String, dynamic> shared) {
+    final accepted = acceptedSettings(boardType, shared);
+    final json = settings.toJson();
+    json.addAll(accepted);
+    settings.fromJson(json);
+    storeSharedSettings(boardType, accepted);
+    _updateSettings();
+    final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+    // A profile carries settings under the data key, the score doesn't.
+    data.remove(dataKey);
+    fromJson(data);
+    save(broadcast: false);
   }
 
   void reset() {
