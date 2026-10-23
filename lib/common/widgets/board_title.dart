@@ -2,7 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/localization.dart';
+import 'package:jasstafel/common/sync/sync_service.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 
 class TitleBar extends AppBar {
@@ -18,6 +20,15 @@ class TitleBar extends AppBar {
            actions: actions,
            context: context,
            priority: priority,
+           // Most players never sync, so the sync button waits in the menu.
+           // While a session runs it stays in the bar, where its icon shows
+           // the session's state.
+           inMenu: SyncService.instance.status.value.active
+               ? const []
+               : const [SyncButton],
+           keep: SyncService.instance.status.value.active
+               ? const [SyncButton]
+               : const [],
          ),
        );
 }

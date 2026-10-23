@@ -533,5 +533,45 @@
         "type": "int"
       }
     }
-  }
+  },
+  "syncTitle": "Synchronisieren",
+  "syncHostAction": "Tafel teilen",
+  "syncJoinAction": "Geteilte Tafel öffnen",
+  "syncHosting": "Tafel wird geteilt – warte auf Geräte …",
+  "syncScanning": "Suche nach geteilten Tafeln …",
+  "syncConnectedDevices": "{count, plural, one{1 Gerät verbunden} other{{count} Geräte verbunden}}",
+  "@syncConnectedDevices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStop": "Beenden",
+  "syncBluetoothOff": "Bluetooth ist ausgeschaltet",
+  "syncNoHosts": "Noch keine geteilte Tafel gefunden. Wähle auf dem anderen Gerät «{action}».",
+  "@syncNoHosts": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "syncUnnamedDevice": "Unbekanntes Gerät",
+  "syncPermissionRequired": "Für die Synchronisierung wird die Bluetooth-Berechtigung benötigt",
+  "syncGrantPermission": "Berechtigung erteilen",
+  "syncOpenSettings": "Einstellungen öffnen",
+  "syncConnectFailed": "Verbindung fehlgeschlagen",
+  "syncUnsupported": "Synchronisierung wird auf diesem Gerät nicht unterstützt",
+  "syncConnecting": "Verbinde …",
+  "syncLocationHint": "Ältere Android-Versionen fragen dafür nach dem Standort. Jasstafel verwendet ihn nicht.",
+  "syncEnded": "Die Synchronisierung wurde beendet",
+  "syncConnectionLost": "Verbindung zur geteilten Tafel verloren",
+  "syncDeviceLeft": "Ein Gerät hat die geteilte Tafel verlassen",
+  "syncLocationOff": "Auf diesem Gerät findet die Suche nur geteilte Tafeln, wenn der Standort eingeschaltet ist.",
+  "syncTurnOnLocation": "Standort einschalten",
+  "syncVersionMismatch": "Die andere Jasstafel hat eine andere Version. Bitte beide Apps aktualisieren.",
+  "syncReconnecting": "Verbindung unterbrochen – verbinde erneut …",
+  "syncReconnected": "Wieder verbunden",
+  "syncBluetoothTurnedOff": "Bluetooth wurde ausgeschaltet – die Tafel wird nicht mehr geteilt"
 }
