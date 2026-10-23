@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/settings/board_settings.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/widgets/profile_radio.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -19,7 +20,7 @@ Map<String, dynamic> decodeProfile(String encoded) {
 }
 
 class ProfilePage extends StatefulWidget {
-  final BoardData<dynamic, Score> boardData;
+  final BoardData<BoardSettings, Score> boardData;
   final Function updateParent;
   final Map<String, String> profiles = {};
 
