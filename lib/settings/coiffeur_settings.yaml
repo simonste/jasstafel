@@ -20,6 +20,7 @@ CoiffeurSettings:
   GreyCompletedRows:
     store: "coiffeur_grey_out_completed_rows"
     default: false
+    local: true
   Bonus:
     store: "coiffeur_bonus"
     default: false

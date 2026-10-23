@@ -11,7 +11,14 @@ class SettingsGroup {
     var settings = <Setting>[];
     for (var key in map.keys) {
       var setting = map[key] as Map;
-      settings.add(Setting(key, setting['store'], setting['default']));
+      settings.add(
+        Setting(
+          key,
+          setting['store'],
+          setting['default'],
+          local: setting['local'],
+        ),
+      );
     }
     return SettingsGroup(name, settings);
   }
@@ -113,6 +120,24 @@ class SettingsGroup {
           ..static = true
           ..returns = refer('Map<String, Object>')
           ..body = Code('return {$def};'),
+      ),
+    );
+
+    final local = _settings
+        .where((setting) => setting.local)
+        .map((setting) => setting.prefName())
+        .join(',');
+    methods.add(
+      Method(
+        (b) => b
+          ..type = MethodType.getter
+          ..name = 'local'
+          ..static = true
+          ..returns = refer('Set<String>')
+          ..docs.add(
+            '/// The settings that stay local when the board is shared.',
+          )
+          ..body = Code('return {$local};'),
       ),
     );
 

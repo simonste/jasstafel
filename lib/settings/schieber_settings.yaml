@@ -14,21 +14,26 @@ SchieberSettings:
   Backside:
     store: "schieber_backside"
     default: false
+    local: true
   BacksideColumns:
     store: "schieber_backside_columns"
     default: 4
   TouchScreen:
     store: "schieber_touch_screen"
     default: true
+    local: true
   Vibrate:
     store: "schieber_vibrate"
     default: true
+    local: true
   BigScore:
     store: "schieber_big_score"
     default: false
+    local: true
   DrawZ:
     store: "schieber_draw_Z"
     default: false
+    local: true
   Data:
     store: "schieber"
     default: "{}"

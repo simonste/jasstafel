@@ -6,14 +6,24 @@ class Setting {
   final String _prefName;
   final dynamic _defaultValue;
 
-  Setting(String name, this._prefName, this._defaultValue)
-    : _name = name.replaceRange(0, 1, name[0].toLowerCase()) {
+  /// Whether the setting only changes how a board looks or behaves on this
+  /// device, so it stays local when the board is shared.
+  final bool local;
+
+  Setting(String name, this._prefName, this._defaultValue, {local})
+    : _name = name.replaceRange(0, 1, name[0].toLowerCase()),
+      local = local ?? false {
     if (!name[0].contains(RegExp(r'[A-Z]'))) {
       throw ArgumentError(
         "setting $_name has to begin with an upper case letter",
       );
     }
+    if (local != null && local is! bool) {
+      throw ArgumentError("local of setting $_name has to be true or false");
+    }
   }
+
+  String prefName() => "'$_prefName'";
 
   Method getterMethod() {
     return Method(
