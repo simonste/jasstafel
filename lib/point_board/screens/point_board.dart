@@ -10,6 +10,8 @@ import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/board_list_with_fab.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
@@ -27,12 +29,16 @@ class PointBoard extends StatefulWidget {
   State<PointBoard> createState() => _PointBoardState();
 }
 
-class _PointBoardState extends State<PointBoard> {
+class _PointBoardState extends State<PointBoard> with BoardSyncMixin {
   var data = BoardData(
     PointBoardSettings(),
     PointBoardScore(),
     PointBoardSettingsKeys().data,
   );
+
+  @override
+  BoardData<PointBoardSettings, PointBoardScore> get syncData => data;
+
   Timer? updateTimer;
 
   void restoreData() async {
@@ -97,6 +103,7 @@ class _PointBoardState extends State<PointBoard> {
         board: Board.pointBoard,
         context: context,
         actions: [
+          SyncButton(context),
           WhoIsNextButton(
             context,
             data.score.playerName.sublist(0, data.settings.players),

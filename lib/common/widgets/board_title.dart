@@ -101,6 +101,11 @@ List<Widget> shrinkActions({
   const boardTitleWidth = 113 + 16 + 16;
   final maxActions = ((screenWidth - boardTitleWidth) / iconWidth).floor();
 
+  final menuFirst = actions
+      .where((action) => inMenu.contains(action.runtimeType))
+      .toList();
+  actions.removeWhere((action) => inMenu.contains(action.runtimeType));
+
   final preferences = SettingsProvider.of(context);
   if (preferences.getBool("additionalTestButtons") ?? false) {
     // for debug / test: add additional buttons
@@ -116,10 +121,6 @@ List<Widget> shrinkActions({
     }
   }
 
-  final menuFirst = actions
-      .where((action) => inMenu.contains(action.runtimeType))
-      .toList();
-  actions.removeWhere((action) => inMenu.contains(action.runtimeType));
   bool movable(Widget action) => !keep.contains(action.runtimeType);
 
   var priorityCopy = [...priority];
