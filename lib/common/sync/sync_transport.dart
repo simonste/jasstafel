@@ -111,3 +111,85 @@ class UnsupportedSyncTransport implements SyncTransport {
   @override
   Future<void> send(String peer, Uint8List data) async {}
 }
+
+/// Creates the transport only once the sync is used: on iOS, the radio asks
+/// for the Bluetooth permission as soon as it is set up, and warns when
+/// Bluetooth is off. Most players never sync, they aren't to be asked.
+///
+/// Reading [state] or calling a method sets the radio up, listening to the
+/// streams doesn't. Where creating it throws [UnimplementedError], as in
+/// widget tests without the plugin, there is no Bluetooth.
+class LazySyncTransport implements SyncTransport {
+  LazySyncTransport(this._create);
+
+  final SyncTransport Function() _create;
+  SyncTransport? _transport;
+
+  final _stateChanged = StreamController<BluetoothState>.broadcast();
+  final _peerJoined = StreamController<String>.broadcast();
+  final _peerLeft = StreamController<String>.broadcast();
+  final _hostSeen = StreamController<SyncHost>.broadcast();
+  final _hostLost = StreamController<String>.broadcast();
+  final _messages = StreamController<SyncMessage>.broadcast();
+
+  /// Whether the radio is set up.
+  bool get created => _transport != null;
+
+  SyncTransport get _radio {
+    final existing = _transport;
+    if (existing != null) return existing;
+    SyncTransport transport;
+    try {
+      transport = _create();
+    } on UnimplementedError {
+      transport = const UnsupportedSyncTransport();
+    }
+    _transport = transport;
+    transport.stateChanged.listen(_stateChanged.add);
+    transport.peerJoined.listen(_peerJoined.add);
+    transport.peerLeft.listen(_peerLeft.add);
+    transport.hostSeen.listen(_hostSeen.add);
+    transport.hostLost.listen(_hostLost.add);
+    transport.messages.listen(_messages.add);
+    return transport;
+  }
+
+  @override
+  BluetoothState get state => _radio.state;
+  @override
+  Stream<BluetoothState> get stateChanged => _stateChanged.stream;
+  @override
+  Future<bool> authorize() => _radio.authorize();
+  @override
+  Future<void> showAppSettings() => _radio.showAppSettings();
+  @override
+  Future<bool> scanNeedsLocation() => _radio.scanNeedsLocation();
+  @override
+  Future<void> openLocationSettings() => _radio.openLocationSettings();
+  @override
+  Future<void> startHosting(String name) => _radio.startHosting(name);
+  @override
+  Future<void> stopHosting() => _radio.stopHosting();
+  @override
+  Stream<String> get peerJoined => _peerJoined.stream;
+  @override
+  Stream<String> get peerLeft => _peerLeft.stream;
+  @override
+  Future<void> disconnectPeer(String peer) => _radio.disconnectPeer(peer);
+  @override
+  Future<void> startScan() => _radio.startScan();
+  @override
+  Future<void> stopScan() => _radio.stopScan();
+  @override
+  Stream<SyncHost> get hostSeen => _hostSeen.stream;
+  @override
+  Future<void> connect(String host) => _radio.connect(host);
+  @override
+  Future<void> disconnect(String host) => _radio.disconnect(host);
+  @override
+  Stream<String> get hostLost => _hostLost.stream;
+  @override
+  Stream<SyncMessage> get messages => _messages.stream;
+  @override
+  Future<void> send(String peer, Uint8List data) => _radio.send(peer, data);
+}
