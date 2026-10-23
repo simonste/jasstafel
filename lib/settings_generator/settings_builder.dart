@@ -25,6 +25,7 @@ class GenerateSettings implements Builder {
 
     var library = Library((b) {
       b.directives.addAll([
+        Directive.import('package:jasstafel/settings/board_settings.dart'),
         Directive.import('package:shared_preferences/shared_preferences.dart'),
       ]);
       b.body.addAll(settings.create());
