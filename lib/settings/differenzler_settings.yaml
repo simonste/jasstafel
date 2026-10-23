@@ -8,6 +8,7 @@ DifferenzlerSettings:
   HideGuess:
     store: "differenzler_hide_guess"
     default: true
+    local: true
   GoalType:
     store: "differenzler_goal_type"
     default: 0
