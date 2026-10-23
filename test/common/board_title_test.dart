@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/sync/sync_service.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -186,5 +189,69 @@ void main() {
     expect(find.byKey(const Key('actionsMenu')), findsOneWidget);
     expect(find.byKey(const Key('other0')), findsNothing);
     expect(find.byKey(const Key('other1')), findsNothing);
+  });
+
+  /// Pumps a board's title bar with the sync button and [count] others.
+  Future<void> pumpTitleBar(
+    WidgetTester tester, {
+    required double widthDp,
+    required int count,
+  }) async {
+    tester.view.physicalSize = Size(widthDp * 4, 2560);
+    tester.view.devicePixelRatio = 4;
+    addTearDown(tester.view.reset);
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    await tester.pumpWidget(
+      SettingsProvider(
+        preferences: preferences,
+        child: JasstafelTestApp(
+          child: Builder(
+            builder: (context) => Scaffold(
+              appBar: TitleBar(
+                board: Board.schieber,
+                context: context,
+                actions: [SyncButton(context), ...others(count)],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  testWidgets('the sync button waits in the menu without a session', (
+    tester,
+  ) async {
+    await pumpTitleBar(tester, widthDp: 260, count: 2);
+
+    expect(find.byKey(const Key('other1')), findsOneWidget);
+    expect(find.byKey(const Key('sync')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('actionsMenu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('sync')), findsOneWidget);
+  });
+
+  testWidgets('alone in the menu, the sync button shows in the bar', (
+    tester,
+  ) async {
+    await pumpTitleBar(tester, widthDp: 360, count: 1);
+
+    expect(find.byKey(const Key('sync')), findsOneWidget);
+    expect(find.byKey(const Key('actionsMenu')), findsNothing);
+  });
+
+  testWidgets('the sync button stays in the bar while a session runs', (
+    tester,
+  ) async {
+    final status = SyncService.instance.statusNotifier;
+    status.value = const SyncStatus(role: SyncRole.host);
+    addTearDown(() => status.value = const SyncStatus());
+    await pumpTitleBar(tester, widthDp: 260, count: 2);
+
+    expect(find.byKey(const Key('sync')), findsOneWidget);
+    expect(find.byKey(const Key('actionsMenu')), findsOneWidget);
+    expect(find.byKey(const Key('other0')), findsNothing);
   });
 }
