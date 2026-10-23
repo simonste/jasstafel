@@ -13,6 +13,7 @@ import 'package:jasstafel/settings/coiffeur_settings.g.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class CoiffeurSettingsScreen extends StatefulWidget {
   final BoardData<CoiffeurSettings, CoiffeurScore> boardData;
@@ -70,7 +71,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.roundingMode = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -81,7 +82,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.match = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -92,7 +93,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.counterLoss = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -107,7 +108,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
               if (value == null) return;
               setState(() {
                 settings.bonus = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
 
               final proposedMatchPoints = value
@@ -127,7 +128,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                     action: () {
                       setState(() {
                         settings.match = proposedMatchPoints;
-                        settings.toPreferences(preferences);
+                        storeSettings(settings, preferences);
                       });
                     },
                   ),
@@ -144,7 +145,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
               onChanged: (value) {
                 setState(() {
                   settings.bonusValue = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),
@@ -158,7 +159,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.threeTeams = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -171,7 +172,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
                 ? (bool? value) {
                     setState(() {
                       settings.thirdColumn = value!;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -185,7 +186,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.rows = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
             displayValue: (v) => Text(context.l10n.noOfRounds(v)),
@@ -197,7 +198,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.customFactor = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -208,7 +209,7 @@ class _CoiffeurSettingsScreenState extends State<CoiffeurSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.greyCompletedRows = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),

@@ -8,6 +8,8 @@ import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
@@ -25,12 +27,16 @@ class Schlaeger extends StatefulWidget {
   State<Schlaeger> createState() => _SchlaegerState();
 }
 
-class _SchlaegerState extends State<Schlaeger> {
+class _SchlaegerState extends State<Schlaeger> with BoardSyncMixin {
   var data = BoardData(
     SchlaegerSettings(),
     SchlaegerScore(),
     SchlaegerSettingsKeys().data,
   );
+
+  @override
+  BoardData<SchlaegerSettings, SchlaegerScore> get syncData => data;
+
   Timer? updateTimer;
 
   void restoreData() async {
@@ -79,6 +85,7 @@ class _SchlaegerState extends State<Schlaeger> {
         board: Board.schlaeger,
         context: context,
         actions: [
+          SyncButton(context),
           WhoIsNextButton(
             context,
             data.score.playerName.sublist(0, data.settings.players),

@@ -572,9 +572,10 @@ class SyncSession {
   /// would replace the host's.
   void shareChanges() {
     final current = _boards.current;
-    if (!isActive || current == null || _pending != null) return;
+    if (!isActive || current == null) return;
     if (_switchingTo != null || _known == null) return;
-    if (current != _known) broadcast(current);
+    // A change waiting to be sent has the board's state from before.
+    if (_pending != null || current != _known) broadcast(current);
   }
 
   /// Shares a board that just loaded, so the other devices switch to it.

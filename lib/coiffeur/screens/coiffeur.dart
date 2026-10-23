@@ -16,6 +16,8 @@ import 'package:jasstafel/common/dialog/points_dialog.dart';
 import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
@@ -31,12 +33,16 @@ class Coiffeur extends StatefulWidget {
   State<Coiffeur> createState() => _CoiffeurState();
 }
 
-class _CoiffeurState extends State<Coiffeur> {
+class _CoiffeurState extends State<Coiffeur> with BoardSyncMixin {
   var data = BoardData(
     CoiffeurSettings(),
     CoiffeurScore(),
     CoiffeurSettingsKeys().data,
   );
+
+  @override
+  BoardData<CoiffeurSettings, CoiffeurScore> get syncData => data;
+
   final typeNameGroup = AutoSizeGroup();
   final cellGroup = AutoSizeGroup();
   Timer? updateTimer;
@@ -72,6 +78,7 @@ class _CoiffeurState extends State<Coiffeur> {
         board: Board.coiffeur,
         context: context,
         actions: [
+          SyncButton(context),
           WhoIsNextButton(
             context,
             WhoIsNextButton.guessPlayerNames(

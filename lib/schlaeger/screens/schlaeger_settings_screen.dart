@@ -10,6 +10,7 @@ import 'package:jasstafel/schlaeger/data/schlaeger_score.dart';
 import 'package:jasstafel/settings/schlaeger_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class SchlaegerPlayers {
   static int get min => 3;
@@ -58,7 +59,7 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.players = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
             displayValue: (v) => Text('$v'),
@@ -78,7 +79,7 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.missingPlayer = value!;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -104,7 +105,7 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.goalType = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -116,7 +117,7 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
               onChanged: (value) {
                 setState(() {
                   settings.goalPoints = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),
@@ -128,7 +129,7 @@ class _SchlaegerSettingsScreenState extends State<SchlaegerSettingsScreen> {
               onChanged: (value) {
                 setState(() {
                   settings.goalRounds = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),

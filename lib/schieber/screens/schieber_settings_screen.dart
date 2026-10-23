@@ -11,6 +11,7 @@ import 'package:jasstafel/schieber/data/schieber_score.dart';
 import 'package:jasstafel/settings/schieber_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class SchieberSettingsScreen extends StatefulWidget {
   final BoardData<SchieberSettings, SchieberScore> boardData;
@@ -69,7 +70,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.goalType = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -82,7 +83,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.differentGoals = value!;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -93,7 +94,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) async {
               setState(() {
                 settings.match = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
 
               final proposedPointsPerRound = roundPoints(value);
@@ -111,7 +112,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                     action: () {
                       setState(() {
                         settings.pointsPerRound = proposedPointsPerRound;
-                        settings.toPreferences(preferences);
+                        storeSettings(settings, preferences);
                       });
                     },
                   ),
@@ -125,7 +126,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) async {
               setState(() {
                 settings.pointsPerRound = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
 
               final proposedMatchPoints = matchPoints(value);
@@ -141,7 +142,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                     action: () {
                       setState(() {
                         settings.match = proposedMatchPoints;
-                        settings.toPreferences(preferences);
+                        storeSettings(settings, preferences);
                       });
                     },
                   ),
@@ -159,7 +160,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.touchScreen = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -173,7 +174,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.vibrate = value!;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -185,7 +186,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.backside = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -200,7 +201,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.backsideColumns = value;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -213,7 +214,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.bigScore = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -224,7 +225,7 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.drawZ = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),

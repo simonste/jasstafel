@@ -7,6 +7,8 @@ import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
@@ -29,12 +31,15 @@ class Schieber extends StatefulWidget {
   State<Schieber> createState() => _SchieberState();
 }
 
-class _SchieberState extends State<Schieber> {
+class _SchieberState extends State<Schieber> with BoardSyncMixin {
   var data = BoardData(
     SchieberSettings(),
     SchieberScore(),
     SchieberSettingsKeys().data,
   );
+
+  @override
+  BoardData<SchieberSettings, SchieberScore> get syncData => data;
 
   void restoreData() async {
     data = await data.load();
@@ -128,6 +133,7 @@ class _SchieberState extends State<Schieber> {
     }
 
     List<Widget> actions = [
+      SyncButton(context),
       WhoIsNextButton(
         context,
         players,

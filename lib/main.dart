@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
 import 'package:jasstafel/differenzler/screens/differenzler.dart';
@@ -258,7 +259,7 @@ class _MyAppState extends State<MyApp> {
         Intl.defaultLocale = language.toLanguageTag();
         return language;
       },
-      navigatorObservers: [observer],
+      navigatorObservers: [observer, syncRouteObserver],
       routes: {
         Board.schieber.name: (context) => const Schieber(),
         Board.coiffeur.name: (context) => const Coiffeur(),

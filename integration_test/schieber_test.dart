@@ -488,7 +488,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('20'), findsNWidgets(2));
-    await tester.tap(find.byType(IconButton));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.byType(IconButton),
+      ),
+    );
     await tester.pump();
     await tester.tap(find.text('Ok'));
     await tester.pumpAndSettle();

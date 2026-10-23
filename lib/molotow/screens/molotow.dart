@@ -14,6 +14,8 @@ import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_list_with_fab.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
@@ -30,12 +32,16 @@ class Molotow extends StatefulWidget {
   State<Molotow> createState() => _MolotowState();
 }
 
-class _MolotowState extends State<Molotow> {
+class _MolotowState extends State<Molotow> with BoardSyncMixin {
   var data = BoardData(
     MolotowSettings(),
     MolotowScore(),
     MolotowSettingsKeys().data,
   );
+
+  @override
+  BoardData<MolotowSettings, MolotowScore> get syncData => data;
+
   Timer? updateTimer;
 
   void restoreData() async {
@@ -113,6 +119,7 @@ class _MolotowState extends State<Molotow> {
         board: Board.molotow,
         context: context,
         actions: [
+          SyncButton(context),
           WhoIsNextButton(
             context,
             data.score.playerName.sublist(0, data.settings.players),

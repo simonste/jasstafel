@@ -12,6 +12,7 @@ import 'package:jasstafel/molotow/data/molotow_score.dart';
 import 'package:jasstafel/settings/molotow_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class MolotowSettingsScreen extends StatefulWidget {
   final BoardData<MolotowSettings, MolotowScore> boardData;
@@ -57,7 +58,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.roundingMode = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -67,7 +68,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.pointsPerRound = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -83,7 +84,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.players = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
             displayValue: (v) => Text('$v'),
@@ -109,7 +110,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.goalType = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -122,7 +123,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
               onChanged: (value) {
                 setState(() {
                   settings.goalPoints = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),
@@ -134,7 +135,7 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
               onChanged: (value) {
                 setState(() {
                   settings.goalRounds = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),

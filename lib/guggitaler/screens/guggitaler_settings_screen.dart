@@ -9,6 +9,7 @@ import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
 import 'package:jasstafel/settings/guggitaler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class GuggitalerSettingsScreen extends StatefulWidget {
   final BoardData<GuggitalerSettings, GuggitalerScore> boardData;
@@ -65,7 +66,7 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.players = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
             displayValue: (v) => Text('$v'),
@@ -77,7 +78,7 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
             onChanged: (value) {
               setState(() {
                 settings.domino = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -91,7 +92,7 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.domino3 = value;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,
@@ -105,7 +106,7 @@ class _GuggitalerSettingsScreenState extends State<GuggitalerSettingsScreen> {
                 ? (value) {
                     setState(() {
                       settings.domino4 = value;
-                      settings.toPreferences(preferences);
+                      storeSettings(settings, preferences);
                     });
                   }
                 : null,

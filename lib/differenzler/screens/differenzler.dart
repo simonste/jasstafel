@@ -12,6 +12,8 @@ import 'package:jasstafel/common/list_board/list_board_utils.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
+import 'package:jasstafel/common/widgets/sync_button.dart';
 import 'package:jasstafel/common/widgets/delete_button.dart';
 import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/who_is_next_button.dart';
@@ -27,12 +29,16 @@ class Differenzler extends StatefulWidget {
   State<Differenzler> createState() => _DifferenzlerState();
 }
 
-class _DifferenzlerState extends State<Differenzler> {
+class _DifferenzlerState extends State<Differenzler> with BoardSyncMixin {
   var data = BoardData(
     DifferenzlerSettings(),
     DifferenzlerScore(),
     DifferenzlerSettingsKeys().data,
   );
+
+  @override
+  BoardData<DifferenzlerSettings, DifferenzlerScore> get syncData => data;
+
   Timer? updateTimer;
 
   final empty = '-';
@@ -219,6 +225,7 @@ class _DifferenzlerState extends State<Differenzler> {
         board: Board.differenzler,
         context: context,
         actions: [
+          SyncButton(context),
           WhoIsNextButton(
             context,
             data.score.playerName.sublist(0, data.settings.players),

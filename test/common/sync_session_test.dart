@@ -340,6 +340,42 @@ void main() {
     });
   });
 
+  test('a setting changed right after an entry is shared with it', () {
+    run((async) {
+      start(
+        async,
+        board: state(Board.schieber, {
+          'pts': [100],
+        }),
+      );
+
+      a.boards.current = state(Board.schieber, {
+        'pts': [100, 30],
+      });
+      a.session.broadcast(a.boards.current!);
+      a.boards.current = BoardState(
+        Board.schieber,
+        {
+          'pts': [100, 30],
+        },
+        {'schieber_match': 300},
+      );
+      a.session.shareChanges();
+      async.elapse(SyncSession.debounce);
+      async.flushMicrotasks();
+
+      final both = BoardState(
+        Board.schieber,
+        {
+          'pts': [100, 30],
+        },
+        {'schieber_match': 300},
+      );
+      expect(host.boards.current, both);
+      expect(a.boards.current, both);
+    });
+  });
+
   test('settings changed on a client reach the host', () {
     run((async) {
       start(

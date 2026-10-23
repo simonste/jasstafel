@@ -10,6 +10,7 @@ import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/settings/differenzler_settings.g.dart';
 import 'package:jasstafel/common/localization.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
+import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 
 class DifferenzlerSettingsScreen extends StatefulWidget {
   final BoardData<DifferenzlerSettings, DifferenzlerScore> boardData;
@@ -51,7 +52,7 @@ class _DifferenzlerSettingsScreenState
             onChanged: (value) {
               setState(() {
                 settings.pointsPerRound = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -67,7 +68,7 @@ class _DifferenzlerSettingsScreenState
             onChanged: (value) {
               setState(() {
                 settings.players = value;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
             displayValue: (v) => Text('$v'),
@@ -79,7 +80,7 @@ class _DifferenzlerSettingsScreenState
             onChanged: (value) {
               setState(() {
                 settings.hideGuess = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -104,7 +105,7 @@ class _DifferenzlerSettingsScreenState
             onChanged: (value) {
               setState(() {
                 settings.goalType = value!;
-                settings.toPreferences(preferences);
+                storeSettings(settings, preferences);
               });
             },
           ),
@@ -116,7 +117,7 @@ class _DifferenzlerSettingsScreenState
               onChanged: (value) {
                 setState(() {
                   settings.goalPoints = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),
@@ -128,7 +129,7 @@ class _DifferenzlerSettingsScreenState
               onChanged: (value) {
                 setState(() {
                   settings.goalRounds = value;
-                  settings.toPreferences(preferences);
+                  storeSettings(settings, preferences);
                 });
               },
             ),
