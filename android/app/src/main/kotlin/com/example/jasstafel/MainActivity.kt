@@ -1,5 +1,6 @@
 package ch.simonste.jasstafel
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
@@ -50,8 +51,21 @@ class MainActivity: FlutterActivity() {
                         startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                         result.success(null)
                     }
+                    // The name a shared board goes by in the join list.
+                    "deviceName" -> result.success(deviceName())
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    // The Bluetooth name, which needs BLUETOOTH_CONNECT from Android 12,
+    // else the device name of the settings.
+    private fun deviceName(): String? {
+        try {
+            val manager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val name = manager.adapter?.name
+            if (!name.isNullOrBlank()) return name
+        } catch (_: SecurityException) {}
+        return Settings.Global.getString(contentResolver, Settings.Global.DEVICE_NAME)
     }
 }

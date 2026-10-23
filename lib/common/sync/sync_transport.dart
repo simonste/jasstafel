@@ -1,10 +1,29 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 /// The state of the Bluetooth radio, as far as the sync needs to know it.
 /// [unknown] until the radio first tells, as while iOS asks for the
 /// permission.
 enum BluetoothState { unknown, unsupported, unauthorized, off, on }
+
+/// The most bytes of a session name an advertisement holds: of its 31
+/// bytes, 3 are for the flags, 4 for the manufacturer data header and id and
+/// 4 for the magic bytes.
+const maxSessionNameBytes = 20;
+
+/// [name] as it is advertised: cut to [maxSessionNameBytes] UTF-8 bytes
+/// without splitting characters.
+String truncateSessionName(String name) {
+  final buffer = StringBuffer();
+  var length = 0;
+  for (final rune in name.runes) {
+    length += utf8.encode(String.fromCharCode(rune)).length;
+    if (length > maxSessionNameBytes) break;
+    buffer.writeCharCode(rune);
+  }
+  return buffer.toString();
+}
 
 /// A host found while searching for a shared board.
 class SyncHost {
@@ -34,6 +53,10 @@ abstract class SyncTransport {
   /// as up to Android 11.
   Future<bool> scanNeedsLocation();
   Future<void> openLocationSettings();
+
+  /// The name the device goes by in Bluetooth, or null where it isn't
+  /// known.
+  Future<String?> deviceName();
 
   /// Advertises a session named [name] and takes clients.
   Future<void> startHosting(String name);
@@ -84,6 +107,8 @@ class UnsupportedSyncTransport implements SyncTransport {
   Future<bool> scanNeedsLocation() async => false;
   @override
   Future<void> openLocationSettings() async {}
+  @override
+  Future<String?> deviceName() async => null;
   @override
   Future<void> startHosting(String name) async {}
   @override
@@ -166,6 +191,8 @@ class LazySyncTransport implements SyncTransport {
   Future<bool> scanNeedsLocation() => _radio.scanNeedsLocation();
   @override
   Future<void> openLocationSettings() => _radio.openLocationSettings();
+  @override
+  Future<String?> deviceName() => _radio.deviceName();
   @override
   Future<void> startHosting(String name) => _radio.startHosting(name);
   @override

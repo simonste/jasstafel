@@ -19,10 +19,6 @@ final _characteristicUuid = UUID.fromString(
 const _manufacturerId = 0xFFFF;
 const _manufacturerMagic = [0x4A, 0x54, 0x41, 0x46];
 
-/// An advertisement holds 31 bytes: 3 for the flags, 4 for the manufacturer
-/// data header and id, 4 for the magic bytes, leaving 20 for the name.
-const _maxNameBytes = 20;
-
 /// The most a message may hold. A board is a few kilobytes, so anything
 /// larger is a broken or hostile device, not a board.
 const _maxMessageBytes = 256 * 1024;
@@ -50,21 +46,13 @@ Advertisement _advertisement(String name) {
     manufacturerSpecificData: [
       ManufacturerSpecificData(
         id: _manufacturerId,
-        data: Uint8List.fromList([..._manufacturerMagic, ..._truncate(name)]),
+        data: Uint8List.fromList([
+          ..._manufacturerMagic,
+          ...utf8.encode(truncateSessionName(name)),
+        ]),
       ),
     ],
   );
-}
-
-/// [name] UTF-8 encoded, cut to [_maxNameBytes] without splitting characters.
-List<int> _truncate(String name) {
-  final bytes = <int>[];
-  for (final rune in name.runes) {
-    final encoded = utf8.encode(String.fromCharCode(rune));
-    if (bytes.length + encoded.length > _maxNameBytes) break;
-    bytes.addAll(encoded);
-  }
-  return bytes;
 }
 
 /// The name of the session [advertisement] belongs to, or null if it isn't a
@@ -321,6 +309,19 @@ class BleSyncTransport implements SyncTransport {
   @override
   Future<void> openLocationSettings() =>
       _platform.invokeMethod('openLocationSettings');
+
+  /// Only Android tells apps the Bluetooth name, iOS answers "iPhone".
+  @override
+  Future<String?> deviceName() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return null;
+    try {
+      return await _platform.invokeMethod<String>('deviceName');
+    } on PlatformException {
+      return null;
+    } on MissingPluginException {
+      return null;
+    }
+  }
 
   @override
   Future<void> startHosting(String name) async {

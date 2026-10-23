@@ -44,7 +44,8 @@ class SyncStatus {
   final SyncRole role;
   final int connectedPeers;
 
-  /// The name of the hosted or joined session, e.g. "Jasstafel K7".
+  /// The name of the hosted or joined session: the host's Bluetooth name,
+  /// or e.g. "Jasstafel K7".
   final String? sessionName;
 
   const SyncStatus({
@@ -123,7 +124,8 @@ abstract class SyncBoards {
 }
 
 /// A session name with a short code to tell sessions apart, avoiding
-/// characters that are easily confused.
+/// characters that are easily confused. For a host without a known
+/// Bluetooth name.
 String _newSessionName() {
   // cspell:disable-next-line
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -361,7 +363,11 @@ class SyncSession {
   Future<void> startHost() async {
     await stop();
     await _transport.authorize();
-    final name = _newSessionName();
+    // As the joining devices see it.
+    final deviceName = truncateSessionName(
+      (await _transport.deviceName())?.trim() ?? '',
+    ).trim();
+    final name = deviceName.isEmpty ? _newSessionName() : deviceName;
     await _transport.startHosting(name);
     _role = SyncRole.host;
     _sessionName = name;
