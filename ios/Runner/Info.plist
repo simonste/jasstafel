@@ -51,5 +51,13 @@
 		<true />
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false />
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>Jasstafel uses Bluetooth to share the board with nearby devices.</string>
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>de</string>
+			<string>en</string>
+			<string>fr</string>
+		</array>
 	</dict>
 </plist>

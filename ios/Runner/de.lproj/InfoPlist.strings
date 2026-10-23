@@ -1,0 +1,2 @@
+/* The reason shown when iOS asks for the Bluetooth permission. */
+"NSBluetoothAlwaysUsageDescription" = "Jasstafel verwendet Bluetooth, um die Tafel mit Geräten in der Nähe zu teilen.";
