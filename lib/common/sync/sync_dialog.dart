@@ -28,8 +28,14 @@ class _SyncDialogState extends State<SyncDialog> {
   bool _permissionDenied = false;
   bool _connectFailed = false;
 
-  /// The host being connected to.
+  /// The host being connected to, until its board is taken.
   String? _connecting;
+
+  /// Connected, the host's board is waiting for the profile to be chosen.
+  bool _joining = false;
+
+  /// The profile chosen to show the host's board in.
+  String? _profile;
 
   /// Whether scanning needs the location turned on.
   bool _locationOff = false;
@@ -43,18 +49,29 @@ class _SyncDialogState extends State<SyncDialog> {
     // The permission state is not reported as a state change, so re-check
     // when returning from the permission dialog or the app settings.
     _lifecycleListener = AppLifecycleListener(onResume: _refreshState);
+    _sync.status.addListener(_onStatus);
     _checkLocation();
+  }
+
+  /// The session ended while joining.
+  void _onStatus() {
+    if (_sync.status.value.role == SyncRole.client || !mounted) return;
+    setState(() {
+      _connecting = null;
+      _joining = false;
+    });
   }
 
   @override
   void dispose() {
     _stateSubscription.cancel();
     _lifecycleListener.dispose();
-    // Closed while searching: nothing would show the search going on.
+    _sync.status.removeListener(_onStatus);
+    // Closed while searching: nothing would show the search going on. Or
+    // before the host's board was taken: it would stay waiting.
     final status = _sync.status.value;
     if (status.role == SyncRole.client &&
-        status.connectedPeers == 0 &&
-        _connecting == null) {
+        (_joining || (status.connectedPeers == 0 && _connecting == null))) {
       _sync.stop();
     }
     super.dispose();
@@ -91,15 +108,22 @@ class _SyncDialogState extends State<SyncDialog> {
     return ValueListenableBuilder<SyncStatus>(
       valueListenable: _sync.status,
       builder: (context, status, _) {
-        final (content, actions) = switch (status.role) {
-          SyncRole.idle => _idle(context),
-          SyncRole.host => _host(context, status),
-          SyncRole.client => _client(context, status),
-        };
-        return AlertDialog(
-          title: Text(context.l10n.syncTitle),
-          content: content,
-          actions: actions,
+        return ValueListenableBuilder<ProfileRequest?>(
+          valueListenable: _sync.profileRequest,
+          builder: (context, request, _) {
+            final (content, actions) = switch (status.role) {
+              SyncRole.idle => _idle(context),
+              SyncRole.host => _host(context, status),
+              SyncRole.client when request != null && _joining =>
+                _profileChoice(context, status, request),
+              SyncRole.client => _client(context, status),
+            };
+            return AlertDialog(
+              title: Text(context.l10n.syncTitle),
+              content: content,
+              actions: actions,
+            );
+          },
         );
       },
     );
@@ -175,7 +199,7 @@ class _SyncDialogState extends State<SyncDialog> {
   }
 
   (Widget, List<Widget>) _client(BuildContext context, SyncStatus status) {
-    if (status.connectedPeers > 0) {
+    if (status.connectedPeers > 0 && !_joining) {
       return (
         _message(
           Icons.bluetooth_connected,
@@ -287,19 +311,73 @@ class _SyncDialogState extends State<SyncDialog> {
     });
     final connected = await _sync.connectToHost(host);
     if (!mounted) {
-      // Closed meanwhile, see dispose.
-      if (!connected) _sync.stop();
+      // Closed meanwhile: nothing would ask for the profile.
+      _sync.stop();
       return;
     }
     if (connected) {
-      // The board follows the host once the dialog is closed.
-      Navigator.of(context).pop();
+      // The host's board arrives, for the profile to be chosen.
+      setState(() => _joining = true);
     } else {
       setState(() {
         _connectFailed = true;
         _connecting = null;
       });
     }
+  }
+
+  /// Asks which profile to show the host's board in: a new one or the one
+  /// of the host's name, else one named after the host, or the active one.
+  (Widget, List<Widget>) _profileChoice(
+    BuildContext context,
+    SyncStatus status,
+    ProfileRequest request,
+  ) {
+    final l10n = context.l10n;
+    final host = status.sessionName ?? l10n.syncUnnamedDevice;
+    final targets = request.names.contains(request.profile)
+        ? [request.profile, '$host ${request.profile}']
+        : [request.profile, request.active];
+    final selected = _profile ?? targets.first;
+    Widget option(String target, String other) {
+      final exists = request.names.contains(target);
+      return RadioListTile<String>(
+        value: target,
+        contentPadding: EdgeInsets.zero,
+        title: Text(
+          exists ? l10n.replaceProfile(target) : l10n.importProfile(target),
+        ),
+        subtitle: Text(
+          exists ? l10n.replaceProfileHint : l10n.importProfileHint(other),
+        ),
+      );
+    }
+
+    return (
+      RadioGroup<String>(
+        groupValue: selected,
+        onChanged: (target) => setState(() => _profile = target),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(host, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            option(targets[0], targets[1]),
+            option(targets[1], targets[0]),
+          ],
+        ),
+      ),
+      [
+        // Stops joining, see dispose.
+        _closeButton(context, text: l10n.cancel),
+        _textButton(l10n.ok, () async {
+          _joining = false;
+          await _sync.chooseProfile(selected);
+          // The board follows the host once the dialog is closed.
+          if (context.mounted) Navigator.of(context).pop();
+        }),
+      ],
+    );
   }
 
   static IconData _signalIcon(int rssi) {

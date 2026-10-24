@@ -176,6 +176,9 @@ class FakeBoards implements SyncBoards {
   /// The session, told when another board opened, as the real boards do.
   SyncSession? session;
 
+  /// The profile another board opens in, else the one of the state.
+  String? profile;
+
   final shown = <BoardState>[];
 
   @override
@@ -183,7 +186,15 @@ class FakeBoards implements SyncBoards {
     final opened = current?.board != state.board;
     shown.add(state);
     current = state;
-    if (opened) session?.boardLoaded(state);
+    if (!opened) return;
+    final loaded = BoardState(
+      state.board,
+      state.data,
+      state.settings,
+      profile: profile ?? state.profile,
+    );
+    current = loaded;
+    session?.boardLoaded(loaded);
   }
 }
 
@@ -274,6 +285,18 @@ void main() {
       expect(a.session.status.value.connectedPeers, 1);
       expect(host.session.status.value.connectedPeers, 1);
       expect(a.session.status.value.sessionName, startsWith('Jasstafel '));
+    });
+  });
+
+  test('a joining client gets the host\'s board even if it has it', () {
+    run((async) {
+      final board = state(Board.schieber, {
+        'pts': [100],
+      });
+      a.boards.current = board;
+      start(async, board: board);
+
+      expect(a.boards.shown, [board]);
     });
   });
 
@@ -374,6 +397,82 @@ void main() {
       async.flushMicrotasks();
 
       expect(host.boards.current!.settings, {'schieber_match': 300});
+    });
+  });
+
+  test('the host\'s board comes with the name of its profile', () {
+    run((async) {
+      final board = BoardState(
+        Board.schieber,
+        {
+          'pts': [100],
+        },
+        const {},
+        profile: 'Family',
+      );
+      start(async, board: board);
+
+      expect(a.boards.shown.single.profile, 'Family');
+    });
+  });
+
+  test('a client\'s change keeps the host\'s profile', () {
+    run((async) {
+      start(
+        async,
+        board: BoardState(
+          Board.schieber,
+          {
+            'pts': [100],
+          },
+          const {},
+          profile: 'Family',
+        ),
+      );
+
+      final changed = BoardState(
+        Board.schieber,
+        {
+          'pts': [100, 57],
+        },
+        const {},
+        profile: 'Standard',
+      );
+      a.boards.current = changed;
+      a.session.broadcast(changed);
+      async.elapse(SyncSession.debounce);
+      async.flushMicrotasks();
+
+      expect(host.boards.current!.profile, 'Family');
+      expect(host.boards.current!.data, changed.data);
+    });
+  });
+
+  test('a board a client opened gets the host\'s profile', () {
+    run((async) {
+      start(
+        async,
+        board: state(Board.schieber, {
+          'pts': [100],
+        }),
+      );
+      host.boards.profile = 'Family';
+
+      final coiffeur = BoardState(
+        Board.coiffeur,
+        {'rows': []},
+        const {},
+        profile: 'Standard',
+      );
+      a.boards.current = coiffeur;
+      a.session.boardLoaded(coiffeur);
+      async.elapse(SyncSession.debounce);
+      async.flushMicrotasks();
+      async.elapse(SyncSession.debounce);
+      async.flushMicrotasks();
+
+      expect(host.boards.current!.profile, 'Family');
+      expect(a.boards.shown.last.profile, 'Family');
     });
   });
 

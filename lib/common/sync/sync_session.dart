@@ -67,24 +67,28 @@ class SyncStatus {
   int get hashCode => Object.hash(role, connectedPeers, sessionName);
 }
 
-/// The state of a board as it is synced: its score and its shared settings.
+/// The state of a board as it is synced: its score, its shared settings and
+/// the name of the host's profile it is in.
 class BoardState {
   final Board board;
   final Map<String, dynamic> data;
   final Map<String, dynamic> settings;
+  final String profile;
 
-  const BoardState(this.board, this.data, this.settings);
+  const BoardState(this.board, this.data, this.settings, {this.profile = ''});
 
   factory BoardState.fromJson(Map<String, dynamic> json) => BoardState(
     Board.values.byName(json['board'] as String),
     json['data'] as Map<String, dynamic>,
     (json['settings'] as Map<String, dynamic>?) ?? {},
+    profile: json['profile'] as String? ?? '',
   );
 
   Map<String, dynamic> toJson() => {
     'board': board.name,
     'data': data,
     'settings': settings,
+    'profile': profile,
   };
 
   /// Keeps the changes of both [ours] and [theirs], made from this state.
@@ -93,12 +97,14 @@ class BoardState {
     mergeJson(data, ours.data, theirs.data) as Map<String, dynamic>,
     mergeJson(settings, ours.settings, theirs.settings, counters: false)
         as Map<String, dynamic>,
+    profile: ours.profile,
   );
 
   @override
   bool operator ==(Object other) =>
       other is BoardState &&
       other.board == board &&
+      other.profile == profile &&
       const DeepCollectionEquality().equals(other.data, data) &&
       const DeepCollectionEquality().equals(other.settings, settings);
 
@@ -227,6 +233,11 @@ class SyncSession {
 
   /// The number of the host's state the board was last updated to.
   int _baseVersion = 0;
+
+  /// Whether a state of the host arrived since joining. The first one is
+  /// shown even if the board here looks the same, for the player to choose
+  /// the profile to show it in.
+  bool _joined = false;
 
   /// Tells this client's changes apart from those of other clients, also
   /// after a reconnect, when the host knows the client by a new peer.
@@ -404,6 +415,7 @@ class SyncSession {
     _hostId = host;
     _clientId = _newClientId();
     _baseVersion = 0;
+    _joined = false;
     _sentChanges = 0;
     _unacked = null;
     _known = null;
@@ -564,11 +576,12 @@ class SyncSession {
   }
 
   /// Shares a board that just loaded, so the other devices switch to it.
-  /// Not when it is the board another device switched to.
+  /// Not when it is the board another device switched to, unless it opened
+  /// in another profile on the host, which names the profiles.
   void boardLoaded(BoardState state) {
     if (_switchingTo == state.board) {
       _switchingTo = null;
-      return;
+      if (_role != SyncRole.host || state.profile == _known?.profile) return;
     }
     broadcast(state);
   }
@@ -699,6 +712,14 @@ class SyncSession {
     final ours = _latest(theirs.board);
     if (baseState != null && ours != null && baseState.board == theirs.board) {
       state = baseState.merge(ours, theirs);
+    } else if (ours != null) {
+      // The host's profile, the client's may have another name.
+      state = BoardState(
+        state.board,
+        state.data,
+        state.settings,
+        profile: ours.profile,
+      );
     }
     // A change of the host not sent yet is in the merged state.
     _debounce?.cancel();
@@ -740,14 +761,17 @@ class SyncSession {
     _unacked = null;
     _baseVersion = json['version'] as int? ?? 0;
     _known = state;
-    _show(state);
+    final first = !_joined;
+    _joined = true;
+    _show(state, always: first);
   }
 
-  /// Shows [state] here, switching the board if it is another one.
-  Future<void> _show(BoardState state) async {
+  /// Shows [state] here, switching the board if it is another one. Unless
+  /// [always], not if the board here is the same already.
+  Future<void> _show(BoardState state, {bool always = false}) async {
     final current = _boards.current;
     if (current != null && current.board == state.board) {
-      if (state == current) return;
+      if (state == current && !always) return;
     } else {
       _switchingTo = state.board;
     }

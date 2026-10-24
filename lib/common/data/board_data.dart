@@ -54,8 +54,9 @@ class BoardData<T extends BoardSettings, S extends Score> {
   static void Function(BoardData<BoardSettings, Score> data, String json)?
   onSaveBroadcast;
 
-  /// Called once a board is loaded, for the sync service to share it.
-  static void Function(BoardData<BoardSettings, Score> data)? onLoaded;
+  /// Called once a board is loaded, for the sync service to share it, or
+  /// to apply the state another device switched to.
+  static Future<void> Function(BoardData<BoardSettings, Score> data)? onLoaded;
 
   static Board determineBoardType(Score score) {
     if (score is SchieberScore) {
@@ -166,7 +167,7 @@ class BoardData<T extends BoardSettings, S extends Score> {
     if (str.length > 2) {
       fromJson(jsonDecode(str));
     }
-    onLoaded?.call(this);
+    await onLoaded?.call(this);
     return this;
   }
 
