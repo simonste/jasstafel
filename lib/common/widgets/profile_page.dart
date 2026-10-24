@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/settings/board_settings.dart';
@@ -8,44 +5,18 @@ import 'package:jasstafel/common/dialog/string_dialog.dart';
 import 'package:jasstafel/common/widgets/profile_radio.dart';
 import 'package:jasstafel/common/localization.dart';
 
-String encodeProfile(Map<String, dynamic> profile) {
-  var bytes = utf8.encode(jsonEncode(profile));
-  return base64.encode(GZipEncoder().encode(bytes));
-}
-
-Map<String, dynamic> decodeProfile(String encoded) {
-  var bytes = GZipDecoder().decodeBytes(base64.decode(encoded));
-  var profile = jsonDecode(utf8.decode(bytes));
-  return profile;
-}
-
 class ProfilePage extends StatefulWidget {
   final BoardData<BoardSettings, Score> boardData;
   final Function updateParent;
   final Map<String, String> profiles = {};
 
   ProfilePage(this.boardData, this.updateParent, {super.key}) {
-    for (var element in boardData.profiles.list) {
-      var separator = element.indexOf(":");
-      var profileName = element.substring(0, separator);
-      var profile = element.substring(separator + 1);
-      profiles[profileName] = profile;
-    }
-
-    saveCurrentProfile();
-  }
-
-  void saveCurrentProfile() {
-    boardData.save();
-    var json = boardData.settings.toJson();
-    profiles[boardData.profiles.active] = encodeProfile(json);
-    saveProfiles();
+    boardData.saveActiveProfile();
+    profiles.addAll(boardData.profileMap());
   }
 
   void loadProfile(String name) async {
-    var profileStr = profiles[name] ?? "{}";
-    var profile = decodeProfile(profileStr);
-    boardData.fromJson(profile);
+    await boardData.loadProfile(name);
     updateParent();
   }
 
@@ -72,13 +43,7 @@ class ProfilePage extends StatefulWidget {
     saveProfiles();
   }
 
-  void saveProfiles() {
-    boardData.profiles.list.clear();
-    profiles.forEach((key, value) {
-      boardData.profiles.list.add("$key:$value");
-    });
-    boardData.saveProfiles();
-  }
+  void saveProfiles() => boardData.storeProfiles(profiles);
 
   @override
   ProfilePageState createState() => ProfilePageState();
