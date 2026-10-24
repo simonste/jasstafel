@@ -350,7 +350,67 @@ class BoardData<T extends BoardSettings, S extends Score> {
     await preferences.setStringList(profilesKey, profiles.list);
   }
 
-  void fromJson(Map<String, dynamic> json) async {
+  /// The profiles by name, each its settings and score encoded, see
+  /// [encodeProfile].
+  Map<String, String> profileMap() => {
+    for (final entry in profiles.list)
+      entry.substring(0, entry.indexOf(':')): entry.substring(
+        entry.indexOf(':') + 1,
+      ),
+  };
+
+  void storeProfiles(Map<String, String> map) {
+    profiles.list = [
+      for (final MapEntry(:key, :value) in map.entries) '$key:$value',
+    ];
+    saveProfiles();
+  }
+
+  /// Stores the settings and the score in the active profile.
+  void saveActiveProfile({bool broadcast = true}) {
+    save(broadcast: broadcast);
+    final map = profileMap();
+    map[profiles.active] = encodeProfile(settings.toJson());
+    storeProfiles(map);
+  }
+
+  /// Makes profile [name] the active one and loads its settings and score.
+  Future<void> loadProfile(String name) async {
+    final profile = profileMap()[name] ?? "{}";
+    profiles.active = name;
+    saveProfiles();
+    await fromJson(decodeProfile(profile));
+  }
+
+  /// Switches to profile [name], which is created as a copy of the active
+  /// one if there is none of that name. The switch isn't shared with synced
+  /// devices.
+  Future<void> switchProfile(String name) async {
+    if (name == profiles.active) return;
+    saveActiveProfile(broadcast: false);
+    final map = profileMap();
+    if (map.containsKey(name)) {
+      await loadProfile(name);
+      return;
+    }
+    map[name] = map[profiles.active]!;
+    profiles.active = name;
+    storeProfiles(map);
+  }
+
+  /// The active profile of [board] and the names of all its profiles, as
+  /// stored, for a board that isn't open.
+  static Future<(String, List<String>)> storedProfiles(Board board) async {
+    final preferences = await SharedPreferences.getInstance();
+    final dataKey = dataKeyOf(board);
+    final active = preferences.getString("${dataKey}_profile") ?? "Standard";
+    final list = preferences.getStringList("${dataKey}_profiles") ?? [];
+    final names = [for (final entry in list) entry.split(':').first];
+    if (!names.contains(active)) names.add(active);
+    return (active, names);
+  }
+
+  Future<void> fromJson(Map<String, dynamic> json) async {
     if (json.containsKey(dataKey)) {
       // restore profile
       final preferences = await SharedPreferences.getInstance();
