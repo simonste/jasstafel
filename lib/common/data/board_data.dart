@@ -470,10 +470,12 @@ class BoardData<T extends BoardSettings, S extends Score> {
       json = jsonDecode(json[dataKey]);
     }
 
-    if (json.containsKey('common')) {
-      common = CommonData.fromJson(json['common']);
-      json.remove('common');
-    }
+    // A board without it, such as an empty profile, is a new game: not the
+    // one of the board before, with its id and times.
+    final commonJson = json.remove('common');
+    common = commonJson == null
+        ? CommonData()
+        : CommonData.fromJson(commonJson);
     switch (boardType) {
       case Board.schieber:
         score = SchieberScore.fromJson(json) as S;
