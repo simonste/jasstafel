@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:jasstafel/common/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -86,8 +88,18 @@ class WhoIsNext {
   Map<String, dynamic> toJson() => _$WhoIsNextToJson(this);
 }
 
+/// A random id for a game, see [CommonData.gameId].
+String newGameId() {
+  final random = Random.secure();
+  return List.generate(12, (_) => random.nextInt(36).toRadixString(36)).join();
+}
+
 @JsonSerializable()
 class CommonData {
+  /// Tells games apart, for synced devices and a later history to know they
+  /// have the same game. A new game gets a new id.
+  @JsonKey(readValue: _readGameId)
+  String gameId = newGameId();
   Timestamps timestamps = Timestamps();
   WhoIsNext whoIsNext = WhoIsNext();
 
@@ -98,7 +110,12 @@ class CommonData {
 
   Map<String, dynamic> toJson() => _$CommonDataToJson(this);
 
+  // A game saved before games had ids gets one.
+  static Object? _readGameId(Map<dynamic, dynamic> json, String key) =>
+      json[key] ?? newGameId();
+
   void reset() {
+    gameId = newGameId();
     timestamps.reset();
     whoIsNext.whoBeginsOffset = null;
   }
