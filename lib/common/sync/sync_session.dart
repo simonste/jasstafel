@@ -189,6 +189,9 @@ class SyncSession {
   /// How many states the host keeps to merge changes made from them.
   static const historySize = 32;
 
+  /// How long ending the session may wait for the radio, for each step.
+  static const cleanupTimeout = Duration(seconds: 3);
+
   final status = ValueNotifier<SyncStatus>(const SyncStatus());
   final _events = StreamController<SyncEvent>.broadcast();
 
@@ -203,6 +206,9 @@ class SyncSession {
   SyncRole _role = SyncRole.idle;
   String? _sessionName;
   bool _stopping = false;
+
+  /// Ending the links of a session that ended, until done.
+  Future<void>? _cleanup;
   Timer? _heartbeat;
 
   // Host state.
@@ -497,34 +503,24 @@ class SyncSession {
   }
 
   /// Ends the session, whatever the role.
+  ///
+  /// The session ends at once; ending the links follows. Each step of that
+  /// may take [cleanupTimeout] at most: with Bluetooth turned off, or a link
+  /// that died unnoticed, the radio may never answer, and the session would
+  /// go on as if connected.
   Future<void> stop() async {
+    final cleanup = _cleanup;
+    if (cleanup != null) await cleanup;
+    if (_role == SyncRole.idle) return;
+    final role = _role;
+    final host = _hostId;
+    final connected = _connected;
+    final peers = _peers.toList();
+
     _stopping = true;
     _giveUp = true;
     _cancelTimers();
     _pending = null;
-
-    if (_role == SyncRole.host && _peers.isNotEmpty) {
-      // Tell the clients to leave, the host can't reliably end the links.
-      try {
-        await _sendToAll(_encode({'end': true}));
-      } catch (_) {}
-    }
-    if (_role == SyncRole.host) {
-      try {
-        await _transport.stopHosting();
-      } catch (_) {}
-    } else if (_role == SyncRole.client) {
-      try {
-        await _stopScan();
-      } catch (_) {}
-      final host = _hostId;
-      if (host != null && _connected) {
-        try {
-          await _transport.disconnect(host);
-        } catch (_) {}
-      }
-    }
-
     _peers.clear();
     _silence.clear();
     _history.clear();
@@ -540,9 +536,36 @@ class SyncSession {
     _role = SyncRole.idle;
     _sessionName = null;
     _switchingTo = null;
-    _stopping = false;
-    _giveUp = false;
     _publishStatus();
+
+    Future<void> step(Future<void> Function() action) async {
+      try {
+        await action().timeout(cleanupTimeout);
+      } catch (_) {}
+    }
+
+    final done = _cleanup = () async {
+      if (role == SyncRole.host) {
+        // Tell the clients to leave, the host can't reliably end the links.
+        final end = _encode({'end': true});
+        for (final peer in peers) {
+          await step(() => _transport.send(peer, end));
+        }
+        await step(_transport.stopHosting);
+      } else {
+        await step(_stopScan);
+        if (host != null && connected) {
+          await step(() => _transport.disconnect(host));
+        }
+      }
+    }();
+    try {
+      await done;
+    } finally {
+      _cleanup = null;
+      _stopping = false;
+      _giveUp = false;
+    }
   }
 
   /// Queues [state] of the open board to be sent to the other devices.
@@ -648,16 +671,6 @@ class SyncSession {
       _history.remove(_version - historySize);
     }
     _sendStateTo(peer);
-  }
-
-  Future<void> _sendToAll(Uint8List payload) async {
-    if (_role == SyncRole.host) {
-      for (final peer in _peers.toList()) {
-        await _transport.send(peer, payload);
-      }
-    } else if (_role == SyncRole.client && _hostId != null) {
-      await _transport.send(_hostId!, payload);
-    }
   }
 
   /// The latest state of [board] here.

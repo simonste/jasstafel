@@ -31,6 +31,11 @@ const _maxMessageBytes = 256 * 1024;
 /// How long one attempt to connect to a host may take.
 const _connectTimeout = Duration(seconds: 8);
 
+/// How long a single operation of the radio may take. With Bluetooth turned
+/// off, or a link that died unnoticed, some never complete, and everything
+/// sent after them would wait for good.
+const _opTimeout = Duration(seconds: 5);
+
 bool get _advertisesLocalName =>
     defaultTargetPlatform == TargetPlatform.iOS ||
     defaultTargetPlatform == TargetPlatform.macOS;
@@ -357,15 +362,17 @@ class BleSyncTransport implements SyncTransport {
   @override
   Future<void> stopHosting() async {
     try {
-      await _peripheralManager.stopAdvertising();
-      await _peripheralManager.removeAllServices();
+      await _peripheralManager.stopAdvertising().timeout(_opTimeout);
+      await _peripheralManager.removeAllServices().timeout(_opTimeout);
     } catch (_) {}
     // The host can't rely on the clients ending the links. Not supported
     // on Darwin.
     try {
-      final centrals = await _peripheralManager.retrieveConnectedCentrals();
+      final centrals = await _peripheralManager
+          .retrieveConnectedCentrals()
+          .timeout(_opTimeout);
       for (final central in centrals) {
-        await _peripheralManager.disconnect(central);
+        await _peripheralManager.disconnect(central).timeout(_opTimeout);
       }
     } catch (_) {}
     _characteristic = null;
@@ -377,14 +384,17 @@ class BleSyncTransport implements SyncTransport {
   @override
   Future<void> disconnectPeer(String peer) async {
     final central = _centrals[peer];
-    if (central != null) await _peripheralManager.disconnect(central);
+    if (central != null) {
+      await _peripheralManager.disconnect(central).timeout(_opTimeout);
+    }
   }
 
   @override
   Future<void> startScan() => _centralManager.startDiscovery();
 
   @override
-  Future<void> stopScan() => _centralManager.stopDiscovery();
+  Future<void> stopScan() =>
+      _centralManager.stopDiscovery().timeout(_opTimeout);
 
   @override
   Future<void> connect(String host) async {
@@ -397,7 +407,7 @@ class BleSyncTransport implements SyncTransport {
         return;
       } catch (_) {
         try {
-          await _centralManager.disconnect(peripheral);
+          await _centralManager.disconnect(peripheral).timeout(_opTimeout);
         } catch (_) {}
         if (attempt == 2) rethrow;
         await Future.delayed(const Duration(milliseconds: 500));
@@ -439,7 +449,9 @@ class BleSyncTransport implements SyncTransport {
       _hostCharacteristic = null;
       _hostBuffer.reset();
     }
-    if (peripheral != null) await _centralManager.disconnect(peripheral);
+    if (peripheral != null) {
+      await _centralManager.disconnect(peripheral).timeout(_opTimeout);
+    }
   }
 
   @override
@@ -461,24 +473,25 @@ class BleSyncTransport implements SyncTransport {
     if (characteristic == null) return;
     var chunkSize = 20;
     try {
-      chunkSize = await _peripheralManager.getMaximumNotifyLength(central);
+      chunkSize = await _peripheralManager
+          .getMaximumNotifyLength(central)
+          .timeout(_opTimeout);
     } catch (_) {}
     var sent = 0;
     for (final chunk in _frame(payload, chunkSize)) {
       try {
-        await _peripheralManager.notifyCharacteristic(
-          central,
-          characteristic,
-          value: chunk,
-        );
+        await _peripheralManager
+            .notifyCharacteristic(central, characteristic, value: chunk)
+            .timeout(_opTimeout);
         sent++;
-      } catch (_) {
+      } catch (e) {
         // The client has part of the message and would read the next one
-        // as its rest. Dropping the link starts both sides over. Not
-        // supported on Darwin, the heartbeat drops the client there.
-        if (sent > 0) {
+        // as its rest, or the radio is stuck. Dropping the link starts both
+        // sides over. Not supported on Darwin, the heartbeat drops the
+        // client there.
+        if (sent > 0 || e is TimeoutException) {
           try {
-            await _peripheralManager.disconnect(central);
+            await _peripheralManager.disconnect(central).timeout(_opTimeout);
           } catch (_) {}
         }
         return;
@@ -492,27 +505,31 @@ class BleSyncTransport implements SyncTransport {
     if (peripheral == null || characteristic == null) return;
     var chunkSize = 20;
     try {
-      chunkSize = await _centralManager.getMaximumWriteLength(
-        peripheral,
-        type: GATTCharacteristicWriteType.withResponse,
-      );
+      chunkSize = await _centralManager
+          .getMaximumWriteLength(
+            peripheral,
+            type: GATTCharacteristicWriteType.withResponse,
+          )
+          .timeout(_opTimeout);
     } catch (_) {}
     var sent = 0;
     for (final chunk in _frame(payload, chunkSize)) {
       try {
-        await _centralManager.writeCharacteristic(
-          peripheral,
-          characteristic,
-          value: chunk,
-          type: GATTCharacteristicWriteType.withResponse,
-        );
+        await _centralManager
+            .writeCharacteristic(
+              peripheral,
+              characteristic,
+              value: chunk,
+              type: GATTCharacteristicWriteType.withResponse,
+            )
+            .timeout(_opTimeout);
         sent++;
-      } catch (_) {
-        // The host has part of the message, see _notify. The link is
-        // reported lost, so the session connects again.
-        if (sent > 0) {
+      } catch (e) {
+        // The host has part of the message, or the radio is stuck, see
+        // _notify. The link is reported lost, so the session connects again.
+        if (sent > 0 || e is TimeoutException) {
           try {
-            await _centralManager.disconnect(peripheral);
+            await _centralManager.disconnect(peripheral).timeout(_opTimeout);
           } catch (_) {}
         }
         return;

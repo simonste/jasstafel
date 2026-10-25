@@ -54,6 +54,12 @@ class FakeTransport implements SyncTransport {
   /// Whether what the device sends gets lost, as on a link about to drop.
   bool losing = false;
 
+  /// Whether the radio leaves requests unanswered, as with Bluetooth turned
+  /// off: ending links, stopping and sending never complete.
+  bool stuck = false;
+
+  Future<void> _hang() => Completer<void>().future;
+
   /// Every message sent, decoded, with its receiver.
   final sent = <(String, Map<String, dynamic>)>[];
 
@@ -96,6 +102,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> stopHosting() async {
+    if (stuck) return _hang();
     hostingName = null;
     network.hosting.remove(id);
     for (final client in clients.toList()) {
@@ -136,6 +143,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> stopScan() async {
+    if (stuck) return _hang();
     scanning = false;
   }
 
@@ -151,6 +159,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> disconnect(String host) async {
+    if (stuck) return _hang();
     if (connectedHost != host) return;
     connectedHost = null;
     network.transports[host]?._clientGone(id);
@@ -158,6 +167,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> send(String peer, Uint8List data) async {
+    if (stuck) return _hang();
     if (!running || losing) return;
     final linked = clients.contains(peer) || connectedHost == peer;
     final target = network.transports[peer];
@@ -622,6 +632,74 @@ void main() {
 
       expect(host.events, [SyncEvent.bluetoothOff]);
       expect(host.session.isActive, isFalse);
+    });
+  });
+
+  test('Bluetooth turned off ends the session though the radio hangs', () {
+    run((async) {
+      start(async);
+
+      a.transport.stuck = true;
+      a.transport.setState(BluetoothState.off);
+      async.flushMicrotasks();
+
+      expect(a.events, [SyncEvent.bluetoothOff]);
+      expect(a.session.isActive, isFalse);
+      expect(a.session.status.value.connectedPeers, 0);
+    });
+  });
+
+  test('ending a session the radio doesn\'t answer ends it at once', () {
+    run((async) {
+      start(async);
+      a.transport.stuck = true;
+
+      var ended = false;
+      a.session.stop().then((_) => ended = true);
+      async.flushMicrotasks();
+      expect(a.session.isActive, isFalse);
+      expect(a.session.status.value.role, SyncRole.idle);
+
+      // Ending it again doesn't hang either.
+      var again = false;
+      a.session.stop().then((_) => again = true);
+      async.elapse(SyncSession.cleanupTimeout * 3);
+      expect(ended, isTrue);
+      expect(again, isTrue);
+    });
+  });
+
+  test('a device joins again once its radio answers again', () {
+    run((async) {
+      final board = state(Board.schieber, {
+        'pts': [100],
+      });
+      start(async, board: board);
+      a.transport.stuck = true;
+      a.session.stop();
+      async.flushMicrotasks();
+      // The host notices the client gone.
+      async.elapse(SyncSession.pingInterval * (SyncSession.silenceTicks + 2));
+
+      a.transport.stuck = false;
+      a.session.startDiscovery();
+      async.elapse(SyncSession.cleanupTimeout * 3);
+      a.session.connectToHost('H');
+      async.flushMicrotasks();
+
+      expect(a.session.status.value.connectedPeers, 1);
+      expect(a.boards.current, board);
+    });
+  });
+
+  test('a host ending the session tells every client to leave', () {
+    run((async) {
+      start(async, clients: [a, b]);
+      host.session.stop();
+      async.elapse(SyncSession.cleanupTimeout * 3);
+
+      expect(a.events, [SyncEvent.ended]);
+      expect(b.events, [SyncEvent.ended]);
     });
   });
 
