@@ -37,6 +37,9 @@ enum SyncEvent {
 
   /// Bluetooth was turned off, which ended the session.
   bluetoothOff,
+
+  /// The host has as many devices as it takes, see [SyncSession.maxClients].
+  full,
 }
 
 /// Immutable snapshot of the sync state, exposed for the UI.
@@ -202,6 +205,10 @@ class SyncSession {
   /// How long changes are collected before they are sent.
   static const debounce = Duration(milliseconds: 150);
 
+  /// How many devices may join a hosted session. Bluetooth takes only a few
+  /// links at once, and every change goes to each device in turn.
+  static const maxClients = 6;
+
   /// How many states the host keeps to merge changes made from them.
   static const historySize = 32;
 
@@ -341,6 +348,10 @@ class SyncSession {
       }),
       _transport.peerJoined.listen((peer) {
         if (_role != SyncRole.host) return;
+        if (_peers.length >= maxClients && !_peers.contains(peer)) {
+          _refuse(peer);
+          return;
+        }
         _peers.add(peer);
         _silence[peer] = 0;
         _sendSnapshotTo(peer);
@@ -385,6 +396,17 @@ class SyncSession {
     _ackTimer = null;
     _reconnectDeadline?.cancel();
     _reconnectDeadline = null;
+  }
+
+  Future<void> _refuse(String peer) async {
+    try {
+      await _transport
+          .send(peer, _encode({'full': true}))
+          .timeout(cleanupTimeout);
+    } catch (_) {}
+    try {
+      await _transport.disconnectPeer(peer).timeout(cleanupTimeout);
+    } catch (_) {}
   }
 
   void _removePeer(String peer) {
@@ -834,6 +856,11 @@ class SyncSession {
       if (json['end'] == true) {
         stop();
         _events.add(SyncEvent.ended);
+        return;
+      }
+      if (json['full'] == true) {
+        stop();
+        _events.add(SyncEvent.full);
         return;
       }
       state = BoardState.fromJson(json);

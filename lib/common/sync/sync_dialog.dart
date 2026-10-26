@@ -24,11 +24,15 @@ class _SyncDialogState extends State<SyncDialog> {
   final _sync = SyncService.instance;
   late BluetoothState _bluetoothState = _sync.bluetoothState;
   late final StreamSubscription<BluetoothState> _stateSubscription;
+  late final StreamSubscription<SyncEvent> _eventSubscription;
   late final AppLifecycleListener _lifecycleListener;
   bool _permissionDenied = false;
   bool _connectFailed = false;
 
   bool _startFailed = false;
+
+  /// Whether the host refused this device, as it had as many as it takes.
+  bool _full = false;
 
   /// The host being connected to, until its board is taken.
   String? _connecting;
@@ -52,6 +56,9 @@ class _SyncDialogState extends State<SyncDialog> {
     // when returning from the permission dialog or the app settings.
     _lifecycleListener = AppLifecycleListener(onResume: _refreshState);
     _sync.status.addListener(_onStatus);
+    _eventSubscription = _sync.events.listen((event) {
+      if (event == SyncEvent.full && mounted) setState(() => _full = true);
+    });
     _checkLocation();
   }
 
@@ -69,6 +76,7 @@ class _SyncDialogState extends State<SyncDialog> {
   @override
   void dispose() {
     _stateSubscription.cancel();
+    _eventSubscription.cancel();
     _lifecycleListener.dispose();
     _sync.status.removeListener(_onStatus);
     // Closed while searching: nothing would show the search going on. Or
@@ -110,7 +118,10 @@ class _SyncDialogState extends State<SyncDialog> {
   /// doesn't.
   Future<void> _start(Future<void> Function() action) async {
     try {
-      setState(() => _startFailed = false);
+      setState(() {
+        _startFailed = false;
+        _full = false;
+      });
       await action();
     } catch (_) {
       if (mounted) setState(() => _startFailed = true);
@@ -215,6 +226,13 @@ class _SyncDialogState extends State<SyncDialog> {
             const SizedBox(height: 12),
             Text(
               context.l10n.syncStartFailed,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ],
+          if (_full) ...[
+            const SizedBox(height: 12),
+            Text(
+              context.l10n.syncFull(SyncService.maxClients),
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ],
