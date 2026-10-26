@@ -60,6 +60,9 @@ class FakeTransport implements SyncTransport {
 
   Future<void> _hang() => Completer<void>().future;
 
+  /// Holds connecting until completed, as a slow radio does.
+  Completer<void>? connecting;
+
   /// Every message sent, decoded, with its receiver.
   final sent = <(String, Map<String, dynamic>)>[];
 
@@ -149,6 +152,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> connect(String host) async {
+    await connecting?.future;
     final target = network.hosting[host];
     if (!running) throw StateError('frozen');
     if (target == null || !target.reachable) throw StateError('no host');
@@ -700,6 +704,33 @@ void main() {
 
       expect(a.events, [SyncEvent.ended]);
       expect(b.events, [SyncEvent.ended]);
+    });
+  });
+
+  test('ending the session while connecting leaves no link', () {
+    run((async) {
+      host.boards.current = state(Board.schieber, {
+        'pts': [100],
+      });
+      host.session.startHost();
+      async.flushMicrotasks();
+      a.session.startDiscovery();
+      async.flushMicrotasks();
+
+      a.transport.connecting = Completer<void>();
+      bool? joined;
+      a.session.connectToHost('H').then((result) => joined = result);
+      async.flushMicrotasks();
+      a.session.stop();
+      async.flushMicrotasks();
+      a.transport.connecting!.complete();
+      async.elapse(SyncSession.cleanupTimeout);
+
+      expect(joined, isFalse);
+      expect(a.session.status.value, const SyncStatus());
+      expect(a.transport.connectedHost, isNull);
+      expect(host.session.status.value.connectedPeers, 0);
+      expect(a.boards.shown, isEmpty);
     });
   });
 

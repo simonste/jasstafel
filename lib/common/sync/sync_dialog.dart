@@ -59,6 +59,8 @@ class _SyncDialogState extends State<SyncDialog> {
     setState(() {
       _connecting = null;
       _joining = false;
+      // Not failed, ended: a search started again starts clean.
+      _connectFailed = false;
     });
   }
 
@@ -72,7 +74,9 @@ class _SyncDialogState extends State<SyncDialog> {
     final status = _sync.status.value;
     if (status.role == SyncRole.client &&
         (_joining || (status.connectedPeers == 0 && _connecting == null))) {
-      _sync.stop();
+      // Not in this frame: the board and its sync button would show the
+      // ended session only when something else repaints them.
+      scheduleMicrotask(_sync.stop);
     }
     super.dispose();
   }
@@ -320,7 +324,8 @@ class _SyncDialogState extends State<SyncDialog> {
       setState(() => _joining = true);
     } else {
       setState(() {
-        _connectFailed = true;
+        // Unless the session was ended meanwhile.
+        _connectFailed = _sync.status.value.role == SyncRole.client;
         _connecting = null;
       });
     }

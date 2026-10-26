@@ -209,6 +209,10 @@ class SyncSession {
 
   /// Ending the links of a session that ended, until done.
   Future<void>? _cleanup;
+
+  /// Counts the sessions ended, for a connection that completes after its
+  /// session ended to tell.
+  int _ended = 0;
   Timer? _heartbeat;
 
   // Host state.
@@ -425,13 +429,23 @@ class SyncSession {
     _sentChanges = 0;
     _unacked = null;
     _known = null;
+    final session = _ended;
     try {
       await _transport.connect(host);
     } catch (_) {
       if (_role == SyncRole.client) await _startScan();
       return false;
     }
+    if (_endedSince(session, host)) return false;
     _onConnected();
+    return true;
+  }
+
+  /// Whether the session ended since [session], while connecting to [host].
+  /// The link that came up after is ended, nothing is left to use it.
+  bool _endedSince(int session, String host) {
+    if (session == _ended) return false;
+    _transport.disconnect(host).timeout(cleanupTimeout).catchError((_) {});
     return true;
   }
 
@@ -453,9 +467,11 @@ class SyncSession {
     _reconnectDeadline = Timer(reconnectTimeout, () => _giveUp = true);
     _events.add(SyncEvent.reconnecting);
     try {
+      final session = _ended;
       while (_role == SyncRole.client && !_stopping && !_giveUp) {
         try {
           await _transport.connect(host);
+          if (_endedSince(session, host)) return;
           _onConnected();
           _resendChange();
           _events.add(SyncEvent.reconnected);
@@ -517,6 +533,7 @@ class SyncSession {
     final connected = _connected;
     final peers = _peers.toList();
 
+    _ended++;
     _stopping = true;
     _giveUp = true;
     _cancelTimers();

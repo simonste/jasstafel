@@ -86,8 +86,11 @@ class SyncService implements SyncBoards {
   ValueListenable<List<SyncHost>> get hosts => _session.hosts;
   bool get isActive => _session.isActive;
 
-  /// The board to switch to, as another device did.
-  Board? get switchingTo => _session.switchingTo;
+  /// The board to switch to, as another device did. Not before a joining
+  /// device chose the profile to show it in: cancelling the choice leaves
+  /// the board as it was.
+  Board? get switchingTo =>
+      _isClient && !_profileChosen ? null : _session.switchingTo;
 
   BluetoothState get bluetoothState => _session.bluetoothState;
   Stream<BluetoothState> get bluetoothStateChanged =>
