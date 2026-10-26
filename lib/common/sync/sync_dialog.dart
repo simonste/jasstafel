@@ -61,6 +61,8 @@ class _SyncDialogState extends State<SyncDialog> {
     setState(() {
       _connecting = null;
       _joining = false;
+      // Not failed, ended: a search started again starts clean.
+      _connectFailed = false;
     });
   }
 
@@ -70,11 +72,17 @@ class _SyncDialogState extends State<SyncDialog> {
     _lifecycleListener.dispose();
     _sync.status.removeListener(_onStatus);
     // Closed while searching: nothing would show the search going on. Or
-    // before the host's board was taken: it would stay waiting.
+    // before the host's board was taken: it would stay waiting. Not while
+    // getting back to the host, the board shows that.
     final status = _sync.status.value;
     if (status.role == SyncRole.client &&
-        (_joining || (status.connectedPeers == 0 && _connecting == null))) {
-      _sync.stop();
+        (_joining ||
+            (status.connectedPeers == 0 &&
+                _connecting == null &&
+                !status.reconnecting))) {
+      // Not in this frame: the board and its sync button would show the
+      // ended session only when something else repaints them.
+      scheduleMicrotask(_sync.stop);
     }
     super.dispose();
   }
@@ -230,11 +238,15 @@ class _SyncDialogState extends State<SyncDialog> {
   }
 
   (Widget, List<Widget>) _client(BuildContext context, SyncStatus status) {
-    if (status.connectedPeers > 0 && !_joining) {
+    if ((status.connectedPeers > 0 || status.reconnecting) && !_joining) {
       return (
         _message(
-          Icons.bluetooth_connected,
-          context.l10n.syncConnectedDevices(status.connectedPeers),
+          status.reconnecting
+              ? Icons.bluetooth_searching
+              : Icons.bluetooth_connected,
+          status.reconnecting
+              ? context.l10n.syncReconnecting
+              : context.l10n.syncConnectedDevices(status.connectedPeers),
           title: status.sessionName,
         ),
         [_stopButton(context), _closeButton(context)],
@@ -350,7 +362,8 @@ class _SyncDialogState extends State<SyncDialog> {
       setState(() => _joining = true);
     } else {
       setState(() {
-        _connectFailed = true;
+        // Unless the session was ended meanwhile.
+        _connectFailed = _sync.status.value.role == SyncRole.client;
         _connecting = null;
       });
     }

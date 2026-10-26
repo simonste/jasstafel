@@ -63,6 +63,9 @@ class FakeTransport implements SyncTransport {
 
   Future<void> _hang() => Completer<void>().future;
 
+  /// Holds connecting until completed, as a slow radio does.
+  Completer<void>? connecting;
+
   /// Every message sent, decoded, with its receiver.
   final sent = <(String, Map<String, dynamic>)>[];
 
@@ -153,6 +156,7 @@ class FakeTransport implements SyncTransport {
 
   @override
   Future<void> connect(String host) async {
+    await connecting?.future;
     final target = network.hosting[host];
     if (!running) throw StateError('frozen');
     if (target == null || !target.reachable) throw StateError('no host');
@@ -632,6 +636,44 @@ void main() {
     });
   });
 
+  test('a session ended while reconnecting leaves the next one alone', () {
+    run((async) {
+      start(async);
+      host.transport.reachable = false;
+      host.transport.running = false;
+      async.elapse(SyncSession.pingInterval * (SyncSession.silenceTicks + 1));
+      expect(a.events, [SyncEvent.reconnecting]);
+      expect(a.session.status.value.reconnecting, isTrue);
+
+      a.session.stop();
+      async.flushMicrotasks();
+      expect(a.session.status.value.reconnecting, isFalse);
+      a.events.clear();
+
+      // Joined again once the host is back.
+      host.transport.reachable = true;
+      host.transport.running = true;
+      start(async);
+      expect(a.session.status.value.connectedPeers, 1);
+      async.elapse(const Duration(seconds: 30));
+      expect(a.events, isEmpty);
+      expect(a.session.status.value.connectedPeers, 1);
+      expect(host.session.status.value.connectedPeers, 1);
+
+      // Lost again, and back again.
+      host.transport.reachable = false;
+      host.transport.running = false;
+      async.elapse(SyncSession.pingInterval * (SyncSession.silenceTicks + 1));
+      expect(a.events, [SyncEvent.reconnecting]);
+      host.transport.reachable = true;
+      host.transport.running = true;
+      async.elapse(SyncSession.reconnectPause);
+      async.flushMicrotasks();
+      expect(a.events, [SyncEvent.reconnecting, SyncEvent.reconnected]);
+      expect(a.session.status.value.connectedPeers, 1);
+    });
+  });
+
   test('a change made while the host is away reaches it once back', () {
     run((async) {
       start(
@@ -831,6 +873,33 @@ void main() {
 
       expect(a.events, [SyncEvent.ended]);
       expect(b.events, [SyncEvent.ended]);
+    });
+  });
+
+  test('ending the session while connecting leaves no link', () {
+    run((async) {
+      host.boards.current = state(Board.schieber, {
+        'pts': [100],
+      });
+      host.session.startHost();
+      async.flushMicrotasks();
+      a.session.startDiscovery();
+      async.flushMicrotasks();
+
+      a.transport.connecting = Completer<void>();
+      bool? joined;
+      a.session.connectToHost('H').then((result) => joined = result);
+      async.flushMicrotasks();
+      a.session.stop();
+      async.flushMicrotasks();
+      a.transport.connecting!.complete();
+      async.elapse(SyncSession.cleanupTimeout);
+
+      expect(joined, isFalse);
+      expect(a.session.status.value, const SyncStatus());
+      expect(a.transport.connectedHost, isNull);
+      expect(host.session.status.value.connectedPeers, 0);
+      expect(a.boards.shown, isEmpty);
     });
   });
 

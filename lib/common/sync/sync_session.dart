@@ -48,10 +48,14 @@ class SyncStatus {
   /// or e.g. "Jasstafel K7".
   final String? sessionName;
 
+  /// Whether a client lost its host and is getting back to it.
+  final bool reconnecting;
+
   const SyncStatus({
     this.role = SyncRole.idle,
     this.connectedPeers = 0,
     this.sessionName,
+    this.reconnecting = false,
   });
 
   bool get active => role != SyncRole.idle;
@@ -61,10 +65,12 @@ class SyncStatus {
       other is SyncStatus &&
       other.role == role &&
       other.connectedPeers == connectedPeers &&
-      other.sessionName == sessionName;
+      other.sessionName == sessionName &&
+      other.reconnecting == reconnecting;
 
   @override
-  int get hashCode => Object.hash(role, connectedPeers, sessionName);
+  int get hashCode =>
+      Object.hash(role, connectedPeers, sessionName, reconnecting);
 }
 
 /// The state of a board as it is synced: its score, its shared settings and
@@ -219,6 +225,10 @@ class SyncSession {
 
   /// Ending the links of a session that ended, until done.
   Future<void>? _cleanup;
+
+  /// Counts the sessions ended, for a connection that completes after its
+  /// session ended to tell.
+  int _ended = 0;
   Timer? _heartbeat;
 
   // Host state.
@@ -243,8 +253,10 @@ class SyncSession {
   String? _hostId;
   bool _connected = false;
   int _hostSilence = 0;
-  bool _reconnecting = false;
-  bool _giveUp = false;
+
+  /// The session a reconnect runs in, see [_ended], while one does. A
+  /// session ended while reconnecting leaves the next one alone.
+  int? _reconnecting;
   Timer? _reconnectDeadline;
 
   /// The number of the host's state the board was last updated to.
@@ -447,11 +459,12 @@ class SyncSession {
     _sentChanges = 0;
     _unacked = null;
     _known = null;
+    final session = _ended;
     try {
       await _stopScan();
       await _transport.connect(host);
     } catch (_) {
-      if (_role == SyncRole.client) {
+      if (_role == SyncRole.client && session == _ended) {
         try {
           await _startScan();
         } catch (_) {
@@ -460,7 +473,16 @@ class SyncSession {
       }
       return false;
     }
+    if (_endedSince(session, host)) return false;
     _onConnected();
+    return true;
+  }
+
+  /// Whether the session ended since [session], while connecting to [host].
+  /// The link that came up after is ended, nothing is left to use it.
+  bool _endedSince(int session, String host) {
+    if (session == _ended) return false;
+    _transport.disconnect(host).timeout(cleanupTimeout).catchError((_) {});
     return true;
   }
 
@@ -476,15 +498,19 @@ class SyncSession {
   /// [reconnectTimeout] before giving the session up.
   Future<void> _reconnect() async {
     final host = _hostId;
-    if (_reconnecting || host == null) return;
-    _reconnecting = true;
-    _giveUp = false;
-    _reconnectDeadline = Timer(reconnectTimeout, () => _giveUp = true);
+    final session = _ended;
+    if (_reconnecting == session || host == null) return;
+    _reconnecting = session;
+    var giveUp = false;
+    final deadline = Timer(reconnectTimeout, () => giveUp = true);
+    _reconnectDeadline = deadline;
     _events.add(SyncEvent.reconnecting);
+    _publishStatus();
     try {
-      while (_role == SyncRole.client && !_stopping && !_giveUp) {
+      while (session == _ended && !giveUp) {
         try {
           await _transport.connect(host);
+          if (_endedSince(session, host)) return;
           _onConnected();
           _resendChange();
           _events.add(SyncEvent.reconnected);
@@ -493,11 +519,14 @@ class SyncSession {
         await Future.delayed(reconnectPause);
       }
     } finally {
-      _reconnecting = false;
-      _reconnectDeadline?.cancel();
-      _reconnectDeadline = null;
+      deadline.cancel();
+      if (identical(_reconnectDeadline, deadline)) _reconnectDeadline = null;
+      if (_reconnecting == session) {
+        _reconnecting = null;
+        _publishStatus();
+      }
     }
-    if (_role != SyncRole.client || _stopping) return;
+    if (session != _ended) return;
     await stop();
     _events.add(SyncEvent.connectionLost);
   }
@@ -546,8 +575,8 @@ class SyncSession {
     final connected = _connected;
     final peers = _peers.toList();
 
+    _ended++;
     _stopping = true;
-    _giveUp = true;
     _cancelTimers();
     _pending = null;
     _peers.clear();
@@ -594,7 +623,6 @@ class SyncSession {
     } finally {
       _cleanup = null;
       _stopping = false;
-      _giveUp = false;
     }
   }
 
@@ -847,6 +875,7 @@ class SyncSession {
       role: _role,
       connectedPeers: peers,
       sessionName: _sessionName,
+      reconnecting: _reconnecting == _ended,
     );
   }
 }
