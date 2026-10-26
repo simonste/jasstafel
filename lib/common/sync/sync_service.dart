@@ -49,6 +49,9 @@ class SyncService implements SyncBoards {
 
   static final SyncService instance = SyncService._();
 
+  /// How many devices may join a shared board.
+  static const maxClients = SyncSession.maxClients;
+
   late final SyncSession _session;
 
   static const _platform = MethodChannel('jasstafel/platform');

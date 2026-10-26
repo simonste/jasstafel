@@ -237,5 +237,6 @@
   "syncVersionMismatch": "L'autre Jasstafel a une version différente. Veuillez mettre à jour les deux applications.",
   "syncReconnecting": "Connexion interrompue – reconnexion …",
   "syncReconnected": "Reconnecté",
-  "syncBluetoothTurnedOff": "Le Bluetooth a été désactivé – le tableau n'est plus partagé"
+  "syncBluetoothTurnedOff": "Le Bluetooth a été désactivé – le tableau n'est plus partagé",
+  "syncFull": "Ce tableau partagé est complet – {count} appareils au maximum peuvent le rejoindre"
 }

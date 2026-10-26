@@ -573,5 +573,13 @@
   "syncVersionMismatch": "Die andere Jasstafel hat eine andere Version. Bitte beide Apps aktualisieren.",
   "syncReconnecting": "Verbindung unterbrochen – verbinde erneut …",
   "syncReconnected": "Wieder verbunden",
-  "syncBluetoothTurnedOff": "Bluetooth wurde ausgeschaltet – die Tafel wird nicht mehr geteilt"
+  "syncBluetoothTurnedOff": "Bluetooth wurde ausgeschaltet – die Tafel wird nicht mehr geteilt",
+  "syncFull": "Diese geteilte Tafel ist voll – es können höchstens {count} Geräte mitmachen",
+  "@syncFull": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

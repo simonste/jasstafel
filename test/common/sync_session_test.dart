@@ -734,6 +734,44 @@ void main() {
     });
   });
 
+  test('a host takes six devices, a seventh is told it is full', () {
+    run((async) {
+      final more = [
+        for (final id in ['C', 'D', 'E', 'F', 'G']) Device(id, network),
+      ];
+      try {
+        start(async, clients: [a, b, ...more.take(4)]);
+        expect(host.session.status.value.connectedPeers, 6);
+
+        final seventh = more.last;
+        seventh.session.startDiscovery();
+        async.flushMicrotasks();
+        seventh.session.connectToHost('H');
+        async.elapse(SyncSession.cleanupTimeout);
+
+        expect(seventh.events, [SyncEvent.full]);
+        expect(seventh.session.isActive, isFalse);
+        expect(seventh.transport.connectedHost, isNull);
+        expect(host.session.status.value.connectedPeers, 6);
+        expect(host.events, isEmpty);
+
+        // Once one leaves, there is room again.
+        a.session.stop();
+        async.elapse(SyncSession.cleanupTimeout);
+        seventh.session.startDiscovery();
+        async.flushMicrotasks();
+        seventh.session.connectToHost('H');
+        async.elapse(SyncSession.cleanupTimeout);
+        expect(seventh.session.status.value.connectedPeers, 1);
+        expect(host.session.status.value.connectedPeers, 6);
+      } finally {
+        for (final device in more) {
+          device.session.dispose();
+        }
+      }
+    });
+  });
+
   test('a host not seen anymore leaves the list', () {
     run((async) {
       host.session.startHost();

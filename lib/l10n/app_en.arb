@@ -244,5 +244,6 @@
   "syncVersionMismatch": "The other Jasstafel has a different version. Please update both apps.",
   "syncReconnecting": "Connection interrupted – reconnecting …",
   "syncReconnected": "Reconnected",
-  "syncBluetoothTurnedOff": "Bluetooth was turned off – the board is no longer shared"
+  "syncBluetoothTurnedOff": "Bluetooth was turned off – the board is no longer shared",
+  "syncFull": "This shared board is full – at most {count} devices can join"
 }

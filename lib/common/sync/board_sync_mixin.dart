@@ -120,6 +120,7 @@ mixin BoardSyncMixin<T extends StatefulWidget> on State<T>
       SyncEvent.reconnecting => context.l10n.syncReconnecting,
       SyncEvent.reconnected => context.l10n.syncReconnected,
       SyncEvent.bluetoothOff => context.l10n.syncBluetoothTurnedOff,
+      SyncEvent.full => context.l10n.syncFull(SyncService.maxClients),
     };
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
