@@ -14,14 +14,16 @@ Future<List<int?>?> schlaegerDialogBuilder(
   }
   title ??= Text(context.l10n.addRound);
 
+  // Kept outside the builders: the dialog is built again whenever the
+  // screen changes, which would forget the points chosen so far.
+  final points = List<int?>.generate(playerNames.length, (_) => null);
+
   return showDialog<List<int?>?>(
     context: context,
     builder: (BuildContext context) {
       final screenSize = MediaQuery.of(context).size;
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          List<int?> points = List.generate(playerNames.length, (_) => null);
-
           var columns = <Widget>[];
           for (var i = 0; i < playerNames.length; i++) {
             columns.add(Text(playerNames[i]));

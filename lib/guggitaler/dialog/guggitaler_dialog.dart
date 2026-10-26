@@ -25,38 +25,40 @@ Future<GuggitalerRound?> guggitalerDialogBuilder(
   required List<String> playerNames,
   required GuggitalerRow? row,
 }) {
+  // Kept outside the builders: the dialog is built again whenever the
+  // screen changes, which would forget what was chosen so far.
+  int factor = 1;
+
+  var round = GuggitalerRound();
+
+  loadPlayer(int i) {
+    round.player = playerNames[i];
+    if (row != null) {
+      for (var r = 0; r < row.pts[i].length; r++) {
+        if (row.pts[i][r] != null) {
+          round.points[r] = row.pts[i][r]!.abs();
+          if (row.pts[i][r]! < 0) {
+            factor = -1;
+          }
+        } else {
+          round.points[r] = null;
+        }
+      }
+    }
+  }
+
+  if (row != null) {
+    for (var i = 0; i < playerNames.length; i++) {
+      if (row.sum(i) != 0) {
+        loadPlayer(i);
+        break;
+      }
+    }
+  }
+
   return showDialog<GuggitalerRound>(
     context: context,
     builder: (BuildContext context) {
-      int factor = 1;
-
-      var round = GuggitalerRound();
-
-      loadPlayer(int i) {
-        round.player = playerNames[i];
-        if (row != null) {
-          for (var r = 0; r < row.pts[i].length; r++) {
-            if (row.pts[i][r] != null) {
-              round.points[r] = row.pts[i][r]!.abs();
-              if (row.pts[i][r]! < 0) {
-                factor = -1;
-              }
-            } else {
-              round.points[r] = null;
-            }
-          }
-        }
-      }
-
-      if (row != null) {
-        for (var i = 0; i < playerNames.length; i++) {
-          if (row.sum(i) != 0) {
-            loadPlayer(i);
-            break;
-          }
-        }
-      }
-
       final autoSizeGroupPlayer = AutoSizeGroup();
       final autoSizeGroupCategory = AutoSizeGroup();
       final screenSize = MediaQuery.of(context).size;

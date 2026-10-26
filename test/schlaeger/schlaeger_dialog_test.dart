@@ -94,6 +94,27 @@ void main() {
     expect(dialogInput.value, [2, 1, null, -1]);
   });
 
+  testWidgets('points are kept when the dialog is built again', (
+    WidgetTester tester,
+  ) async {
+    var dialogInput = await tester.openDialog(playerNames: playerNames);
+
+    await tester.addSchlaegerPoints('pts_0', 3);
+    await tester.pump();
+    await tester.addSchlaegerPoints('pts_1', 1);
+    await tester.pump();
+    // As when the screen changes, the system bars or the keyboard.
+    tester.view.physicalSize = tester.view.physicalSize * 1.1;
+    addTearDown(tester.view.reset);
+    await tester.pump();
+    await tester.addSchlaegerPoints('pts_2', 0);
+    await tester.pump();
+    await tester.tap(find.text('Ok'));
+    await tester.pump();
+
+    expect(dialogInput.value, [3, 1, 0, null]);
+  });
+
   testWidgets('edit', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(
       playerNames: playerNames,

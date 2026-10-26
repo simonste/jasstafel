@@ -93,6 +93,28 @@ void main() {
     expect(dialogInput.value!.points, [null, null, 2, null, null]);
   });
 
+  testWidgets('the choice is kept when the dialog is built again', (
+    WidgetTester tester,
+  ) async {
+    var dialogInput = await tester.openDialog(
+      playerNames: playerNames.sublist(0, 4),
+    );
+
+    await tester.tap(find.text('+/-'));
+    await tester.tap(find.text('P2'));
+    await tester.scrollNumberPicker(const Key('picker_0'), 3);
+    // As when the screen changes, the system bars or the keyboard.
+    tester.view.physicalSize = tester.view.physicalSize * 1.1;
+    addTearDown(tester.view.reset);
+    await tester.pump();
+    await tester.scrollNumberPicker(const Key('picker_2'), 1);
+    await tester.tap(find.text('Ok'));
+    await tester.pumpAndSettle();
+
+    expect(dialogInput.value!.player, "P2");
+    expect(dialogInput.value!.points, [-3, null, -1, null, null]);
+  });
+
   testWidgets('Player 1 - all schellen', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(playerNames: playerNames);
 
