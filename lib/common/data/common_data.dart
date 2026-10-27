@@ -52,10 +52,12 @@ class Timestamps {
     return "";
   }
 
+  /// The first points start the clock, unless the board was reset just
+  /// before: the time a board waited after a reset isn't played.
   void addPoints(int totalPts) {
     if (totalPts == 0 &&
         (startTime == null ||
-            DateTime.now().difference(startTime!).elapsed < 10)) {
+            DateTime.now().difference(startTime!).elapsed >= 10)) {
       reset();
     } else if (finishTime != null) {
       finishTime = DateTime.now();
