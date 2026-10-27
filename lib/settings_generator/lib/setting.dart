@@ -23,6 +23,8 @@ class Setting {
     }
   }
 
+  String get name => _name;
+
   String prefName() => "'$_prefName'";
 
   Method getterMethod() {

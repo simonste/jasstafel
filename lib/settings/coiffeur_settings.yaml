@@ -1,4 +1,5 @@
 CoiffeurSettings:
+  hasGoal: true
   Rows:
     store: "coiffeur_rows"
     default: 11

@@ -18,6 +18,22 @@ class Timestamps {
   DateTime? startTime;
   DateTime? finishTime;
 
+  /// When the board last changed, on whichever device: the devices sharing
+  /// a board take it along with the change, so the history on each of them
+  /// knows the same revision of the game, see `GameRecord.changed`.
+  DateTime? changeTime;
+
+  /// Stamps a change made here. Later than the last one even on a device
+  /// whose clock is behind the one that made it, so that a change is always
+  /// a later revision than the state it was made from.
+  void changed() {
+    final now = DateTime.now();
+    final last = changeTime;
+    changeTime = last != null && !now.isAfter(last)
+        ? last.add(const Duration(milliseconds: 1))
+        : now;
+  }
+
   Timestamps();
 
   factory Timestamps.fromJson(Map<String, dynamic> json) =>

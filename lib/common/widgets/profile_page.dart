@@ -11,7 +11,9 @@ class ProfilePage extends StatefulWidget {
   final Map<String, String> profiles = {};
 
   ProfilePage(this.boardData, this.updateParent, {super.key}) {
-    boardData.saveActiveProfile();
+    // Only to list the board in its profile: nothing changed, so it is no
+    // new revision of the game to share.
+    boardData.saveActiveProfile(broadcast: false);
     profiles.addAll(boardData.profileMap());
   }
 
@@ -34,7 +36,7 @@ class ProfilePage extends StatefulWidget {
   }
 
   void copyProfile(String srcName, String newName) {
-    profiles[newName] = profiles[srcName]!;
+    profiles[newName] = boardData.withNewGame(profiles[srcName]!);
     saveProfiles();
   }
 

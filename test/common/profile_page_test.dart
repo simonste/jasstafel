@@ -17,6 +17,24 @@ bool radioSelected(Key key) {
 }
 
 void main() {
+  testWidgets('opening the profiles changes nothing on the board', (
+    WidgetTester tester,
+  ) async {
+    var data = BoardData(SchieberSettings(), SchieberScore(), "");
+    data.common.timestamps.changed();
+    final changeTime = data.common.timestamps.changeTime;
+    var broadcasts = 0;
+    BoardData.onSaveBroadcast = (_, _) => broadcasts++;
+    addTearDown(() => BoardData.onSaveBroadcast = null);
+
+    await tester.pumpWidget(makeTestableExpanded(ProfilePage(data, () {})));
+
+    // A new revision would replace the game on synced devices, which may
+    // have gone on with it.
+    expect(data.common.timestamps.changeTime, changeTime);
+    expect(broadcasts, 0);
+  });
+
   testWidgets('copy profile', (WidgetTester tester) async {
     var data = BoardData(SchieberSettings(), SchieberScore(), "");
 

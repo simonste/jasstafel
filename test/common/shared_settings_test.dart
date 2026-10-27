@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/schieber/data/schieber_score.dart';
+import 'package:jasstafel/settings/schieber_settings.g.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('accepts only the board\'s own settings of the right type', () {
@@ -34,6 +37,28 @@ void main() {
       }),
       isEmpty,
     );
+  });
+
+  test('a state the board can\'t take leaves it as it was', () async {
+    SharedPreferences.setMockInitialValues({});
+    final data = BoardData(
+      SchieberSettings(),
+      SchieberScore(),
+      SchieberSettingsKeys().data,
+    );
+    data.score.add(157, 0);
+    final before = data.currentJson();
+
+    expect(
+      () => data.applyRemote('{"team": 5}', {'schieber_match': 300}),
+      throwsA(anything),
+    );
+
+    expect(data.currentJson(), before);
+    expect(data.settings.match, 257);
+    await pumpEventQueue();
+    final preferences = await SharedPreferences.getInstance();
+    expect(preferences.getInt('schieber_match'), isNull);
   });
 
   test('the local settings come from the settings YAML', () {

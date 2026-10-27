@@ -5,11 +5,24 @@ class SettingsGroup {
   String _groupName;
   var _settings = [];
 
-  SettingsGroup(this._groupName, this._settings);
+  /// Whether the board always has a goal to reach. Not for a board with a
+  /// `GoalType` setting, which says.
+  final bool _hasGoal;
 
+  SettingsGroup(this._groupName, this._settings, {bool hasGoal = false})
+    : _hasGoal = hasGoal;
+
+  /// Parses the settings of the group [name]: entries beginning with an upper
+  /// case letter. `hasGoal` says that the board always has a goal to reach,
+  /// unless a `GoalType` setting says when it has one.
   factory SettingsGroup.parse(String name, map) {
     var settings = <Setting>[];
+    var hasGoal = false;
     for (var key in map.keys) {
+      if (key == 'hasGoal') {
+        hasGoal = map[key] as bool;
+        continue;
+      }
       var setting = map[key] as Map;
       settings.add(
         Setting(
@@ -20,8 +33,12 @@ class SettingsGroup {
         ),
       );
     }
-    return SettingsGroup(name, settings);
+    return SettingsGroup(name, settings, hasGoal: hasGoal);
   }
+
+  /// Whether the generated class needs `GoalType`, see [_hasGoal].
+  bool get usesGoalType =>
+      _settings.any((setting) => setting.name == 'goalType');
 
   Iterable<Spec> create() {
     var fields = [
@@ -138,6 +155,20 @@ class SettingsGroup {
             '/// The settings that stay local when the board is shared.',
           )
           ..body = Code('return {$local};'),
+      ),
+    );
+
+    methods.add(
+      Method(
+        (b) => b
+          ..type = MethodType.getter
+          ..name = 'hasGoal'
+          ..annotations.add(refer('override'))
+          ..returns = refer('bool')
+          ..lambda = true
+          ..body = Code(
+            usesGoalType ? 'goalType != GoalType.noGoal.index' : '$_hasGoal',
+          ),
       ),
     );
 
