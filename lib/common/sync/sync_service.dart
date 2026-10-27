@@ -44,6 +44,7 @@ class SyncService implements SyncBoards {
       }
     }
     _session = SyncSession(transport, this);
+    BoardData.isShared = () => _session.isActive;
     _session.status.addListener(_onStatus);
   }
 
@@ -253,8 +254,19 @@ class SyncService implements SyncBoards {
         data.boardType,
         state.profile,
       ), () => state.profile);
+      // A new profile starts as a copy of the active one, whose game goes
+      // on there.
+      final copied =
+          local != data.profiles.active &&
+          !data.profileMap().containsKey(local);
       await data.switchProfile(local);
       _hostProfiles[data.boardType] = state.profile;
+      data.applyRemote(
+        jsonEncode(state.data),
+        state.settings,
+        endsGame: !copied,
+      );
+      return;
     }
     data.applyRemote(jsonEncode(state.data), state.settings);
   }

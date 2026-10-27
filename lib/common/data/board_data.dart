@@ -8,6 +8,8 @@ import 'package:jasstafel/common/rounding.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/data/common_data.dart';
 import 'package:jasstafel/common/data/profile_data.dart';
+import 'package:jasstafel/common/history/game_record.dart';
+import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/common/dialog/winner_dialog.dart';
 import 'package:jasstafel/differenzler/data/differenzler_score.dart';
 import 'package:jasstafel/guggitaler/data/guggitaler_score.dart';
@@ -73,6 +75,18 @@ class BoardData<T extends BoardSettings, S extends Score> {
   T settings;
   S score;
   var common = CommonData();
+
+  /// Whether the board is shared with other devices just now. Set by the
+  /// sync service.
+  static bool Function()? isShared;
+
+  /// Whether the board was played when last saved or loaded, to tell when a
+  /// game starts.
+  bool _playedBefore = false;
+
+  /// The game whose end this device has shown, so that the winner is shown
+  /// once, whether the finish was reached here or on a synced device.
+  String? _announcedGame;
   ProfileData profiles = ProfileData("Standard", []);
   final Board boardType;
   bool supportsVibration = false;
@@ -85,6 +99,10 @@ class BoardData<T extends BoardSettings, S extends Score> {
   /// Called once a board is loaded, for the sync service to share it, or
   /// to apply the state another device switched to.
   static Future<void> Function(BoardData<BoardSettings, Score> data)? onLoaded;
+
+  /// Called with a game that ended, for the history to keep it. A game is
+  /// reported again whenever it changes after its end, under the same id.
+  static Future<void> Function(GameRecord record)? onGameEnded;
 
   static Board determineBoardType(Score score) {
     if (score is SchieberScore) {
@@ -195,17 +213,29 @@ class BoardData<T extends BoardSettings, S extends Score> {
     if (str.length > 2) {
       fromJson(jsonDecode(str));
     }
+    _keepAnnounced();
     await onLoaded?.call(this);
     return this;
   }
 
   void save({bool broadcast = true}) async {
+    // A game starts with its first entry. On a board of its own it gets an
+    // id of its own then, not one left from a board shared before, which
+    // the other devices may start a game of their own on, too.
+    if (broadcast && !_playedBefore && played && !(isShared?.call() ?? false)) {
+      common.gameId = newGameId();
+    }
+    _playedBefore = played;
     var json = score.toJson();
     json['common'] = common.toJson();
     final str = jsonEncode(json);
     // Before awaiting anything, to share it before reacting to others.
     if (broadcast) {
       onSaveBroadcast?.call(this, str);
+    }
+    final finishTime = common.timestamps.finishTime;
+    if (finishTime != null) {
+      _recordGame(ended: finishTime, state: str);
     }
     switch (boardType) {
       case Board.schieber:
@@ -242,6 +272,83 @@ class BoardData<T extends BoardSettings, S extends Score> {
     var json = score.toJson();
     json['common'] = common.toJson();
     return jsonEncode(json);
+  }
+
+  /// Whether anything was written on the board, so that it is a game worth
+  /// keeping once it ends.
+  bool get played => score.noOfRounds() > 0 || score.totalPoints() != 0;
+
+  /// Whether the board has a goal to reach, so that a game can finish rather
+  /// than only be reset.
+  bool get hasGoal => switch (boardType) {
+    Board.schieber =>
+      (settings as SchieberSettings).goalType != GoalType.noGoal.index,
+    Board.molotow =>
+      (settings as MolotowSettings).goalType != GoalType.noGoal.index,
+    Board.pointBoard =>
+      (settings as PointBoardSettings).goalType != GoalType.noGoal.index,
+    Board.differenzler =>
+      (settings as DifferenzlerSettings).goalType != GoalType.noGoal.index,
+    Board.schlaeger =>
+      (settings as SchlaegerSettings).goalType != GoalType.noGoal.index,
+    Board.coiffeur => true,
+    Board.guggitaler => false,
+  };
+
+  /// The players of each team, as guessed for who is next: split from the
+  /// team names, empty for a team whose name doesn't name its players. On a
+  /// board without teams, each player is their own.
+  List<List<String>> players() {
+    final names = score.names();
+    final teams = switch (score) {
+      SchieberScore(:final team)
+          when (settings as SchieberSettings).differentGoals &&
+              team[0].goalPoints != team[1].goalPoints =>
+        // Three players: the one with the lower goal plays alone.
+        [
+          for (var i = 0; i < 2; i++)
+            team[i].goalPoints < team[1 - i].goalPoints
+                ? WhoIsNextButton.lonePlayer(team[i].name)
+                : WhoIsNextButton.teamPlayers([team[i].name]).single,
+        ],
+      SchieberScore() || CoiffeurScore() => WhoIsNextButton.teamPlayers(names),
+      _ => [
+        for (final name in names) [name],
+      ],
+    };
+    return [for (final team in teams) team ?? []];
+  }
+
+  /// The game on the board as the history keeps it, [ended] being its finish
+  /// or the moment it was reset. [state] is the board as [save] serializes
+  /// it, if already at hand.
+  GameRecord gameRecord({required DateTime ended, String? state}) => GameRecord(
+    id: common.gameId,
+    board: boardType,
+    profile: profiles.active,
+    started: common.timestamps.startTime,
+    ended: ended,
+    finished: common.timestamps.finishTime != null || !hasGoal,
+    rounds: score.noOfRounds(),
+    names: score.names(),
+    totals: score.totals(),
+    details: score.details(),
+    players: players(),
+    winners: _winners(),
+    losers: score.loser(),
+    state: state ?? currentJson(),
+    settings: sharedSettings(),
+  );
+
+  /// The winners of the game: those who reached the goal, or, on a board
+  /// without one, those ahead when it ended.
+  List<String> _winners() {
+    final winners = score.winner();
+    return winners.isEmpty && !hasGoal ? score.leaders() : winners;
+  }
+
+  void _recordGame({required DateTime ended, String? state}) {
+    onGameEnded?.call(gameRecord(ended: ended, state: state));
   }
 
   /// The settings of [board] that only change how it looks or behaves on a
@@ -336,21 +443,45 @@ class BoardData<T extends BoardSettings, S extends Score> {
   /// Applies board state and [shared] settings received from a synced device
   /// and persists them locally without re-broadcasting them (which would loop
   /// back to the sender).
-  void applyRemote(String jsonStr, Map<String, dynamic> shared) {
+  ///
+  /// A game on the board that [jsonStr] replaces is reported as ended, unless
+  /// [endsGame] is false because it lives on in another profile.
+  void applyRemote(
+    String jsonStr,
+    Map<String, dynamic> shared, {
+    bool endsGame = true,
+  }) {
+    final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+    // A profile carries settings under the data key, the score doesn't.
+    data.remove(dataKey);
+    // Another device started a new game: the one on the board ended, and it
+    // is only this device that still has it. Taken before the settings of
+    // the new game apply, such as fewer players.
+    final incomingId = (data['common'] as Map?)?['gameId'];
+    final ended =
+        endsGame &&
+            incomingId is String &&
+            incomingId != common.gameId &&
+            played
+        ? gameRecord(ended: common.timestamps.finishTime ?? DateTime.now())
+        : null;
     final accepted = acceptedSettings(boardType, shared);
     final json = settings.toJson();
     json.addAll(accepted);
     settings.fromJson(json);
     storeSharedSettings(boardType, accepted);
     _updateSettings();
-    final data = jsonDecode(jsonStr) as Map<String, dynamic>;
-    // A profile carries settings under the data key, the score doesn't.
-    data.remove(dataKey);
     fromJson(data);
+    if (ended != null) onGameEnded?.call(ended);
     save(broadcast: false);
   }
 
   void reset() {
+    // A finished game was recorded with its finish, but not if the board is
+    // reset right after it; a game reset before its finish ends here.
+    if (played) {
+      _recordGame(ended: common.timestamps.finishTime ?? DateTime.now());
+    }
     score.reset(common.timestamps.duration());
     common.reset();
     save();
@@ -358,14 +489,22 @@ class BoardData<T extends BoardSettings, S extends Score> {
 
   void checkGameOver(BuildContext context, {required GoalType goalType}) {
     final winners = score.winner();
-    if (winners.isNotEmpty && common.timestamps.justFinished()) {
+    if (winners.isNotEmpty && _announcedGame != common.gameId) {
+      _announcedGame = common.gameId;
+      // Finished here, unless the finish came from a synced device.
+      final finishedHere = common.timestamps.justFinished();
       Future.delayed(Duration.zero, () {
+        // Keeps the finish, and tells the synced devices and the history.
+        if (finishedHere) save();
         if (context.mounted) {
           winnerDialog(
             context: context,
             winners: winners,
             losers: score.loser(),
-            setWinnerFunction: score.setWinner,
+            setWinnerFunction: (String team) {
+              score.setWinner(team);
+              save();
+            },
             goalType: goalType,
           );
         }
@@ -388,6 +527,20 @@ class BoardData<T extends BoardSettings, S extends Score> {
       ),
   };
 
+  /// The profile [encoded], see [encodeProfile], with its game under a new
+  /// id: a copy of a profile goes on as a game of its own.
+  String withNewGame(String encoded) {
+    final profile = decodeProfile(encoded);
+    final board = profile[dataKey];
+    if (board is! String || board.length <= 2) return encoded;
+    final json = jsonDecode(board) as Map<String, dynamic>;
+    final common = json['common'];
+    if (common is! Map) return encoded;
+    common['gameId'] = newGameId();
+    profile[dataKey] = jsonEncode(json);
+    return encodeProfile(profile);
+  }
+
   void storeProfiles(Map<String, String> map) {
     profiles.list = [
       for (final MapEntry(:key, :value) in map.entries) '$key:$value',
@@ -409,6 +562,12 @@ class BoardData<T extends BoardSettings, S extends Score> {
     profiles.active = name;
     saveProfiles();
     await fromJson(decodeProfile(profile));
+    _keepAnnounced();
+  }
+
+  /// A game that was finished when it was opened has been shown before.
+  void _keepAnnounced() {
+    if (common.timestamps.finishTime != null) _announcedGame = common.gameId;
   }
 
   /// Switches to profile [name], which is created as a copy of the active
@@ -513,5 +672,6 @@ class BoardData<T extends BoardSettings, S extends Score> {
         break;
     }
     _updateSettings();
+    _playedBefore = played;
   }
 }

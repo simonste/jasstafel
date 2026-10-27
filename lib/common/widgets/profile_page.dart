@@ -34,7 +34,7 @@ class ProfilePage extends StatefulWidget {
   }
 
   void copyProfile(String srcName, String newName) {
-    profiles[newName] = profiles[srcName]!;
+    profiles[newName] = boardData.withNewGame(profiles[srcName]!);
     saveProfiles();
   }
 

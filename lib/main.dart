@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/history/history_db.dart';
 import 'package:jasstafel/common/sync/board_sync_mixin.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:jasstafel/coiffeur/screens/coiffeur.dart';
@@ -13,7 +15,9 @@ import 'package:jasstafel/schieber/screens/schieber.dart';
 import 'package:jasstafel/schlaeger/screens/schlaeger.dart';
 import 'package:jasstafel/settings/common_settings.g.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:jasstafel/common/localization.dart';
@@ -29,6 +33,15 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(_systemUiOverlayStyle);
 
   final preferences = await SharedPreferences.getInstance();
+
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.windows)) {
+    // No sqflite plugin there, the history runs on the bundled SQLite.
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+  BoardData.onGameEnded = HistoryDb.instance.record;
 
   runApp(SettingsProvider(preferences: preferences, child: const MyApp()));
 }
