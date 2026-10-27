@@ -67,6 +67,18 @@ class CoiffeurScore implements Score {
   CoiffeurSettings _settings = CoiffeurSettings();
   void setSettings(CoiffeurSettings settings) => _settings = settings;
 
+  @override
+  List<String> names() => teamName.sublist(0, _settings.threeTeams ? 3 : 2);
+
+  @override
+  List<int> totals() => [for (var t = 0; t < names().length; t++) total(t)];
+
+  @override
+  List<String> leaders() => leadersOf(names(), totals());
+
+  @override
+  Map<String, List<int>> details() => const {};
+
   List<String> teamName = ["Team 1", "Team 2", "Team 3"];
   var rows = List.filled(13, RowSettings(1, "Wunsch"));
 
