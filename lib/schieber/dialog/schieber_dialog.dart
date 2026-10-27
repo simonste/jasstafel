@@ -19,6 +19,9 @@ class Points {
 }
 
 class PointsController extends TextEditingController {
+  /// No round or weis has more points.
+  static const maxDigits = 3;
+
   PointsController() {
     text = "0";
   }
@@ -30,7 +33,7 @@ class PointsController extends TextEditingController {
   void add(String s) {
     if (text == "0") {
       text = s;
-    } else {
+    } else if (text.length < maxDigits) {
       text += s;
     }
   }

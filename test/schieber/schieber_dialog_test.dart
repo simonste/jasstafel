@@ -91,6 +91,15 @@ void main() {
     expect(dialogInput.value!.points2, 0);
   });
 
+  testWidgets('three digits at most', (WidgetTester tester) async {
+    var dialogInput = await tester.openDialog(matchPoints: 257);
+
+    await tester.addSchieberPoints(['key_1', 'key_2', 'key_3', 'key_4']);
+
+    expect(dialogInput.value!.points1, 123);
+    expect(dialogInput.value!.points2, 34);
+  });
+
   testWidgets('add match 514', (WidgetTester tester) async {
     var dialogInput = await tester.openDialog(
       matchPoints: 514,
