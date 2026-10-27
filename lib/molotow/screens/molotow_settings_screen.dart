@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/history/history_page.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
 import 'package:jasstafel/common/widgets/profile_page.dart';
@@ -50,6 +51,8 @@ class _MolotowSettingsScreenState extends State<MolotowSettingsScreen> {
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
           const Divider(),
+
+          ...historySection(context, widget.boardData.boardType),
 
           sectionTitle(context, context.l10n.countingType),
           buildRoundingTile(

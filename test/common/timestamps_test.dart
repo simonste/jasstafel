@@ -23,6 +23,12 @@ void main() {
     expect(timestamps.duration(), 30);
   });
 
+  test('a start ahead of the clock counts as nothing played', () {
+    final timestamps = Timestamps()
+      ..startTime = DateTime.now().add(const Duration(minutes: 2));
+    expect(timestamps.duration(), 0);
+  });
+
   test('a board without a start gets one', () {
     final timestamps = Timestamps();
     timestamps.addPoints(0);

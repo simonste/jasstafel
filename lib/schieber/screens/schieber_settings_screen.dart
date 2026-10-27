@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/dialog/confirm_dialog.dart';
+import 'package:jasstafel/common/history/history_page.dart';
 import 'package:jasstafel/common/utils.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
 import 'package:jasstafel/common/widgets/profile_button.dart';
@@ -47,6 +48,8 @@ class _SchieberSettingsScreenState extends State<SchieberSettingsScreen> {
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
           const Divider(),
+
+          ...historySection(context, widget.boardData.boardType),
 
           sectionTitle(context, context.l10n.countingType),
           buildDropdownTile(
