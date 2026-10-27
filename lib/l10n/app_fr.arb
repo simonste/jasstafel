@@ -238,5 +238,20 @@
   "syncReconnecting": "Connexion interrompue – reconnexion …",
   "syncReconnected": "Reconnecté",
   "syncBluetoothTurnedOff": "Le Bluetooth a été désactivé – le tableau n'est plus partagé",
-  "syncFull": "Ce tableau partagé est complet – {count} appareils au maximum peuvent le rejoindre"
+  "syncFull": "Ce tableau partagé est complet – {count} appareils au maximum peuvent le rejoindre",
+  "history": "Historique",
+  "historyEmpty": "Aucune partie terminée pour l'instant.",
+  "historyGames": "{count, plural, =1{1 partie} other{{count} parties}}",
+  "historyUnfinished": "non terminée",
+  "historyAverage": "Points moy.",
+  "games": "Parties",
+  "deleteHistory": "Supprimer l'historique",
+  "deleteHistoryConfirm": "Supprimer toutes les parties de ce tableau de l'historique ?",
+  "deleteGame": "Supprimer la partie",
+  "deleteGameConfirm": "Supprimer la partie du {date} ?",
+  "historyPlayers": "Joueurs",
+  "historyWinRate": "Taux de victoire",
+  "historyAverageOf": "{value} moy.",
+  "historyHand": "main",
+  "historyTable": "table"
 }

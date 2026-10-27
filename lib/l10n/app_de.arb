@@ -581,5 +581,41 @@
         "type": "int"
       }
     }
-  }
+  },
+  "history": "Verlauf",
+  "historyEmpty": "Noch keine Spiele beendet.",
+  "historyGames": "{count, plural, =1{1 Spiel} other{{count} Spiele}}",
+  "@historyGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyUnfinished": "nicht beendet",
+  "historyAverage": "Ø Punkte",
+  "games": "Spiele",
+  "deleteHistory": "Verlauf löschen",
+  "deleteHistoryConfirm": "Alle Spiele dieser Tafel aus dem Verlauf löschen?",
+  "deleteGame": "Spiel löschen",
+  "deleteGameConfirm": "Spiel vom {date} löschen?",
+  "@deleteGameConfirm": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "historyPlayers": "Spieler",
+  "historyWinRate": "Siegquote",
+  "historyAverageOf": "Ø {value}",
+  "@historyAverageOf": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "historyHand": "Hand",
+  "historyTable": "Tisch"
 }

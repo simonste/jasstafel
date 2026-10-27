@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasstafel/common/history/history_page.dart';
 import 'package:jasstafel/common/widgets/settings_screen_helpers.dart';
 import 'package:jasstafel/common/data/board_data.dart';
 import 'package:jasstafel/common/widgets/pref_number.dart';
@@ -42,6 +43,10 @@ class _DifferenzlerSettingsScreenState
             title: Text(widget.boardData.profiles.active),
             page: ProfilePage(widget.boardData, () => setState(() {})),
           ),
+          const Divider(),
+
+          sectionTitle(context, context.l10n.history),
+          HistoryButton(widget.boardData.boardType),
           const Divider(),
 
           sectionTitle(context, context.l10n.countingType),

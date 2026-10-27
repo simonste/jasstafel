@@ -245,5 +245,20 @@
   "syncReconnecting": "Connection interrupted – reconnecting …",
   "syncReconnected": "Reconnected",
   "syncBluetoothTurnedOff": "Bluetooth was turned off – the board is no longer shared",
-  "syncFull": "This shared board is full – at most {count} devices can join"
+  "syncFull": "This shared board is full – at most {count} devices can join",
+  "history": "History",
+  "historyEmpty": "No games finished yet.",
+  "historyGames": "{count, plural, =1{1 game} other{{count} games}}",
+  "historyUnfinished": "not finished",
+  "historyAverage": "Avg. points",
+  "games": "Games",
+  "deleteHistory": "Delete history",
+  "deleteHistoryConfirm": "Delete all games of this board from the history?",
+  "deleteGame": "Delete game",
+  "deleteGameConfirm": "Delete the game of {date}?",
+  "historyPlayers": "Players",
+  "historyWinRate": "Win rate",
+  "historyAverageOf": "Avg. {value}",
+  "historyHand": "hand",
+  "historyTable": "table"
 }

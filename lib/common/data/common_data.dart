@@ -30,20 +30,15 @@ class Timestamps {
     finishTime = null;
   }
 
-  int? duration() {
-    int minutes = 1000;
-    if (startTime != null) {
-      if (finishTime != null) {
-        minutes = finishTime!.difference(startTime!).elapsed;
-      } else {
-        minutes = DateTime.now().difference(startTime!).elapsed;
-      }
-    }
+  int? duration() => startTime == null
+      ? null
+      : playedMinutes(startTime!, finishTime ?? DateTime.now());
 
-    if (minutes < 300) {
-      return minutes;
-    }
-    return null;
+  /// The minutes played from [start] to [end], or null for a game too long
+  /// to have been played in one go, such as one left open.
+  static int? playedMinutes(DateTime start, DateTime end) {
+    final minutes = end.difference(start).elapsed;
+    return minutes < 300 ? minutes : null;
   }
 
   String elapsed(BuildContext context) {
