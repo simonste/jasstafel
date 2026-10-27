@@ -4,6 +4,7 @@ import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/history/game_record.dart';
 import 'package:jasstafel/common/history/history_db.dart';
 import 'package:jasstafel/common/history/history_statistics.dart';
+import 'package:jasstafel/common/sync/sync_history.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:test/test.dart';
 
@@ -255,9 +256,108 @@ void main() {
     ]);
   });
 
-  test('the list leaves the board out', () async {
+  test('deleted games are remembered as beyond any revision', () async {
+    final changed = DateTime(2026, 10, 24, 21);
+    await db.upsert(record('a', changed: changed));
+    await db.upsert(record('b', finished: false));
+    await db.upsert(record('c', board: Board.molotow, changed: changed));
+    final revision = changed.millisecondsSinceEpoch;
+    expect(await db.revisions(), {'a': revision, 'b': 0, 'c': revision});
+
+    await db.delete('a');
+    await db.deleteAll(Board.molotow);
+    expect(await db.revisions(), {
+      'a': SyncHistory.deleted,
+      'b': 0,
+      'c': SyncHistory.deleted,
+    });
+    expect(await db.games(Board.schieber), hasLength(1));
+    expect(await db.games(Board.molotow), isEmpty);
+  });
+
+  test('a deleted game stays deleted when its board records it', () async {
+    await db.upsert(record('a'));
+    await db.delete('a');
+
+    // The board still shows the game, and saves it again.
+    await db.upsert(record('a', changed: DateTime(2026, 10, 25)));
+    expect(await db.games(Board.schieber), isEmpty);
+    expect(await db.revisions(), {'a': SyncHistory.deleted});
+  });
+
+  test('the list leaves the board out, the rows have it', () async {
     await db.upsert(record('a'));
     expect((await db.games(Board.schieber)).single.state, isNull);
+    expect((await db.rows(['a'])).single['state'], '{"rounds":[]}');
+  });
+
+  test('the games asked for are given as rows', () async {
+    await db.upsert(record('a'));
+    await db.upsert(record('b'));
+    expect(await db.rows([]), isEmpty);
+    final rows = await db.rows(['b', 'missing']);
+    expect(rows.single['id'], 'b');
+    expect(GameRecord.fromRow(rows.single).names, ['Wir', 'Ihr']);
+  });
+
+  test('games of another device are taken in', () async {
+    await db.upsert(record('kept'));
+    await db.upsert(record('open', finished: false, totals: [100, 57]));
+    await db.upsert(record('gone'));
+    await db.delete('gone');
+    final other = GameRecord.fromRow({
+      ...record('open', totals: [2500, 900]).toRow(),
+      'profile': 'Pixel Standard',
+    });
+
+    await db.take([
+      record('new').toRow(),
+      record('kept', totals: [1, 1]).toRow(),
+      other.toRow(),
+      record('gone').toRow(),
+      {'id': 'broken'},
+      {...record('no board').toRow(), 'state': null},
+    ]);
+
+    final games = {for (final g in await db.games(Board.schieber)) g.id: g};
+    expect(games.keys.toSet(), {'new', 'kept', 'open'});
+    // A game kept here stays as it is.
+    expect(games['kept']!.totals, [2500, 1800]);
+    // Its end replaces the unfinished one, in the profile played here.
+    expect(games['open']!.finished, isTrue);
+    expect(games['open']!.totals, [2500, 900]);
+    expect(games['open']!.profile, 'Standard');
+  });
+
+  test('a finished game that changed replaces its earlier revision', () async {
+    final changed = DateTime(2026, 10, 24, 21);
+    await db.upsert(record('g', changed: changed));
+    await db.take([
+      record('g', changed: changed, totals: [5, 5]).toRow(),
+    ]);
+    expect((await db.games(Board.schieber)).single.totals, [2500, 1800]);
+
+    final later = changed.add(const Duration(minutes: 1));
+    await db.take([
+      {
+        ...record('g', changed: later, totals: [5, 5]).toRow(),
+        'profile': 'X',
+      },
+    ]);
+    final game = (await db.games(Board.schieber)).single;
+    expect(game.totals, [5, 5]);
+    expect(game.changed, later);
+    expect(game.profile, 'Standard');
+  });
+
+  test('an unfinished game doesn\'t replace the finished one', () async {
+    await db.upsert(record('g'));
+    await db.take([
+      record('g', finished: false, totals: [5, 5]).toRow(),
+    ]);
+    final game = (await db.games(Board.schieber)).single;
+    expect(game.finished, isTrue);
+    expect(game.totals, [2500, 1800]);
   });
 
   test('the details are kept', () async {

@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/sync/merge.dart';
+import 'package:jasstafel/common/sync/sync_history.dart';
 import 'package:jasstafel/common/sync/sync_transport.dart';
 
 /// The version of the messages exchanged. Raised when their format changes,
@@ -176,12 +177,17 @@ String _newClientId() {
 /// Time is counted in ticks of its own timers rather than read from the
 /// clock, so the session runs under `fakeAsync` in tests.
 class SyncSession {
-  SyncSession(this._transport, this._boards) {
+  SyncSession(
+    this._transport,
+    this._boards, [
+    this._games = const NoSyncHistory(),
+  ]) {
     _listen();
   }
 
   final SyncTransport _transport;
   final SyncBoards _boards;
+  final SyncHistory _games;
 
   /// How often host and clients tell each other they are still there. A link
   /// outlives the app on the other side, so it doesn't tell.
@@ -214,6 +220,14 @@ class SyncSession {
 
   /// How long ending the session may wait for the radio, for each step.
   static const cleanupTimeout = Duration(seconds: 3);
+
+  /// Recorded games go to a device that lacks them a few at a time, one
+  /// batch per pause, for the board's messages to get through in between.
+  static const gamesPause = Duration(seconds: 1);
+  static const gamesBatch = 8;
+
+  /// The most a message of games may take, well below the transport's limit.
+  static const maxGamesMessage = 128 * 1024;
 
   final status = ValueNotifier<SyncStatus>(const SyncStatus());
   final _events = StreamController<SyncEvent>.broadcast();
@@ -274,6 +288,10 @@ class SyncSession {
   /// the profile to show it in.
   bool _joined = false;
 
+  /// Whether the player chose to join, see [shareGames]: from then on the
+  /// recorded games are compared with the host's.
+  bool _sharesGames = false;
+
   /// Tells this client's changes apart from those of other clients, also
   /// after a reconnect, when the host knows the client by a new peer.
   String _clientId = '';
@@ -308,6 +326,16 @@ class SyncSession {
   BoardState? _pending;
 
   final _subscriptions = <StreamSubscription<void>>[];
+
+  // Recorded games, for the host by client, for a client of the host.
+  /// The revision of each game a device has, or is getting, as far as known
+  /// here, see [SyncHistory.revisions].
+  final _theirGames = <String, Map<String, int>>{};
+
+  /// The games waiting to be sent to each device.
+  final _outbox = <String, List<String>>{};
+  Timer? _gamesTimer;
+  bool _sendingGames = false;
 
   bool get isActive => _role != SyncRole.idle;
 
@@ -396,6 +424,8 @@ class SyncSession {
     _ackTimer = null;
     _reconnectDeadline?.cancel();
     _reconnectDeadline = null;
+    _gamesTimer?.cancel();
+    _gamesTimer = null;
   }
 
   Future<void> _refuse(String peer) async {
@@ -410,6 +440,8 @@ class SyncSession {
   }
 
   void _removePeer(String peer) {
+    _theirGames.remove(peer);
+    _outbox.remove(peer);
     _silence.remove(peer);
     _acks.remove(peer);
     _lastChanges.remove(peer);
@@ -432,6 +464,7 @@ class SyncSession {
     _role = SyncRole.host;
     _sessionName = name;
     _startHeartbeat();
+    _startGames();
     _publishStatus();
   }
 
@@ -478,6 +511,7 @@ class SyncSession {
     _clientId = _newClientId();
     _baseVersion = 0;
     _joined = false;
+    _sharesGames = false;
     _sentChanges = 0;
     _unacked = null;
     _known = null;
@@ -512,6 +546,7 @@ class SyncSession {
     _connected = true;
     _hostSilence = 0;
     _startHeartbeat();
+    _startGames();
     // The host sends the session board once subscribed.
     _publishStatus();
   }
@@ -535,6 +570,8 @@ class SyncSession {
           if (_endedSince(session, host)) return;
           _onConnected();
           _resendChange();
+          // The host knows the client anew, the games are compared again.
+          if (_sharesGames) _sendHave();
           _events.add(SyncEvent.reconnected);
           return;
         } catch (_) {}
@@ -602,6 +639,8 @@ class SyncSession {
     _cancelTimers();
     _pending = null;
     _peers.clear();
+    _theirGames.clear();
+    _outbox.clear();
     _silence.clear();
     _history.clear();
     _version = 0;
@@ -785,6 +824,10 @@ class SyncSession {
         return;
       }
       if (json['ping'] == true) return;
+      if (_isGames(json)) {
+        _onGames(peer, json);
+        return;
+      }
       theirs = BoardState.fromJson(json);
       base = json['base'] as int? ?? 0;
       change = json['change'] as int? ?? 0;
@@ -863,6 +906,10 @@ class SyncSession {
         _events.add(SyncEvent.full);
         return;
       }
+      if (_isGames(json)) {
+        _onGames(_hostId!, json);
+        return;
+      }
       state = BoardState.fromJson(json);
       ack = json['ack'] as int? ?? 0;
       version = json['version'] as int? ?? 0;
@@ -882,6 +929,125 @@ class SyncSession {
     final first = !_joined;
     _joined = true;
     _show(state, always: first);
+  }
+
+  /// Whether [json] is about recorded games. It has no board, so an app
+  /// without the history fails to read it as a state and leaves it.
+  static bool _isGames(Map<String, dynamic> json) =>
+      json.containsKey('have') || json.containsKey('games');
+
+  /// Starts comparing the recorded games with the host's, once the player
+  /// chose to join: a join cancelled before shares none. The host only
+  /// answers, it never starts.
+  void shareGames() {
+    if (_role != SyncRole.client || _sharesGames) return;
+    _sharesGames = true;
+    _sendHave();
+  }
+
+  /// Tells the host which games are here, for both to send what the other
+  /// lacks.
+  Future<void> _sendHave() async {
+    final host = _hostId;
+    if (host == null) return;
+    try {
+      final mine = await _games.revisions();
+      await _transport.send(host, _encode({'have': mine}));
+    } catch (_) {}
+  }
+
+  Future<void> _onGames(String from, Map<String, dynamic> json) async {
+    try {
+      if (json['have'] case final Map<String, dynamic> have) {
+        _theirGames[from] = {
+          for (final MapEntry(:key, :value) in have.entries) key: value as int,
+        };
+        final mine = await _games.revisions();
+        _queueGames(from, mine);
+        // A client tells first, the host answers, so each sends the other
+        // what it lacks.
+        if (_role == SyncRole.host) {
+          await _transport.send(from, _encode({'have': mine}));
+        }
+      } else if (json['games'] case final String encoded) {
+        final rows = decodeGames(encoded);
+        await _games.take(rows);
+        final revisions = {
+          for (final row in rows)
+            row['id'] as String: SyncHistory.revisionOf(row),
+        };
+        _theirGames[from]?.addAll(revisions);
+        if (_role == SyncRole.host) {
+          // Passed on to the other clients that lack them.
+          for (final peer in _peers.where((peer) => peer != from)) {
+            _queueGames(peer, revisions);
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  /// Queues those of [revisions] the device [to] lacks, or has in an
+  /// earlier revision, once its games are known. Not the games deleted
+  /// here, there is nothing to send of them.
+  void _queueGames(String to, Map<String, int> revisions) {
+    final known = _theirGames[to];
+    if (known == null) return;
+    final queue = _outbox.putIfAbsent(to, () => []);
+    for (final MapEntry(key: id, value: revision) in revisions.entries) {
+      if (revision == SyncHistory.deleted) continue;
+      final theirs = known[id];
+      if (theirs == null || theirs < revision) {
+        known[id] = revision;
+        if (!queue.contains(id)) queue.add(id);
+      }
+    }
+  }
+
+  void _startGames() {
+    _gamesTimer?.cancel();
+    _gamesTimer = Timer.periodic(gamesPause, (_) => _sendGames());
+  }
+
+  /// Sends a batch of queued games to each device waiting for some.
+  Future<void> _sendGames() async {
+    if (_sendingGames) return;
+    _sendingGames = true;
+    try {
+      for (final MapEntry(key: to, value: queue) in _outbox.entries.toList()) {
+        if (queue.isEmpty) continue;
+        final reachable = _role == SyncRole.host
+            ? _peers.contains(to)
+            : _connected && to == _hostId;
+        if (!reachable) continue;
+        final batch = queue.take(gamesBatch).toList();
+        try {
+          for (final part in _gameMessages(await _games.rows(batch))) {
+            await _transport.send(to, _encode({'games': part}));
+          }
+        } catch (_) {
+          // Tried again at the next pause, the batch stays queued.
+          continue;
+        }
+        queue.removeRange(0, batch.length);
+      }
+    } finally {
+      _sendingGames = false;
+    }
+  }
+
+  /// [rows] as messages of games, split until each fits. A single game
+  /// too big for a message is left out.
+  static List<String> _gameMessages(List<GameRow> rows) {
+    if (rows.isEmpty) return [];
+    final encoded = encodeGames(rows);
+    if (encoded.length <= maxGamesMessage) return [encoded];
+    if (rows.length == 1) return [];
+    final half = rows.length ~/ 2;
+    return [
+      ..._gameMessages(rows.sublist(0, half)),
+      ..._gameMessages(rows.sublist(half)),
+    ];
   }
 
   /// Shows [state] here, switching the board if it is another one. Unless
