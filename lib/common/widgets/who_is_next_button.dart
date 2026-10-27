@@ -51,7 +51,11 @@ class WhoIsNextButton extends IconButton {
   }
 
   static List<String> splitTeamName(String teamName, {int? limit}) {
-    var playerNames = teamName.split(RegExp("[-&/+]"));
+    // A hyphen joins names such as Anna-Lena, unless nothing else splits.
+    var playerNames = teamName.split(RegExp("[&/+]"));
+    if (playerNames.length < 2 || playerNames[0].isEmpty) {
+      playerNames = teamName.split("-");
+    }
     if (playerNames.length < 2 || playerNames[0].isEmpty) {
       playerNames = teamName.split(RegExp("[ ]+"));
     }
@@ -85,14 +89,44 @@ class WhoIsNextButton extends IconButton {
     return "$teamName$suffix";
   }
 
-  static List<String> guessPlayerNames(List<String> teamNames) {
-    final l = teamNames.length;
-    int playersPerTeam = 2;
-    if (l == 2 &&
+  static int _playersPerTeam(List<String> teamNames) {
+    if (teamNames.length == 2 &&
         splitTeamName(teamNames[0].trim()).length == 3 &&
         splitTeamName(teamNames[1].trim()).length == 3) {
-      playersPerTeam = 3;
+      return 3;
     }
+    return 2;
+  }
+
+  /// The players of each team, split from the team names, or null for a
+  /// team whose name doesn't name its players, such as "Team 1".
+  static List<List<String>?> teamPlayers(List<String> teamNames) {
+    final playersPerTeam = _playersPerTeam(teamNames);
+    return [
+      for (final name in teamNames)
+        switch (name.trim()) {
+          final teamName
+              when teamName.isNotEmpty &&
+                  !teamName.toLowerCase().contains('team') =>
+            switch (splitTeamName(teamName, limit: playersPerTeam)) {
+              final names when names.length == playersPerTeam => names,
+              _ => null,
+            },
+          _ => null,
+        },
+    ];
+  }
+
+  /// The player of a team of one, or null if it isn't named after them.
+  static List<String>? lonePlayer(String teamName) {
+    final name = teamName.trim();
+    return name.isEmpty || name.toLowerCase().contains('team') ? null : [name];
+  }
+
+  static List<String> guessPlayerNames(List<String> teamNames) {
+    final l = teamNames.length;
+    final playersPerTeam = _playersPerTeam(teamNames);
+    final teams = teamPlayers(teamNames);
     final int numPlayers = l * playersPerTeam;
     List<String> playerNames = List.generate(numPlayers, (i) => 'P${i + 1}');
     for (var t = 0; t < l; t++) {
@@ -100,16 +134,8 @@ class WhoIsNextButton extends IconButton {
       if (teamName.isEmpty) {
         continue;
       }
-      final names = splitTeamName(teamName, limit: playersPerTeam);
-      final validSplit =
-          names.length == playersPerTeam &&
-          !teamName.toLowerCase().contains('team');
       for (var n = 0; n < playersPerTeam; n++) {
-        if (validSplit) {
-          playerNames[t + n * l] = names[n];
-        } else {
-          playerNames[t + n * l] = _addSuffix(teamName, n);
-        }
+        playerNames[t + n * l] = teams[t]?[n] ?? _addSuffix(teamName, n);
       }
     }
     return playerNames;

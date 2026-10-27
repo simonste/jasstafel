@@ -210,4 +210,29 @@ void main() {
     expect(players[2], "Bro");
     expect(players[3], "Z");
   });
+
+  test('team players', () {
+    final teams = WhoIsNextButton.teamPlayers;
+    expect(teams(["Max & Matthew", "Peter Paul"]), [
+      ['Max', 'Matthew'],
+      ['Peter', 'Paul'],
+    ]);
+    expect(teams(["Team 1", "Wir", ""]), [null, null, null]);
+    expect(teams(["Al Bo Cy", "Di Ed Fe"]), [
+      ['Al', 'Bo', 'Cy'],
+      ['Di', 'Ed', 'Fe'],
+    ]);
+  });
+
+  test('hyphenated names', () {
+    expect(split("Anna-Lena & Tom"), ['Anna-Lena', 'Tom']);
+    expect(split("Tom / Anna-Lena"), ['Tom', 'Anna-Lena']);
+    expect(split("Max-Ben"), ['Max', 'Ben']);
+    expect(guess(["Anna-Lena & Tom", "Max+Eva"]), [
+      'Anna-Lena',
+      'Max',
+      'Tom',
+      'Eva',
+    ]);
+  });
 }
