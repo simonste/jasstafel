@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/sync/merge.dart';
+import 'package:jasstafel/common/sync/sync_history.dart';
 import 'package:jasstafel/common/sync/sync_transport.dart';
 
 /// The version of the messages exchanged. Raised when their format changes,
@@ -160,12 +161,17 @@ String _newClientId() {
 /// Time is counted in ticks of its own timers rather than read from the
 /// clock, so the session runs under `fakeAsync` in tests.
 class SyncSession {
-  SyncSession(this._transport, this._boards) {
+  SyncSession(
+    this._transport,
+    this._boards, [
+    this._games = const NoSyncHistory(),
+  ]) {
     _listen();
   }
 
   final SyncTransport _transport;
   final SyncBoards _boards;
+  final SyncHistory _games;
 
   /// How often host and clients tell each other they are still there. A link
   /// outlives the app on the other side, so it doesn't tell.
@@ -198,6 +204,14 @@ class SyncSession {
 
   /// How long ending the session may wait for the radio, for each step.
   static const cleanupTimeout = Duration(seconds: 3);
+
+  /// Recorded games go to a device that lacks them a few at a time, one
+  /// batch per pause, for the board's messages to get through in between.
+  static const gamesPause = Duration(seconds: 1);
+  static const gamesBatch = 8;
+
+  /// The most a message of games may take, well below the transport's limit.
+  static const maxGamesMessage = 128 * 1024;
 
   final status = ValueNotifier<SyncStatus>(const SyncStatus());
   final _events = StreamController<SyncEvent>.broadcast();
@@ -287,6 +301,16 @@ class SyncSession {
 
   final _subscriptions = <StreamSubscription<void>>[];
 
+  // Recorded games, for the host by client, for a client of the host.
+  /// The games each device has, or is getting, as far as known here, each
+  /// with whether it is finished there.
+  final _theirGames = <String, Map<String, bool>>{};
+
+  /// The games waiting to be sent to each device.
+  final _outbox = <String, List<String>>{};
+  Timer? _gamesTimer;
+  bool _sendingGames = false;
+
   bool get isActive => _role != SyncRole.idle;
 
   BluetoothState get bluetoothState => _transport.state;
@@ -374,6 +398,8 @@ class SyncSession {
     _ackTimer = null;
     _reconnectDeadline?.cancel();
     _reconnectDeadline = null;
+    _gamesTimer?.cancel();
+    _gamesTimer = null;
   }
 
   /// Tells [peer] the session is full, then ends its link.
@@ -389,6 +415,8 @@ class SyncSession {
   }
 
   void _removePeer(String peer) {
+    _theirGames.remove(peer);
+    _outbox.remove(peer);
     _silence.remove(peer);
     _acks.remove(peer);
     _lastChanges.remove(peer);
@@ -409,6 +437,7 @@ class SyncSession {
     _role = SyncRole.host;
     _sessionName = name;
     _startHeartbeat();
+    _startGames();
     _publishStatus();
   }
 
@@ -476,6 +505,7 @@ class SyncSession {
     _connected = true;
     _hostSilence = 0;
     _startHeartbeat();
+    _startGames();
     // The host sends the session board once subscribed.
     _publishStatus();
   }
@@ -497,6 +527,8 @@ class SyncSession {
           if (_endedSince(session, host)) return;
           _onConnected();
           _resendChange();
+          // The host knows the client anew, the games are compared again.
+          _sendHave();
           _events.add(SyncEvent.reconnected);
           return;
         } catch (_) {}
@@ -562,6 +594,8 @@ class SyncSession {
     _cancelTimers();
     _pending = null;
     _peers.clear();
+    _theirGames.clear();
+    _outbox.clear();
     _silence.clear();
     _history.clear();
     _version = 0;
@@ -738,6 +772,10 @@ class SyncSession {
         return;
       }
       if (json['ping'] == true) return;
+      if (_isGames(json)) {
+        _onGames(peer, json);
+        return;
+      }
       theirs = BoardState.fromJson(json);
     } catch (_) {
       return;
@@ -804,6 +842,10 @@ class SyncSession {
         _events.add(SyncEvent.full);
         return;
       }
+      if (_isGames(json)) {
+        _onGames(_hostId!, json);
+        return;
+      }
       state = BoardState.fromJson(json);
     } catch (_) {
       return;
@@ -822,6 +864,116 @@ class SyncSession {
     final first = !_joined;
     _joined = true;
     _show(state, always: first);
+    if (first) _sendHave();
+  }
+
+  /// Whether [json] is about recorded games. It has no board, so an app
+  /// without the history fails to read it as a state and leaves it.
+  static bool _isGames(Map<String, dynamic> json) =>
+      json.containsKey('have') || json.containsKey('games');
+
+  /// Tells the host which games are here, for both to send what the other
+  /// lacks.
+  Future<void> _sendHave() async {
+    final host = _hostId;
+    if (host == null) return;
+    try {
+      final mine = await _games.ids();
+      await _transport.send(host, _encode({'have': _have(mine)}));
+    } catch (_) {}
+  }
+
+  Future<void> _onGames(String from, Map<String, dynamic> json) async {
+    try {
+      if (json['have'] case final Map<String, dynamic> have) {
+        _theirGames[from] = {
+          for (final MapEntry(:key, :value) in have.entries) key: value == 1,
+        };
+        final mine = await _games.ids();
+        _queueGames(from, mine);
+        // A client tells first, the host answers, so each sends the other
+        // what it lacks.
+        if (_role == SyncRole.host) {
+          await _transport.send(from, _encode({'have': _have(mine)}));
+        }
+      } else if (json['games'] case final String encoded) {
+        final rows = decodeGames(encoded);
+        await _games.take(rows);
+        final ids = {
+          for (final row in rows) row['id'] as String: row['finished'] == 1,
+        };
+        _theirGames[from]?.addAll(ids);
+        if (_role == SyncRole.host) {
+          // Passed on to the other clients that lack them.
+          for (final peer in _peers.where((peer) => peer != from)) {
+            _queueGames(peer, ids);
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  /// [ids] as told in a message, 1 for a finished game.
+  static Map<String, int> _have(Map<String, bool> ids) => {
+    for (final MapEntry(:key, :value) in ids.entries) key: value ? 1 : 0,
+  };
+
+  /// Queues those of [ids] the device [to] lacks, or has unfinished where
+  /// they are finished here, once its games are known.
+  void _queueGames(String to, Map<String, bool> ids) {
+    final known = _theirGames[to];
+    if (known == null) return;
+    final queue = _outbox.putIfAbsent(to, () => []);
+    for (final MapEntry(key: id, value: finished) in ids.entries) {
+      final theirs = known[id];
+      if (theirs == null || (!theirs && finished)) {
+        known[id] = finished;
+        if (!queue.contains(id)) queue.add(id);
+      }
+    }
+  }
+
+  void _startGames() {
+    _gamesTimer?.cancel();
+    _gamesTimer = Timer.periodic(gamesPause, (_) => _sendGames());
+  }
+
+  /// Sends a batch of queued games to each device waiting for some.
+  Future<void> _sendGames() async {
+    if (_sendingGames) return;
+    _sendingGames = true;
+    try {
+      for (final MapEntry(key: to, value: queue) in _outbox.entries.toList()) {
+        if (queue.isEmpty) continue;
+        final reachable = _role == SyncRole.host
+            ? _peers.contains(to)
+            : _connected && to == _hostId;
+        if (!reachable) continue;
+        final batch = queue.take(gamesBatch).toList();
+        queue.removeRange(0, batch.length);
+        for (final part in _gameMessages(await _games.rows(batch))) {
+          await _transport.send(to, _encode({'games': part}));
+        }
+      }
+    } catch (_) {
+      // Sent again in the next session, when the games are compared anew.
+    } finally {
+      _sendingGames = false;
+    }
+  }
+
+  /// [rows] as messages of games, split until each fits. A single game
+  /// too big for a message is left out.
+  static List<String> _gameMessages(List<GameRow> rows) {
+    if (rows.isEmpty) return [];
+    final encoded = encodeGames(rows);
+    if (encoded.length <= maxGamesMessage) return [encoded];
+    if (rows.length == 1) return [];
+    final half = rows.length ~/ 2;
+    return [
+      ..._gameMessages(rows.sublist(0, half)),
+      ..._gameMessages(rows.sublist(half)),
+    ];
   }
 
   /// Shows [state] here, switching the board if it is another one. Unless

@@ -237,6 +237,66 @@ void main() {
     ]);
   });
 
+  test('deleted games are remembered as finished', () async {
+    await db.upsert(record('a'));
+    await db.upsert(record('b', finished: false));
+    await db.upsert(record('c', board: Board.molotow));
+    expect(await db.ids(), {'a': true, 'b': false, 'c': true});
+
+    await db.delete('a');
+    await db.deleteAll(Board.molotow);
+    expect(await db.ids(), {'a': true, 'b': false, 'c': true});
+    expect(await db.games(Board.schieber), hasLength(1));
+    expect(await db.games(Board.molotow), isEmpty);
+  });
+
+  test('the games asked for are given as rows', () async {
+    await db.upsert(record('a'));
+    await db.upsert(record('b'));
+    expect(await db.rows([]), isEmpty);
+    final rows = await db.rows(['b', 'missing']);
+    expect(rows.single['id'], 'b');
+    expect(GameRecord.fromRow(rows.single).names, ['Wir', 'Ihr']);
+  });
+
+  test('games of another device are taken in', () async {
+    await db.upsert(record('kept'));
+    await db.upsert(record('open', finished: false, totals: [100, 57]));
+    await db.upsert(record('gone'));
+    await db.delete('gone');
+    final other = GameRecord.fromRow({
+      ...record('open', totals: [2500, 900]).toRow(),
+      'profile': 'Pixel Standard',
+    });
+
+    await db.take([
+      record('new').toRow(),
+      record('kept', totals: [1, 1]).toRow(),
+      other.toRow(),
+      record('gone').toRow(),
+      {'id': 'broken'},
+    ]);
+
+    final games = {for (final g in await db.games(Board.schieber)) g.id: g};
+    expect(games.keys.toSet(), {'new', 'kept', 'open'});
+    // A game kept here stays as it is.
+    expect(games['kept']!.totals, [2500, 1800]);
+    // Its end replaces the unfinished one, in the profile played here.
+    expect(games['open']!.finished, isTrue);
+    expect(games['open']!.totals, [2500, 900]);
+    expect(games['open']!.profile, 'Standard');
+  });
+
+  test('an unfinished game doesn\'t replace the finished one', () async {
+    await db.upsert(record('g'));
+    await db.take([
+      record('g', finished: false, totals: [5, 5]).toRow(),
+    ]);
+    final game = (await db.games(Board.schieber)).single;
+    expect(game.finished, isTrue);
+    expect(game.totals, [2500, 1800]);
+  });
+
   test('the details are kept', () async {
     final details = {
       'handWeis': [-20, 0],

@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/history/game_record.dart';
+import 'package:jasstafel/common/sync/sync_history.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
@@ -10,7 +11,10 @@ import 'package:sqflite/sqflite.dart';
 /// A game is stored once per id, so recording it again (a synced device
 /// receiving its end, a reset after it was finished) replaces the entry
 /// rather than adding one.
-class HistoryDb {
+///
+/// Games deleted here are remembered, so the devices of a shared board,
+/// which send each other the games they lack, don't bring them back.
+class HistoryDb implements SyncHistory {
   /// The database the app records into, opened on first use.
   static final HistoryDb instance = HistoryDb();
 
@@ -25,6 +29,7 @@ class HistoryDb {
   Future<Database>? _db;
 
   static const _table = 'games';
+  static const _deleted = 'deleted';
 
   static const _version = 1;
 
@@ -49,6 +54,7 @@ class HistoryDb {
       options: OpenDatabaseOptions(
         version: _version,
         onCreate: (db, version) async {
+          await db.execute('CREATE TABLE $_deleted (id TEXT PRIMARY KEY)');
           await db.execute('''
           CREATE TABLE $_table (
             id TEXT PRIMARY KEY,
@@ -112,12 +118,84 @@ class HistoryDb {
 
   Future<void> delete(String id) async {
     final db = await _database;
-    await db.delete(_table, where: 'id = ?', whereArgs: [id]);
+    await db.transaction((txn) async {
+      await txn.insert(_deleted, {
+        'id': id,
+      }, conflictAlgorithm: ConflictAlgorithm.ignore);
+      await txn.delete(_table, where: 'id = ?', whereArgs: [id]);
+    });
   }
 
   Future<void> deleteAll(Board board) async {
     final db = await _database;
-    await db.delete(_table, where: 'board = ?', whereArgs: [board.name]);
+    await db.transaction((txn) async {
+      await txn.rawInsert(
+        'INSERT OR IGNORE INTO $_deleted (id) '
+        'SELECT id FROM $_table WHERE board = ?',
+        [board.name],
+      );
+      await txn.delete(_table, where: 'board = ?', whereArgs: [board.name]);
+    });
+  }
+
+  @override
+  Future<Map<String, bool>> ids() async {
+    final db = await _database;
+    final rows = await db.rawQuery(
+      'SELECT id, finished FROM $_table '
+      'UNION SELECT id, 1 FROM $_deleted',
+    );
+    return {for (final row in rows) row['id'] as String: row['finished'] == 1};
+  }
+
+  @override
+  Future<List<GameRow>> rows(Iterable<String> ids) async {
+    final list = ids.toList();
+    if (list.isEmpty) return [];
+    final db = await _database;
+    return db.query(
+      _table,
+      where: 'id IN (${List.filled(list.length, '?').join(', ')})',
+      whereArgs: list,
+    );
+  }
+
+  @override
+  Future<void> take(List<GameRow> rows) async {
+    final db = await _database;
+    await db.transaction((txn) async {
+      for (final row in rows) {
+        final GameRecord game;
+        try {
+          game = GameRecord.fromRow(row);
+        } catch (_) {
+          // From a broken or foreign device.
+          continue;
+        }
+        final deleted = await txn.query(
+          _deleted,
+          where: 'id = ?',
+          whereArgs: [game.id],
+        );
+        if (deleted.isNotEmpty) continue;
+        final kept = await txn.query(
+          _table,
+          columns: ['finished', 'profile'],
+          where: 'id = ?',
+          whereArgs: [game.id],
+        );
+        if (kept.isEmpty) {
+          await txn.insert(_table, game.toRow());
+        } else if (kept.single['finished'] == 0 && game.finished) {
+          // The end of a game this device left before it finished, under
+          // the profile it was played in here.
+          await txn.insert(_table, {
+            ...game.toRow(),
+            'profile': kept.single['profile'],
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
+    });
   }
 
   Future<void> close() async {

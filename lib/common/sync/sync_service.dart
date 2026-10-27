@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:jasstafel/common/board.dart';
 import 'package:jasstafel/common/data/board_data.dart';
+import 'package:jasstafel/common/history/history_db.dart';
 import 'package:jasstafel/common/sync/ble_sync_transport.dart';
 import 'package:jasstafel/common/sync/sync_session.dart';
 import 'package:jasstafel/common/sync/sync_transport.dart';
@@ -43,7 +44,7 @@ class SyncService implements SyncBoards {
         // No plugin, as in widget tests.
       }
     }
-    _session = SyncSession(transport, this);
+    _session = SyncSession(transport, this, HistoryDb.instance);
     BoardData.isShared = () => _session.isActive;
     _session.status.addListener(_onStatus);
   }
