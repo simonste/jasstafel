@@ -166,6 +166,31 @@ class SchieberScore implements Score {
   SchieberSettings _settings = SchieberSettings();
   void setSettings(SchieberSettings settings) => _settings = settings;
 
+  @override
+  List<String> names() => [for (final t in team) t.name];
+
+  @override
+  List<int> totals() => [for (final t in team) t.sum()];
+
+  /// With a goal of points, each team plays to a goal of its own: ahead is
+  /// the one with the larger share of its goal.
+  @override
+  List<String> leaders() {
+    final [first, second] = team;
+    if (_settings.goalType != GoalType.points.index ||
+        first.goalPoints <= 0 ||
+        second.goalPoints <= 0) {
+      return leadersOf(names(), totals());
+    }
+    final ahead =
+        first.sum() * second.goalPoints - second.sum() * first.goalPoints;
+    if (ahead == 0) return [];
+    return [ahead > 0 ? first.name : second.name];
+  }
+
+  @override
+  Map<String, List<int>> details() => {'weis': weisPoints()};
+
   var team = [TeamData("Team 1"), TeamData("Team 2")];
   int goalRounds = 8;
   List<SchieberRound> rounds = [];

@@ -29,6 +29,19 @@ class PointBoardScore implements Score {
   PointBoardSettings _settings = PointBoardSettings();
   void setSettings(PointBoardSettings settings) => _settings = settings;
 
+  @override
+  List<String> names() => playerName.sublist(0, _settings.players);
+
+  @override
+  List<int> totals() => [for (var i = 0; i < _settings.players; i++) total(i)];
+
+  @override
+  List<String> leaders() =>
+      leadersOf(names(), totals(), fewest: !_settings.goalMax);
+
+  @override
+  Map<String, List<int>> details() => const {};
+
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <PointBoardRow>[];
 

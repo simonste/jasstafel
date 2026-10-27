@@ -36,6 +36,34 @@ abstract class Score {
   List<String> winner();
   void setWinner(String team);
   List<String> loser(); // not empty if fewest points win
+
+  /// The teams or players taking part, and their points so far.
+  List<String> names();
+  List<int> totals();
+
+  /// Those ahead so far, see [leadersOf].
+  List<String> leaders();
+
+  /// Further numbers of each team or player the board counts, by kind and
+  /// in the order of [names], such as the Weis. Empty on most boards.
+  Map<String, List<int>> details();
+}
+
+/// Those of [names] with the best of [totals], the fewest if [fewest]. None
+/// while all are level.
+List<String> leadersOf(
+  List<String> names,
+  List<int> totals, {
+  bool fewest = false,
+}) {
+  if (totals.isEmpty || totals.every((t) => t == totals.first)) return [];
+  final best = fewest
+      ? totals.reduce((a, b) => a < b ? a : b)
+      : totals.reduce((a, b) => a > b ? a : b);
+  return [
+    for (var i = 0; i < names.length && i < totals.length; i++)
+      if (totals[i] == best) names[i],
+  ];
 }
 
 class BoardData<T extends BoardSettings, S extends Score> {

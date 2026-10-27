@@ -65,6 +65,18 @@ class DifferenzlerScore implements Score {
   DifferenzlerSettings _settings = DifferenzlerSettings();
   void setSettings(DifferenzlerSettings settings) => _settings = settings;
 
+  @override
+  List<String> names() => playerName.sublist(0, _settings.players);
+
+  @override
+  List<int> totals() => [for (var i = 0; i < _settings.players; i++) total(i)];
+
+  @override
+  List<String> leaders() => leadersOf(names(), totals(), fewest: true);
+
+  @override
+  Map<String, List<int>> details() => const {};
+
   var playerName = List.generate(Players.max, (i) => "Spieler ${i + 1}");
   var rows = <DifferenzlerRow>[];
 
@@ -72,6 +84,7 @@ class DifferenzlerScore implements Score {
 
   @override
   int noOfRounds() {
+    if (rows.isEmpty) return 0;
     var n = rows.length - 1;
     for (var p in rows.last.pts) {
       if (p != null) {
