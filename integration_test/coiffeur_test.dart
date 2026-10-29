@@ -482,14 +482,14 @@ void main() {
     await tester.pump();
     await tester.enterText(find.byType(TextField), '157');
     await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.waitKeyboardGone();
     expect(find.text('gerundet 16'), findsOneWidget);
 
     await tester.tapInList('Konter-Match-Strafe');
     await tester.pump();
     await tester.enterText(find.byType(TextField), '50');
     await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.waitKeyboardGone();
     expect(find.text('gerundet 5'), findsOneWidget);
 
     await tester.tapInList('Match-Prämie verwenden');
@@ -499,7 +499,7 @@ void main() {
     await tester.pump();
     await tester.enterText(find.byType(TextField), '120');
     await tester.tap(find.text('Ok'));
-    await tester.pumpAndSettle();
+    await tester.waitKeyboardGone();
     expect(find.text('gerundet 12'), findsOneWidget);
     await tester.closeSettings();
   });

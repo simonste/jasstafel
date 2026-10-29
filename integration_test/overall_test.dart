@@ -88,16 +88,21 @@ extension AppHelper on WidgetTester {
     await pumpAndSettle();
   }
 
+  /// Waits until the keyboard has been gone for a while. Android may show
+  /// it only after the dialog that asked for it has closed, and then hide
+  /// it again, so a single look can come too early.
   Future<void> waitKeyboardGone() async {
+    const goneFor = Duration(milliseconds: 500);
     const maxWaitTime = Duration(seconds: 10);
     final startTime = DateTime.now();
 
-    await pump(const Duration(milliseconds: 100));
-    while (view.viewInsets.bottom > 0) {
+    var lastSeen = DateTime.now();
+    while (DateTime.now().difference(lastSeen) < goneFor) {
       if (DateTime.now().difference(startTime) > maxWaitTime) {
         throw TestFailure('The keyboard was still there after $maxWaitTime.');
       }
       await pump(const Duration(milliseconds: 50));
+      if (view.viewInsets.bottom > 0) lastSeen = DateTime.now();
     }
     await pumpAndSettle();
   }
