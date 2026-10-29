@@ -89,15 +89,17 @@ extension AppHelper on WidgetTester {
   }
 
   Future<void> waitKeyboardGone() async {
+    const goneFor = Duration(milliseconds: 500);
     const maxWaitTime = Duration(seconds: 10);
     final startTime = DateTime.now();
 
-    await pump(const Duration(milliseconds: 100));
-    while (view.viewInsets.bottom > 0) {
+    var lastSeen = DateTime.now();
+    while (DateTime.now().difference(lastSeen) < goneFor) {
       if (DateTime.now().difference(startTime) > maxWaitTime) {
         throw TestFailure('The keyboard was still there after $maxWaitTime.');
       }
       await pump(const Duration(milliseconds: 50));
+      if (view.viewInsets.bottom > 0) lastSeen = DateTime.now();
     }
     await pumpAndSettle();
   }
@@ -354,6 +356,7 @@ extension AppHelper on WidgetTester {
   Future<void> slideTo(String text, int value) async {
     await scrollTo(find.text(text));
     final slider = find.byType(Slider);
+    await scrollTo(slider);
     final prefSlider = slider.evaluate().single.widget as Slider;
     const sliderPadding = 24;
     final totalWidth = getSize(slider).width - 2 * sliderPadding;
