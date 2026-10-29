@@ -359,6 +359,8 @@ extension AppHelper on WidgetTester {
   Future<void> slideTo(String text, int value) async {
     await scrollTo(find.text(text));
     final slider = find.byType(Slider);
+    // The title can be on the screen while the slider below it isn't yet.
+    await scrollTo(slider);
     final prefSlider = slider.evaluate().single.widget as Slider;
     const sliderPadding = 24;
     final totalWidth = getSize(slider).width - 2 * sliderPadding;
