@@ -188,11 +188,6 @@ class _SchieberState extends State<Schieber> with BoardSyncMixin {
         board: Board.schieber,
         context: context,
         actions: actions,
-        priority: const [
-          SettingsButton<SchieberSettingsScreen>,
-          DeleteButton,
-          SchieberStatisticsButton,
-        ],
       ),
       body: SafeArea(
         child: Stack(

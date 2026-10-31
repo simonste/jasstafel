@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jasstafel/common/board.dart';
+import 'package:jasstafel/common/data/common_data.dart';
+import 'package:jasstafel/common/dialog/statistics_dialog.dart';
 import 'package:jasstafel/common/sync/sync_service.dart';
 import 'package:jasstafel/common/widgets/board_title.dart';
+import 'package:jasstafel/common/widgets/delete_button.dart';
+import 'package:jasstafel/common/widgets/settings_button.dart';
 import 'package:jasstafel/common/widgets/sync_button.dart';
+import 'package:jasstafel/common/widgets/who_is_next_button.dart';
 import 'package:jasstafel/common/widgets/settings_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,6 +87,7 @@ void main() {
     required List<Widget> Function() actions,
     List<Type> inMenu = const [],
     List<Type> keep = const [],
+    List<Type> priority = const [],
   }) async {
     tester.view.physicalSize = Size(widthDp * 4, 2560);
     tester.view.devicePixelRatio = 4;
@@ -97,7 +103,7 @@ void main() {
               children: shrinkActions(
                 actions: actions(),
                 context: context,
-                priority: const [],
+                priority: priority,
                 inMenu: inMenu,
                 keep: keep,
               ),
@@ -139,19 +145,20 @@ void main() {
     expect(find.byKey(const Key('other0')), findsOneWidget);
   });
 
-  testWidgets('a lone menu entry takes the menu\'s slot instead', (
+  testWidgets('a lone menu entry goes back to its place instead', (
     tester,
   ) async {
     await pump(
       tester,
       widthDp: 360,
-      actions: () => [const MenuButton(), ...others(1)],
+      actions: () => [const MenuButton(), ...others(2)],
       inMenu: const [MenuButton],
     );
 
-    expect(find.byKey(const Key('menu')), findsOneWidget);
-    expect(find.byKey(const Key('other0')), findsOneWidget);
     expect(find.byKey(const Key('actionsMenu')), findsNothing);
+    final menu = tester.getTopLeft(find.byKey(const Key('menu'))).dx;
+    final other0 = tester.getTopLeft(find.byKey(const Key('other0'))).dx;
+    expect(menu, lessThan(other0));
   });
 
   testWidgets('a menu entry keeps the tooltip of its button', (tester) async {
@@ -175,6 +182,21 @@ void main() {
     expect(find.byTooltip('Label'), findsOneWidget);
   });
 
+  testWidgets('a priority type without a movable action is skipped', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      widthDp: 260,
+      actions: () => [const KeptButton(), ...others(2)],
+      keep: const [KeptButton],
+      priority: const [KeptButton, MenuButton, IconButton],
+    );
+
+    expect(find.byKey(const Key('kept')), findsOneWidget);
+    expect(find.byKey(const Key('actionsMenu')), findsOneWidget);
+  });
+
   testWidgets('a kept action stays in the bar whatever the width', (
     tester,
   ) async {
@@ -191,7 +213,8 @@ void main() {
     expect(find.byKey(const Key('other1')), findsNothing);
   });
 
-  /// Pumps a board's title bar with the sync button and [count] others.
+  /// Pumps a board's title bar with the sync button and [count] of delete
+  /// and statistics.
   Future<void> pumpTitleBar(
     WidgetTester tester, {
     required double widthDp,
@@ -211,7 +234,13 @@ void main() {
               appBar: TitleBar(
                 board: Board.schieber,
                 context: context,
-                actions: [SyncButton(context), ...others(count)],
+                actions: [
+                  SyncButton(context),
+                  ...[
+                    DeleteButton(context, deleteFunction: () {}),
+                    StatisticsButton(context, '', const [], const []),
+                  ].take(count),
+                ],
               ),
             ),
           ),
@@ -225,7 +254,7 @@ void main() {
   ) async {
     await pumpTitleBar(tester, widthDp: 260, count: 2);
 
-    expect(find.byKey(const Key('other1')), findsOneWidget);
+    expect(find.byKey(const Key('statistics')), findsOneWidget);
     expect(find.byKey(const Key('sync')), findsNothing);
 
     await tester.tap(find.byKey(const Key('actionsMenu')));
@@ -252,6 +281,59 @@ void main() {
 
     expect(find.byKey(const Key('sync')), findsOneWidget);
     expect(find.byKey(const Key('actionsMenu')), findsOneWidget);
-    expect(find.byKey(const Key('other0')), findsNothing);
+    expect(find.byKey(const Key('delete')), findsNothing);
+  });
+
+  /// Pumps a board's title bar with all the common actions.
+  Future<void> pumpBoardActions(
+    WidgetTester tester, {
+    required double widthDp,
+  }) async {
+    tester.view.physicalSize = Size(widthDp * 4, 2560);
+    tester.view.devicePixelRatio = 4;
+    addTearDown(tester.view.reset);
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    await tester.pumpWidget(
+      SettingsProvider(
+        preferences: preferences,
+        child: JasstafelTestApp(
+          child: Builder(
+            builder: (context) => Scaffold(
+              appBar: TitleBar(
+                board: Board.schieber,
+                context: context,
+                actions: [
+                  SyncButton(context),
+                  WhoIsNextButton(context, ['a', 'b'], 0, WhoIsNext(), () {}),
+                  StatisticsButton(context, '', const [], const []),
+                  DeleteButton(context, deleteFunction: () {}),
+                  SettingsButton(const TextField(), context, () {}),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool inBar(String key) => find.byKey(Key(key)).evaluate().isNotEmpty;
+
+  testWidgets('settings, who is next and delete move out in this order', (
+    tester,
+  ) async {
+    // four slots: three actions and the menu
+    await pumpBoardActions(tester, widthDp: 360);
+    expect(inBar('SettingsButton'), isFalse);
+    expect(inBar('whoIsNext'), isTrue);
+    expect(inBar('delete'), isTrue);
+    expect(inBar('statistics'), isTrue);
+
+    // two slots: one action and the menu
+    await pumpBoardActions(tester, widthDp: 260);
+    expect(inBar('whoIsNext'), isFalse);
+    expect(inBar('delete'), isFalse);
+    expect(inBar('statistics'), isTrue);
   });
 }
