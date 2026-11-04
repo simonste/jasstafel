@@ -1,0 +1,5 @@
+Version 4.4.0
+
+- Share a board with other devices over Bluetooth
+- History of the finished games with statistics
+- Minor improvements

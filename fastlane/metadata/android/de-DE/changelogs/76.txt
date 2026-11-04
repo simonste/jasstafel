@@ -1,0 +1,5 @@
+Version 4.4.0
+
+- Tafel über Bluetooth mit anderen Geräten teilen
+- Verlauf der beendeten Spiele mit Statistik
+- Kleinere Verbesserungen

@@ -1,0 +1,5 @@
+Version 4.4.0
+
+- Partager un tableau avec d'autres appareils via Bluetooth
+- Historique des parties terminées avec statistiques
+- Petites améliorations
