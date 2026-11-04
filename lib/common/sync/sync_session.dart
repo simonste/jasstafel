@@ -127,6 +127,11 @@ abstract class SyncBoards {
   /// keeps it and opens its board. The session set [SyncSession.switchingTo]
   /// then, and expects [SyncSession.boardLoaded] once the board is open.
   Future<void> show(BoardState state);
+
+  /// Opens [board] with its state here, as a client opened it. The session
+  /// set [SyncSession.switchingTo] then, and expects
+  /// [SyncSession.boardLoaded] once the board is open.
+  Future<void> open(Board board);
 }
 
 /// A session name with a short code to tell sessions apart, avoiding
@@ -268,6 +273,10 @@ class SyncSession {
 
   /// The board to switch to, as another device did.
   Board? get switchingTo => _switchingTo;
+
+  /// The board the host opens as a client opened it, to send its state of
+  /// the board once open.
+  Board? _opening;
 
   // Outgoing coalescing.
   Timer? _debounce;
@@ -560,6 +569,7 @@ class SyncSession {
     _role = SyncRole.idle;
     _sessionName = null;
     _switchingTo = null;
+    _opening = null;
     _stopping = false;
     _giveUp = false;
     _publishStatus();
@@ -600,10 +610,11 @@ class SyncSession {
   /// Not when it is the board another device switched to, unless it opened
   /// in another profile on the host, which names the profiles.
   void boardLoaded(BoardState state) {
-    if (_switchingTo == state.board) {
+    if (_switchingTo == state.board && _opening != state.board) {
       _switchingTo = null;
       if (_role != SyncRole.host || state.profile == _known?.profile) return;
     }
+    _opening = null;
     broadcast(state);
   }
 
@@ -735,25 +746,34 @@ class SyncSession {
         : _history[base];
     _lastChanges[peer] = (base, theirs);
 
-    var state = theirs;
     final ours = _latest(theirs.board);
-    if (baseState != null && ours != null && baseState.board == theirs.board) {
-      state = baseState.merge(ours, theirs);
-    } else if (ours != null) {
-      // The host's profile, the client's may have another name.
-      state = BoardState(
-        state.board,
-        state.data,
-        state.settings,
-        profile: ours.profile,
-      );
-    }
-    // A change of the host not sent yet is in the merged state.
+    // A change of the host not sent yet is in the merged state, or in the
+    // host's board that wins.
     _debounce?.cancel();
     _debounce = null;
     _pending = null;
+    if (baseState == null || ours == null || baseState.board != theirs.board) {
+      // Not a change of a board the session has: the client opened another
+      // board, or is too far behind. The host's board wins, as on joining.
+      _hostBoardWins(theirs.board);
+      return;
+    }
+    final state = baseState.merge(ours, theirs);
     _commit(state);
     _show(state);
+  }
+
+  /// Sends the host's state of [board] to the clients, opening it first if
+  /// it isn't open here.
+  void _hostBoardWins(Board board) {
+    final current = _boards.current;
+    if (current != null && current.board == board) {
+      _commit(current);
+    } else if (_opening != board) {
+      _switchingTo = board;
+      _opening = board;
+      _boards.open(board);
+    }
   }
 
   void _onMessageFromHost(Uint8List message) {

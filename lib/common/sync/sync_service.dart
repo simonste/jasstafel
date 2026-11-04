@@ -253,6 +253,13 @@ class SyncService implements SyncBoards {
     _onSwitchBoard?.call();
   }
 
+  @override
+  Future<void> open(Board board) async {
+    // With its own state, not one another device switched to before.
+    _switching = null;
+    _onSwitchBoard?.call();
+  }
+
   /// Applies [state] to [data], in the profile it is shown in here.
   Future<void> _applyTo(
     BoardData<BoardSettings, Score> data,

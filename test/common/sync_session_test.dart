@@ -191,6 +191,9 @@ class FakeBoards implements SyncBoards {
 
   final shown = <BoardState>[];
 
+  /// The boards stored here, as they open.
+  final stored = <Board, BoardState>{};
+
   @override
   Future<void> show(BoardState state) async {
     final opened = current?.board != state.board;
@@ -205,6 +208,15 @@ class FakeBoards implements SyncBoards {
     );
     current = loaded;
     session?.boardLoaded(loaded);
+  }
+
+  @override
+  Future<void> open(Board board) async {
+    final opened =
+        stored[board] ??
+        BoardState(board, const {}, const {}, profile: profile ?? '');
+    current = opened;
+    session?.boardLoaded(opened);
   }
 }
 
@@ -500,6 +512,36 @@ void main() {
 
       expect(host.boards.current!.profile, 'Family');
       expect(host.boards.current!.data, changed.data);
+    });
+  });
+
+  test('a board a client opens shows the host\'s game of it', () {
+    run((async) {
+      start(
+        async,
+        clients: [a, b],
+        board: state(Board.schieber, {
+          'pts': [100],
+        }),
+      );
+      final hosts = state(Board.coiffeur, {
+        'rows': [1],
+      });
+      host.boards.stored[Board.coiffeur] = hosts;
+
+      final clients = state(Board.coiffeur, {
+        'rows': [2],
+      });
+      a.boards.current = clients;
+      a.session.boardLoaded(clients);
+      for (var i = 0; i < 3; i++) {
+        async.elapse(SyncSession.debounce);
+        async.flushMicrotasks();
+      }
+
+      expect(host.boards.current, hosts);
+      expect(a.boards.current, hosts);
+      expect(b.boards.current, hosts);
     });
   });
 
